@@ -1,4 +1,4 @@
-package tutor.cesh;
+package database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -14,13 +14,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseFacility extends SQLiteOpenHelper
 {
 
-    private static final int    DATABASE_VERSION    = 1;
+    private static final int    DATABASE_VERSION    = 5;
     private static final String DATABASE_NAME       = "tutorcesh.db";
     private ContentValues       contentValues;
     private SQLiteDatabase      db;
 
     /* User Table */
     private static final String USER                = "User";
+    private static final String ID                  = "id";
     private static final String PASSWORD            = "password";
     private static final String EMAIL               = "email";
     private static final String FIRSTNAME           = "firstname";
@@ -58,6 +59,9 @@ public class DatabaseFacility extends SQLiteOpenHelper
     private static final String RATE                = "rate";
     private static final String LOCATION            = "location";
 
+
+
+
     /**
      * Creates the database by passing super the database name
      * and the database version
@@ -73,6 +77,8 @@ public class DatabaseFacility extends SQLiteOpenHelper
     public void onCreate(SQLiteDatabase sqLiteDatabase)
     {
         System.out.println("Inside onCreate method in Database Facility");
+
+
         sqLiteDatabase.execSQL("CREATE TABLE " + USER + "( "
                                 + EMAIL         + " TEXT PRIMARY KEY, "
                                 + PASSWORD      + " TEXT, "
@@ -80,14 +86,14 @@ public class DatabaseFacility extends SQLiteOpenHelper
                                 + LASTNAME      + " TEXT, "
                                 + ABOUT         + " TEXT, "
                                 + PROFILE_PIC   + " BLOB, "
-                                + COVER_PIC     + " BLOB )"
+                                + COVER_PIC     + " BLOB );"
                               );
 
         sqLiteDatabase.execSQL("CREATE TABLE " + SCHOOL + "( "
                                 + DOMAIN        + " TEXT PRIMARY KEY, "
                                 + SCHOOLNAME    + " TEXT, "
                                 + CITY          + " TEXT, "
-                                + STATE         + " TEXT "
+                                + STATE         + " TEXT);"
                               );
 
         sqLiteDatabase.execSQL("CREATE TABLE " + COURSE + "( "
@@ -95,7 +101,7 @@ public class DatabaseFacility extends SQLiteOpenHelper
                                 + CLASS_NUMBER  + " TEXT PRIMARY KEY, "
                                 + COURSE_NUMBER + " TEXT, "
                                 + DEPARTMENT    + " TEXT, "
-                                + TITLE         + " TEXT"
+                                + TITLE         + " TEXT);"
 
                               );
 
@@ -110,32 +116,34 @@ public class DatabaseFacility extends SQLiteOpenHelper
                                 +                  USER + "(" + EMAIL + "), "
 
                                 +                 "FOREIGN KEY (" + DOMAIN + ") " + "REFERENCES "
-                                +                  SCHOOL + "(" + DOMAIN + ")"
+                                +                  SCHOOL + "(" + DOMAIN + "));"
 
                               );
 
         sqLiteDatabase.execSQL("CREATE TABLE " + OFFER + "( "
-                                + TIME          + " TEXT, "
-                                + BUILDING      + " TEXT, "
                                 + DOMAIN        + " TEXT, "
                                 + CLASS_NUMBER  + " TEXT, "
+                                + TIME          + " TEXT, "
+                                + BUILDING      + " TEXT, "
+
 
                                 +                 "PRIMARY KEY (" + DOMAIN + ", " + CLASS_NUMBER
                                 +                 "), "
 
-                                +                 "FOREIGN KEY (" + DOMAIN + ") " + "REFERENCES"
+                                +                 "FOREIGN KEY (" + DOMAIN + ") " + "REFERENCES "
                                 +                  SCHOOL + "(" + DOMAIN + "), "
 
                                 +                 "FOREIGN KEY (" + CLASS_NUMBER + ") " + "REFERENCES "
-                                +                 COURSE + "(" + CLASS_NUMBER + ")"
+                                +                 COURSE + "(" + CLASS_NUMBER + "));"
 
                               );
 
         sqLiteDatabase.execSQL("CREATE TABLE " + TUTOR + "( "
-                                + RATE          + "TEXT, "
-                                + LOCATION      + "TEXT, "
-                                + EMAIL         + "TEXT, "
-                                + CLASS_NUMBER  + "TEXT, "
+                                + EMAIL         + " TEXT, "
+                                + CLASS_NUMBER  + " TEXT, "
+                                + RATE          + " TEXT, "
+                                + LOCATION      + " TEXT, "
+
 
                                 +                 "PRIMARY KEY (" + EMAIL + ", " + CLASS_NUMBER
                                 +                  "), "
@@ -144,7 +152,7 @@ public class DatabaseFacility extends SQLiteOpenHelper
                                 +                  USER + "(" + EMAIL + "), "
 
                                 +                 "FOREIGN KEY (" + CLASS_NUMBER + ") " + "REFERENCES "
-                                +                  COURSE + "(" + CLASS_NUMBER + ")"
+                                +                  COURSE + "(" + CLASS_NUMBER + "));"
 
                               );
 
@@ -184,6 +192,7 @@ public class DatabaseFacility extends SQLiteOpenHelper
 
     public void insertUserRecord(String email, String password, String firstName, String lastName, String about)
     {
+        System.out.println("Inserting user Record!");
         contentValues = new ContentValues();
         contentValues.put(EMAIL, email);
         contentValues.put(PASSWORD, password);
@@ -192,6 +201,9 @@ public class DatabaseFacility extends SQLiteOpenHelper
         contentValues.put(ABOUT, about);
 
         this.db.insert(USER, null, contentValues);
+        this.db.close();
+
+        System.out.println("Finished inserting user record");
     }
 
     /**
@@ -210,6 +222,7 @@ public class DatabaseFacility extends SQLiteOpenHelper
         contentValues.put(STATE, state);
 
         this.db.insert(SCHOOL, null, contentValues);
+        this.db.close();
 
     }
 
@@ -230,6 +243,7 @@ public class DatabaseFacility extends SQLiteOpenHelper
         contentValues.put(TITLE, title);
 
         this.db.insert(COURSE, null, contentValues);
+        this.db.close();
 
     }
 
@@ -249,6 +263,7 @@ public class DatabaseFacility extends SQLiteOpenHelper
         contentValues.put(YEAR, year);
 
         this.db.insert(ENROLL, null, contentValues);
+        this.db.close();
 
     }
 
@@ -269,6 +284,7 @@ public class DatabaseFacility extends SQLiteOpenHelper
         contentValues.put(LOCATION, location);
 
         this.db.insert(ENROLL, null, contentValues);
+        this.db.close();
 
     }
 
@@ -288,37 +304,40 @@ public class DatabaseFacility extends SQLiteOpenHelper
         contentValues.put(TIME, time);
 
         this.db.insert(OFFER, null, contentValues);
+        this.db.close();
 
     }
 
     public boolean validateUser(String email, String password)
     {
+        System.out.println("Inside validateUser in database Facility");
+
         String  query;
-        String  dbEmail;
-        String  dbPassword;
         Cursor  cursor;
         boolean bool;
 
-        query   = "SELECT * FROM USER WHERE email = " + email + " AND password = " + password;
+
+        bool = true;
+        query   = "SELECT " + EMAIL + ", " + PASSWORD +
+                  " FROM " + USER +
+                  " WHERE " + EMAIL + "=" + "\'" + email + "\'" + " AND " + PASSWORD + "=" + "\'" + password + "\'";
+
         cursor  = this.db.rawQuery(query, null);
 
-        if (cursor.moveToFirst())
+        if(cursor.getCount() != 1)
         {
-            dbEmail     = cursor.getString(1);
-            dbPassword  = cursor.getString(2);
-
-            if(dbEmail.equalsIgnoreCase(email) && dbPassword.equalsIgnoreCase(password))
-                bool = true;
-            else
-                bool = false;
-        }
-        else
-        {
+            System.out.println("Did not find a match");
             bool = false;
+        }
+
+        if (!cursor.isClosed())
+        {
+            cursor.close();
         }
 
         return bool;
     }
+
 
     public void executeQuery(String query)
     {

@@ -2,7 +2,6 @@ package tutor.cesh;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,14 +9,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import database.DatabaseFacility;
 
 public class LoginActivity extends ActionBarActivity implements Arrival {
 
     private String              email;
     private String              password;
-    private DatabaseFacility    databaseFacility;
+    private DatabaseFacility databaseFacility;
     private SQLiteDatabase      database;
 
     @Override
@@ -63,6 +64,21 @@ public class LoginActivity extends ActionBarActivity implements Arrival {
         this.email      = ((EditText) findViewById(R.id.emailTextView)).getText().toString();
         this.password   = ((EditText) findViewById(R.id.passwordTextView)).getText().toString();
 
+        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n");
+
         System.out.println("Email entered is: " + this.email);
         System.out.println("Password entered is: " + this.password);
 
@@ -73,15 +89,23 @@ public class LoginActivity extends ActionBarActivity implements Arrival {
     private void validate()
     {
         databaseFacility    = new DatabaseFacility(getApplicationContext());
-        database            = databaseFacility.getWritableDatabase();
+        database            = databaseFacility.getReadableDatabase();
         databaseFacility.setDatabase(database);
+
+
+        /* Writing to the Database */
+        //database            = databaseFacility.getWritableDatabase();
+        //databaseFacility.insertUserRecord(this.email, this.password, "TEST RUN", "TEST RUN", "TEST RUN");
+        //databaseFacility.setDatabase(database);
 
         if(!databaseFacility.validateUser(this.email, this.password))
         {
+            Toast.makeText(this, "Could not verify login", Toast.LENGTH_LONG).show();
             System.out.println("YOUR CREDENTIALS DO NOT MATCH UP WITH OUR DATABASE!");
         }
         else
         {
+            Toast.makeText(this, "Login verified", Toast.LENGTH_LONG).show();
             System.out.println("GOOD JOB, YOU HAVE BEEN VALIDATED IN THE DB!");
         }
 
