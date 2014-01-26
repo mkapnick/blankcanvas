@@ -1,0 +1,61 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="tutor.cesh.NewAccountActivity"
+    tools:ignore="MergeRootFrame" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="61dp"
+        android:padding="10dp"
+        android:background="@drawable/rounded_border_multiple_views">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/emailTextView"
+            android:hint= "@string/email"
+            android:gravity="left"
+            />
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/passwordTextView"
+            android:hint= "@string/password"
+            android:gravity="left"
+            android:layout_below="@+id/emailTextView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:text="@string/CreateAccountText"
+            android:id="@+id/createAccountButton"
+            android:background="@drawable/rounded_button"
+            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/passwordTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
