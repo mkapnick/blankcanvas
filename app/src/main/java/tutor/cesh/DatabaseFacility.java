@@ -2,6 +2,7 @@ package tutor.cesh;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -64,8 +65,8 @@ public class DatabaseFacility extends SQLiteOpenHelper
      */
     public DatabaseFacility(Context context)
     {
-        System.out.println("Inside Database Facility Constructor");
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        System.out.println("Inside Database Facility Constructor");
 
     }
     @Override
@@ -146,8 +147,6 @@ public class DatabaseFacility extends SQLiteOpenHelper
                                 +                  COURSE + "(" + CLASS_NUMBER + ")"
 
                               );
-
-
 
     }
 
@@ -289,6 +288,43 @@ public class DatabaseFacility extends SQLiteOpenHelper
         contentValues.put(TIME, time);
 
         this.db.insert(OFFER, null, contentValues);
+
+    }
+
+    public boolean validateUser(String email, String password)
+    {
+        String  query;
+        String  dbEmail;
+        String  dbPassword;
+        Cursor  cursor;
+        boolean bool;
+
+        query   = "SELECT * FROM USER WHERE email = " + email + " AND password = " + password;
+        cursor  = this.db.rawQuery(query, null);
+
+        if (cursor.moveToFirst())
+        {
+            dbEmail     = cursor.getString(1);
+            dbPassword  = cursor.getString(2);
+
+            if(dbEmail.equalsIgnoreCase(email) && dbPassword.equalsIgnoreCase(password))
+                bool = true;
+            else
+                bool = false;
+        }
+        else
+        {
+            bool = false;
+        }
+
+        return bool;
+    }
+
+    public void executeQuery(String query)
+    {
+        Cursor cursor;
+        cursor = this.db.rawQuery(query, null);
+
 
     }
 }

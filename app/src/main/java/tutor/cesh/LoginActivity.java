@@ -75,6 +75,16 @@ public class LoginActivity extends ActionBarActivity implements Arrival {
         databaseFacility    = new DatabaseFacility(getApplicationContext());
         database            = databaseFacility.getWritableDatabase();
         databaseFacility.setDatabase(database);
+
+        if(!databaseFacility.validateUser(this.email, this.password))
+        {
+            System.out.println("YOUR CREDENTIALS DO NOT MATCH UP WITH OUR DATABASE!");
+        }
+        else
+        {
+            System.out.println("GOOD JOB, YOU HAVE BEEN VALIDATED IN THE DB!");
+        }
+
     }
 
     /**
