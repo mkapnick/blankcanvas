@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/nyc_blurry_left_right"
     tools:context="tutor.cesh.LoginActivity"
     tools:ignore="MergeRootFrame" >
 
@@ -12,22 +13,25 @@
         android:layout_height="wrap_content"
         android:id="@+id/relativeLayout"
         android:layout_alignBottom="@+id/setUpNewAccountText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginTop="100dp"
         android:padding="10dp"
-        android:background="@drawable/rounded_border_multiple_views">
+        android:background="@drawable/rounded_border_multiple_views"
+        android:alpha=".7"
+        >
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:inputType="textEmailAddress"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         android:ems="10"
         android:id="@+id/emailTextView"
         android:hint= "@string/email"
         android:gravity="left"
+        android:textCursorDrawable="@null"
        />
 
 
@@ -38,10 +42,12 @@
         android:ems="10"
         android:id="@+id/passwordTextView"
         android:hint= "@string/password"
-        android:gravity="left"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         android:layout_below="@+id/emailTextView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textCursorDrawable="@null"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -52,32 +58,26 @@
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/passwordTextView"
         android:layout_centerHorizontal="true"
+        android:textColor="#737373"
         android:layout_marginTop="10dp"/>
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="65dp"
         android:text="@string/login"
         android:id="@+id/loginButton"
-        android:background="@drawable/rounded_button"
+        android:background="@drawable/rounded_button_gray"
         android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/forgotPasswordText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
+
         android:onClick="validateArrival"/>
 
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/newAccountText"
-        android:id="@+id/setUpNewAccountText"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="410dp"
-        android:layout_centerHorizontal="true"/>
+
 
 
 </RelativeLayout>

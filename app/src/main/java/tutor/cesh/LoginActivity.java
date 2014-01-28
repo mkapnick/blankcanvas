@@ -1,5 +1,6 @@
 package tutor.cesh;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
@@ -33,7 +34,6 @@ public class LoginActivity extends ActionBarActivity implements Arrival {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         
@@ -54,6 +54,40 @@ public class LoginActivity extends ActionBarActivity implements Arrival {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * User needs to set up an account, pass responsibility
+     * over to NewAccountActivity class
+     * @param view The view from the UI
+     */
+    public void signUp(View view)
+    {
+        System.out.println("IN SIGNUP!");
+        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------\n");
+
+
+        Intent intent;
+        intent = new Intent(this, NewAccountActivity.class);
+        startActivity(intent);
+
+    }
+
+    /**
+     * Validate the email and password of user
+     * @param view The view from the UI
+     */
     @Override
     public void validateArrival(View view)
     {
@@ -86,6 +120,10 @@ public class LoginActivity extends ActionBarActivity implements Arrival {
 
     }
 
+    /**
+     * Validates the user email and password
+     * by querying the database as necessary
+     */
     private void validate()
     {
         databaseFacility    = new DatabaseFacility(getApplicationContext());
@@ -128,3 +166,39 @@ public class LoginActivity extends ActionBarActivity implements Arrival {
     }
 
 }
+
+/*
+
+
+<LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="350dp"
+        android:id="@+id/setUpNewAccountText"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/newAccountText"
+            android:textColor="@color/white"
+            android:id="@+id/dontHaveAccountText"
+            />
+
+        <TextView
+            android:id="@+id/signUpText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/SignUpText"
+            android:layout_marginLeft="5dp"
+            android:clickable="true"
+            android:onClick="signUp"
+            android:textColor="@color/white"/>
+
+        </LinearLayout>
+ */

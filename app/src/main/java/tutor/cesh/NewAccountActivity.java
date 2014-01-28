@@ -1,9 +1,11 @@
 package tutor.cesh;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import database.DatabaseFacility;
 
 public class NewAccountActivity extends ActionBarActivity implements Arrival {
 
@@ -61,6 +66,42 @@ public class NewAccountActivity extends ActionBarActivity implements Arrival {
         System.out.println("Email entered is: " + this.email);
         System.out.println("Password entered is: " + this.password);
 
+        validate();
+
+    }
+
+    /**
+     * Validates the user email and password
+     * by querying the database as necessary
+     */
+    private void validate()
+    {
+        Log.d("","In validate in NewAccountActivity");
+        DatabaseFacility    databaseFacility;
+        SQLiteDatabase      database;
+
+
+        databaseFacility    = new DatabaseFacility(getApplicationContext());
+        database            = databaseFacility.getReadableDatabase();
+        databaseFacility.setDatabase(database);
+
+
+        /* Writing to the Database */
+        //database            = databaseFacility.getWritableDatabase();
+        //databaseFacility.insertUserRecord(this.email, this.password, "TEST RUN", "TEST RUN", "TEST RUN");
+        //databaseFacility.setDatabase(database);
+
+        if(!databaseFacility.validateUser(this.email, this.password))
+        {
+            database        = databaseFacility.getWritableDatabase();
+            databaseFacility.setDatabase(database);
+            databaseFacility.insertUserRecord(this.email, this.password, "", "", "");
+            Toast.makeText(this, "Account created", Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            Toast.makeText(this, "Email account already active", Toast.LENGTH_LONG).show();
+        }
     }
 
     /**

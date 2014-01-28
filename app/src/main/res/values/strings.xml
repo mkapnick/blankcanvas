@@ -10,6 +10,8 @@
     <string name="login">Login</string>
     <string name="CreateAccountText">Create Account</string>
     <string name="forgotPassword"> Forgot your password?</string>
-    <string name="newAccountText">Don\'t have an account? Sign up </string>
+    <string name="newAccountText">Don\'t have an account? </string>
+    <string name="SignUpText"> Sign Up</string>
+    <string name="title_activity_beginning">BeginningActivity</string>
 
 </resources>
