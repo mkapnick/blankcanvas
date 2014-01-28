@@ -54,7 +54,7 @@ public class DatabaseFacility extends SQLiteOpenHelper
     private static final String DEPARTMENT          = "department";
     private static final String TITLE               = "title";
 
-    /* Tutor Table */
+    /* Tutor Table. */
     private static final String TUTOR               = "Tutor";
     private static final String RATE                = "rate";
     private static final String LOCATION            = "location";
