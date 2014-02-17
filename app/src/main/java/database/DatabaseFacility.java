@@ -14,8 +14,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseFacility extends SQLiteOpenHelper
 {
 
-    private static final int    DATABASE_VERSION    = 5;
-    private static final String DATABASE_NAME       = "tutorcesh.db";
+    private static final int    DATABASE_VERSION    = 8;
+    private static final String DATABASE_NAME       = "tutorCesh.db";
     private ContentValues       contentValues;
     private SQLiteDatabase      db;
 
@@ -29,6 +29,7 @@ public class DatabaseFacility extends SQLiteOpenHelper
     private static final String ABOUT               = "about";
     private static final String PROFILE_PIC         = "profile_pic";
     private static final String COVER_PIC           = "cover_pic";
+    private static final String CONFIRM             = "false";
 
     /* Enroll Table */
     private static final String ENROLL              = "Enroll";
@@ -86,7 +87,8 @@ public class DatabaseFacility extends SQLiteOpenHelper
                                 + LASTNAME      + " TEXT, "
                                 + ABOUT         + " TEXT, "
                                 + PROFILE_PIC   + " BLOB, "
-                                + COVER_PIC     + " BLOB );"
+                                + COVER_PIC     + " BLOB, "
+                                + CONFIRM       + " TEXT);"
                               );
 
         sqLiteDatabase.execSQL("CREATE TABLE " + SCHOOL + "( "
@@ -190,7 +192,7 @@ public class DatabaseFacility extends SQLiteOpenHelper
      * @param about User's about info
      */
 
-    public void insertUserRecord(String email, String password, String firstName, String lastName, String about)
+    public void insertUserRecord(String email, String password, String firstName, String lastName, String about, String confirm)
     {
         System.out.println("Inserting user Record!");
         contentValues = new ContentValues();
@@ -199,6 +201,7 @@ public class DatabaseFacility extends SQLiteOpenHelper
         contentValues.put(FIRSTNAME, firstName);
         contentValues.put(LASTNAME, lastName);
         contentValues.put(ABOUT, about);
+        contentValues.put(CONFIRM, confirm);
 
         this.db.insert(USER, null, contentValues);
         this.db.close();

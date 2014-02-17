@@ -1,8 +1,8 @@
 package tutor.cesh;
 
 import android.database.sqlite.SQLiteDatabase;
+import android.os.NetworkOnMainThreadException;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,13 +11,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import database.DatabaseFacility;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
 
-public class NewAccountActivity extends ActionBarActivity implements Arrival {
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+
+import database.DatabaseFacility;
+import database.RESTClientFactory;
+
+public class NewAccountActivity extends ActionBarActivity implements Arrival
+{
 
     private String email;
     private String password;
@@ -55,6 +64,44 @@ public class NewAccountActivity extends ActionBarActivity implements Arrival {
         return super.onOptionsItemSelected(item);
     }
 
+    private void sendOutConfirmationEmail()
+    {
+        /*Intent              intent;
+        String                 url;
+
+        intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("message/rfc822");
+
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{this.email});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Welcome to Tutorcesh");
+
+        try
+        {
+            System.out.println("INSIDE TRY CATCH IN SENDOUTCONFIRMATIONEMAIL!!");
+
+            url = "localhost:8080/ConfirmationLinkAndroid/verify-email?token=testingtesting123herewego";
+
+            intent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml("Click the link below to activate account\n" +
+                "<a href=" + url + "/>"+ url + "</a>"));
+
+            System.out.println("before start activity");
+            startActivity(Intent.createChooser(intent, "Send mail..."));
+            System.out.println("after start activity");
+        }
+
+        catch(Exception e)
+        {
+            System.out.println("Exception thrown");
+        }*/
+
+    }
+
+    /**
+     * Method makes sure the email address is not already in
+     * the database system
+     *
+     * @param view The view sent from the UI
+     */
     @Override
     public void validateArrival(View view)
     {
@@ -71,37 +118,71 @@ public class NewAccountActivity extends ActionBarActivity implements Arrival {
     }
 
     /**
-     * Validates the user email and password
-     * by querying the database as necessary
+     *
+     * Creates a new User account by sending the Web server
+     * a POST request with the necessary JSON data
      */
     private void validate()
     {
-        Log.d("","In validate in NewAccountActivity");
-        DatabaseFacility    databaseFacility;
-        SQLiteDatabase      database;
+        //DatabaseFacility    databaseFacility;
+        //SQLiteDatabase      database;
 
-
-        databaseFacility    = new DatabaseFacility(getApplicationContext());
-        database            = databaseFacility.getReadableDatabase();
-        databaseFacility.setDatabase(database);
-
-
-        /* Writing to the Database */
-        //database            = databaseFacility.getWritableDatabase();
-        //databaseFacility.insertUserRecord(this.email, this.password, "TEST RUN", "TEST RUN", "TEST RUN");
+        //databaseFacility        = new DatabaseFacility(getApplicationContext());
+        //database                = databaseFacility.getReadableDatabase();
         //databaseFacility.setDatabase(database);
 
-        if(!databaseFacility.validateUser(this.email, this.password))
+        //if(!databaseFacility.validateUser(this.email, this.password))
+        //{
+        //database        = databaseFacility.getWritableDatabase();
+        //databaseFacility.setDatabase(database);
+        //databaseFacility.insertUserRecord(this.email, this.password, "", "", "", "false");
+        //Send out email
+        //sendOutConfirmationEmail();
+        //}
+        //else
+        //{
+        //Toast.makeText(this, "Email account already active", Toast.LENGTH_LONG).show();
+        //}
+
+        Log.d("","In validate in NewAccountActivity");
+
+        HttpPost    httpPost;
+        RESTClient  restClient;
+        Thread      thread;
+
+        try
         {
-            database        = databaseFacility.getWritableDatabase();
-            databaseFacility.setDatabase(database);
-            databaseFacility.insertUserRecord(this.email, this.password, "", "", "");
+            httpPost        = RESTClientFactory.post(this.email, this.password);
+            restClient      = new RESTClient(httpPost);
+            thread          = new Thread(restClient);
+
+            thread.setPriority(0x0000000a); //set this thread to a lower priority than the main UI thread
+            thread.start();
+
             Toast.makeText(this, "Account created", Toast.LENGTH_LONG).show();
+            finish();
         }
-        else
+        catch(IOException e)
         {
-            Toast.makeText(this, "Email account already active", Toast.LENGTH_LONG).show();
+            System.out.println("Inside IOException exception!.. not good!");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
+        catch(JSONException e)
+        {
+            System.out.println("Inside JSONException!.. not good!");
+        }
+        catch(NetworkOnMainThreadException e)
+        {
+            System.out.println("Network on main thread exception");
+        }
+        catch(NoSuchAlgorithmException e)
+        {
+            System.out.println("No such algorithm exception");
+        }
+
+        //Log out and make sure the user confirm his/her email before
+        //anything else
     }
 
     /**

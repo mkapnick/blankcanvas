@@ -2,9 +2,12 @@ package tutor.cesh;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
+import android.os.NetworkOnMainThreadException;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,7 +16,23 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.ExecutionException;
+
 import database.DatabaseFacility;
+import database.RESTClientFactory;
+import tutor.profile.ProfileActivity;
 
 public class LoginActivity extends ActionBarActivity implements Arrival {
 
@@ -126,12 +145,12 @@ public class LoginActivity extends ActionBarActivity implements Arrival {
      */
     private void validate()
     {
-        databaseFacility    = new DatabaseFacility(getApplicationContext());
+        /*databaseFacility    = new DatabaseFacility(getApplicationContext());
         database            = databaseFacility.getReadableDatabase();
         databaseFacility.setDatabase(database);
 
 
-        /* Writing to the Database */
+        /* Writing to the Database
         //database            = databaseFacility.getWritableDatabase();
         //databaseFacility.insertUserRecord(this.email, this.password, "TEST RUN", "TEST RUN", "TEST RUN");
         //databaseFacility.setDatabase(database);
@@ -145,8 +164,123 @@ public class LoginActivity extends ActionBarActivity implements Arrival {
         {
             Toast.makeText(this, "Login verified", Toast.LENGTH_LONG).show();
             System.out.println("GOOD JOB, YOU HAVE BEEN VALIDATED IN THE DB!");
+        }*/
+
+        Log.d("", "In validate in LoginActivity");
+
+        HttpGet                                 get;
+        RESTClientGet                           rcg;
+        AsyncTask<HttpGet, Integer, JSONArray>  async;
+        JSONArray                               json;
+        Intent                                  intent;
+        JSONObject                              obj;
+
+        rcg = null;
+        try
+        {
+            get     = RESTClientFactory.get(this.email, this.password);
+            async   = new RESTClientGet().execute(get);
+            json    = async.get();
+
+            if(checkAndValidateResponse(json))
+            {
+                //user has access to the application !
+                intent  = new Intent(this, ProfileActivity.class);
+                obj     = json.getJSONObject(0);
+                intent.putExtra("firstName", obj.getString("first_name"));
+                intent.putExtra("lastName", obj.getString("last_name"));
+                intent.putExtra("about", obj.getString("about"));
+                intent.putExtra("profPic", obj.getString("prof_pic"));
+                intent.putExtra("coverPic", obj.getString("cover_pic"));
+                intent.putExtra("email", obj.getString("email"));
+
+                startActivity(intent);
+            }
+
+        }
+        catch(NetworkOnMainThreadException e)
+        {
+            System.out.println("Network on main thread exception");
+        }
+        catch (InterruptedException e)
+        {
+            System.out.println("Interrupted exception");
+        }
+        catch (ExecutionException e)
+        {
+            System.out.println("Execution exception");
+        }
+        catch (JSONException e)
+        {
+            System.out.println("JSON exception");
+
+        }
+    }
+
+    private boolean checkAndValidateResponse(JSONArray json) throws JSONException
+    {
+        boolean         validated;
+        validated       = false;
+
+        if(json.length() > 0)
+        {
+            try
+            {
+                System.out.println("length > 0");
+
+                JSONObject      obj;
+                String          confirm;
+                String          serverHashedPassword;
+                String          androidHashedPassword;
+                String          salt;
+                int             id;
+                MessageDigest   digest;
+
+
+                serverHashedPassword        = "";
+                androidHashedPassword       = "";
+                salt                        = "";
+                confirm                     = "";
+
+                for (int i = 0; i < json.length(); ++i)
+                {
+                    obj                     = json.getJSONObject(i);
+                    id                      = obj.getInt("id");
+                    confirm                 = obj.getString("confirm");
+                    serverHashedPassword    = obj.getString("hashed_password");
+                    salt                    = obj.getString("salt");
+                }
+
+                System.out.println("hashed password: " + serverHashedPassword);
+
+                digest = MessageDigest.getInstance("SHA-256");
+                digest.reset();
+
+                androidHashedPassword = bin2hex(digest.digest((this.password + "wibble" + salt).getBytes()));
+
+                if(serverHashedPassword.equals(androidHashedPassword) && confirm.equalsIgnoreCase("true"))
+                {
+                    System.out.println("holy wow they're the same!");
+                    validated   = true;
+                }
+            }
+
+            catch(Exception e)
+            {
+                System.out.println("Exception thrown");
+            }
+        }
+        else
+        {
+            System.out.println("Empty JSON response!");
         }
 
+        return validated;
+    }
+
+    static String bin2hex(byte[] data)
+    {
+        return String.format("%0" + (data.length * 2) + 'x', new BigInteger(1, data));
     }
 
     /**

@@ -1,0 +1,127 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+
+    tools:context="tutor.profile.ProfileActivity$PlaceholderFragment">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/profileBackgroundImage"
+        android:background="@drawable/brooklyn_bridge_blur"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/profileImageButton"
+        android:background="@drawable/ic_action_umbrellaa"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="25dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:alpha=".7"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        >
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/name"
+            android:hint="Name"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:paddingTop="5dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/major"
+            android:hint="Major"
+            android:layout_below="@id/name"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:paddingTop="5dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/year"
+            android:hint="Year"
+            android:layout_below="@id/major"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:paddingTop="5dp"/>
+
+        <View
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/black"/>
+
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+
+    >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:id="@+id/relativeLayout"
+            android:padding="10dp"
+            android:background="@color/black"
+            android:alpha=".7">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/about"
+                android:hint="About"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:paddingTop="10dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/classes"
+                android:layout_below="@id/about"
+                android:hint="Classes"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:paddingTop="30dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/location"
+                android:layout_below="@id/classes"
+                android:hint="Location"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:paddingTop="30dp"/>
+
+        </RelativeLayout>
+    </ScrollView>
+
+
+</RelativeLayout>
