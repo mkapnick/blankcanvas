@@ -9,31 +9,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/profileBackgroundImage"
-        android:background="@drawable/brooklyn_bridge_blur"
+        android:background="@drawable/cab_blurry"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <ImageButton
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:id="@+id/profileImageButton"
-        android:background="@drawable/ic_action_umbrellaa"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="25dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:background="@drawable/circle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        />
 
 
     <RelativeLayout
+        android:id="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/black"
         android:alpha=".7"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="150dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+
         >
 
         <EditText
@@ -43,7 +43,7 @@
             android:hint="Name"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
-            android:paddingTop="5dp"/>
+            android:gravity="center"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -53,7 +53,8 @@
             android:layout_below="@id/name"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
-            android:paddingTop="5dp"/>
+            android:paddingTop="1dp"
+            android:gravity="center"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -63,23 +64,21 @@
             android:layout_below="@id/major"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
-            android:paddingTop="5dp"/>
-
-        <View
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:background="@android:color/black"/>
-
-
+            android:paddingTop="1dp"
+            android:gravity="center"/>
     </RelativeLayout>
+
 
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
+        android:layout_below="@id/top"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
+        android:id="@+id/scroll"
+        android:layout_marginTop="50dp"
 
     >
 
@@ -89,7 +88,8 @@
             android:id="@+id/relativeLayout"
             android:padding="10dp"
             android:background="@color/black"
-            android:alpha=".7">
+            android:alpha=".7"
+            >
 
             <EditText
                 android:layout_width="match_parent"
