@@ -1,4 +1,4 @@
-package tutor.cesh;
+package tutor.cesh.arrival;
 
 import android.view.View;
 

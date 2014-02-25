@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/nyc_blurry_left_right"
-    tools:context="tutor.cesh.NewAccountActivity"
+    tools:context="tutor.cesh.arrival.NewAccountActivity"
     tools:ignore="MergeRootFrame" >
 
     <RelativeLayout

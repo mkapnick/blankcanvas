@@ -1,25 +1,23 @@
-package tutor.cesh;
-
-import android.os.AsyncTask;
+package tutor.cesh.rest;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.net.URL;
 
 /**
  * Created by michaelk18 on 2/2/14.
  */
-public class RESTClient implements Runnable
+public class RestClientPost implements Runnable
 {
     HttpPost    httpPost;
-    HttpClient  httpClient;
+    HttpClient  httpClient  = new DefaultHttpClient();
 
-    public RESTClient(HttpPost post)
+    HttpPut     httpPut;
+
+    public RestClientPost(HttpPost post)
     {
         this.httpPost   = post;
-        this.httpClient = new DefaultHttpClient();
     }
 
     @Override
@@ -27,7 +25,9 @@ public class RESTClient implements Runnable
     {
         try
         {
-            httpClient.execute(httpPost);
+            if(this.httpPost != null)
+                httpClient.execute(httpPost);
+
         }
         catch(Exception e)
         {

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/nyc_blurry_left_right"
-    tools:context="tutor.cesh.LoginActivity"
+    tools:context="tutor.cesh.arrival.LoginActivity"
     tools:ignore="MergeRootFrame" >
 
     <RelativeLayout

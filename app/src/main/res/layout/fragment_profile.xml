@@ -2,93 +2,108 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-
-    tools:context="tutor.profile.ProfileActivity$PlaceholderFragment">
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/profileBackgroundImage"
-        android:background="@drawable/cab_blurry"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <ImageButton
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:id="@+id/profileImageButton"
-        android:background="@drawable/circle"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        />
+    android:id="@+id/container"
+    tools:context="tutor.cesh.profile.ProfileActivity$PlaceholderFragment">
 
 
     <RelativeLayout
         android:id="@+id/top"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/black"
-        android:alpha=".7"
-        android:layout_marginTop="150dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_above="@+id/scroll"
+        android:layout_alignParentTop="true">
 
-        >
-
-        <EditText
+        <ImageView
+            android:id="@+id/profileBackgroundImage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/name"
-            android:hint="Name"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:gravity="center"/>
+            android:layout_height="match_parent"
+            android:background="@drawable/brooklyn_bridge_blur"
+            android:adjustViewBounds="true"/>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/major"
-            android:hint="Major"
-            android:layout_below="@id/name"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:paddingTop="1dp"
-            android:gravity="center"/>
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/circle"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="100dp"
+            android:layout_marginLeft="15dp"
+            />
 
-        <EditText
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/year"
-            android:hint="Year"
-            android:layout_below="@id/major"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:paddingTop="1dp"
-            android:gravity="center"/>
+            android:layout_marginTop="115dp"
+            android:layout_marginLeft="100dp">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/name"
+                android:hint="Name"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:gravity="left"
+                android:clickable="false"
+                android:editable="false"
+                android:textSize="25sp"
+                android:background="#000000"
+                android:maxLines="2"
+                android:textCursorDrawable="@null"
+                android:alpha=".7"
+                />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/major"
+                android:hint="Major"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="10sp"
+                android:gravity="left"
+                android:clickable="false"
+                android:editable="false"
+                android:layout_marginTop="15dp"
+                android:maxWidth="200dp"
+                android:background="#000000"
+                android:layout_below="@+id/name"
+                android:textCursorDrawable="@null"
+                android:alpha=".7"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/year"
+                android:hint="Year"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:clickable="true"
+                android:textSize="10sp"
+                android:editable="false"
+                android:gravity="left"
+                android:background="#000000"
+                android:maxWidth="200dp"
+                android:layout_below="@+id/major"
+                android:textCursorDrawable="@null"
+                android:alpha=".7"/>
+            </RelativeLayout>
     </RelativeLayout>
-
 
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/top"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:id="@+id/scroll"
-        android:layout_marginTop="50dp"
-
-    >
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="#F2F2F2"
+        android:alpha=".9"
+        android:paddingTop="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:id="@+id/relativeLayout"
-            android:padding="10dp"
-            android:background="@color/black"
-            android:alpha=".7"
+            android:layout_height="wrap_content"
+            android:id="@+id/bottom"
             >
 
             <EditText
@@ -96,32 +111,45 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/about"
                 android:hint="About"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:paddingTop="10dp"/>
+                android:height="60dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="14dp"
+                android:clickable="false"
+                android:editable="false"
+                android:singleLine="false"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:height="60dp"
+                android:id="@+id/subjects"
+                android:layout_below="@id/about"
+                android:hint="Subjects"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:paddingTop="10dp"
+                android:clickable="false"
+                android:textSize="14dp"
+                android:editable="false"
+                android:singleLine="false"/>
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/classes"
-                android:layout_below="@id/about"
+                android:layout_below="@id/subjects"
                 android:hint="Classes"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:paddingTop="30dp"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/location"
-                android:layout_below="@id/classes"
-                android:hint="Location"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:paddingTop="30dp"/>
+                android:height="60dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:paddingTop="10dp"
+                android:clickable="false"
+                android:textSize="14dp"
+                android:editable="false"
+                android:singleLine="false"/>
 
         </RelativeLayout>
     </ScrollView>
-
 
 </RelativeLayout>

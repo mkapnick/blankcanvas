@@ -1,4 +1,4 @@
-package database;
+package tutor.cesh.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,8 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * Created by Michael Kapnick on 1/25/14.
- * A class responsible for maintaining the database
- * and querying the database
+ * A class responsible for maintaining the tutor.app.database
+ * and querying the tutor.app.database
  */
 public class DatabaseFacility extends SQLiteOpenHelper
 {
@@ -64,8 +64,8 @@ public class DatabaseFacility extends SQLiteOpenHelper
 
 
     /**
-     * Creates the database by passing super the database name
-     * and the database version
+     * Creates the tutor.app.database by passing super the tutor.app.database name
+     * and the tutor.app.database version
      * @param context The context of the application
      */
     public DatabaseFacility(Context context)
@@ -175,8 +175,8 @@ public class DatabaseFacility extends SQLiteOpenHelper
     }
 
     /**
-     * Sets the current database object
-     * @param db The current database object
+     * Sets the current tutor.app.database object
+     * @param db The current tutor.app.database object
      */
     public void setDatabase(SQLiteDatabase db)
     {
@@ -313,7 +313,7 @@ public class DatabaseFacility extends SQLiteOpenHelper
 
     public boolean validateUser(String email, String password)
     {
-        System.out.println("Inside validateUser in database Facility");
+        System.out.println("Inside validateUser in tutor.app.database Facility");
 
         String  query;
         Cursor  cursor;

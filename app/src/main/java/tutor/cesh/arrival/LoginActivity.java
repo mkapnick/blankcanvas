@@ -1,4 +1,4 @@
-package tutor.cesh;
+package tutor.cesh.arrival;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,25 +14,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutionException;
 
-import database.DatabaseFacility;
-import database.RESTClientFactory;
-import tutor.profile.ProfileActivity;
+import tutor.cesh.database.DatabaseFacility;
+import tutor.cesh.database.RestClientFactory;
+import tutor.cesh.rest.AsyncAuthenticate;
+import tutor.cesh.R;
+import tutor.cesh.profile.ProfileActivity;
 
 public class LoginActivity extends ActionBarActivity implements Arrival {
 
@@ -110,7 +106,7 @@ public class LoginActivity extends ActionBarActivity implements Arrival {
     @Override
     public void validateArrival(View view)
     {
-        //Validate with database query
+        //Validate with tutor.app.database query
 
         System.out.println("-- In validateArrival() --");
 
@@ -141,61 +137,49 @@ public class LoginActivity extends ActionBarActivity implements Arrival {
 
     /**
      * Validates the user email and password
-     * by querying the database as necessary
+     * by querying the tutor.app.database as necessary
      */
     private void validate()
     {
-        /*databaseFacility    = new DatabaseFacility(getApplicationContext());
-        database            = databaseFacility.getReadableDatabase();
-        databaseFacility.setDatabase(database);
-
-
-        /* Writing to the Database
-        //database            = databaseFacility.getWritableDatabase();
-        //databaseFacility.insertUserRecord(this.email, this.password, "TEST RUN", "TEST RUN", "TEST RUN");
-        //databaseFacility.setDatabase(database);
-
-        if(!databaseFacility.validateUser(this.email, this.password))
-        {
-            Toast.makeText(this, "Could not verify login", Toast.LENGTH_LONG).show();
-            System.out.println("YOUR CREDENTIALS DO NOT MATCH UP WITH OUR DATABASE!");
-        }
-        else
-        {
-            Toast.makeText(this, "Login verified", Toast.LENGTH_LONG).show();
-            System.out.println("GOOD JOB, YOU HAVE BEEN VALIDATED IN THE DB!");
-        }*/
-
         Log.d("", "In validate in LoginActivity");
 
-        HttpGet                                 get;
-        RESTClientGet                           rcg;
-        AsyncTask<HttpGet, Integer, JSONArray>  async;
-        JSONArray                               json;
-        Intent                                  intent;
-        JSONObject                              obj;
+        HttpGet                                             get;
+        AsyncTask<HttpGet, Integer, JSONArray>              async;
+        JSONArray                                           jsonArray;
+        Intent                                              intent;
+        JSONObject                                          object;
 
-        rcg = null;
         try
         {
-            get     = RESTClientFactory.get(this.email, this.password);
-            async   = new RESTClientGet().execute(get);
-            json    = async.get();
 
-            if(checkAndValidateResponse(json))
+            System.out.println("authenticating...");
+            get         = RestClientFactory.authenticateUser(email, password);
+            async       = new AsyncAuthenticate().execute(get);
+            jsonArray   = async.get();
+
+            if(jsonArray != null)
             {
-                //user has access to the application !
-                intent  = new Intent(this, ProfileActivity.class);
-                obj     = json.getJSONObject(0);
-                intent.putExtra("firstName", obj.getString("first_name"));
-                intent.putExtra("lastName", obj.getString("last_name"));
-                intent.putExtra("about", obj.getString("about"));
-                intent.putExtra("profPic", obj.getString("prof_pic"));
-                intent.putExtra("coverPic", obj.getString("cover_pic"));
-                intent.putExtra("email", obj.getString("email"));
+                object      = jsonArray.getJSONObject(0);
+                if(object.getString("confirm").equalsIgnoreCase("true"))
+                {
+                    //user has access to the application !
+                    System.out.println("user has access to app!");
+                    intent  = new Intent(this, ProfileActivity.class);
+                    intent.putExtra("id", object.getString("id"));
+                    intent.putExtra("enrollId", object.getString("enroll_id"));
+                    intent.putExtra("email", object.getString("email"));
+                    intent.putExtra("firstName", object.getString("first_name"));
+                    intent.putExtra("lastName", object.getString("last_name"));
+                    intent.putExtra("about", object.getString("about"));
+                    intent.putExtra("profileImage", object.getString("profile_image"));
+                    intent.putExtra("coverImage", object.getString("cover_image"));
 
-                startActivity(intent);
+                    System.out.println("before starting intent");
+                    startActivity(intent);
+                }
             }
+            else
+                finish();
 
         }
         catch(NetworkOnMainThreadException e)
@@ -213,76 +197,16 @@ public class LoginActivity extends ActionBarActivity implements Arrival {
         catch (JSONException e)
         {
             System.out.println("JSON exception");
-
         }
-    }
-
-    private boolean checkAndValidateResponse(JSONArray json) throws JSONException
-    {
-        boolean         validated;
-        validated       = false;
-
-        if(json.length() > 0)
+        catch(IOException ioe)
         {
-            try
-            {
-                System.out.println("length > 0");
-
-                JSONObject      obj;
-                String          confirm;
-                String          serverHashedPassword;
-                String          androidHashedPassword;
-                String          salt;
-                int             id;
-                MessageDigest   digest;
-
-
-                serverHashedPassword        = "";
-                androidHashedPassword       = "";
-                salt                        = "";
-                confirm                     = "";
-
-                for (int i = 0; i < json.length(); ++i)
-                {
-                    obj                     = json.getJSONObject(i);
-                    id                      = obj.getInt("id");
-                    confirm                 = obj.getString("confirm");
-                    serverHashedPassword    = obj.getString("hashed_password");
-                    salt                    = obj.getString("salt");
-                }
-
-                System.out.println("hashed password: " + serverHashedPassword);
-
-                digest = MessageDigest.getInstance("SHA-256");
-                digest.reset();
-
-                androidHashedPassword = bin2hex(digest.digest((this.password + "wibble" + salt).getBytes()));
-
-                if(serverHashedPassword.equals(androidHashedPassword) && confirm.equalsIgnoreCase("true"))
-                {
-                    System.out.println("holy wow they're the same!");
-                    validated   = true;
-                }
-            }
-
-            catch(Exception e)
-            {
-                System.out.println("Exception thrown");
-            }
+            System.out.println("IOEXc");
         }
-        else
+        catch(NoSuchAlgorithmException nse)
         {
-            System.out.println("Empty JSON response!");
+            System.out.println("NSALExc");
         }
-
-        return validated;
     }
-
-    static String bin2hex(byte[] data)
-    {
-        return String.format("%0" + (data.length * 2) + 'x', new BigInteger(1, data));
-    }
-
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -300,39 +224,3 @@ public class LoginActivity extends ActionBarActivity implements Arrival {
     }
 
 }
-
-/*
-
-
-<LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="350dp"
-        android:id="@+id/setUpNewAccountText"
-        android:layout_gravity="center"
-        android:layout_centerHorizontal="true">
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/newAccountText"
-            android:textColor="@color/white"
-            android:id="@+id/dontHaveAccountText"
-            />
-
-        <TextView
-            android:id="@+id/signUpText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/SignUpText"
-            android:layout_marginLeft="5dp"
-            android:clickable="true"
-            android:onClick="signUp"
-            android:textColor="@color/white"/>
-
-        </LinearLayout>
- */
