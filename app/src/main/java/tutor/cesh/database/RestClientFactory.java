@@ -102,6 +102,21 @@ public class RestClientFactory
 
     /**
      *
+     * @param email
+     * @param password
+     * @return
+     */
+    public static ArrayList<HttpGet> getUser(String id, String email, String password)
+    {
+        HttpGet get;
+        get = new HttpGet(DOMAIN + "users/" + id);
+
+        return null;
+    }
+
+
+    /**
+     *
      * @return
      * @throws JSONException
      */

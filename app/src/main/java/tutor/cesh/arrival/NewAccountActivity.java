@@ -100,7 +100,7 @@ public class NewAccountActivity extends ActionBarActivity implements Arrival
         try
         {
             httpPost        = RestClientFactory.postNewAccount(this.email, this.password);
-            restClientPost = new RestClientPost(httpPost);
+            restClientPost  = new RestClientPost(httpPost);
             thread          = new Thread(restClientPost);
 
             thread.setPriority(0x0000000a); //set this thread to a lower priority than the main UI thread

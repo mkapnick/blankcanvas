@@ -19,8 +19,8 @@ import tutor.cesh.R;
 public class ProfileActivity extends Activity
 {
     private Bundle      info;
-    public ImageButton  ib;
-    public ImageView    iv;
+    public  ImageButton  ib;
+    public  ImageView    iv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -47,8 +47,15 @@ public class ProfileActivity extends Activity
     {
         EditText name, major, year, about, subjects, classes;
 
-        name = (EditText) findViewById(R.id.name);
-        //name.setText();
+        name        = (EditText)    findViewById(R.id.name);
+        major       = (EditText)    findViewById(R.id.major);
+        year        = (EditText)    findViewById(R.id.year);
+        about       = (EditText)    findViewById(R.id.about);
+        subjects    = (EditText)    findViewById(R.id.subjects);
+        classes     = (EditText)    findViewById(R.id.classes);
+
+       // Query web server and get user's information
+
     }
 
 
