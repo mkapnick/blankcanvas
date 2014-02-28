@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,25 +18,28 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import tutor.cesh.database.RestClientFactory;
-import tutor.cesh.rest.RestClientPost;
+import tutor.cesh.rest.AsyncGet;
+import tutor.cesh.rest.RestClientExecute;
+import tutor.cesh.rest.RestClientFactory;
 
 import tutor.cesh.R;
-import tutor.cesh.rest.RestClientPut;
 
-public class EditProfileActivity extends Activity {
+public class EditStudentProfileActivity extends Activity {
 
 
     private boolean isProfPic = false;
     private String  profilePicPath = null;
     private String  backgroundPicPath = null;
-    private Bundle  bundle;
+    private Bundle  info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +51,46 @@ public class EditProfileActivity extends Activity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-        this.bundle = getIntent().getExtras();
+        this.info = getIntent().getExtras();
         System.out.println("inside edit profile activity!");
+
+        try
+        {
+            setUpTextAreas();
+        }
+        catch (JSONException e)
+        {
+            System.out.println("Inside exception student profile activity");
+            e.printStackTrace();
+        }
+        catch(Exception ee)
+        {
+
+        }
     }
 
+    /**
+     *
+     */
+    private void setUpTextAreas() throws JSONException, Exception
+    {
+        EditText            name, major, year, about, subjects, classes;
+
+
+        name        = (EditText)    findViewById(R.id.name);
+        major       = (EditText)    findViewById(R.id.major);
+        year        = (EditText)    findViewById(R.id.year);
+        about       = (EditText)    findViewById(R.id.about);
+        subjects    = (EditText)    findViewById(R.id.subjects);
+        classes     = (EditText)    findViewById(R.id.classes);
+
+        name.setText(info.getString("first_name"));
+        major.setText(info.getString("major"));
+        year.setText(info.getString("year"));
+        about.setText(info.getString("about"));
+
+
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -79,14 +119,12 @@ public class EditProfileActivity extends Activity {
         {
             if (resultCode == RESULT_OK)
             {
-
                 try
                 {
                     bitMap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
                     //image.setImageBitmap(bitMap);
                     drawable = new BitmapDrawable(getResources(), bitMap);
                     image.setBackground(drawable);
-                    //post data to the server and update users background image
                 }
                 catch (FileNotFoundException e)
                 {
@@ -124,7 +162,6 @@ public class EditProfileActivity extends Activity {
             case R.id.saveButton:
                 saveUserProfile(view);
                 break;
-
         }
     }
 
@@ -137,14 +174,16 @@ public class EditProfileActivity extends Activity {
         System.out.println("in save user profile");
         EditText            name, major, year, about, subjects;
         ArrayList<HttpPut>  puts;
-        RestClientPut restClientPut;
-        Thread              thread;
+        RestClientExecute   rce;
         String              id, enrollId;
 
         System.out.println("before bundle");
-        id              = bundle.getString("id");
-        enrollId        = bundle.getString("enrollId");
+
+        id              = info.getString("id");
+        enrollId        = "1";//info.getString("enrollId");
+
         System.out.println("after bundle");
+
         name            = (EditText)    findViewById(R.id.name);
         major           = (EditText)    findViewById(R.id.major);
         year            = (EditText)    findViewById(R.id.year);
@@ -154,31 +193,25 @@ public class EditProfileActivity extends Activity {
         try
         {
             System.out.println("calling rest client factory!");
-            puts        = RestClientFactory.postUserData(id, enrollId, backgroundPicPath, profilePicPath, name.getText().toString(),
-                    major.getText().toString(), year.getText().toString(), about.getText().toString(),
+            puts        = RestClientFactory.put(id, enrollId, backgroundPicPath, profilePicPath,
+                    name.getText().toString(), major.getText().toString(),
+                    year.getText().toString(), about.getText().toString(),
                     subjects.getText().toString());
-
-            System.out.println("holy wow after restclient");
 
             for (int i =0; i < puts.size(); i++)
             {
-                restClientPut   = new RestClientPut(puts.get(i));
-                thread          = new Thread(restClientPut);
-
-                thread.setPriority(0x0000000a); //set this thread to a lower priority than the main UI thread
-                System.out.println("starting thread...");
-                thread.start();
+                rce = new RestClientExecute(puts.get(i));
+                rce.start();
             }
 
             Toast.makeText(this, "Saved", Toast.LENGTH_LONG).show();
-
+            finish();
         }
         catch(Exception e)
         {
-            System.out.println("inside exception........darn");
+            System.out.println("inside exception........edit student profile activity");
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

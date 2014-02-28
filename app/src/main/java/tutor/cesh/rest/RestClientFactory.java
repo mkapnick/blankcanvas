@@ -1,4 +1,4 @@
-package tutor.cesh.database;
+package tutor.cesh.rest;
 
 import android.util.Base64;
 
@@ -29,26 +29,28 @@ import java.util.ArrayList;
 public class RestClientFactory
 {
     private static final String     POST_NEW_USER       = "http://protected-earth-9689.herokuapp.com/users";
-    private static final String     GET_EXISTING_USER   = "http://protected-earth-9689.herokuapp.com/users/info/";
     private static final String     DOMAIN              = "http://protected-earth-9689.herokuapp.com/";
     private static final String     PUT_USER            = "http://protected-earth-9689.herokuapp.com/users/";
     private static final String     PUT_ENROLL_DATA    = "http://protected-earth-9689.herokuapp.com/enrolls/";
     private static       JSONObject userParams;
     private static       JSONObject enrollParams;
+
     /**
+     * Authorize that a user's email and password is
+     * stored on the server
      *
-     * @param email
-     * @param password
-     * @return
+     * @param email User's email
+     * @param password User's password
+     *
+     * @return an HttpGet ready to authenticate a user's email and password
      * @throws JSONException
      * @throws IOException
      * @throws NoSuchAlgorithmException
      */
-    public static HttpGet authenticateUser(String email, String password)
-            throws JSONException,
-            IOException, NoSuchAlgorithmException
+    public static HttpGet authenticate(String email, String password) throws JSONException,
+                                                                    IOException,
+                                                                    NoSuchAlgorithmException
     {
-
         HttpGet      httpGet;
         httpGet     = null;
         try
@@ -62,7 +64,6 @@ public class RestClientFactory
             httpGet.setHeader("Accept", "application/json");
             httpGet.setHeader("Content-Type", "application/json");
         }
-
         catch(Exception e)
         {
             System.out.println("in Exception !!");
@@ -70,11 +71,29 @@ public class RestClientFactory
         return httpGet;
     }
 
+    /**
+     * Get user info
+     *
+     * @param id The user's id
+     * @return HttpGet for the correct user
+     */
+    public static HttpGet get(String table, String id)
+    {
+        HttpGet httpGet;
+        httpGet = new HttpGet(DOMAIN + table + "/" + id);
+        System.out.println("Getting: " + DOMAIN + table + "/" + id);
+        httpGet.setHeader("Accept", "application/json");
+        httpGet.setHeader("Content-Type", "application/json");
+
+        return httpGet;
+
+    }
+
 
     /**
      *
-     * @param email
-     * @param password
+     * @param email User's email
+     * @param password User's password
      * @return
      */
     private static String getB6Auth(String email, String password)
@@ -95,25 +114,9 @@ public class RestClientFactory
             enrollParams = new JSONObject();
             enrollParams.put("major", "major");
             enrollParams.put("year", "year");
-
         }
         return enrollParams;
     }
-
-    /**
-     *
-     * @param email
-     * @param password
-     * @return
-     */
-    public static ArrayList<HttpGet> getUser(String id, String email, String password)
-    {
-        HttpGet get;
-        get = new HttpGet(DOMAIN + "users/" + id);
-
-        return null;
-    }
-
 
     /**
      *
@@ -125,9 +128,9 @@ public class RestClientFactory
         if (userParams == null)
         {
             userParams = new JSONObject();
-            userParams.put("first_name", "");
-            userParams.put("last_name", "");
-            userParams.put("about", "");
+            userParams.put("first_name", "Name");
+            userParams.put("last_name", "Name");
+            userParams.put("about", "About");
             userParams.put("profile_image", "");
             userParams.put("cover_image", "");
         }
@@ -137,33 +140,30 @@ public class RestClientFactory
 
 
     /**
+     * Create a new user with the given email and password
      *
-     * @param email
-     * @param password
+     * @param email The user's email
+     * @param password The user's password
      * @throws JSONException
      * @throws MalformedURLException
      * @throws UnsupportedEncodingException
      */
-    public static HttpPost postNewAccount(String email, String password)
-            throws JSONException,
-            IOException, NoSuchAlgorithmException
+    public static HttpPost post(String email, String password) throws   JSONException,
+                                                                        IOException,
+                                                                        NoSuchAlgorithmException
 
     {
         System.out.println("Inside post in RestClientFactory");
-
-        //RestClientFactory.initializeSecretKey();
-
         System.out.println("posting new account)");
+
         JSONObject              params;
         HttpPost                httpPost;
         StringEntity            entity;
         httpPost    = new HttpPost(POST_NEW_USER);
         params      = getUserParams();
 
-
         params.put("email", email);
         params.put("password", password);
-        //params.put("s", new FileBody(new File("edwfd", "")));
 
         entity          = new StringEntity(params.toString());
 
@@ -176,45 +176,42 @@ public class RestClientFactory
     }
 
     /**
+     * Update information about a user
      *
-     * @param backGroundPath
-     * @param profilePath
-     * @param name
-     * @param major
-     * @param year
-     * @param about
-     * @param subjects
+     * @param backGroundPath    File path to the user's background image
+     * @param profilePath       File path to the user's profile picture
+     * @param name              user's name
+     * @param major             user's major
+     * @param year              year in school
+     * @param about             short info about the user
+     * @param subjects          Subject's user teaches
      * @return
      * @throws Exception
      */
-    public static ArrayList<HttpPut> postUserData( String id, String enrollId,
-                                                    String backGroundPath, String profilePath,
-                                                    String name, String major, String year,
-                                                    String about, String subjects)
-
-                            throws Exception
+    public static ArrayList<HttpPut> put( String id, String enrollId,
+                                          String backGroundPath, String profilePath,
+                                          String name, String major, String year,
+                                          String about, String subjects) throws Exception
     {
+        System.out.println("updating user data !");
 
-        System.out.println("posting user data !");
         JSONObject              params1, params2;
-        ArrayList<HttpPut>      puts;
-        HttpPut                 puts1, puts2, post3;
+        ArrayList<HttpPut>      putsList;
+        HttpPut                 puts1, puts2;
         MultipartEntity         entity;
         File                    coverImageFile, profileImageFile;
         FileBody                cBody, pBody;
 
-        params1  = getUserParams();
-        puts   = new ArrayList<HttpPut>();
-        puts1   = new HttpPut(PUT_USER + id);
-
-        entity  = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-
+        params1     = getUserParams();
+        putsList    = new ArrayList<HttpPut>();
+        puts1       = new HttpPut(PUT_USER + id);
+        entity      = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
         entity.addPart("user[first_name]", new StringBody(name));
         entity.addPart("user[last_name]", new StringBody("testing"));
         entity.addPart("user[about]", new StringBody(about));
 
-
+        // Add Images to the multipart entity
         if(backGroundPath != null)
         {
             coverImageFile  = new File(backGroundPath);
@@ -223,7 +220,6 @@ public class RestClientFactory
         }
         else
             entity.addPart("user[cover_image]", new StringBody(params1.getString("cover_image")));
-
 
         if(profilePath != null)
         {
@@ -235,11 +231,11 @@ public class RestClientFactory
             entity.addPart("user[profile_image]", new StringBody(params1.getString("profile_image")));
 
         puts1.setEntity(entity);
-        puts.add(puts1);
+        putsList.add(puts1);
 
         System.out.println("puts1 entity complete");
 
-        /** Second post **/
+        /** Second put **/
         puts2   = new HttpPut(PUT_ENROLL_DATA + enrollId);
         params2 = getEnrollParams();
 
@@ -250,91 +246,10 @@ public class RestClientFactory
         puts2.setHeader("Accept", "application/json");
         puts2.setHeader("Content-Type", "application/json");
 
-
-        puts.add(puts2);
+        putsList.add(puts2);
 
         System.out.println("Done with posting user data, returning arraylist");
-        return puts;
+
+        return putsList;
     }
 }
-
-
-
-
-    /*backGround.compress(Bitmap.CompressFormat.JPEG, 75, bos);
-    profile.compress(Bitmap.CompressFormat.JPEG, 75, bos2);
-
-    data    = bos.toByteArray();
-    data2   = bos2.toByteArray();
-
-    bab     = new ByteArrayBody(data, "cover_pick");
-    bab2    = new ByteArrayBody(data2, "profile_pic");
-
-
-    entity.addPart("cover_image", bab);
-    entity.addPart("profile_image", bab2);
-    entity.addPart("first_name", new StringBody(name));
-    entity.addPart("major", new StringBody(major));
-    entity.addPart("year", new StringBody(year));
-    entity.addPart("about", new StringBody(about));
-    entity.addPart("classes", new StringBody(subjects));
-    post.setEntity(entity);*/
-
-
-    /*public static HttpGet getUserInfo(String email, String password)
-    {
-
-        HttpClient      httpClient;
-        HttpGet         request = null;
-        BufferedReader  reader;
-        String          encodedEmail;
-        StringBuilder   builder;
-        String          line;
-        JSONTokener     tokener;
-        JSONArray       finalResult = null;
-
-        try
-        {
-            encodedEmail    = email.replace(".", "_");
-            System.out.println("encoded email: " + encodedEmail);
-            builder         = new StringBuilder();
-
-            httpClient      = new DefaultHttpClient();
-            request         = new HttpGet();
-            request.setURI(new URI(GET_EXISTING_USER + encodedEmail));
-
-            request.setHeader("Accept", "application/json");
-            request.setHeader("Content-Type", "application/json");
-        }
-
-        catch (Exception e)
-        {
-            System.out.println("in URIE");
-        }
-
-        return request;
-
-            /**
-     *
-     * @return
-
-    private static List<NameValuePair> getUserParams()
-    {
-        System.out.println("get user params");
-        if (params == null)
-        {
-            params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("email", "-"));
-            params.add(new BasicNameValuePair("password", "-"));
-            params.add(new BasicNameValuePair("first_name", "-"));
-            params.add(new BasicNameValuePair("last_name", "-"));
-            params.add(new BasicNameValuePair("about", "-"));
-            params.add(new BasicNameValuePair("profile_image", "-"));
-            params.add(new BasicNameValuePair("cover_image", "-"));
-            params.add(new BasicNameValuePair("confirm", "false"));
-        }
-
-        return params;
-    }
-
-}*/

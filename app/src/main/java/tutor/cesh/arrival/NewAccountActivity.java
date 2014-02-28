@@ -19,9 +19,9 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
-import tutor.cesh.database.RestClientFactory;
+import tutor.cesh.rest.RestClientExecute;
+import tutor.cesh.rest.RestClientFactory;
 import tutor.cesh.R;
-import tutor.cesh.rest.RestClientPost;
 
 public class NewAccountActivity extends ActionBarActivity implements Arrival
 {
@@ -93,18 +93,14 @@ public class NewAccountActivity extends ActionBarActivity implements Arrival
 
         Log.d("","In validate in NewAccountActivity");
 
-        HttpPost    httpPost;
-        RestClientPost restClientPost;
-        Thread      thread;
+        HttpPost            httpPost;
+        RestClientExecute   rce;
 
         try
         {
-            httpPost        = RestClientFactory.postNewAccount(this.email, this.password);
-            restClientPost  = new RestClientPost(httpPost);
-            thread          = new Thread(restClientPost);
-
-            thread.setPriority(0x0000000a); //set this thread to a lower priority than the main UI thread
-            thread.start();
+            httpPost        = RestClientFactory.post(this.email, this.password);
+            rce             = new RestClientExecute(httpPost);
+            rce.start();
 
             Toast.makeText(this, "Account created", Toast.LENGTH_LONG).show();
             //Dialog box here! Let user know that an email has been sent

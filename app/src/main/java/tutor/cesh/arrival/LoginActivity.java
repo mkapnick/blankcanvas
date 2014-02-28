@@ -22,15 +22,18 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ConcurrentModificationException;
 import java.util.concurrent.ExecutionException;
 
 import tutor.cesh.database.DatabaseFacility;
-import tutor.cesh.database.RestClientFactory;
-import tutor.cesh.rest.AsyncAuthenticate;
+import tutor.cesh.rest.AsyncGet;
+import tutor.cesh.rest.RestClientExecute;
+import tutor.cesh.rest.RestClientFactory;
+import tutor.cesh.profile.StudentProfileActivity;
 import tutor.cesh.R;
-import tutor.cesh.profile.ProfileActivity;
 
-public class LoginActivity extends ActionBarActivity implements Arrival {
+public class LoginActivity extends ActionBarActivity implements Arrival
+{
 
     private String              email;
     private String              password;
@@ -143,30 +146,33 @@ public class LoginActivity extends ActionBarActivity implements Arrival {
     {
         Log.d("", "In validate in LoginActivity");
 
-        HttpGet                                             get;
-        AsyncTask<HttpGet, Integer, JSONArray>              async;
-        JSONArray                                           jsonArray;
-        Intent                                              intent;
-        JSONObject                                          object;
+        HttpGet             get;
+        AsyncTask <HttpGet, Integer, JSONObject> async;
+        JSONArray           jsonArray;
+        Intent              intent;
+        JSONObject          object;
 
         try
         {
-
             System.out.println("authenticating...");
-            get         = RestClientFactory.authenticateUser(email, password);
-            async       = new AsyncAuthenticate().execute(get);
-            jsonArray   = async.get();
+            get         = RestClientFactory.authenticate(email, password);
+            async       = new AsyncGet().execute(get);
+            object      = async.get();
 
-            if(jsonArray != null)
+            System.out.println("After jsonArray!");
+            System.out.println(object.toString());
+
+            if(object != null)
             {
-                object      = jsonArray.getJSONObject(0);
+                System.out.println("inside if");
+                //object      = jsonArray.getJSONObject(0);
                 if(object.getString("confirm").equalsIgnoreCase("true"))
                 {
-                    //user has access to the application !
                     System.out.println("user has access to app!");
-                    intent  = new Intent(this, ProfileActivity.class);
+                    intent  = new Intent(this, StudentProfileActivity.class);
                     intent.putExtra("id", object.getString("id"));
-                    intent.putExtra("enrollId", object.getString("enroll_id"));
+                    intent.putExtra("enrollId", "1");
+                    //intent.putExtra("tutorId", object.getString("tutor_id"));
                     intent.putExtra("email", object.getString("email"));
                     intent.putExtra("firstName", object.getString("first_name"));
                     intent.putExtra("lastName", object.getString("last_name"));
@@ -179,32 +185,35 @@ public class LoginActivity extends ActionBarActivity implements Arrival {
                 }
             }
             else
+            {
+                System.out.println("inside finish!");
                 finish();
-
+            }
         }
         catch(NetworkOnMainThreadException e)
         {
             System.out.println("Network on main thread exception");
         }
-        catch (InterruptedException e)
-        {
-            System.out.println("Interrupted exception");
-        }
-        catch (ExecutionException e)
-        {
-            System.out.println("Execution exception");
-        }
         catch (JSONException e)
         {
             System.out.println("JSON exception");
         }
-        catch(IOException ioe)
+        catch (NoSuchAlgorithmException e)
         {
-            System.out.println("IOEXc");
+            e.printStackTrace();
         }
-        catch(NoSuchAlgorithmException nse)
+        catch (IOException e)
         {
-            System.out.println("NSALExc");
+            e.printStackTrace();
+        }
+
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+        catch (ExecutionException e)
+        {
+            e.printStackTrace();
         }
     }
     /**

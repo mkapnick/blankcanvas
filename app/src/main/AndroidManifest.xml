@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".arrival.BeginningActivity"
+            android:name="tutor.cesh.arrival.BeginningActivity"
             android:label="@string/title_activity_beginning" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".arrival.LoginActivity"
+            android:name="tutor.cesh.arrival.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".arrival.NewAccountActivity"
+            android:name="tutor.cesh.arrival.NewAccountActivity"
             android:label="@string/title_activity_new_account" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,7 +36,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".profile.ProfileActivity"
+            android:name=".profile.StudentProfileActivity"
             android:label="@string/title_activity_profile" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,8 +44,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".profile.EditProfileActivity"
+            android:name=".profile.EditStudentProfileActivity"
             android:label="@string/title_activity_edit_profile" >
+        </activity>
+        <activity
+            android:name="tutor.cesh.profile.TutorProfileActivity"
+            android:label="@string/title_activity_tutor_profile" >
+        </activity>
+        <activity
+            android:name="tutor.cesh.profile.EditTutorProfileActivity"
+            android:label="@string/title_activity_edit_tutor_profile" >
         </activity>
     </application>
 

@@ -7,6 +7,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.BufferedReader;
@@ -15,46 +16,41 @@ import java.io.InputStreamReader;
 /**
  * Created by michaelk18 on 2/2/14.
  */
-public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONArray>
+public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
 {
     HttpGet     httpGet;
     HttpClient  httpClient;
 
     @Override
-    protected JSONArray doInBackground(HttpGet... httpGets)
+    protected JSONObject doInBackground(HttpGet... httpGets)
     {
 
         HttpResponse    response;
         BufferedReader  reader;
-        StringBuilder   builder;
-        JSONTokener     tokener;
-        JSONArray       finalResult;
+        String          json;
+        JSONObject      obj;
 
         this.httpGet    = httpGets[0];
         this.httpClient = new DefaultHttpClient();
-        finalResult     = null;
-        builder         = null;
-
+        obj             = null;
         try
         {
             System.out.println("httpGet: " + httpGet);
             response        = httpClient.execute(httpGet);
             System.out.println("after response!");
             reader          = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-            builder         = new StringBuilder();
-            builder.append(reader.readLine());
+            json            = reader.readLine();
+            json = json.replaceAll("\\[", "").replaceAll("\\]","");
 
-
-            tokener         = new JSONTokener(builder.toString());
-            finalResult     = new JSONArray(tokener);
-            System.out.println("After JSON array");
+            obj = new JSONObject(json);
 
         }
         catch(Exception e)
         {
-            System.out.println("Exception again");
+            System.out.println(" Inside AsyncGet Exception!");
+            e.printStackTrace();
         }
 
-        return finalResult;
+        return obj;
     }
 }
