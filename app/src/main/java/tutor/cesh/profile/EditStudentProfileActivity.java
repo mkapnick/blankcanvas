@@ -2,13 +2,15 @@ package tutor.cesh.profile;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,45 +20,57 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-import tutor.cesh.rest.AsyncGet;
 import tutor.cesh.rest.RestClientExecute;
 import tutor.cesh.rest.RestClientFactory;
 
 import tutor.cesh.R;
+import tutor.cesh.sampled.statik.BitMapOp;
 
 public class EditStudentProfileActivity extends Activity {
 
 
-    private boolean isProfPic = false;
-    private String  profilePicPath = null;
-    private String  backgroundPicPath = null;
+    private String  profileImagePath;
+    private String  coverImagePath;
     private Bundle  info;
+    private EditText        name, major, year, about, subjects, classes;
+    private ImageView       profileImageView, coverImageView;
+    private Bitmap          profileImage, coverImage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_profile);
+        setContentView(R.layout.activity_edit_student_profile);
 
-        if (savedInstanceState == null) {
+        /*if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
-        }
+        }*/
         this.info = getIntent().getExtras();
         System.out.println("inside edit profile activity!");
+
+        name                = (EditText)    findViewById(R.id.name);
+        major               = (EditText)    findViewById(R.id.major);
+        year                = (EditText)    findViewById(R.id.year);
+        about               = (EditText)    findViewById(R.id.about);
+        subjects            = (EditText)    findViewById(R.id.subjects);
+        classes             = (EditText)    findViewById(R.id.classes);
+        profileImageView    = (ImageView)   findViewById(R.id.profileImage);
+        coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
 
         try
         {
             setUpTextAreas();
+            //setUpImages();
         }
         catch (JSONException e)
         {
@@ -74,21 +88,11 @@ public class EditStudentProfileActivity extends Activity {
      */
     private void setUpTextAreas() throws JSONException, Exception
     {
-        EditText            name, major, year, about, subjects, classes;
-
-
-        name        = (EditText)    findViewById(R.id.name);
-        major       = (EditText)    findViewById(R.id.major);
-        year        = (EditText)    findViewById(R.id.year);
-        about       = (EditText)    findViewById(R.id.about);
-        subjects    = (EditText)    findViewById(R.id.subjects);
-        classes     = (EditText)    findViewById(R.id.classes);
 
         name.setText(info.getString("first_name"));
         major.setText(info.getString("major"));
         year.setText(info.getString("year"));
         about.setText(info.getString("about"));
-
 
     }
     @Override
@@ -97,44 +101,48 @@ public class EditStudentProfileActivity extends Activity {
         Uri             targetUri;
         Bitmap          bitMap;
         BitmapDrawable  drawable;
-        ImageView       image;
 
         System.out.println("on activity for result in edit profile");
         super.onActivityResult(requestCode, resultCode, data);
-        targetUri = data.getData();
 
-        if(isProfPic)
+        try
         {
-            image               = (ImageView) findViewById(R.id.profileImage);
-            profilePicPath      = targetUri.getPath();
-        }
-
-        else
-        {
-            image               = (ImageView) findViewById(R.id.profileBackgroundImage);
-            backgroundPicPath   = targetUri.getPath();
-        }
-
-        if (requestCode == 1)
-        {
-            if (resultCode == RESULT_OK)
+            //targetUri = Uri.parse(getRealPathFromURI(this, data.getData()));
+            if (requestCode == 1)
             {
-                try
+                System.out.println("request code is 1***********************************************************************");
+                profileImagePath    = data.getData().getPath();
+                if(profileImagePath != null)
                 {
-                    bitMap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
-                    //image.setImageBitmap(bitMap);
+                    profileImagePath = getRealPathFromURI(this, data.getData());
+                    System.out.println(profileImagePath);
+                    bitMap              = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()));
+                    bitMap              = BitMapOp.getResizedBitmap(bitMap, 75,75);
+                    profileImageView.setImageBitmap(bitMap);
+                    profileImage = bitMap;
+                }
+
+            }
+            else
+            {
+                System.out.println("request code is: " + requestCode);
+                //coverImagePath      = targetUri.getPath();
+                if(coverImagePath != null)
+                {
+                    bitMap = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()));
                     drawable = new BitmapDrawable(getResources(), bitMap);
-                    image.setBackground(drawable);
+                    coverImageView.setBackground(drawable);
+                    coverImage = bitMap;
                 }
-                catch (FileNotFoundException e)
-                {
-                    e.printStackTrace();
-                }
+
             }
         }
-
-        isProfPic       = false;
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
     }
+
     /**
      *
      * @param view
@@ -149,14 +157,13 @@ public class EditStudentProfileActivity extends Activity {
             case R.id.profileImage:
                 System.out.println("in profile image button");
                 intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                isProfPic= true;
                 startActivityForResult(intent, 1);
                 break;
 
             case R.id.profileBackgroundImage:
                 System.out.println("in profile background image button");
                 intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, 2);
                 break;
 
             case R.id.saveButton:
@@ -172,7 +179,6 @@ public class EditStudentProfileActivity extends Activity {
     private void saveUserProfile(View view)
     {
         System.out.println("in save user profile");
-        EditText            name, major, year, about, subjects;
         ArrayList<HttpPut>  puts;
         RestClientExecute   rce;
         String              id, enrollId;
@@ -180,20 +186,16 @@ public class EditStudentProfileActivity extends Activity {
         System.out.println("before bundle");
 
         id              = info.getString("id");
-        enrollId        = "1";//info.getString("enrollId");
+        System.out.println("id is.." + id);
+        enrollId        = info.getString("enrollId");
+        System.out.println("enroll id is.." + enrollId);
 
         System.out.println("after bundle");
-
-        name            = (EditText)    findViewById(R.id.name);
-        major           = (EditText)    findViewById(R.id.major);
-        year            = (EditText)    findViewById(R.id.year);
-        about           = (EditText)    findViewById(R.id.about);
-        subjects        = (EditText)    findViewById(R.id.classes);
 
         try
         {
             System.out.println("calling rest client factory!");
-            puts        = RestClientFactory.put(id, enrollId, backgroundPicPath, profilePicPath,
+            puts        = RestClientFactory.put(id, enrollId, coverImage, profileImagePath,
                     name.getText().toString(), major.getText().toString(),
                     year.getText().toString(), about.getText().toString(),
                     subjects.getText().toString());
@@ -204,7 +206,7 @@ public class EditStudentProfileActivity extends Activity {
                 rce.start();
             }
 
-            Toast.makeText(this, "Saved", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
             finish();
         }
         catch(Exception e)
@@ -234,6 +236,34 @@ public class EditStudentProfileActivity extends Activity {
     }
 
     /**
+     *
+     * @param context
+     * @param contentUri
+     * @return
+     */
+    private String getRealPathFromURI(Context context, Uri contentUri)
+    {
+        Cursor cursor;
+        int columnIndex;
+        cursor = null;
+        try
+        {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri,proj, null, null, null);
+            columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(columnIndex);
+        }
+        finally
+        {
+            if (cursor != null)
+            {
+                cursor.close();
+            }
+        }
+    }
+
+    /**
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
@@ -244,7 +274,7 @@ public class EditStudentProfileActivity extends Activity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_edit_student_profile, container, false);
             return rootView;
         }
     }

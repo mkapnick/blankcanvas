@@ -1,5 +1,7 @@
 package tutor.cesh.rest;
 
+import android.graphics.Bitmap;
+import android.os.Environment;
 import android.util.Base64;
 
 import org.apache.http.client.methods.HttpGet;
@@ -9,11 +11,13 @@ import org.apache.http.entity.StringEntity;
 
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -112,8 +116,8 @@ public class RestClientFactory
         if(enrollParams == null)
         {
             enrollParams = new JSONObject();
-            enrollParams.put("major", "major");
-            enrollParams.put("year", "year");
+            enrollParams.put("major", "");
+            enrollParams.put("year", "");
         }
         return enrollParams;
     }
@@ -128,9 +132,9 @@ public class RestClientFactory
         if (userParams == null)
         {
             userParams = new JSONObject();
-            userParams.put("first_name", "Name");
-            userParams.put("last_name", "Name");
-            userParams.put("about", "About");
+            userParams.put("first_name", "");
+            userParams.put("last_name", "");
+            userParams.put("about", "");
             userParams.put("profile_image", "");
             userParams.put("cover_image", "");
         }
@@ -178,8 +182,6 @@ public class RestClientFactory
     /**
      * Update information about a user
      *
-     * @param backGroundPath    File path to the user's background image
-     * @param profilePath       File path to the user's profile picture
      * @param name              user's name
      * @param major             user's major
      * @param year              year in school
@@ -189,7 +191,7 @@ public class RestClientFactory
      * @throws Exception
      */
     public static ArrayList<HttpPut> put( String id, String enrollId,
-                                          String backGroundPath, String profilePath,
+                                          Bitmap coverImage, String profileImagePath,
                                           String name, String major, String year,
                                           String about, String subjects) throws Exception
     {
@@ -201,8 +203,12 @@ public class RestClientFactory
         MultipartEntity         entity;
         File                    coverImageFile, profileImageFile;
         FileBody                cBody, pBody;
+        ByteArrayOutputStream   bos;
+        ByteArrayBody           bab;
+        byte []                 data;
 
         params1     = getUserParams();
+        bos         = new ByteArrayOutputStream();
         putsList    = new ArrayList<HttpPut>();
         puts1       = new HttpPut(PUT_USER + id);
         entity      = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -212,23 +218,32 @@ public class RestClientFactory
         entity.addPart("user[about]", new StringBody(about));
 
         // Add Images to the multipart entity
-        if(backGroundPath != null)
+        if(coverImage != null)
         {
-            coverImageFile  = new File(backGroundPath);
-            cBody           = new FileBody(coverImageFile, "image/jpeg");
-            entity.addPart("user[cover_image]", cBody);
+            //coverImageFile  = new File(backGroundPath);
+            //cBody           = new FileBody(coverImageFile, "image/jpeg");
+            //entity.addPart("user[cover_image]", cBody);
         }
         else
             entity.addPart("user[cover_image]", new StringBody(params1.getString("cover_image")));
 
-        if(profilePath != null)
+        if(profileImagePath != null)
         {
-            profileImageFile    = new File(profilePath);
-            pBody               = new FileBody(profileImageFile, "image/jpeg");
+            System.out.println("profile Image is not null!-------------------------------------");
+            //profileImage.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+            //data    = bos.toByteArray();
+            //bab     = new ByteArrayBody(data, "profileImage.jpg");
+
+            System.out.println(profileImagePath);
+            profileImageFile = new File(profileImagePath);
+            //profileImageFile    = new File(profilePath);
+            pBody               = new FileBody(profileImageFile, "image/jpg");
+            System.out.println("ok.. adding to entity...");
             entity.addPart("user[profile_image]", pBody);
         }
         else
             entity.addPart("user[profile_image]", new StringBody(params1.getString("profile_image")));
+
 
         puts1.setEntity(entity);
         putsList.add(puts1);

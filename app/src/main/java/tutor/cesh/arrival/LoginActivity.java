@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
@@ -79,23 +80,6 @@ public class LoginActivity extends ActionBarActivity implements Arrival
      */
     public void signUp(View view)
     {
-        System.out.println("IN SIGNUP!");
-        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n");
-
-
         Intent intent;
         intent = new Intent(this, NewAccountActivity.class);
         startActivity(intent);
@@ -115,21 +99,6 @@ public class LoginActivity extends ActionBarActivity implements Arrival
 
         this.email      = ((EditText) findViewById(R.id.emailTextView)).getText().toString();
         this.password   = ((EditText) findViewById(R.id.passwordTextView)).getText().toString();
-
-        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n" +
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n");
 
         System.out.println("Email entered is: " + this.email);
         System.out.println("Password entered is: " + this.password);
@@ -165,29 +134,33 @@ public class LoginActivity extends ActionBarActivity implements Arrival
             if(object != null)
             {
                 System.out.println("inside if");
-                //object      = jsonArray.getJSONObject(0);
                 if(object.getString("confirm").equalsIgnoreCase("true"))
                 {
                     System.out.println("user has access to app!");
                     intent  = new Intent(this, StudentProfileActivity.class);
                     intent.putExtra("id", object.getString("id"));
-                    intent.putExtra("enrollId", "1");
+                    intent.putExtra("enrollId", object.getString("enroll_id"));
                     //intent.putExtra("tutorId", object.getString("tutor_id"));
                     intent.putExtra("email", object.getString("email"));
                     intent.putExtra("firstName", object.getString("first_name"));
                     intent.putExtra("lastName", object.getString("last_name"));
                     intent.putExtra("about", object.getString("about"));
-                    intent.putExtra("profileImage", object.getString("profile_image"));
-                    intent.putExtra("coverImage", object.getString("cover_image"));
+                    intent.putExtra("profileImage", object.getString("profile_image_file_name"));
+                    intent.putExtra("coverImage", object.getString("cover_image_file_name"));
 
                     System.out.println("before starting intent");
                     startActivity(intent);
                 }
+                else
+                {
+                    Toast.makeText(this, "Confirm your Email!", Toast.LENGTH_SHORT).show();
+                    System.out.println("inside finish!");
+                }
             }
             else
             {
+                Toast.makeText(this, "Email or password incorrect", Toast.LENGTH_SHORT).show();
                 System.out.println("inside finish!");
-                finish();
             }
         }
         catch(NetworkOnMainThreadException e)
@@ -196,6 +169,7 @@ public class LoginActivity extends ActionBarActivity implements Arrival
         }
         catch (JSONException e)
         {
+            Toast.makeText(this, "Email or password incorrect", Toast.LENGTH_SHORT).show();
             System.out.println("JSON exception");
         }
         catch (NoSuchAlgorithmException e)

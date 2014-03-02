@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,24 +17,33 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import org.apache.http.client.methods.HttpGet;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import tutor.cesh.R;
-import tutor.cesh.rest.RestClientExecute;
 import tutor.cesh.rest.RestClientFactory;
 import tutor.cesh.rest.AsyncGet;
-import android.os.AsyncTask;
+import tutor.cesh.sampled.statik.BitMapOp;
+import tutor.cesh.sampled.statik.BitmapFactoryA;
 
-import java.io.FileNotFoundException;
+import android.os.AsyncTask;
+import android.widget.TextView;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 
 public class StudentProfileActivity extends Activity
 {
     private Bundle      info;
-    public  ImageButton  ib;
-    public  ImageView    iv;
+    public  ImageView   profileImageView, coverImageView;
+    EditText            name, major, year, about, subjects, classes;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,15 +51,23 @@ public class StudentProfileActivity extends Activity
         System.out.println("inside student Profile activity");
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_profile);
+        setContentView(R.layout.activity_student_profile);
+        name                = (EditText)    this.findViewById(R.id.name);
+        major               = (EditText)    this.findViewById(R.id.major);
+        year                = (EditText)    this.findViewById(R.id.year);
+        about               = (EditText)    this.findViewById(R.id.about);
+        subjects            = (EditText)    this.findViewById(R.id.subjects);
+        classes             = (EditText)    this.findViewById(R.id.classes);
+        profileImageView    = (ImageView)   findViewById(R.id.profileImage);
+        coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
 
         info = getIntent().getExtras();
 
-        if (savedInstanceState == null) {
+        /*if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
-        }
+        }*/
 
         try
         {
@@ -77,7 +93,7 @@ public class StudentProfileActivity extends Activity
             System.out.println("request code is 1!");
             try
             {
-                System.out.println("Result is ok!");
+                System.out.println("Setting up text areas");
                 setUpTextAreas();
             }
             catch (JSONException e)
@@ -100,19 +116,11 @@ public class StudentProfileActivity extends Activity
         HttpGet                                     get1, get2;
         AsyncTask<HttpGet, Integer, JSONObject>      async1, async2;
         JSONObject                                  obj1, obj2;
-        EditText                                    name, major, year, about, subjects, classes;
-
-        name        = (EditText)    findViewById(R.id.name);
-        major       = (EditText)    findViewById(R.id.major);
-        year        = (EditText)    findViewById(R.id.year);
-        about       = (EditText)    findViewById(R.id.about);
-        subjects    = (EditText)    findViewById(R.id.subjects);
-        classes     = (EditText)    findViewById(R.id.classes);
 
        // Query web server and get user's information
 
         get1        = RestClientFactory.get("users", info.getString("id"));
-        get2        = RestClientFactory.get("enrolls", info.getString("enroll_id"));
+        get2        = RestClientFactory.get("enrolls", info.getString("enrollId"));
 
         async1      = new AsyncGet().execute(get1);
         obj1        = async1.get();
@@ -120,20 +128,23 @@ public class StudentProfileActivity extends Activity
         async2      = new AsyncGet().execute(get2);
         obj2        = async2.get();
 
-        System.out.println("After gets");
+        System.out.println("After gets in setupTextAreas in StudentProfileActivity");
         System.out.println(obj1.getString("first_name"));
-        name.setText(obj1.getString("first_name"));
-        major.setText(obj2.getString("major"));
-        year.setText(obj2.getString("year"));
-        about.setText(obj1.getString("about"));
+        System.out.println("profile image is..." + obj1.get("profile_image_url"));
+        name.setText(obj1.getString("first_name"), TextView.BufferType.EDITABLE);
+        major.setText(obj2.getString("major"), TextView.BufferType.EDITABLE);
+        year.setText(obj2.getString("year"), TextView.BufferType.EDITABLE);
+        System.out.println("About is...: " + obj1.getString("about"));
+        about.setText(obj1.getString("about"), TextView.BufferType.EDITABLE);
+        //profileImageView.setImageBitmap(BitmapFactoryA.loadBitmap(obj1.getString("profile_image_url")));
 
         info.putString("first_name", name.getText().toString());
         info.putString("about", about.getText().toString());
         info.putString("year", year.getText().toString());
-        //info.putString("major", major.getText().toString());
+        info.putString("major", major.getText().toString());
+        //info.put("profileImage", ((BitmapDrawable) profileImageView.getDrawable()).getBitmap());
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -185,7 +196,7 @@ public class StudentProfileActivity extends Activity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_student_profile, container, false);
 
             return rootView;
         }
