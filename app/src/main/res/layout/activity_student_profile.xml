@@ -17,14 +17,12 @@
             android:id="@+id/profileBackgroundImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/brooklyn_bridge_blur"
             android:adjustViewBounds="true"/>
 
         <ImageView
             android:id="@+id/profileImage"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@drawable/circle"
             android:adjustViewBounds="true"
             android:layout_marginTop="100dp"
             android:layout_marginLeft="15dp"

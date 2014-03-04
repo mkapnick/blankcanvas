@@ -42,6 +42,7 @@ public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
             json            = reader.readLine();
             System.out.println(json);
             json = json.replaceAll("\\[", "").replaceAll("\\]","");
+            System.out.println("json is: " + json);
 
             obj = new JSONObject(json);
 

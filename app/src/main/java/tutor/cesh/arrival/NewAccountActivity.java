@@ -1,5 +1,7 @@
 package tutor.cesh.arrival;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.NetworkOnMainThreadException;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
@@ -73,13 +75,30 @@ public class NewAccountActivity extends ActionBarActivity implements Arrival
     {
         System.out.println("-- In validateArrival() --");
 
+        String extension;
+
         this.email      = ((EditText) findViewById(R.id.emailTextView)).getText().toString();
         this.password   = ((EditText) findViewById(R.id.passwordTextView)).getText().toString();
 
         System.out.println("Email entered is: " + this.email);
         System.out.println("Password entered is: " + this.password);
+        extension = this.email.substring(this.email.lastIndexOf('.') + 1);
+        System.out.println(extension);
 
-        validate();
+        if (this.email.length() > 0 )
+        {
+           if(this.password.length() > 0)
+           {
+               if(extension.equals("edu"))
+                   validate();
+               else
+                   Toast.makeText(this, "Email must be a .edu address", Toast.LENGTH_LONG).show();
+           }
+           else
+               Toast.makeText(this, "Enter a password!", Toast.LENGTH_LONG).show();
+        }
+        else
+            Toast.makeText(this, "Enter your .edu email!", Toast.LENGTH_LONG).show();
 
     }
 
@@ -91,7 +110,7 @@ public class NewAccountActivity extends ActionBarActivity implements Arrival
     private void validate()
     {
 
-        Log.d("","In validate in NewAccountActivity");
+        Log.d("", "In validate in NewAccountActivity");
 
         HttpPost            httpPost;
         RestClientExecute   rce;
@@ -103,8 +122,7 @@ public class NewAccountActivity extends ActionBarActivity implements Arrival
             rce.start();
 
             Toast.makeText(this, "Account created", Toast.LENGTH_LONG).show();
-            //Dialog box here! Let user know that an email has been sent
-            finish();
+            showUserDialog();
         }
         catch(IOException e)
         {
@@ -128,7 +146,23 @@ public class NewAccountActivity extends ActionBarActivity implements Arrival
     }
 
     /**
-     * A placeholder fragment containing a simple view.
+
+     */
+    private void showUserDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.on_create_new_account)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                });
+
+        builder.create().show();
+    }
+
+    /**
+    * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
 

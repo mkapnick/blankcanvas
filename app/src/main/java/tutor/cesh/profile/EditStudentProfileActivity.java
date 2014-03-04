@@ -8,7 +8,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+import tutor.cesh.rest.AsyncDownloader;
 import tutor.cesh.rest.RestClientExecute;
 import tutor.cesh.rest.RestClientFactory;
 
@@ -69,7 +72,7 @@ public class EditStudentProfileActivity extends Activity {
 
         try
         {
-            setUpTextAreas();
+            setUpUserInfo();
             //setUpImages();
         }
         catch (JSONException e)
@@ -86,13 +89,26 @@ public class EditStudentProfileActivity extends Activity {
     /**
      *
      */
-    private void setUpTextAreas() throws JSONException, Exception
+    private void setUpUserInfo() throws JSONException, Exception
     {
 
+        AsyncTask<Void, Integer, Bitmap>    asyncDownloader;
+        Drawable                            drawable;
         name.setText(info.getString("first_name"));
         major.setText(info.getString("major"));
         year.setText(info.getString("year"));
         about.setText(info.getString("about"));
+
+        System.out.println("profile image...");
+        asyncDownloader = new AsyncDownloader(info.getString("profileImage"), null,null).execute();
+        profileImageView.setImageBitmap(asyncDownloader.get());
+        System.out.println("done profile image...");
+
+        System.out.println("cover image...");
+        asyncDownloader = new AsyncDownloader(info.getString("coverImage"), null,null).execute();
+        drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
+        coverImageView.setBackground(drawable);
+        System.out.println("done cover image...");
 
     }
     @Override
@@ -126,7 +142,7 @@ public class EditStudentProfileActivity extends Activity {
             else
             {
                 System.out.println("request code is: " + requestCode);
-                //coverImagePath      = targetUri.getPath();
+                coverImagePath      = data.getData().getPath();
                 if(coverImagePath != null)
                 {
                     bitMap = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()));
@@ -195,7 +211,8 @@ public class EditStudentProfileActivity extends Activity {
         try
         {
             System.out.println("calling rest client factory!");
-            puts        = RestClientFactory.put(id, enrollId, coverImage, profileImagePath,
+            System.out.println("profileImagePath is: " + profileImagePath);
+            puts        = RestClientFactory.put(id, enrollId, coverImagePath, profileImagePath,
                     name.getText().toString(), major.getText().toString(),
                     year.getText().toString(), about.getText().toString(),
                     subjects.getText().toString());

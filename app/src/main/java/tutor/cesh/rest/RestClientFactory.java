@@ -32,12 +32,11 @@ import java.util.ArrayList;
  */
 public class RestClientFactory
 {
-    private static final String     POST_NEW_USER       = "http://protected-earth-9689.herokuapp.com/users";
+    private static final String     POST_NEW_USER       = "http://protected-earth-9689.herokuapp.com/users/";
     private static final String     DOMAIN              = "http://protected-earth-9689.herokuapp.com/";
     private static final String     PUT_USER            = "http://protected-earth-9689.herokuapp.com/users/";
-    private static final String     PUT_ENROLL_DATA    = "http://protected-earth-9689.herokuapp.com/enrolls/";
-    private static       JSONObject userParams;
-    private static       JSONObject enrollParams;
+    private static final String     PUT_ENROLL_DATA     = "http://protected-earth-9689.herokuapp.com/enrolls/";
+
 
     /**
      * Authorize that a user's email and password is
@@ -62,7 +61,7 @@ public class RestClientFactory
             System.out.println("inside authenticate user");
             email = email.replaceAll("\\.", "_");
             System.out.println(email);
-            httpGet = new HttpGet(new URI(DOMAIN));
+            httpGet = new HttpGet(new URI(DOMAIN +"/auth"));
             System.out.println("after httpPost");
             httpGet.setHeader("Authorization",  getB6Auth(email, password));
             httpGet.setHeader("Accept", "application/json");
@@ -108,42 +107,6 @@ public class RestClientFactory
     }
 
     /**
-     *
-     * @return
-     */
-    private static JSONObject getEnrollParams() throws JSONException
-    {
-        if(enrollParams == null)
-        {
-            enrollParams = new JSONObject();
-            enrollParams.put("major", "");
-            enrollParams.put("year", "");
-        }
-        return enrollParams;
-    }
-
-    /**
-     *
-     * @return
-     * @throws JSONException
-     */
-    private static JSONObject getUserParams() throws JSONException
-    {
-        if (userParams == null)
-        {
-            userParams = new JSONObject();
-            userParams.put("first_name", "");
-            userParams.put("last_name", "");
-            userParams.put("about", "");
-            userParams.put("profile_image", "");
-            userParams.put("cover_image", "");
-        }
-
-        return userParams;
-    }
-
-
-    /**
      * Create a new user with the given email and password
      *
      * @param email The user's email
@@ -158,13 +121,13 @@ public class RestClientFactory
 
     {
         System.out.println("Inside post in RestClientFactory");
-        System.out.println("posting new account)");
+        System.out.println("posting new account...");
 
         JSONObject              params;
         HttpPost                httpPost;
         StringEntity            entity;
         httpPost    = new HttpPost(POST_NEW_USER);
-        params      = getUserParams();
+        params      = new JSONObject();
 
         params.put("email", email);
         params.put("password", password);
@@ -191,68 +154,51 @@ public class RestClientFactory
      * @throws Exception
      */
     public static ArrayList<HttpPut> put( String id, String enrollId,
-                                          Bitmap coverImage, String profileImagePath,
+                                          String coverImagePath, String profileImagePath,
                                           String name, String major, String year,
                                           String about, String subjects) throws Exception
     {
-        System.out.println("updating user data !");
-
+        System.out.println("inside put!");
         JSONObject              params1, params2;
         ArrayList<HttpPut>      putsList;
         HttpPut                 puts1, puts2;
         MultipartEntity         entity;
         File                    coverImageFile, profileImageFile;
         FileBody                cBody, pBody;
-        ByteArrayOutputStream   bos;
-        ByteArrayBody           bab;
-        byte []                 data;
 
-        params1     = getUserParams();
-        bos         = new ByteArrayOutputStream();
         putsList    = new ArrayList<HttpPut>();
         puts1       = new HttpPut(PUT_USER + id);
         entity      = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
+        System.out.println("before adding to entity");
         entity.addPart("user[first_name]", new StringBody(name));
-        entity.addPart("user[last_name]", new StringBody("testing"));
+        entity.addPart("user[last_name]", new StringBody(" "));
         entity.addPart("user[about]", new StringBody(about));
 
-        // Add Images to the multipart entity
-        if(coverImage != null)
+        System.out.println("after......");
+
+        if(coverImagePath != null)
         {
-            //coverImageFile  = new File(backGroundPath);
-            //cBody           = new FileBody(coverImageFile, "image/jpeg");
-            //entity.addPart("user[cover_image]", cBody);
+            System.out.println("coverImagePath isnt null!");
+            coverImageFile  = new File(coverImagePath);
+            cBody           = new FileBody(coverImageFile, "image/jpeg");
+            entity.addPart("user[cover_image]", cBody);
         }
-        else
-            entity.addPart("user[cover_image]", new StringBody(params1.getString("cover_image")));
 
         if(profileImagePath != null)
         {
-            System.out.println("profile Image is not null!-------------------------------------");
-            //profileImage.compress(Bitmap.CompressFormat.JPEG, 50, bos);
-            //data    = bos.toByteArray();
-            //bab     = new ByteArrayBody(data, "profileImage.jpg");
-
-            System.out.println(profileImagePath);
+            System.out.println("profileImagePath isnt null!");
             profileImageFile = new File(profileImagePath);
-            //profileImageFile    = new File(profilePath);
             pBody               = new FileBody(profileImageFile, "image/jpg");
-            System.out.println("ok.. adding to entity...");
             entity.addPart("user[profile_image]", pBody);
         }
-        else
-            entity.addPart("user[profile_image]", new StringBody(params1.getString("profile_image")));
-
 
         puts1.setEntity(entity);
         putsList.add(puts1);
 
-        System.out.println("puts1 entity complete");
-
         /** Second put **/
         puts2   = new HttpPut(PUT_ENROLL_DATA + enrollId);
-        params2 = getEnrollParams();
+        params2 = new JSONObject();
 
         params2.put("major", major);
         params2.put("year", year);
@@ -263,7 +209,6 @@ public class RestClientFactory
 
         putsList.add(puts2);
 
-        System.out.println("Done with posting user data, returning arraylist");
 
         return putsList;
     }

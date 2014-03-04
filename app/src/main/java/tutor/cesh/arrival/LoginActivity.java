@@ -96,14 +96,29 @@ public class LoginActivity extends ActionBarActivity implements Arrival
         //Validate with tutor.app.database query
 
         System.out.println("-- In validateArrival() --");
-
+        String extension;
         this.email      = ((EditText) findViewById(R.id.emailTextView)).getText().toString();
         this.password   = ((EditText) findViewById(R.id.passwordTextView)).getText().toString();
 
         System.out.println("Email entered is: " + this.email);
         System.out.println("Password entered is: " + this.password);
 
-        validate();
+        extension = this.email.substring(this.email.lastIndexOf('.') + 1);
+
+        if (this.email.length() > 0 )
+        {
+            if(this.password.length() > 0)
+            {
+                if(extension.equals("edu"))
+                    validate();
+                else
+                    Toast.makeText(this, "Email must be a .edu address", Toast.LENGTH_LONG).show();
+            }
+            else
+                Toast.makeText(this, "Enter your password", Toast.LENGTH_LONG).show();
+        }
+        else
+            Toast.makeText(this, "Enter your .edu email", Toast.LENGTH_LONG).show();
 
     }
 
@@ -129,7 +144,7 @@ public class LoginActivity extends ActionBarActivity implements Arrival
             object      = async.get();
 
             System.out.println("After jsonArray!");
-            System.out.println(object.toString());
+            System.out.println(object);
 
             if(object != null)
             {
@@ -140,13 +155,13 @@ public class LoginActivity extends ActionBarActivity implements Arrival
                     intent  = new Intent(this, StudentProfileActivity.class);
                     intent.putExtra("id", object.getString("id"));
                     intent.putExtra("enrollId", object.getString("enroll_id"));
-                    //intent.putExtra("tutorId", object.getString("tutor_id"));
+                    intent.putExtra("tutorId", object.getString("tutor_id"));
                     intent.putExtra("email", object.getString("email"));
                     intent.putExtra("firstName", object.getString("first_name"));
                     intent.putExtra("lastName", object.getString("last_name"));
                     intent.putExtra("about", object.getString("about"));
-                    intent.putExtra("profileImage", object.getString("profile_image_file_name"));
-                    intent.putExtra("coverImage", object.getString("cover_image_file_name"));
+                    intent.putExtra("profileImage", object.getString("profile_image_url"));
+                    intent.putExtra("coverImage", object.getString("cover_image_url"));
 
                     System.out.println("before starting intent");
                     startActivity(intent);

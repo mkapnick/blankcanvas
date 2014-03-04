@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import tutor.cesh.R;
+import tutor.cesh.rest.AsyncDownloader;
 import tutor.cesh.rest.RestClientFactory;
 import tutor.cesh.rest.AsyncGet;
 import tutor.cesh.sampled.statik.BitMapOp;
@@ -40,10 +42,10 @@ import java.net.URL;
 
 public class StudentProfileActivity extends Activity
 {
-    private Bundle      info;
-    public  ImageView   profileImageView, coverImageView;
-    EditText            name, major, year, about, subjects, classes;
-
+    private Bundle          info;
+    private ImageView       profileImageView, coverImageView;
+    private EditText        name, major, year, about, subjects, classes;
+    private static String   DOMAIN = "http://protected-earth-9689.herokuapp.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -71,8 +73,8 @@ public class StudentProfileActivity extends Activity
 
         try
         {
-            System.out.println("Settign up text areas");
-            setUpTextAreas();
+            System.out.println("Setting up user info");
+            setUpUserInfo();
         }
         catch (JSONException e)
         {
@@ -94,7 +96,7 @@ public class StudentProfileActivity extends Activity
             try
             {
                 System.out.println("Setting up text areas");
-                setUpTextAreas();
+                setUpUserInfo();
             }
             catch (JSONException e)
             {
@@ -110,39 +112,51 @@ public class StudentProfileActivity extends Activity
     /**
      *
      */
-    private void setUpTextAreas() throws JSONException, Exception
+    private void setUpUserInfo() throws JSONException, Exception
     {
-        System.out.println("Inisde setUpTextAreas");
+        System.out.println("Inisde setUpUserInfo");
         HttpGet                                     get1, get2;
-        AsyncTask<HttpGet, Integer, JSONObject>      async1, async2;
+        AsyncTask<HttpGet, Integer, JSONObject>     asyncGet1, asyncGet2;
+        AsyncTask<Void, Integer, Bitmap>            asyncDownloader;
         JSONObject                                  obj1, obj2;
+        Drawable                                    drawable;
 
        // Query web server and get user's information
 
         get1        = RestClientFactory.get("users", info.getString("id"));
         get2        = RestClientFactory.get("enrolls", info.getString("enrollId"));
 
-        async1      = new AsyncGet().execute(get1);
-        obj1        = async1.get();
+        asyncGet1      = new AsyncGet().execute(get1);
+        obj1        = asyncGet1.get();
 
-        async2      = new AsyncGet().execute(get2);
-        obj2        = async2.get();
+        asyncGet2      = new AsyncGet().execute(get2);
+        obj2        = asyncGet2.get();
 
-        System.out.println("After gets in setupTextAreas in StudentProfileActivity");
-        System.out.println(obj1.getString("first_name"));
-        System.out.println("profile image is..." + obj1.get("profile_image_url"));
         name.setText(obj1.getString("first_name"), TextView.BufferType.EDITABLE);
         major.setText(obj2.getString("major"), TextView.BufferType.EDITABLE);
         year.setText(obj2.getString("year"), TextView.BufferType.EDITABLE);
-        System.out.println("About is...: " + obj1.getString("about"));
         about.setText(obj1.getString("about"), TextView.BufferType.EDITABLE);
-        //profileImageView.setImageBitmap(BitmapFactoryA.loadBitmap(obj1.getString("profile_image_url")));
 
         info.putString("first_name", name.getText().toString());
         info.putString("about", about.getText().toString());
         info.putString("year", year.getText().toString());
         info.putString("major", major.getText().toString());
-        //info.put("profileImage", ((BitmapDrawable) profileImageView.getDrawable()).getBitmap());
+
+
+        System.out.println("profile image...");
+        asyncDownloader = new AsyncDownloader(DOMAIN + obj1.getString("profile_image_url"), null, null).execute();
+        profileImageView.setImageBitmap(asyncDownloader.get());
+        info.putString("profileImage", DOMAIN + obj1.getString("profile_image_url"));
+        System.out.println("done profile image...");
+
+        System.out.println("cover image...");
+        asyncDownloader = new AsyncDownloader(DOMAIN + obj1.getString("cover_image_url"), null, null).execute();
+        drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
+        coverImageView.setBackground(drawable);
+        info.putString("coverImage", DOMAIN + obj1.getString("cover_image_url"));
+        System.out.println("done cover image...");
+
+        //((BitmapDrawable) profileImageView.getDrawable()).getBitmap());
 
     }
 
