@@ -5,10 +5,15 @@
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
-        android:showAsAction="always" />
+        android:showAsAction="ifRoom" />
 
-    <item android:id="@+id/action_edit_profile"
+    <item android:id="@+id/action_edit_student_profile"
         android:title="Edit"
         android:orderInCategory="1"
+        android:showAsAction="always" />
+
+    <item android:id="@+id/action_switch_profile"
+        android:title="Switch to Tutor"
+        android:orderInCategory="2"
         android:showAsAction="always" />
 </menu>

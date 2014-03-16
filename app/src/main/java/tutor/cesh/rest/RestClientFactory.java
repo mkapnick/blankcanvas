@@ -26,6 +26,8 @@ import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import tutor.cesh.database.DatabaseTable;
+
 
 /**
  * Created by michaelk18 on 2/2/14.
@@ -36,6 +38,7 @@ public class RestClientFactory
     private static final String     DOMAIN              = "http://protected-earth-9689.herokuapp.com/";
     private static final String     PUT_USER            = "http://protected-earth-9689.herokuapp.com/users/";
     private static final String     PUT_ENROLL_DATA     = "http://protected-earth-9689.herokuapp.com/enrolls/";
+    private static final String     PUT_TUTOR_DATA      = "http://protected-earth-9689.herokuapp.com/tutors/";
 
 
     /**
@@ -75,16 +78,30 @@ public class RestClientFactory
     }
 
     /**
-     * Get user info
+     * Get info from server
      *
      * @param id The user's id
      * @return HttpGet for the correct user
      */
-    public static HttpGet get(String table, String id)
+    public static HttpGet get(DatabaseTable table, String id)
     {
         HttpGet httpGet;
-        httpGet = new HttpGet(DOMAIN + table + "/" + id);
-        System.out.println("Getting: " + DOMAIN + table + "/" + id);
+        httpGet = null;
+        switch(table)
+        {
+            case USERS:
+                httpGet = new HttpGet(DOMAIN + "users" + "/" + id);
+                break;
+            case TUTORS:
+                httpGet = new HttpGet(DOMAIN + "tutors" + "/" + id);
+                break;
+
+            case ENROLLS:
+                httpGet = new HttpGet(DOMAIN + "enrolls" + "/" + id);
+
+                break;
+        }
+
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-Type", "application/json");
 
@@ -158,28 +175,45 @@ public class RestClientFactory
                                           String name, String major, String year,
                                           String about, String subjects) throws Exception
     {
-        System.out.println("inside put!");
+        return put (id, enrollId, coverImagePath, profileImagePath, name,
+                    major, year, about, subjects, null);
+    }
+
+    /**
+     * Update information about a user
+     *
+     * @param name              user's name
+     * @param major             user's major
+     * @param year              year in school
+     * @param about             short info about the user
+     * @param subjects          Subject's user teaches
+     * @return
+     * @throws Exception
+     */
+    public static ArrayList<HttpPut> put( String id, String enrollId,
+                                          String coverImagePath, String profileImagePath,
+                                          String name, String major, String year,
+                                          String about, String subjects, String rate) throws Exception
+    {
         JSONObject              params1, params2;
         ArrayList<HttpPut>      putsList;
-        HttpPut                 puts1, puts2;
+        HttpPut                 puts1, puts2, puts3;
         MultipartEntity         entity;
         File                    coverImageFile, profileImageFile;
         FileBody                cBody, pBody;
 
         putsList    = new ArrayList<HttpPut>();
+
+        /******************************** First put ********************************/
         puts1       = new HttpPut(PUT_USER + id);
         entity      = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
-        System.out.println("before adding to entity");
         entity.addPart("user[first_name]", new StringBody(name));
         entity.addPart("user[last_name]", new StringBody(" "));
         entity.addPart("user[about]", new StringBody(about));
 
-        System.out.println("after......");
-
         if(coverImagePath != null)
         {
-            System.out.println("coverImagePath isnt null!");
             coverImageFile  = new File(coverImagePath);
             cBody           = new FileBody(coverImageFile, "image/jpeg");
             entity.addPart("user[cover_image]", cBody);
@@ -187,28 +221,38 @@ public class RestClientFactory
 
         if(profileImagePath != null)
         {
-            System.out.println("profileImagePath isnt null!");
             profileImageFile = new File(profileImagePath);
-            pBody               = new FileBody(profileImageFile, "image/jpg");
+            pBody            = new FileBody(profileImageFile, "image/jpg");
             entity.addPart("user[profile_image]", pBody);
         }
 
         puts1.setEntity(entity);
-        putsList.add(puts1);
-
-        /** Second put **/
+        /******************************** Second put ********************************/
         puts2   = new HttpPut(PUT_ENROLL_DATA + enrollId);
-        params2 = new JSONObject();
+        params1 = new JSONObject();
 
-        params2.put("major", major);
-        params2.put("year", year);
+        params1.put("major", major);
+        params1.put("year", year);
 
-        puts2.setEntity(new StringEntity(params2.toString()));
+        puts2.setEntity(new StringEntity(params1.toString()));
         puts2.setHeader("Accept", "application/json");
         puts2.setHeader("Content-Type", "application/json");
 
+        putsList.add(puts1);
         putsList.add(puts2);
+        /******************************** Third put ********************************/
+        if (rate != null)
+        {
+            puts3       = new HttpPut(PUT_TUTOR_DATA + id);
+            params2     = new JSONObject();
+            params2.put("rate", rate);
+            puts3.setEntity(new StringEntity(params1.toString()));
+            puts3.setHeader("Accept", "application/json");
+            puts3.setHeader("Content-Type", "application/json");
 
+            putsList.add(puts3);
+
+        }
 
         return putsList;
     }

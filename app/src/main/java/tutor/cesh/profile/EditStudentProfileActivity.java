@@ -23,11 +23,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.apache.http.client.methods.HttpPut;
-import org.json.JSONException;
 
 import java.io.FileNotFoundException;
-import java.net.URI;
-import java.net.URISyntaxException;
+
 import java.util.ArrayList;
 
 import tutor.cesh.rest.AsyncDownloader;
@@ -37,15 +35,15 @@ import tutor.cesh.rest.RestClientFactory;
 import tutor.cesh.R;
 import tutor.cesh.sampled.statik.BitMapOp;
 
-public class EditStudentProfileActivity extends Activity {
+public class EditStudentProfileActivity extends Activity
+{
 
 
-    private String  profileImagePath;
-    private String  coverImagePath;
-    private Bundle  info;
-    private EditText        name, major, year, about, subjects, classes;
-    private ImageView       profileImageView, coverImageView;
-    private Bitmap          profileImage, coverImage;
+    private String      profileImagePath;
+    private String      coverImagePath;
+    private Bundle      info;
+    private EditText    name, major, year, about, classes;
+    private ImageView   profileImageView, coverImageView;
 
 
     @Override
@@ -59,96 +57,79 @@ public class EditStudentProfileActivity extends Activity {
                     .commit();
         }*/
         this.info = getIntent().getExtras();
-        System.out.println("inside edit profile activity!");
 
         name                = (EditText)    findViewById(R.id.name);
         major               = (EditText)    findViewById(R.id.major);
         year                = (EditText)    findViewById(R.id.year);
         about               = (EditText)    findViewById(R.id.about);
-        subjects            = (EditText)    findViewById(R.id.subjects);
         classes             = (EditText)    findViewById(R.id.classes);
         profileImageView    = (ImageView)   findViewById(R.id.profileImage);
         coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
 
-        try
-        {
-            setUpUserInfo();
-            //setUpImages();
-        }
-        catch (JSONException e)
-        {
-            System.out.println("Inside exception student profile activity");
-            e.printStackTrace();
-        }
-        catch(Exception ee)
-        {
-
-        }
+        setUpUserInfo();
     }
+
+
 
     /**
      *
      */
-    private void setUpUserInfo() throws JSONException, Exception
+    private void setUpUserInfo()
     {
 
         AsyncTask<Void, Integer, Bitmap>    asyncDownloader;
         Drawable                            drawable;
-        name.setText(info.getString("first_name"));
+
+        name.setText(info.getString("firstName"));
         major.setText(info.getString("major"));
         year.setText(info.getString("year"));
         about.setText(info.getString("about"));
 
-        System.out.println("profile image...");
-        asyncDownloader = new AsyncDownloader(info.getString("profileImage"), null,null).execute();
-        profileImageView.setImageBitmap(asyncDownloader.get());
-        System.out.println("done profile image...");
+        try
+        {
+            asyncDownloader = new AsyncDownloader(info.getString("profileImage"), null,null).execute();
+            profileImageView.setImageBitmap(asyncDownloader.get());
 
-        System.out.println("cover image...");
-        asyncDownloader = new AsyncDownloader(info.getString("coverImage"), null,null).execute();
-        drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
-        coverImageView.setBackground(drawable);
-        System.out.println("done cover image...");
+            asyncDownloader = new AsyncDownloader(info.getString("coverImage"), null,null).execute();
+            drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
+            coverImageView.setBackground(drawable);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
 
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Uri             targetUri;
         Bitmap          bitMap;
         BitmapDrawable  drawable;
 
-        System.out.println("on activity for result in edit profile");
         super.onActivityResult(requestCode, resultCode, data);
 
         try
         {
-            //targetUri = Uri.parse(getRealPathFromURI(this, data.getData()));
             if (requestCode == 1)
             {
-                System.out.println("request code is 1***********************************************************************");
                 profileImagePath    = data.getData().getPath();
                 if(profileImagePath != null)
                 {
                     profileImagePath = getRealPathFromURI(this, data.getData());
-                    System.out.println(profileImagePath);
                     bitMap              = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()));
                     bitMap              = BitMapOp.getResizedBitmap(bitMap, 75,75);
                     profileImageView.setImageBitmap(bitMap);
-                    profileImage = bitMap;
                 }
-
             }
             else
             {
-                System.out.println("request code is: " + requestCode);
                 coverImagePath      = data.getData().getPath();
                 if(coverImagePath != null)
                 {
+                    coverImagePath = getRealPathFromURI(this, data.getData());
                     bitMap = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()));
                     drawable = new BitmapDrawable(getResources(), bitMap);
                     coverImageView.setBackground(drawable);
-                    coverImage = bitMap;
                 }
 
             }
@@ -184,6 +165,10 @@ public class EditStudentProfileActivity extends Activity {
 
             case R.id.saveButton:
                 saveUserProfile(view);
+                intent = new Intent();
+                intent.putExtras(info);
+                setResult(RESULT_OK, intent);
+                finish();
                 break;
         }
     }
@@ -194,28 +179,20 @@ public class EditStudentProfileActivity extends Activity {
      */
     private void saveUserProfile(View view)
     {
-        System.out.println("in save user profile");
         ArrayList<HttpPut>  puts;
         RestClientExecute   rce;
         String              id, enrollId;
 
-        System.out.println("before bundle");
-
         id              = info.getString("id");
-        System.out.println("id is.." + id);
         enrollId        = info.getString("enrollId");
-        System.out.println("enroll id is.." + enrollId);
-
-        System.out.println("after bundle");
 
         try
         {
-            System.out.println("calling rest client factory!");
-            System.out.println("profileImagePath is: " + profileImagePath);
+            System.out.println("before puts/./.......");
             puts        = RestClientFactory.put(id, enrollId, coverImagePath, profileImagePath,
                     name.getText().toString(), major.getText().toString(),
                     year.getText().toString(), about.getText().toString(),
-                    subjects.getText().toString());
+                    "");
 
             for (int i =0; i < puts.size(); i++)
             {
@@ -223,12 +200,16 @@ public class EditStudentProfileActivity extends Activity {
                 rce.start();
             }
 
+            info.putString("firstName", name.getText().toString());
+            info.putString("about", about.getText().toString());
+            info.putString("year", year.getText().toString());
+            info.putString("major", major.getText().toString());
+
             Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
-            finish();
         }
         catch(Exception e)
         {
-            System.out.println("inside exception........edit student profile activity");
+            e.printStackTrace();
         }
     }
 

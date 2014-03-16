@@ -26,10 +26,10 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:adjustViewBounds="true"
-            android:layout_marginTop="100dp"
             android:layout_marginLeft="15dp"
-            android:onClick="onUserClick"
-            />
+            android:layout_alignTop="@+id/userInfo"
+            android:onClick="onUserClick"/>
+
 
         <TextView
             android:layout_width="match_parent"
@@ -51,9 +51,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="115dp"
-            android:layout_marginLeft="100dp">
+            android:layout_marginLeft="100dp"
+            android:id="@+id/userInfo">
 
-            <EditText
+
+        <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/name"
@@ -105,74 +107,60 @@
                 android:textCursorDrawable="@null"
                 android:alpha=".7"/>
         </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="300dp"
+        android:background="#F2F2F2"
+        android:alpha=".9">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:id="@+id/scrollview1"
+            android:fillViewport="true">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:id="@+id/about"
+                android:hint="About"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="14dp"
+                android:singleLine="false"
+                android:background="#00000000"
+                android:paddingLeft="10dp"
+                android:scrollbars="vertical"/>
+
+        </ScrollView>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:id="@+id/scrollview2"
+            android:layout_below="@id/scrollview1"
+            android:fillViewport="true">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:id="@+id/classes"
+                android:hint="Classes I'm taking"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="14dp"
+                android:singleLine="false"
+                android:background="#00000000"
+                android:paddingLeft="10dp"
+                android:scrollbars="vertical"/>
+
+        </ScrollView>
+
     </RelativeLayout>
 
 
-
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="#F2F2F2"
-        android:alpha=".9"
-        android:paddingTop="10dp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/bottom"
-            >
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/about"
-                android:hint="About"
-                android:height="60dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
-                android:textSize="14dp"
-                android:clickable="true"
-                android:editable="true"
-                android:singleLine="false"
-                android:maxLines="3"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:height="60dp"
-                android:id="@+id/subjects"
-                android:layout_below="@id/about"
-                android:hint="Subjects"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
-                android:paddingTop="10dp"
-                android:clickable="true"
-                android:editable="true"
-                android:textSize="14dp"
-                android:singleLine="false"
-                android:maxLines="3"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/classes"
-                android:layout_below="@id/subjects"
-                android:hint="Classes"
-                android:height="60dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
-                android:paddingTop="10dp"
-                android:clickable="true"
-                android:editable="true"
-                android:textSize="14dp"
-                android:singleLine="false"
-                android:maxLines="3"/>
-
-        </RelativeLayout>
-    </ScrollView>
-
 </RelativeLayout>
+    </RelativeLayout>
 

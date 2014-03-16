@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import tutor.cesh.R;
+import tutor.cesh.database.DatabaseTable;
 import tutor.cesh.rest.AsyncDownloader;
 import tutor.cesh.rest.RestClientFactory;
 import tutor.cesh.rest.AsyncGet;
@@ -44,7 +45,7 @@ public class StudentProfileActivity extends Activity
 {
     private Bundle          info;
     private ImageView       profileImageView, coverImageView;
-    private EditText        name, major, year, about, subjects, classes;
+    private EditText        name, major, year, about, classes;
     private static String   DOMAIN = "http://protected-earth-9689.herokuapp.com";
 
     @Override
@@ -58,106 +59,143 @@ public class StudentProfileActivity extends Activity
         major               = (EditText)    this.findViewById(R.id.major);
         year                = (EditText)    this.findViewById(R.id.year);
         about               = (EditText)    this.findViewById(R.id.about);
-        subjects            = (EditText)    this.findViewById(R.id.subjects);
         classes             = (EditText)    this.findViewById(R.id.classes);
         profileImageView    = (ImageView)   findViewById(R.id.profileImage);
         coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
 
         info = getIntent().getExtras();
+        info.putString("isRateSet", "false");
 
         /*if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }*/
+        setUpUserInfo();
 
-        try
-        {
-            System.out.println("Setting up user info");
-            setUpUserInfo();
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-        catch(Exception e)
-        {
-
-        }
     }
+
+    @Override
+    protected void onRestart()
+    {
+        setUpUserInfo();
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        System.out.println("In on activity for result");
+        Bundle      savedInstanceState;
+        JSONObject  json;
+
         if (requestCode == 1)
         {
-            System.out.println("request code is 1!");
-            try
+            if (resultCode == RESULT_OK)
             {
-                System.out.println("Setting up text areas");
-                setUpUserInfo();
-            }
-            catch (JSONException e)
-            {
-                e.printStackTrace();
-            }
-            catch(Exception ee)
-            {
+                savedInstanceState = data.getExtras();
+                info.putString("firstName", savedInstanceState.getString("firstName"));
+                info.putString("about", savedInstanceState.getString("about"));
+                info.putString("year", savedInstanceState.getString("year"));
+                info.putString("major", savedInstanceState.getString("major"));
+                info.putString("isRateSet", "true");
 
+                try
+                {
+                    json       = setUpGet(DatabaseTable.USERS, info.getString("userId"));
+                    info.putString("profileImage", DOMAIN + json.getString("profile_image_url"));
+                    info.putString("coverImage", DOMAIN + json.getString("cover_image_url"));
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
+        setUpUserInfo();
+    }
+
+
+    /**
+     * Helper method to set up an HttpGet request
+     * @param table
+     * @param id
+     * @return
+     */
+    private JSONObject setUpGet(DatabaseTable table, String id)
+    {
+        JSONObject                                  obj1;
+        HttpGet                                     get1;
+        AsyncTask<HttpGet, Integer, JSONObject>     asyncGet1;
+
+        obj1 = null;
+        try
+        {
+            get1        = RestClientFactory.get(table, id);
+            asyncGet1   = new AsyncGet().execute(get1);
+            obj1        = asyncGet1.get();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return obj1;
     }
 
     /**
      *
      */
-    private void setUpUserInfo() throws JSONException, Exception
+    private void setUpUserInfo()
     {
-        System.out.println("Inisde setUpUserInfo");
-        HttpGet                                     get1, get2;
-        AsyncTask<HttpGet, Integer, JSONObject>     asyncGet1, asyncGet2;
         AsyncTask<Void, Integer, Bitmap>            asyncDownloader;
-        JSONObject                                  obj1, obj2;
+        JSONObject                                  json1, json2;
         Drawable                                    drawable;
 
-       // Query web server and get user's information
+        try
+        {
+            if(info.getString("isRateSet").equalsIgnoreCase("false"))
+            {
+                json1 = setUpGet(DatabaseTable.USERS, info.getString("id"));
+                json2 = setUpGet(DatabaseTable.ENROLLS, info.getString("enrollId"));
 
-        get1        = RestClientFactory.get("users", info.getString("id"));
-        get2        = RestClientFactory.get("enrolls", info.getString("enrollId"));
+                name.setText(json1.getString("first_name"), TextView.BufferType.EDITABLE);
+                major.setText(json2.getString("major"), TextView.BufferType.EDITABLE);
+                year.setText(json2.getString("year"), TextView.BufferType.EDITABLE);
+                about.setText(json1.getString("about"), TextView.BufferType.EDITABLE);
 
-        asyncGet1      = new AsyncGet().execute(get1);
-        obj1        = asyncGet1.get();
+                asyncDownloader = new AsyncDownloader(DOMAIN + json1.getString("profile_image_url"), null, null).execute();
+                profileImageView.setImageBitmap(asyncDownloader.get());
 
-        asyncGet2      = new AsyncGet().execute(get2);
-        obj2        = asyncGet2.get();
+                asyncDownloader = new AsyncDownloader(DOMAIN + json1.getString("cover_image_url"), null, null).execute();
+                drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
+                coverImageView.setBackground(drawable);
 
-        name.setText(obj1.getString("first_name"), TextView.BufferType.EDITABLE);
-        major.setText(obj2.getString("major"), TextView.BufferType.EDITABLE);
-        year.setText(obj2.getString("year"), TextView.BufferType.EDITABLE);
-        about.setText(obj1.getString("about"), TextView.BufferType.EDITABLE);
+                info.putString("firstName", name.getText().toString());
+                info.putString("about", about.getText().toString());
+                info.putString("year", year.getText().toString());
+                info.putString("major", major.getText().toString());
+                info.putString("profileImage", DOMAIN + json1.getString("profile_image_url"));
+                info.putString("coverImage", DOMAIN + json1.getString("cover_image_url"));
+            }
+            else
+            {
+                name.setText(info.getString("firstName"), TextView.BufferType.EDITABLE);
+                major.setText(info.getString("major"), TextView.BufferType.EDITABLE);
+                year.setText(info.getString("year"), TextView.BufferType.EDITABLE);
+                about.setText(info.getString("about"), TextView.BufferType.EDITABLE);
 
-        info.putString("first_name", name.getText().toString());
-        info.putString("about", about.getText().toString());
-        info.putString("year", year.getText().toString());
-        info.putString("major", major.getText().toString());
+                asyncDownloader = new AsyncDownloader(info.getString("profileImage"), null, null).execute();
+                profileImageView.setImageBitmap(asyncDownloader.get());
 
-
-        System.out.println("profile image...");
-        asyncDownloader = new AsyncDownloader(DOMAIN + obj1.getString("profile_image_url"), null, null).execute();
-        profileImageView.setImageBitmap(asyncDownloader.get());
-        info.putString("profileImage", DOMAIN + obj1.getString("profile_image_url"));
-        System.out.println("done profile image...");
-
-        System.out.println("cover image...");
-        asyncDownloader = new AsyncDownloader(DOMAIN + obj1.getString("cover_image_url"), null, null).execute();
-        drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
-        coverImageView.setBackground(drawable);
-        info.putString("coverImage", DOMAIN + obj1.getString("cover_image_url"));
-        System.out.println("done cover image...");
-
-        //((BitmapDrawable) profileImageView.getDrawable()).getBitmap());
-
+                asyncDownloader = new AsyncDownloader(info.getString("coverImage"), null, null).execute();
+                drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
+                coverImageView.setBackground(drawable);
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -165,7 +203,7 @@ public class StudentProfileActivity extends Activity
         
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.profile, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -179,20 +217,26 @@ public class StudentProfileActivity extends Activity
 
         id  = item.getItemId();
 
-
         if (id == R.id.action_settings)
         {
             return true;
         }
 
-        if(id == R.id.action_edit_profile)
+        else if(id == R.id.action_edit_student_profile)
         {
-            //start new intent and call editprofile
-            System.out.println("before starting intent");
-            Bundle bundle;
             intent = new Intent(this, EditStudentProfileActivity.class);
             intent.putExtras(info);
             startActivityForResult(intent, 1);
+        }
+
+        else if(id == R.id.action_switch_profile)
+        {
+            System.out.println("calling tutor profile activity...");
+            intent = new Intent(this, TutorProfileActivity.class);
+            System.out.println(info.get("tutorId"));
+            intent.putExtras(info);
+            startActivity(intent);
+            finish();
         }
 
 
