@@ -1,166 +1,162 @@
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent"
-    android:id="@+id/container"
-    tools:context="tutor.cesh.profile.StudentProfileActivity">
+    android:layout_height="match_parent">
 
-
-    <RelativeLayout
-        android:id="@+id/top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/scroll"
-        android:layout_alignParentTop="true">
-
-        <ImageView
-            android:id="@+id/profileBackgroundImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            />
-
-        <ImageView
-            android:id="@+id/profileImage"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:adjustViewBounds="true"
-            android:layout_marginLeft="15dp"
-            android:layout_alignTop="@+id/userInfo"
-            android:onClick="onUserClick"/>
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Done"
-            android:id="@+id/saveButton"
-            android:layout_alignParentRight="true"
-            android:paddingRight="20dp"
-            android:textColor="@color/white"
-            android:clickable="true"
-            android:onClick="onUserClick"
-            android:background="#403E3E"
-            android:paddingBottom="10dp"
-            android:gravity="right"
-            android:paddingTop="5dp"
-            />
         <RelativeLayout
+            android:id="@+id/top"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="115dp"
-            android:layout_marginLeft="100dp"
-            android:id="@+id/userInfo">
+            android:layout_above="@+id/scroll"
+            android:layout_alignParentTop="true">
 
-
-        <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/name"
-                android:hint="Name"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:gravity="left"
-                android:clickable="true"
-                android:editable="true"
-                android:textSize="25sp"
-                android:background="#000000"
-                android:maxLines="2"
-                android:textCursorDrawable="@null"
-                android:alpha=".7"
+            <ImageView
+                android:id="@+id/profileBackgroundImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
                 />
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/major"
-                android:hint="Major"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:textSize="10sp"
-                android:gravity="left"
-                android:clickable="true"
-                android:editable="true"
-                android:layout_marginTop="15dp"
-                android:maxWidth="200dp"
-                android:background="#000000"
-                android:layout_below="@+id/name"
-                android:textCursorDrawable="@null"
-                android:alpha=".7"/>
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:adjustViewBounds="true"
+                android:layout_marginLeft="15dp"
+                android:layout_alignTop="@+id/userInfo"
+                android:onClick="onUserClick"/>
 
-            <EditText
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Done"
+                android:id="@+id/saveButton"
+                android:layout_alignParentRight="true"
+                android:paddingRight="20dp"
+                android:textColor="@color/white"
+                android:clickable="true"
+                android:onClick="onUserClick"
+                android:background="#403E3E"
+                android:paddingBottom="10dp"
+                android:gravity="right"
+                android:paddingTop="5dp"
+                />
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/year"
-                android:hint="Year"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:clickable="true"
-                android:textSize="10sp"
-                android:editable="true"
-                android:gravity="left"
-                android:background="#000000"
-                android:maxWidth="200dp"
-                android:layout_below="@+id/major"
-                android:textCursorDrawable="@null"
-                android:alpha=".7"/>
+                android:layout_marginTop="115dp"
+                android:layout_marginLeft="100dp"
+                android:id="@+id/userInfo">
+
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/name"
+                    android:hint="Name"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:gravity="left"
+                    android:clickable="true"
+                    android:editable="true"
+                    android:textSize="25sp"
+                    android:background="#000000"
+                    android:maxLines="2"
+                    android:textCursorDrawable="@null"
+                    android:alpha=".7"
+                        />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/major"
+                    android:hint="Major"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:textSize="10sp"
+                    android:gravity="left"
+                    android:clickable="true"
+                    android:editable="true"
+                    android:layout_marginTop="15dp"
+                    android:maxWidth="200dp"
+                    android:background="#000000"
+                    android:layout_below="@+id/name"
+                    android:textCursorDrawable="@null"
+                    android:alpha=".7"/>
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/year"
+                    android:hint="Year"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:clickable="true"
+                    android:textSize="10sp"
+                    android:editable="true"
+                    android:gravity="left"
+                    android:background="#000000"
+                    android:maxWidth="200dp"
+                    android:layout_below="@+id/major"
+                    android:textCursorDrawable="@null"
+                    android:alpha=".7"/>
+            </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="300dp"
+            android:background="#F2F2F2"
+            android:alpha=".9">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/scrollview1"
+                android:fillViewport="true">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:id="@+id/about"
+                    android:hint="About"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="14dp"
+                    android:singleLine="false"
+                    android:paddingLeft="10dp"
+                    android:scrollbars="vertical"/>
+
+            </ScrollView>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/scrollview2"
+                android:layout_below="@id/scrollview1"
+                android:fillViewport="true">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:id="@+id/classes"
+                    android:hint="Classes I'm taking"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="14dp"
+                    android:singleLine="false"
+                    android:paddingLeft="10dp"
+                    android:scrollbars="vertical"/>
+
+            </ScrollView>
         </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="300dp"
-        android:background="#F2F2F2"
-        android:alpha=".9">
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:id="@+id/scrollview1"
-            android:fillViewport="true">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:id="@+id/about"
-                android:hint="About"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
-                android:textSize="14dp"
-                android:singleLine="false"
-                android:background="#00000000"
-                android:paddingLeft="10dp"
-                android:scrollbars="vertical"/>
-
-        </ScrollView>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:id="@+id/scrollview2"
-            android:layout_below="@id/scrollview1"
-            android:fillViewport="true">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:id="@+id/classes"
-                android:hint="Classes I'm taking"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
-                android:textSize="14dp"
-                android:singleLine="false"
-                android:background="#00000000"
-                android:paddingLeft="10dp"
-                android:scrollbars="vertical"/>
-
-        </ScrollView>
-
     </RelativeLayout>
 
+</android.support.v4.widget.DrawerLayout>
 
-</RelativeLayout>
-    </RelativeLayout>
 

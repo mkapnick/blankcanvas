@@ -46,6 +46,7 @@ public class EditStudentProfileActivity extends Activity
     private ImageView   profileImageView, coverImageView;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -20,5 +20,15 @@
     <string name="title_activity_tutor_profile">TutorProfileActivity</string>
     <string name="title_activity_edit_tutor_profile">EditTutorProfileActivity</string>
     <string name="on_create_new_account">Thanks for creating an account with BlankCanvas! We just sent a confirmation link to the email you provided. Click that link and you\'ll be able to login and get started. </string>
+    <string-array name="drawable_list_items">
+        <item>PROFILE </item>
+        <item>SWITCH TO TUTOR</item>
+        <item>OPEN TUTOR SESSIONS</item>
+    </string-array>
 
+    <string-array name="drawable_list_items_tutor">
+        <item>PROFILE </item>
+        <item>SWITCH TO STUDENT</item>
+        <item>OPEN TUTOR SESSIONS</item>
+    </string-array>
 </resources>

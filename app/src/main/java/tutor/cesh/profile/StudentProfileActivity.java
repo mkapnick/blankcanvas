@@ -4,21 +4,21 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import org.apache.http.client.methods.HttpGet;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import tutor.cesh.R;
@@ -26,19 +26,12 @@ import tutor.cesh.database.DatabaseTable;
 import tutor.cesh.rest.AsyncDownloader;
 import tutor.cesh.rest.RestClientFactory;
 import tutor.cesh.rest.AsyncGet;
-import tutor.cesh.sampled.statik.BitMapOp;
-import tutor.cesh.sampled.statik.BitmapFactoryA;
+
 
 import android.os.AsyncTask;
+import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 
 public class StudentProfileActivity extends Activity
@@ -46,22 +39,30 @@ public class StudentProfileActivity extends Activity
     private Bundle          info;
     private ImageView       profileImageView, coverImageView;
     private EditText        name, major, year, about, classes;
+    private DrawerLayout    drawerLayout;
+    private ListView        listView;
     private static String   DOMAIN = "http://protected-earth-9689.herokuapp.com";
+    private String []       listViewTitles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        System.out.println("inside student Profile activity");
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_profile);
-        name                = (EditText)    this.findViewById(R.id.name);
-        major               = (EditText)    this.findViewById(R.id.major);
-        year                = (EditText)    this.findViewById(R.id.year);
-        about               = (EditText)    this.findViewById(R.id.about);
-        classes             = (EditText)    this.findViewById(R.id.classes);
+
+        name                = (EditText)    findViewById(R.id.name);
+        major               = (EditText)    findViewById(R.id.major);
+        year                = (EditText)    findViewById(R.id.year);
+        about               = (EditText)    findViewById(R.id.about);
+        classes             = (EditText)    findViewById(R.id.classes);
         profileImageView    = (ImageView)   findViewById(R.id.profileImage);
         coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
+        drawerLayout        = (DrawerLayout)findViewById(R.id.drawer_layout);
+        listView            = (ListView)    findViewById(R.id.left_drawer);
+
+        listViewTitles = getResources().getStringArray(R.array.drawable_list_items);
+        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listViewTitles));
+        listView.setOnItemClickListener(new DrawerItemClickListener());
 
         info = getIntent().getExtras();
         info.putString("isRateSet", "false");
@@ -209,38 +210,67 @@ public class StudentProfileActivity extends Activity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int     id;
-        Intent  intent;
+        int position, id;
 
-        id  = item.getItemId();
+        id          = item.getItemId();
+        position    = -1;
 
         if (id == R.id.action_settings)
-        {
             return true;
-        }
-
         else if(id == R.id.action_edit_student_profile)
+            position = -100;
+        else if(id == R.id.action_switch_profile)
+            position = 1;
+
+
+        onOptionsItemSelected(position);
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    /**
+     * Responding to clicks from the Action Bar and from
+     * the drawer layout
+     *
+     * @param position The position in the listViewTitles array
+     */
+    private void onOptionsItemSelected(int position)
+    {
+        Intent  intent;
+
+        if(position == -100)
         {
             intent = new Intent(this, EditStudentProfileActivity.class);
             intent.putExtras(info);
             startActivityForResult(intent, 1);
         }
 
-        else if(id == R.id.action_switch_profile)
+        else if(position == 1)
         {
-            System.out.println("calling tutor profile activity...");
+            drawerLayout.closeDrawer(listView);
             intent = new Intent(this, TutorProfileActivity.class);
-            System.out.println(info.get("tutorId"));
             intent.putExtras(info);
             startActivity(intent);
             finish();
         }
+    }
 
-
-        return super.onOptionsItemSelected(item);
+    /**
+     * A private class responsible for handling click events on the
+     * DrawableLayout
+     *
+     * @author Michael Kapnick
+     * @version v1
+     */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener
+    {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id)
+        {
+            System.out.println("on item click!");
+            listView.setItemChecked(position, true);
+            onOptionsItemSelected(position);
+        }
     }
 
     /**

@@ -7,10 +7,15 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.apache.http.client.methods.HttpGet;
@@ -29,6 +34,9 @@ public class TutorProfileActivity extends Activity {
     private ImageView       profileImageView, coverImageView;
     private EditText        name, major, year, about, classes, rate;
     private static String   DOMAIN = "http://protected-earth-9689.herokuapp.com";
+    private DrawerLayout    drawerLayout;
+    private ListView        listView;
+    private String []       listViewTitles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -44,6 +52,13 @@ public class TutorProfileActivity extends Activity {
         rate                = (EditText)    this.findViewById(R.id.rate);
         profileImageView    = (ImageView)   findViewById(R.id.profileImage);
         coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
+        drawerLayout        = (DrawerLayout)findViewById(R.id.drawer_layout_tutor);
+        listView            = (ListView)    findViewById(R.id.left_drawer_tutor);
+
+
+        listViewTitles = getResources().getStringArray(R.array.drawable_list_items_tutor);
+        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listViewTitles));
+        listView.setOnItemClickListener(new DrawerItemClickListener());
 
         info = getIntent().getExtras();
         info.putString("isRateSet", "false");
@@ -139,40 +154,26 @@ public class TutorProfileActivity extends Activity {
             year.setText(info.getString("year"), TextView.BufferType.EDITABLE);
             about.setText(info.getString("about"), TextView.BufferType.EDITABLE);
 
-            System.out.println("here 2");
-
             if(info.getString("isRateSet").equalsIgnoreCase("false"))
             {
-                System.out.println("here 3");
-
                 json = setUpGet(DatabaseTable.TUTORS, info.getString("tutorId"));
-                System.out.println(json);
                 rate.setText(json.getString("rate"), TextView.BufferType.EDITABLE);
             }
             else
             {
-                System.out.println("here 4");
-
                 rate.setText(info.getString("rate"), TextView.BufferType.EDITABLE);
             }
-
-            System.out.println("here 5");
 
             asyncDownloader = new AsyncDownloader(info.getString("profileImage"), null, null).execute();
             profileImageView.setImageBitmap(asyncDownloader.get());
 
-            System.out.println("here 6");
-
             asyncDownloader = new AsyncDownloader(info.getString("coverImage"), null, null).execute();
             drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
             coverImageView.setBackground(drawable);
-
-            System.out.println("here 7");
-
         }
         catch(Exception e)
         {
-            System.out.println("Exception@!");
+            System.out.println("Exception!");
             e.printStackTrace();
         }
     }
@@ -188,36 +189,65 @@ public class TutorProfileActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int     id;
-        Intent  intent;
+        int position, id;
 
-        id  = item.getItemId();
-
+        id          = item.getItemId();
+        position    = -1;
 
         if (id == R.id.action_settings)
-        {
             return true;
-        }
+        else if(id == R.id.action_edit_student_profile)
+            position = -100;
+        else if(id == R.id.action_switch_profile)
+            position = 1;
 
-        else if(id == R.id.action_edit_tutor_profile)
+        onOptionsItemSelected(position);
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Responding to clicks from the Action Bar and from
+     * the drawer layout
+     *
+     * @param position The position in the listViewTitles array
+     */
+    private void onOptionsItemSelected(int position)
+    {
+        Intent  intent;
+
+        if(position == -100)
         {
-            intent = new Intent(this, EditTutorProfileActivity.class);
+            intent = new Intent(this, EditStudentProfileActivity.class);
             intent.putExtras(info);
             startActivityForResult(intent, 1);
         }
 
-        else if (id == R.id.action_switch_profile)
+        else if(position == 1)
         {
+            drawerLayout.closeDrawer(listView);
             intent = new Intent(this, StudentProfileActivity.class);
             intent.putExtras(info);
             startActivity(intent);
             finish();
         }
+    }
 
-        return super.onOptionsItemSelected(item);
+    /**
+     * A private class responsible for handling click events on the
+     * DrawableLayout
+     *
+     * @author Michael Kapnick
+     * @version v1
+     */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener
+    {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id)
+        {
+            System.out.println("on item click!");
+            listView.setItemChecked(position, true);
+            onOptionsItemSelected(position);
+        }
     }
 
 }
