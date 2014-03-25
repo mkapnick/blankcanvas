@@ -169,7 +169,7 @@
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="60dp"
                 android:id="@+id/classes"
                 android:hint="Classes I'm taking"
                 android:textColor="@color/black"
