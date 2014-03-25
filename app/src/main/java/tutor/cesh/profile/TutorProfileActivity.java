@@ -19,7 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.apache.http.client.methods.HttpGet;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import tutor.cesh.R;
@@ -196,7 +195,7 @@ public class TutorProfileActivity extends Activity {
 
         if (id == R.id.action_settings)
             return true;
-        else if(id == R.id.action_edit_student_profile)
+        else if(id == R.id.action_edit_tutor_profile)
             position = -100;
         else if(id == R.id.action_switch_profile)
             position = 1;
@@ -217,7 +216,7 @@ public class TutorProfileActivity extends Activity {
 
         if(position == -100)
         {
-            intent = new Intent(this, EditStudentProfileActivity.class);
+            intent = new Intent(this, EditTutorProfileActivity.class);
             intent.putExtras(info);
             startActivityForResult(intent, 1);
         }
