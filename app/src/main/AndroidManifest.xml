@@ -46,7 +46,8 @@
         </activity>
         <activity
             android:name=".profile.EditStudentProfileActivity"
-            android:label="@string/title_activity_edit_profile" >
+            android:label="@string/title_activity_edit_profile">
+
         </activity>
         <activity
             android:name="tutor.cesh.profile.TutorProfileActivity"
@@ -56,6 +57,7 @@
             android:name="tutor.cesh.profile.EditTutorProfileActivity"
             android:label="@string/title_activity_edit_tutor_profile" >
         </activity>
+
     </application>
 
 </manifest>

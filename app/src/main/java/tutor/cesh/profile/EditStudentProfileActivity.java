@@ -25,26 +25,24 @@ import android.widget.Toast;
 import org.apache.http.client.methods.HttpPut;
 
 import java.io.FileNotFoundException;
-
 import java.util.ArrayList;
 
+import tutor.cesh.R;
 import tutor.cesh.rest.AsyncDownloader;
 import tutor.cesh.rest.RestClientExecute;
 import tutor.cesh.rest.RestClientFactory;
-
-import tutor.cesh.R;
 import tutor.cesh.sampled.statik.BitMapOp;
 
 public class EditStudentProfileActivity extends Activity
 {
 
 
-    private String      profileImagePath;
-    private String      coverImagePath;
+    private String      profileImagePath, coverImagePath;
+    private EditText [] editTextsArray;
     private Bundle      info;
-    private EditText    name, major, year, about, classes;
+    private EditText    name, major, year, about,   classes;
     private ImageView   profileImageView, coverImageView;
-
+    private final int   NUM_EDIT_TEXTS = 10;
 
 
     @Override
@@ -59,19 +57,39 @@ public class EditStudentProfileActivity extends Activity
         }*/
         this.info = getIntent().getExtras();
 
-        name                = (EditText)    findViewById(R.id.name);
-        major               = (EditText)    findViewById(R.id.major);
-        year                = (EditText)    findViewById(R.id.year);
-        about               = (EditText)    findViewById(R.id.about);
-        classes             = (EditText)    findViewById(R.id.classes);
-        profileImageView    = (ImageView)   findViewById(R.id.profileImage);
-        coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
-
+        initializeUI();
+        initializeEditTexts();
         setUpUserInfo();
     }
 
 
+    /**
+     * Initialize main parts of the UI
+     *
+     */
+    private void initializeUI()
+    {
+        name                = (EditText)    findViewById(R.id.name);
+        major               = (EditText)    findViewById(R.id.major);
+        year                = (EditText)    findViewById(R.id.year);
+        about               = (EditText)    findViewById(R.id.about);
+        profileImageView    = (ImageView)   findViewById(R.id.profileImage);
+        coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
+    }
+    /**
+     * Initialize edit texts for entering classes in UI
+     *
+     */
+    private void initializeEditTexts()
+    {
+        GenericTextWatcher  textWatcher;
 
+        classes             = (EditText)    findViewById(R.id.classes);
+
+
+        textWatcher = GenericTextWatcher.getInstance(getApplicationContext(), classes);
+        classes.addTextChangedListener(textWatcher);
+    }
     /**
      *
      */
