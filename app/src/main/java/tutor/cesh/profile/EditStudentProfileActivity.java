@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,9 +21,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.client.methods.HttpPut;
+import org.json.JSONArray;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -37,12 +40,11 @@ public class EditStudentProfileActivity extends Activity
 {
 
 
-    private String      profileImagePath, coverImagePath;
-    private EditText [] editTextsArray;
-    private Bundle      info;
-    private EditText    name, major, year, about,   classes;
-    private ImageView   profileImageView, coverImageView;
-    private final int   NUM_EDIT_TEXTS = 10;
+    private String              profileImagePath, coverImagePath;
+    private Bundle              info;
+    private EditText            name, major, year, about,   classes;
+    private ImageView           profileImageView, coverImageView;
+    private GenericTextWatcher  textWatcher;
 
 
     @Override
@@ -58,7 +60,6 @@ public class EditStudentProfileActivity extends Activity
         this.info = getIntent().getExtras();
 
         initializeUI();
-        initializeEditTexts();
         setUpUserInfo();
     }
 
@@ -73,32 +74,33 @@ public class EditStudentProfileActivity extends Activity
         major               = (EditText)    findViewById(R.id.major);
         year                = (EditText)    findViewById(R.id.year);
         about               = (EditText)    findViewById(R.id.about);
-        profileImageView    = (ImageView)   findViewById(R.id.profileImage);
-        coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
-    }
-    /**
-     * Initialize edit texts for entering classes in UI
-     *
-     */
-    private void initializeEditTexts()
-    {
-        GenericTextWatcher  textWatcher;
-
         classes             = (EditText)    findViewById(R.id.classes);
 
+        profileImageView    = (ImageView)   findViewById(R.id.profileImage);
+        coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
 
-        textWatcher = GenericTextWatcher.getInstance(getApplicationContext(), classes);
+        textWatcher         = new GenericTextWatcher(getApplicationContext(), classes);
         classes.addTextChangedListener(textWatcher);
     }
+
     /**
      *
      */
     private void setUpUserInfo()
     {
-
         AsyncTask<Void, Integer, Bitmap>    asyncDownloader;
         Drawable                            drawable;
+        String []                           classesFromBundle;
+        BubbleTextView                      bubbleTextView;
+        String                              courseName;
+        SpannableStringBuilder              sb;
+        int                                 start, end;
+        TextView                            tv;
 
+        start           = 0;
+        end             = 0;
+
+        //set fields based on data from the bundle
         name.setText(info.getString("firstName"));
         major.setText(info.getString("major"));
         year.setText(info.getString("year"));
@@ -106,17 +108,62 @@ public class EditStudentProfileActivity extends Activity
 
         try
         {
+            //get profile image from bundle and set as profile image
             asyncDownloader = new AsyncDownloader(info.getString("profileImage"), null,null).execute();
             profileImageView.setImageBitmap(asyncDownloader.get());
 
+            //get background image from bundle and set as background image
             asyncDownloader = new AsyncDownloader(info.getString("coverImage"), null,null).execute();
             drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
             coverImageView.setBackground(drawable);
+
+            /************************* Handle classes field from server *******************/
+            classes.setText("");
+            classesFromBundle = info.getString("classes").split(",");
+            System.out.println("In edit student!! -- " + info.getString("classes"));
+            for (int i =0; i < classesFromBundle.length; i++)
+            {
+                courseName      = classesFromBundle[i];
+                System.out.println("courseName " + courseName);
+
+                courseName      = courseName.replaceAll("\\]", "");
+                courseName      = courseName.replaceAll("\\[", "");
+                courseName      = courseName.replaceAll("\"", "");
+                System.out.println(courseName);
+                tv              = new TextView(this);
+                this.textWatcher.addTextView(tv);
+
+                bubbleTextView  = new BubbleTextView(getApplicationContext(), tv);
+                sb              = bubbleTextView.createBubbleOverText(courseName, true);
+                end+=sb.length();
+
+
+                System.out.println("start " + start);
+                System.out.println("end " + end);
+
+                classes.append(sb);
+                classes.getText().replace(start, end, sb, 0, sb.length());
+                this.textWatcher.addLength(sb.length());
+
+
+
+                this.textWatcher.setPreviousEndPosition(end);
+                this.textWatcher.setPreviousStartPosition(end - sb.length());
+                this.textWatcher.addStartingPosition(end - sb.length());
+                //this.classes.setSelection(cursorPosition);
+
+                start += sb.length();
+                System.out.println("start " + start);
+
+
+            }
+            /******************************************************************************/
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
+
 
     }
     @Override
@@ -199,19 +246,49 @@ public class EditStudentProfileActivity extends Activity
     private void saveUserProfile(View view)
     {
         ArrayList<HttpPut>  puts;
+        ArrayList<TextView> tvClasses;
         RestClientExecute   rce;
-        String              id, enrollId;
+        String              id, enrollId, courseName, jsonArray;
+        JSONArray           classesAsStudent;
 
-        id              = info.getString("id");
-        enrollId        = info.getString("enrollId");
+        id                  = info.getString("id");
+        enrollId            = info.getString("enrollId");
+        tvClasses           = textWatcher.getTextViews();
+        classes             = null;
+        jsonArray           = null;
+        classesAsStudent    = null;
 
+        //As long as the user entered in the classes he/she is taking
+        if (tvClasses.size() > 0)
+        {
+            //convert to a valid JSON Array to send up to the server
+            jsonArray      = "[";
+            for (int i = 0; i < tvClasses.size(); i++)
+            {
+                courseName = tvClasses.get(i).getText().toString();
+                if (i != tvClasses.size() - 1)
+                    jsonArray += "{\"name\": " + "\"" + courseName + "\"" + "},";
+                else
+                    jsonArray += "{\"name\": " + "\"" + courseName + "\""+ "}";
+            }
+            jsonArray += "]";
+        }
+
+        System.out.println("Updating this to the server: " + jsonArray);
+        //Send a put request with the user's data up the server
         try
         {
-            System.out.println("before puts/./.......");
+            if (jsonArray != null)
+            {
+                System.out.println("JSON array is not null");
+                System.out.println(jsonArray);
+                classesAsStudent = new JSONArray(jsonArray);
+            }
+
             puts        = RestClientFactory.put(id, enrollId, coverImagePath, profileImagePath,
                     name.getText().toString(), major.getText().toString(),
                     year.getText().toString(), about.getText().toString(),
-                    "");
+                    classesAsStudent);
 
             for (int i =0; i < puts.size(); i++)
             {
@@ -223,11 +300,14 @@ public class EditStudentProfileActivity extends Activity
             info.putString("about", about.getText().toString());
             info.putString("year", year.getText().toString());
             info.putString("major", major.getText().toString());
+            System.out.println("JSONARAAY bitch: " + jsonArray);
+            info.putString("classes", jsonArray);
 
             Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
         }
         catch(Exception e)
         {
+            System.out.println("Exception!!!---!!!");
             e.printStackTrace();
         }
     }

@@ -134,7 +134,8 @@
                     android:editable="false"
                     android:singleLine="false"
                     android:paddingLeft="10dp"
-                    android:scrollbars="vertical"/>
+                    android:scrollbars="vertical"
+                    />
 
 
 

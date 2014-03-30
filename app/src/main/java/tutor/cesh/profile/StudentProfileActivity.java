@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,21 +19,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import org.apache.http.client.methods.HttpGet;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import tutor.cesh.R;
 import tutor.cesh.database.DatabaseTable;
 import tutor.cesh.rest.AsyncDownloader;
-import tutor.cesh.rest.RestClientFactory;
 import tutor.cesh.rest.AsyncGet;
-
-
-import android.os.AsyncTask;
-import android.widget.ListView;
-import android.widget.TextView;
-
+import tutor.cesh.rest.RestClientFactory;
 
 
 public class StudentProfileActivity extends Activity
@@ -65,7 +64,7 @@ public class StudentProfileActivity extends Activity
         listView.setOnItemClickListener(new DrawerItemClickListener());
 
         info = getIntent().getExtras();
-        info.putString("isRateSet", "false");
+        info.putString("ok", "false");
 
         /*if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
@@ -78,7 +77,17 @@ public class StudentProfileActivity extends Activity
 
     @Override
     protected void onRestart()
+
     {
+        super.onRestart();
+        setUpUserInfo();
+    }
+
+    @Override
+    protected void onResume()
+
+    {
+        super.onResume();
         setUpUserInfo();
     }
 
@@ -95,14 +104,17 @@ public class StudentProfileActivity extends Activity
             {
                 savedInstanceState = data.getExtras();
                 info.putString("firstName", savedInstanceState.getString("firstName"));
-                info.putString("about", savedInstanceState.getString("about"));
-                info.putString("year", savedInstanceState.getString("year"));
-                info.putString("major", savedInstanceState.getString("major"));
-                info.putString("isRateSet", "true");
+                info.putString("about",     savedInstanceState.getString("about"));
+                info.putString("year",      savedInstanceState.getString("year"));
+                info.putString("major",     savedInstanceState.getString("major"));
+                info.putString("classes",   savedInstanceState.getString("classes"));
+                info.putString("ok", "true");
+
+                System.out.println("---------------------" + savedInstanceState.getString("classes"));
 
                 try
                 {
-                    json       = setUpGet(DatabaseTable.USERS, info.getString("userId"));
+                    json       = setUpAndExecuteGet(DatabaseTable.USERS, info.getString("userId"));
                     info.putString("profileImage", DOMAIN + json.getString("profile_image_url"));
                     info.putString("coverImage", DOMAIN + json.getString("cover_image_url"));
                 }
@@ -122,25 +134,26 @@ public class StudentProfileActivity extends Activity
      * @param id
      * @return
      */
-    private JSONObject setUpGet(DatabaseTable table, String id)
+    private JSONObject setUpAndExecuteGet(DatabaseTable table, String id)
     {
-        JSONObject                                  obj1;
+        JSONObject                                  json1;
         HttpGet                                     get1;
         AsyncTask<HttpGet, Integer, JSONObject>     asyncGet1;
 
-        obj1 = null;
+        json1 = null;
         try
         {
             get1        = RestClientFactory.get(table, id);
+
             asyncGet1   = new AsyncGet().execute(get1);
-            obj1        = asyncGet1.get();
+            json1        = asyncGet1.get();
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
 
-        return obj1;
+        return json1;
     }
 
     /**
@@ -150,47 +163,126 @@ public class StudentProfileActivity extends Activity
     {
         AsyncTask<Void, Integer, Bitmap>            asyncDownloader;
         JSONObject                                  json1, json2;
+        JSONArray                                   jsonArray;
         Drawable                                    drawable;
+        BubbleTextView                              bubbleTextView;
+        SpannableStringBuilder                      sb;
+        String []                                   classesFromServer;
+        String                                      courseName, formattedClasses;
+        int                                         start, end;
+
+        start   = 0;
+        end     = 0;
 
         try
         {
-            if(info.getString("isRateSet").equalsIgnoreCase("false"))
+            if(info.getString("ok").equalsIgnoreCase("false"))
             {
-                json1 = setUpGet(DatabaseTable.USERS, info.getString("id"));
-                json2 = setUpGet(DatabaseTable.ENROLLS, info.getString("enrollId"));
+                json1 = setUpAndExecuteGet(DatabaseTable.USERS, info.getString("id"));
+                json2 = setUpAndExecuteGet(DatabaseTable.ENROLLS, info.getString("enrollId"));
 
+                //set fields based on data from the server
                 name.setText(json1.getString("first_name"), TextView.BufferType.EDITABLE);
                 major.setText(json2.getString("major"), TextView.BufferType.EDITABLE);
                 year.setText(json2.getString("year"), TextView.BufferType.EDITABLE);
                 about.setText(json1.getString("about"), TextView.BufferType.EDITABLE);
 
+                //get profile image from server and set profile image
                 asyncDownloader = new AsyncDownloader(DOMAIN + json1.getString("profile_image_url"), null, null).execute();
                 profileImageView.setImageBitmap(asyncDownloader.get());
 
+                //get background image from server and set the background
                 asyncDownloader = new AsyncDownloader(DOMAIN + json1.getString("cover_image_url"), null, null).execute();
-                drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
+                drawable        = new BitmapDrawable(getResources(), asyncDownloader.get());
                 coverImageView.setBackground(drawable);
 
+                /************************* Handle classes field from server *******************/
+
+                classes.setText("");
+
+                classesFromServer = json1.getString("classes").split(",");
+                System.out.println("---***--** " + classesFromServer[0]);
+                if (classesFromServer.length > 0)
+                {
+                    for (int i = 0; i < classesFromServer.length; i++)
+                    {
+                        bubbleTextView = new BubbleTextView(getApplicationContext(), new TextView(this));
+                        courseName = classesFromServer[i];
+
+                        courseName = courseName.replaceAll("\\]", "");
+                        courseName = courseName.replaceAll("\\[", "");
+                        courseName = courseName.replaceAll("\"", "");
+
+                        System.out.println(courseName);
+                        sb = bubbleTextView.createBubbleOverText(courseName, false);
+                        end += sb.length();
+                        classes.append(sb);
+                        classes.getText().replace(start, end, sb, 0, sb.length());
+                        start += sb.length();
+                    }
+                }
+                /******************************************************************************/
+
+                //update bundle
                 info.putString("firstName", name.getText().toString());
                 info.putString("about", about.getText().toString());
                 info.putString("year", year.getText().toString());
                 info.putString("major", major.getText().toString());
                 info.putString("profileImage", DOMAIN + json1.getString("profile_image_url"));
                 info.putString("coverImage", DOMAIN + json1.getString("cover_image_url"));
+                info.putString("classes", json1.getString("classes"));
             }
-            else
-            {
+            else {
+                //set fields based on data from the updated bundle
                 name.setText(info.getString("firstName"), TextView.BufferType.EDITABLE);
                 major.setText(info.getString("major"), TextView.BufferType.EDITABLE);
                 year.setText(info.getString("year"), TextView.BufferType.EDITABLE);
                 about.setText(info.getString("about"), TextView.BufferType.EDITABLE);
 
+                //get profile image from bundle and set profile image
                 asyncDownloader = new AsyncDownloader(info.getString("profileImage"), null, null).execute();
                 profileImageView.setImageBitmap(asyncDownloader.get());
 
+                //get background image from bundle and set the background
                 asyncDownloader = new AsyncDownloader(info.getString("coverImage"), null, null).execute();
                 drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
                 coverImageView.setBackground(drawable);
+
+                /************************* Handle classes field from bundle *******************/
+                classes.setText("");
+
+                if (!info.getString("classes").equalsIgnoreCase("null"))
+                {
+                    formattedClasses = "[";
+                    System.out.println("classes in bundle: " + info.getString("classes"));
+                    jsonArray = new JSONArray(info.getString("classes"));
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        bubbleTextView = new BubbleTextView(getApplicationContext(), new TextView(this));
+                        courseName = jsonArray.getString(i);
+                        courseName = courseName.substring(courseName.lastIndexOf(':') + 1);
+                        courseName = courseName.replaceAll("\\}", "");
+
+                        if (i != jsonArray.length() - 1)
+                            formattedClasses += courseName + ",";
+                        else
+                            formattedClasses += courseName + "]";
+
+                        courseName = courseName.replaceAll("\"", "");
+
+                        System.out.println(courseName);
+                        sb = bubbleTextView.createBubbleOverText(courseName, false);
+                        end += sb.length();
+                        System.out.println("START -- " + start);
+                        classes.append(sb);
+                        classes.getText().replace(start, end, sb, 0, sb.length());
+                        start += sb.length();
+                    }
+                    /******************************************************************************/
+
+                    //update classes in bundle to correct format
+                    info.putString("classes", formattedClasses);
+                }
             }
         }
         catch(Exception e)

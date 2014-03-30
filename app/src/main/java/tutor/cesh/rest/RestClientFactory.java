@@ -1,23 +1,19 @@
 package tutor.cesh.rest;
 
-import android.graphics.Bitmap;
-import android.os.Environment;
 import android.util.Base64;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
-
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -109,6 +105,39 @@ public class RestClientFactory
 
     }
 
+    /**
+     * Get info from server
+     *
+     * @param id The user's id
+     * @param attribute A specific attribute from the user
+     * @return HttpGet for the correct user
+     */
+    public static HttpGet get(DatabaseTable table, String id, String attribute)
+    {
+        HttpGet httpGet;
+        httpGet = null;
+        switch(table)
+        {
+            case USERS:
+                httpGet = new HttpGet(DOMAIN + "users" + "/" + id + "/" + attribute);
+                break;
+            case TUTORS:
+                httpGet = new HttpGet(DOMAIN + "tutors" + "/" + id + attribute);
+                break;
+
+            case ENROLLS:
+                httpGet = new HttpGet(DOMAIN + "enrolls" + "/" + id + attribute);
+
+                break;
+        }
+
+        httpGet.setHeader("Accept", "application/json");
+        httpGet.setHeader("Content-Type", "application/json");
+
+        return httpGet;
+
+    }
+
 
     /**
      *
@@ -166,17 +195,17 @@ public class RestClientFactory
      * @param major             user's major
      * @param year              year in school
      * @param about             short info about the user
-     * @param subjects          Subject's user teaches
+     * @param classes           Classes user is taking
      * @return
      * @throws Exception
      */
     public static ArrayList<HttpPut> put( String id, String enrollId,
                                           String coverImagePath, String profileImagePath,
                                           String name, String major, String year,
-                                          String about, String subjects) throws Exception
+                                          String about, JSONArray classes) throws Exception
     {
         return put (id, enrollId, coverImagePath, profileImagePath, name,
-                    major, year, about, subjects, null);
+                    major, year, about, classes, null);
     }
 
     /**
@@ -186,14 +215,14 @@ public class RestClientFactory
      * @param major             user's major
      * @param year              year in school
      * @param about             short info about the user
-     * @param subjects          Subject's user teaches
+     * @param classes           Classes user is taking
      * @return
      * @throws Exception
      */
     public static ArrayList<HttpPut> put( String id, String enrollId,
                                           String coverImagePath, String profileImagePath,
                                           String name, String major, String year,
-                                          String about, String subjects, String rate) throws Exception
+                                          String about, JSONArray classes, String rate) throws Exception
     {
         JSONObject              params1, params2;
         ArrayList<HttpPut>      putsList;
@@ -211,6 +240,9 @@ public class RestClientFactory
         entity.addPart("user[first_name]", new StringBody(name));
         entity.addPart("user[last_name]", new StringBody(" "));
         entity.addPart("user[about]", new StringBody(about));
+
+        if(classes != null)
+            entity.addPart("user[classes]", new StringBody(classes.toString()));
 
         if(coverImagePath != null)
         {
@@ -246,6 +278,7 @@ public class RestClientFactory
             puts3       = new HttpPut(PUT_TUTOR_DATA + id);
             params2     = new JSONObject();
             params2.put("rate", rate);
+
             puts3.setEntity(new StringEntity(params1.toString()));
             puts3.setHeader("Accept", "application/json");
             puts3.setHeader("Content-Type", "application/json");

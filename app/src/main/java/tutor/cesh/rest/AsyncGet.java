@@ -6,9 +6,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -18,8 +16,9 @@ import java.io.InputStreamReader;
  */
 public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
 {
-    HttpGet     httpGet;
-    HttpClient  httpClient;
+    private HttpGet     httpGet;
+    private HttpClient  httpClient;
+
 
     @Override
     protected JSONObject doInBackground(HttpGet... httpGets)
@@ -40,11 +39,9 @@ public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
             System.out.println("after response!");
             reader          = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             json            = reader.readLine();
-            System.out.println(json);
-            json = json.replaceAll("\\[", "").replaceAll("\\]","");
-            System.out.println("json is: " + json);
 
             obj = new JSONObject(json);
+            System.out.println(obj.toString());
 
         }
         catch(Exception e)
@@ -55,4 +52,5 @@ public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
 
         return obj;
     }
+
 }

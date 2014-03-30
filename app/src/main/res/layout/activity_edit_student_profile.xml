@@ -150,12 +150,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:id="@+id/classes"
-                        android:hint="Classes you are taking this semester"
+                        android:hint="Classes you are taking this semester followed by a space"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black"
                         android:textSize="14dp"
                         android:singleLine="false"
                         android:paddingLeft="10dp"
+                        android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                         android:scrollbars="vertical"/>
 
                 </ScrollView>

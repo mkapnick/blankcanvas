@@ -3,10 +3,10 @@ package tutor.cesh.arrival;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
-import android.os.NetworkOnMainThreadException;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.os.NetworkOnMainThreadException;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,15 +23,13 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ConcurrentModificationException;
 import java.util.concurrent.ExecutionException;
 
-import tutor.cesh.database.DatabaseFacility;
-import tutor.cesh.rest.AsyncGet;
-import tutor.cesh.rest.RestClientExecute;
-import tutor.cesh.rest.RestClientFactory;
-import tutor.cesh.profile.StudentProfileActivity;
 import tutor.cesh.R;
+import tutor.cesh.database.DatabaseFacility;
+import tutor.cesh.profile.StudentProfileActivity;
+import tutor.cesh.rest.AsyncGet;
+import tutor.cesh.rest.RestClientFactory;
 
 public class LoginActivity extends ActionBarActivity implements Arrival
 {

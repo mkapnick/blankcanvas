@@ -37,12 +37,12 @@ public class BubbleTextView extends MultiAutoCompleteTextView
     /**
      * Create a bounding bubble over some text
      */
-    public SpannableStringBuilder createBubbleOverText(String text, int start)
+    public SpannableStringBuilder createBubbleOverText(String text, boolean edit)
     {
         BitmapDrawable drawable;
         SpannableStringBuilder sb;
 
-        this.tv = initializeTextView(text);
+        this.tv = initializeTextView(text, edit);
 
         sb       = new SpannableStringBuilder();
         drawable = convertTextViewToDrawable();
@@ -64,13 +64,16 @@ public class BubbleTextView extends MultiAutoCompleteTextView
      * @param text
      * @return
      */
-    private TextView initializeTextView(String text)
+    private TextView initializeTextView(String text, boolean edit)
     {
         tv.setText(text);
         tv.setTextSize(12);
         tv.setTextColor(Color.parseColor("#FFFFFF"));
         tv.setBackgroundResource(R.drawable.oval);
-        tv.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.abc_ic_clear_search_api_holo_light, 0);
+        if (edit)
+            tv.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.abc_ic_clear_search_api_holo_light, 0);
+        else
+            tv.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.oval, 0);
         return tv;
     }
 

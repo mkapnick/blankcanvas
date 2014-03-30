@@ -186,7 +186,7 @@ public class EditTutorProfileActivity extends Activity {
             puts        = RestClientFactory.put(id, enrollId, coverImagePath, profileImagePath,
                                                 name.getText().toString(), major.getText().toString(),
                                                 year.getText().toString(), about.getText().toString(),
-                                                "", rate.getText().toString());
+                                                null, rate.getText().toString());
 
             for (int i  = 0; i < puts.size(); i++)
             {
