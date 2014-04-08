@@ -71,14 +71,10 @@ public class DatabaseFacility extends SQLiteOpenHelper
     public DatabaseFacility(Context context)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        System.out.println("Inside Database Facility Constructor");
-
     }
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase)
     {
-        System.out.println("Inside onCreate method in Database Facility");
-
 
         sqLiteDatabase.execSQL("CREATE TABLE " + USER + "( "
                                 + EMAIL         + " TEXT PRIMARY KEY, "
@@ -194,7 +190,6 @@ public class DatabaseFacility extends SQLiteOpenHelper
 
     public void insertUserRecord(String email, String password, String firstName, String lastName, String about, String confirm)
     {
-        System.out.println("Inserting user Record!");
         contentValues = new ContentValues();
         contentValues.put(EMAIL, email);
         contentValues.put(PASSWORD, password);
@@ -205,8 +200,6 @@ public class DatabaseFacility extends SQLiteOpenHelper
 
         this.db.insert(USER, null, contentValues);
         this.db.close();
-
-        System.out.println("Finished inserting user record");
     }
 
     /**
@@ -313,8 +306,6 @@ public class DatabaseFacility extends SQLiteOpenHelper
 
     public boolean validateUser(String email, String password)
     {
-        System.out.println("Inside validateUser in tutor.app.database Facility");
-
         String  query;
         Cursor  cursor;
         boolean bool;
@@ -329,7 +320,6 @@ public class DatabaseFacility extends SQLiteOpenHelper
 
         if(cursor.getCount() != 1)
         {
-            System.out.println("Did not find a match");
             bool = false;
         }
 

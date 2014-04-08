@@ -1,39 +1,42 @@
 package tutor.cesh.profile;
 
-import android.app.Activity;
-import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.text.SpannableStringBuilder;
-import android.view.LayoutInflater;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import tutor.cesh.R;
 import tutor.cesh.database.DatabaseTable;
 import tutor.cesh.rest.AsyncDownloader;
 import tutor.cesh.rest.AsyncGet;
+import tutor.cesh.rest.BackgroundImageTaskDelegate;
+import tutor.cesh.rest.ProfileImageTaskDelegate;
 import tutor.cesh.rest.RestClientFactory;
+import tutor.cesh.rest.TaskDelegate;
 
 
-public class StudentProfileActivity extends Activity
+public class StudentProfileActivity extends ActionBarActivity implements View.OnClickListener, TaskDelegate
 {
     private Bundle          info;
     private ImageView       profileImageView, coverImageView;
@@ -42,12 +45,20 @@ public class StudentProfileActivity extends Activity
     private ListView        listView;
     private static String   DOMAIN = "http://protected-earth-9689.herokuapp.com";
     private String []       listViewTitles;
+    private ActionBar       actionBar;
+    private ProgressDialog  progressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_profile);
+
+        TextView    actionBarTextView, actionBarEdit;
+        View        actionBarView;
+        ImageButton actionBarMenuButton;
+
 
         name                = (EditText)    findViewById(R.id.name);
         major               = (EditText)    findViewById(R.id.major);
@@ -59,25 +70,36 @@ public class StudentProfileActivity extends Activity
         drawerLayout        = (DrawerLayout)findViewById(R.id.drawer_layout);
         listView            = (ListView)    findViewById(R.id.left_drawer);
 
-        listViewTitles = getResources().getStringArray(R.array.drawable_list_items);
+        listViewTitles      = getResources().getStringArray(R.array.drawable_list_items);
         listView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listViewTitles));
         listView.setOnItemClickListener(new DrawerItemClickListener());
 
-        info = getIntent().getExtras();
+        info                = getIntent().getExtras();
         info.putString("ok", "false");
 
-        /*if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }*/
+        actionBar           = getSupportActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(R.layout.my_action_bar);
+
+        //displaying custom ActionBar
+        actionBarView       = getSupportActionBar().getCustomView();
+        actionBarTextView   = (TextView) actionBarView.findViewById(R.id.textViewActionBar);
+        actionBarTextView.setText("STUDENT");
+        actionBarTextView.setTextColor(Color.WHITE);
+
+        actionBarEdit       = (TextView)actionBarView.findViewById(R.id.editStudentProfile);
+        actionBarEdit.setOnClickListener(this);
+
+        actionBarMenuButton = (ImageButton) actionBarView.findViewById(R.id.menu_button);
+        actionBarMenuButton.setOnClickListener(this);
+
+
         setUpUserInfo();
 
     }
 
     @Override
     protected void onRestart()
-
     {
         super.onRestart();
         setUpUserInfo();
@@ -85,18 +107,15 @@ public class StudentProfileActivity extends Activity
 
     @Override
     protected void onResume()
-
     {
         super.onResume();
         setUpUserInfo();
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         Bundle      savedInstanceState;
-        JSONObject  json;
 
         if (requestCode == 1)
         {
@@ -110,13 +129,9 @@ public class StudentProfileActivity extends Activity
                 info.putString("classes",   savedInstanceState.getString("classes"));
                 info.putString("ok", "true");
 
-                System.out.println("---------------------" + savedInstanceState.getString("classes"));
-
                 try
                 {
-                    json       = setUpAndExecuteGet(DatabaseTable.USERS, info.getString("userId"));
-                    info.putString("profileImage", DOMAIN + json.getString("profile_image_url"));
-                    info.putString("coverImage", DOMAIN + json.getString("cover_image_url"));
+                    setUpAndExecuteGet(DatabaseTable.USERS, info.getString("userId"));
                 }
                 catch(Exception e)
                 {
@@ -138,15 +153,12 @@ public class StudentProfileActivity extends Activity
     {
         JSONObject                                  json1;
         HttpGet                                     get1;
-        AsyncTask<HttpGet, Integer, JSONObject>     asyncGet1;
 
         json1 = null;
         try
         {
             get1        = RestClientFactory.get(table, id);
-
-            asyncGet1   = new AsyncGet().execute(get1);
-            json1        = asyncGet1.get();
+            new AsyncGet(this, this).execute(get1);
         }
         catch(Exception e)
         {
@@ -162,77 +174,25 @@ public class StudentProfileActivity extends Activity
     private void setUpUserInfo()
     {
         AsyncTask<Void, Integer, Bitmap>            asyncDownloader;
-        JSONObject                                  json1, json2;
         JSONArray                                   jsonArray;
         Drawable                                    drawable;
-        BubbleTextView                              bubbleTextView;
-        SpannableStringBuilder                      sb;
-        String []                                   classesFromServer;
-        String                                      courseName, formattedClasses;
-        int                                         start, end;
 
-        start   = 0;
-        end     = 0;
+        TextFieldHelper                             classesTextFieldHelper;
+        String                                      formatted;
+        TaskDelegate                                taskDelegate;
+
+        classesTextFieldHelper  = new ClassesTextFieldHelper(this);
 
         try
         {
+            //get user info from the server
             if(info.getString("ok").equalsIgnoreCase("false"))
             {
-                json1 = setUpAndExecuteGet(DatabaseTable.USERS, info.getString("id"));
-                json2 = setUpAndExecuteGet(DatabaseTable.ENROLLS, info.getString("enrollId"));
-
-                //set fields based on data from the server
-                name.setText(json1.getString("first_name"), TextView.BufferType.EDITABLE);
-                major.setText(json2.getString("major"), TextView.BufferType.EDITABLE);
-                year.setText(json2.getString("year"), TextView.BufferType.EDITABLE);
-                about.setText(json1.getString("about"), TextView.BufferType.EDITABLE);
-
-                //get profile image from server and set profile image
-                asyncDownloader = new AsyncDownloader(DOMAIN + json1.getString("profile_image_url"), null, null).execute();
-                profileImageView.setImageBitmap(asyncDownloader.get());
-
-                //get background image from server and set the background
-                asyncDownloader = new AsyncDownloader(DOMAIN + json1.getString("cover_image_url"), null, null).execute();
-                drawable        = new BitmapDrawable(getResources(), asyncDownloader.get());
-                coverImageView.setBackground(drawable);
-
-                /************************* Handle classes field from server *******************/
-
-                classes.setText("");
-
-                classesFromServer = json1.getString("classes").split(",");
-                System.out.println("---***--** " + classesFromServer[0]);
-                if (classesFromServer.length > 0)
-                {
-                    for (int i = 0; i < classesFromServer.length; i++)
-                    {
-                        bubbleTextView = new BubbleTextView(getApplicationContext(), new TextView(this));
-                        courseName = classesFromServer[i];
-
-                        courseName = courseName.replaceAll("\\]", "");
-                        courseName = courseName.replaceAll("\\[", "");
-                        courseName = courseName.replaceAll("\"", "");
-
-                        System.out.println(courseName);
-                        sb = bubbleTextView.createBubbleOverText(courseName, false);
-                        end += sb.length();
-                        classes.append(sb);
-                        classes.getText().replace(start, end, sb, 0, sb.length());
-                        start += sb.length();
-                    }
-                }
-                /******************************************************************************/
-
-                //update bundle
-                info.putString("firstName", name.getText().toString());
-                info.putString("about", about.getText().toString());
-                info.putString("year", year.getText().toString());
-                info.putString("major", major.getText().toString());
-                info.putString("profileImage", DOMAIN + json1.getString("profile_image_url"));
-                info.putString("coverImage", DOMAIN + json1.getString("cover_image_url"));
-                info.putString("classes", json1.getString("classes"));
+                setUpAndExecuteGet(DatabaseTable.USERS, info.getString("id"));
+                setUpAndExecuteGet(DatabaseTable.ENROLLS, info.getString("enrollId"));
             }
-            else {
+            else
+            {
                 //set fields based on data from the updated bundle
                 name.setText(info.getString("firstName"), TextView.BufferType.EDITABLE);
                 major.setText(info.getString("major"), TextView.BufferType.EDITABLE);
@@ -240,48 +200,23 @@ public class StudentProfileActivity extends Activity
                 about.setText(info.getString("about"), TextView.BufferType.EDITABLE);
 
                 //get profile image from bundle and set profile image
-                asyncDownloader = new AsyncDownloader(info.getString("profileImage"), null, null).execute();
-                profileImageView.setImageBitmap(asyncDownloader.get());
+                taskDelegate        = new ProfileImageTaskDelegate(profileImageView);
+                asyncDownloader     = new AsyncDownloader(info.getString("profileImage"),
+                                                          this,taskDelegate);
+                asyncDownloader.execute();
 
                 //get background image from bundle and set the background
-                asyncDownloader = new AsyncDownloader(info.getString("coverImage"), null, null).execute();
-                drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
-                coverImageView.setBackground(drawable);
-
-                /************************* Handle classes field from bundle *******************/
-                classes.setText("");
+                taskDelegate        = new BackgroundImageTaskDelegate(getResources(),
+                                                                      coverImageView);
+                asyncDownloader     = new AsyncDownloader(info.getString("coverImage"),
+                                                          this, taskDelegate);
+                asyncDownloader.execute();
 
                 if (!info.getString("classes").equalsIgnoreCase("null"))
                 {
-                    formattedClasses = "[";
-                    System.out.println("classes in bundle: " + info.getString("classes"));
                     jsonArray = new JSONArray(info.getString("classes"));
-
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        bubbleTextView = new BubbleTextView(getApplicationContext(), new TextView(this));
-                        courseName = jsonArray.getString(i);
-                        courseName = courseName.substring(courseName.lastIndexOf(':') + 1);
-                        courseName = courseName.replaceAll("\\}", "");
-
-                        if (i != jsonArray.length() - 1)
-                            formattedClasses += courseName + ",";
-                        else
-                            formattedClasses += courseName + "]";
-
-                        courseName = courseName.replaceAll("\"", "");
-
-                        System.out.println(courseName);
-                        sb = bubbleTextView.createBubbleOverText(courseName, false);
-                        end += sb.length();
-                        System.out.println("START -- " + start);
-                        classes.append(sb);
-                        classes.getText().replace(start, end, sb, 0, sb.length());
-                        start += sb.length();
-                    }
-                    /******************************************************************************/
-
-                    //update classes in bundle to correct format
-                    info.putString("classes", formattedClasses);
+                    formatted = classesTextFieldHelper.help(this.classes, null, jsonArray);
+                    info.putString("classes", formatted);
                 }
             }
         }
@@ -290,10 +225,9 @@ public class StudentProfileActivity extends Activity
             e.printStackTrace();
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.profile, menu);
         return super.onCreateOptionsMenu(menu);
@@ -309,8 +243,10 @@ public class StudentProfileActivity extends Activity
 
         if (id == R.id.action_settings)
             return true;
-        else if(id == R.id.action_edit_student_profile)
+        else if(id == R.id.editStudentProfile)
+        {
             position = -100;
+        }
         else if(id == R.id.action_switch_profile)
             position = 1;
 
@@ -347,6 +283,26 @@ public class StudentProfileActivity extends Activity
         }
     }
 
+    @Override
+    public void onClick(View v)
+    {
+        Intent intent;
+        switch(v.getId())
+        {
+            case R.id.editStudentProfile:
+                intent = new Intent(this, EditStudentProfileActivity.class);
+                intent.putExtras(info);
+                startActivityForResult(intent, 1);
+                break;
+
+            case R.id.menu_button:
+                if(drawerLayout.isDrawerOpen(listView))
+                    drawerLayout.closeDrawer(listView);
+                else
+                    drawerLayout.openDrawer(listView);
+                break;
+        }
+    }
     /**
      * A private class responsible for handling click events on the
      * DrawableLayout
@@ -359,27 +315,83 @@ public class StudentProfileActivity extends Activity
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id)
         {
-            System.out.println("on item click!");
             listView.setItemChecked(position, true);
             onOptionsItemSelected(position);
         }
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_student_profile, container, false);
-
-            return rootView;
-        }
+    @Override
+    public void taskCompletionResult(Bitmap b)
+    {
+        //nothing
     }
 
+    @Override
+    public void taskCompletionResult(JSONObject response)
+    {
+        //set fields based on JSON response from the server
+        AsyncTask<Void, Integer, Bitmap>            asyncDownloader;
+        String []                                   classesFromServer;
+        TextFieldHelper                             classesTextFieldHelper;
+        TaskDelegate                                taskDelegate;
+
+        classesTextFieldHelper  = new ClassesTextFieldHelper(this);
+
+        try
+        {
+            if(response.has("first_name")) {
+                name.setText(response.getString("first_name"), TextView.BufferType.EDITABLE);
+                info.putString("firstName", name.getText().toString());
+            }
+
+            if(response.has("major")) {
+                major.setText(response.getString("major"), TextView.BufferType.EDITABLE);
+                info.putString("major", major.getText().toString());
+            }
+
+            if(response.has("year")) {
+                year.setText(response.getString("year"), TextView.BufferType.EDITABLE);
+                info.putString("year", year.getText().toString());
+            }
+
+            if(response.has("about")) {
+                about.setText(response.getString("about"), TextView.BufferType.EDITABLE);
+                info.putString("about", about.getText().toString());
+            }
+
+            //get profile image from server and set profile image
+            if(response.has("profile_image_url")) {
+                taskDelegate        = new ProfileImageTaskDelegate(profileImageView);
+                asyncDownloader     = new AsyncDownloader(DOMAIN + response.getString("profile_image_url"),
+                                                          this, taskDelegate);
+                asyncDownloader.execute();
+                info.putString("profileImage", DOMAIN + response.getString("profile_image_url"));
+
+            }
+            //get background image from server and set the background
+            if(response.has("cover_image_url")) {
+                taskDelegate        = new BackgroundImageTaskDelegate(getResources(),
+                                                                      coverImageView);
+                asyncDownloader     = new AsyncDownloader(DOMAIN + response.getString("cover_image_url"),
+                                                          this, taskDelegate);
+                asyncDownloader.execute();
+                info.putString("coverImage", DOMAIN + response.getString("cover_image_url"));
+            }
+            if(response.has("classes")) {
+                classesFromServer = response.getString("classes").split(",");
+                classesTextFieldHelper.help(this.classes, null, classesFromServer, false);
+                info.putString("classes", response.getString("classes"));
+            }
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        this.progressDialog.dismiss();
+    }
+    @Override
+    public void setProgressDialog(ProgressDialog pd)
+    {
+        this.progressDialog = pd;
+    }
 }

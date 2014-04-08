@@ -25,7 +25,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import tutor.cesh.R;
-import tutor.cesh.rest.AsyncDownloader;
 import tutor.cesh.rest.RestClientExecute;
 import tutor.cesh.rest.RestClientFactory;
 import tutor.cesh.sampled.statik.BitMapOp;
@@ -81,12 +80,12 @@ public class EditTutorProfileActivity extends Activity {
 
         try
         {
-            asyncDownloader = new AsyncDownloader(info.getString("profileImage"), null,null).execute();
-            profileImageView.setImageBitmap(asyncDownloader.get());
+            //asyncDownloader = new AsyncDownloader(info.getString("profileImage"), this).execute();
+            //profileImageView.setImageBitmap(asyncDownloader.get());
 
-            asyncDownloader = new AsyncDownloader(info.getString("coverImage"), null,null).execute();
-            drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
-            coverImageView.setBackground(drawable);
+           // asyncDownloader = new AsyncDownloader(info.getString("coverImage"), this).execute();
+           // drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
+            //coverImageView.setBackground(drawable);
         }
         catch(Exception e)
         {
@@ -204,7 +203,7 @@ public class EditTutorProfileActivity extends Activity {
         }
         catch(Exception e)
         {
-            System.out.println("inside exception........edit student profile activity");
+            e.printStackTrace();
         }
     }
 

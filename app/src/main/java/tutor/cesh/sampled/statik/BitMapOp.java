@@ -9,19 +9,21 @@ import android.graphics.Matrix;
 public class BitMapOp
 {
 
-    public static Bitmap getResizedBitmap(Bitmap image, int newHeight, int newWidth)
+    public static Bitmap getResizedBitmap(Bitmap image, float scaledWidth, float scaledHeight)
     {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
+        Matrix  matrix;
+        Bitmap  resizedBitmap;
+
+
+
         // create a matrix for the manipulation
-        Matrix matrix = new Matrix();
+        matrix          = new Matrix();
         // resize the bit map
-        matrix.postScale(scaleWidth, scaleHeight);
+        matrix.setScale(scaledWidth, scaledHeight);
         // recreate the new Bitmap
-        Bitmap resizedBitmap = Bitmap.createBitmap(image, 0, 0, width, height,
-                matrix, false);
+        resizedBitmap   = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(),
+                matrix, true);
+
         return resizedBitmap;
     }
 

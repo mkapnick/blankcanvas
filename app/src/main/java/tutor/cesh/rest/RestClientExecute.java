@@ -1,20 +1,12 @@
 package tutor.cesh.rest;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -55,17 +47,14 @@ public class RestClientExecute implements Runnable
         catch (UnsupportedEncodingException e)
         {
             e.printStackTrace();
-            System.out.println("2");
         }
         catch (ClientProtocolException e)
         {
             e.printStackTrace();
-            System.out.println("3");
         }
         catch (IOException e)
         {
             e.printStackTrace();
-            System.out.println("4");
         }
     }
 

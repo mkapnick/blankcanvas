@@ -2,12 +2,10 @@ package tutor.cesh.arrival;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,18 +15,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.apache.http.client.methods.HttpGet;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.ExecutionException;
 
 import tutor.cesh.R;
 import tutor.cesh.database.DatabaseFacility;
-import tutor.cesh.profile.StudentProfileActivity;
+import tutor.cesh.rest.AbstractTaskDelegate;
 import tutor.cesh.rest.AsyncGet;
+import tutor.cesh.rest.OnLoginTaskDelegate;
 import tutor.cesh.rest.RestClientFactory;
 
 public class LoginActivity extends ActionBarActivity implements Arrival
@@ -93,13 +89,9 @@ public class LoginActivity extends ActionBarActivity implements Arrival
     {
         //Validate with tutor.app.database query
 
-        System.out.println("-- In validateArrival() --");
         String extension;
         this.email      = ((EditText) findViewById(R.id.emailTextView)).getText().toString();
         this.password   = ((EditText) findViewById(R.id.passwordTextView)).getText().toString();
-
-        System.out.println("Email entered is: " + this.email);
-        System.out.println("Password entered is: " + this.password);
 
         extension = this.email.substring(this.email.lastIndexOf('.') + 1);
 
@@ -126,79 +118,28 @@ public class LoginActivity extends ActionBarActivity implements Arrival
      */
     private void validate()
     {
-        Log.d("", "In validate in LoginActivity");
-
-        HttpGet             get;
-        AsyncTask <HttpGet, Integer, JSONObject> async;
-        JSONArray           jsonArray;
-        Intent              intent;
-        JSONObject          object;
+        HttpGet                                     get;
+        AbstractTaskDelegate                        delegate;
 
         try
         {
-            System.out.println("authenticating...");
+            delegate    = new OnLoginTaskDelegate(this);
             get         = RestClientFactory.authenticate(email, password);
-            async       = new AsyncGet().execute(get);
-            object      = async.get();
-
-            System.out.println("After jsonArray!");
-            System.out.println(object);
-
-            if(object != null)
-            {
-                System.out.println("inside if");
-                if(object.getString("confirm").equalsIgnoreCase("true"))
-                {
-                    System.out.println("user has access to app!");
-                    intent  = new Intent(this, StudentProfileActivity.class);
-                    intent.putExtra("id", object.getString("id"));
-                    intent.putExtra("enrollId", object.getString("enroll_id"));
-                    intent.putExtra("tutorId", object.getString("tutor_id"));
-                    intent.putExtra("email", object.getString("email"));
-                    intent.putExtra("firstName", object.getString("first_name"));
-                    intent.putExtra("lastName", object.getString("last_name"));
-                    intent.putExtra("about", object.getString("about"));
-                    intent.putExtra("profileImage", object.getString("profile_image_url"));
-                    intent.putExtra("coverImage", object.getString("cover_image_url"));
-
-                    System.out.println("before starting intent");
-                    startActivity(intent);
-                }
-                else
-                {
-                    Toast.makeText(this, "Confirm your Email!", Toast.LENGTH_SHORT).show();
-                    System.out.println("inside finish!");
-                }
-            }
-            else
-            {
-                Toast.makeText(this, "Email or password incorrect", Toast.LENGTH_SHORT).show();
-                System.out.println("inside finish!");
-            }
+            new AsyncGet(this, delegate).execute(get);
         }
         catch(NetworkOnMainThreadException e)
         {
-            System.out.println("Network on main thread exception");
+            e.printStackTrace();
         }
         catch (JSONException e)
         {
-            Toast.makeText(this, "Email or password incorrect", Toast.LENGTH_SHORT).show();
-            System.out.println("JSON exception");
+            e.printStackTrace();
         }
         catch (NoSuchAlgorithmException e)
         {
             e.printStackTrace();
         }
         catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
-        catch (ExecutionException e)
         {
             e.printStackTrace();
         }

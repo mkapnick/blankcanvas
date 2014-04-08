@@ -3,7 +3,6 @@ package tutor.cesh.profile;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import org.json.JSONObject;
 
 import tutor.cesh.R;
 import tutor.cesh.database.DatabaseTable;
-import tutor.cesh.rest.AsyncDownloader;
 import tutor.cesh.rest.AsyncGet;
 import tutor.cesh.rest.RestClientFactory;
 
@@ -76,7 +74,6 @@ public class TutorProfileActivity extends Activity {
         Bundle      savedInstanceState;
         JSONObject  json;
 
-        System.out.println("In on activity for result");
         if (requestCode == 1)
         {
             if (resultCode == RESULT_OK)
@@ -126,7 +123,7 @@ public class TutorProfileActivity extends Activity {
         try
         {
             get1        = RestClientFactory.get(table, id);
-            asyncGet1   = new AsyncGet().execute(get1);
+            asyncGet1   = new AsyncGet(this, null).execute(get1);
             obj1        = asyncGet1.get();
         }
         catch(Exception e)
@@ -147,7 +144,6 @@ public class TutorProfileActivity extends Activity {
 
         try
         {
-            System.out.println("here 1");
             name.setText(info.getString("firstName"), TextView.BufferType.EDITABLE);
             major.setText(info.getString("major"), TextView.BufferType.EDITABLE);
             year.setText(info.getString("year"), TextView.BufferType.EDITABLE);
@@ -163,16 +159,15 @@ public class TutorProfileActivity extends Activity {
                 rate.setText(info.getString("rate"), TextView.BufferType.EDITABLE);
             }
 
-            asyncDownloader = new AsyncDownloader(info.getString("profileImage"), null, null).execute();
-            profileImageView.setImageBitmap(asyncDownloader.get());
+            //asyncDownloader = new AsyncDownloader(info.getString("profileImage"), this).execute();
+            //profileImageView.setImageBitmap(asyncDownloader.get());
 
-            asyncDownloader = new AsyncDownloader(info.getString("coverImage"), null, null).execute();
-            drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
-            coverImageView.setBackground(drawable);
+            //asyncDownloader = new AsyncDownloader(info.getString("coverImage"), this).execute();
+            //drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
+            //coverImageView.setBackground(drawable);
         }
         catch(Exception e)
         {
-            System.out.println("Exception!");
             e.printStackTrace();
         }
     }
@@ -243,7 +238,6 @@ public class TutorProfileActivity extends Activity {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id)
         {
-            System.out.println("on item click!");
             listView.setItemChecked(position, true);
             onOptionsItemSelected(position);
         }

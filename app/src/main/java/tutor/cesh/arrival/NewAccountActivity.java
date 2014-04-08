@@ -2,11 +2,10 @@ package tutor.cesh.arrival;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.NetworkOnMainThreadException;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.NetworkOnMainThreadException;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,9 +20,9 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
+import tutor.cesh.R;
 import tutor.cesh.rest.RestClientExecute;
 import tutor.cesh.rest.RestClientFactory;
-import tutor.cesh.R;
 
 public class NewAccountActivity extends ActionBarActivity implements Arrival
 {
@@ -73,17 +72,13 @@ public class NewAccountActivity extends ActionBarActivity implements Arrival
     @Override
     public void validateArrival(View view)
     {
-        System.out.println("-- In validateArrival() --");
 
         String extension;
 
         this.email      = ((EditText) findViewById(R.id.emailTextView)).getText().toString();
         this.password   = ((EditText) findViewById(R.id.passwordTextView)).getText().toString();
 
-        System.out.println("Email entered is: " + this.email);
-        System.out.println("Password entered is: " + this.password);
         extension = this.email.substring(this.email.lastIndexOf('.') + 1);
-        System.out.println(extension);
 
         if (this.email.length() > 0 )
         {
@@ -110,8 +105,6 @@ public class NewAccountActivity extends ActionBarActivity implements Arrival
     private void validate()
     {
 
-        Log.d("", "In validate in NewAccountActivity");
-
         HttpPost            httpPost;
         RestClientExecute   rce;
 
@@ -126,21 +119,19 @@ public class NewAccountActivity extends ActionBarActivity implements Arrival
         }
         catch(IOException e)
         {
-            System.out.println("Inside IOException exception!.. not good!");
-            System.out.println(e.getMessage());
             e.printStackTrace();
         }
         catch(JSONException e)
         {
-            System.out.println("Inside JSONException!.. not good!");
+            e.printStackTrace();
         }
         catch(NetworkOnMainThreadException e)
         {
-            System.out.println("Network on main thread exception");
+            e.printStackTrace();
         }
         catch(NoSuchAlgorithmException e)
         {
-            System.out.println("No such algorithm exception");
+            e.printStackTrace();
         }
 
     }

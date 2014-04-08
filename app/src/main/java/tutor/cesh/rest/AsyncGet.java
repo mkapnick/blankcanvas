@@ -1,5 +1,7 @@
 package tutor.cesh.rest;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 
 import org.apache.http.HttpResponse;
@@ -16,9 +18,23 @@ import java.io.InputStreamReader;
  */
 public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
 {
-    private HttpGet     httpGet;
-    private HttpClient  httpClient;
+    private HttpGet                 httpGet;
+    private HttpClient              httpClient;
+    private Context                 context;
+    private ProgressDialog          pd;
+    private JSONObject              response;
+    private TaskDelegate            taskDelegate;
 
+
+    public AsyncGet(Context c, TaskDelegate td)
+    {
+        this.context        = c;
+        this.taskDelegate   = td;
+        this.pd             = new ProgressDialog(c);
+        if(this.taskDelegate != null)
+            this.taskDelegate.setProgressDialog(this.pd);
+
+    }
 
     @Override
     protected JSONObject doInBackground(HttpGet... httpGets)
@@ -27,30 +43,50 @@ public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
         HttpResponse    response;
         BufferedReader  reader;
         String          json;
-        JSONObject      obj;
 
         this.httpGet    = httpGets[0];
         this.httpClient = new DefaultHttpClient();
-        obj             = null;
         try
         {
-            System.out.println("httpGet: " + httpGet);
             response        = httpClient.execute(httpGet);
-            System.out.println("after response!");
             reader          = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             json            = reader.readLine();
 
-            obj = new JSONObject(json);
-            System.out.println(obj.toString());
-
+            this.response   = new JSONObject(json);
         }
         catch(Exception e)
         {
-            System.out.println(" Inside AsyncGet Exception!");
             e.printStackTrace();
         }
 
-        return obj;
+        return this.response;
+    }
+
+    @Override
+    protected void onPostExecute(JSONObject result)
+    {
+        //super.onPostExecute(result);
+        if(pd!=null)
+        {
+            if(taskDelegate != null) {
+                this.pd.dismiss();
+                taskDelegate.taskCompletionResult(this.response);
+            }
+
+        }
+
+        super.onPostExecute(result);
+    };
+
+    @Override
+    protected void onPreExecute() {
+        //super.onPreExecute();
+        pd.setTitle("Processing...");
+        pd.setMessage("Please wait");
+        pd.setCancelable(false);
+        pd.setIndeterminate(true);
+        pd.show();
+        super.onPreExecute();
     }
 
 }

@@ -57,18 +57,15 @@ public class RestClientFactory
         httpGet     = null;
         try
         {
-            System.out.println("inside authenticate user");
             email = email.replaceAll("\\.", "_");
-            System.out.println(email);
             httpGet = new HttpGet(new URI(DOMAIN +"/auth"));
-            System.out.println("after httpPost");
             httpGet.setHeader("Authorization",  getB6Auth(email, password));
             httpGet.setHeader("Accept", "application/json");
             httpGet.setHeader("Content-Type", "application/json");
         }
         catch(Exception e)
         {
-            System.out.println("in Exception !!");
+            e.printStackTrace();
         }
         return httpGet;
     }
@@ -166,9 +163,6 @@ public class RestClientFactory
                                                                         NoSuchAlgorithmException
 
     {
-        System.out.println("Inside post in RestClientFactory");
-        System.out.println("posting new account...");
-
         JSONObject              params;
         HttpPost                httpPost;
         StringEntity            entity;

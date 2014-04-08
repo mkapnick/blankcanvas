@@ -15,23 +15,26 @@
             android:id="@+id/top"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:adjustViewBounds="true"
+            >
 
             <ImageView
                 android:id="@+id/profileBackgroundImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:adjustViewBounds="true"
+                android:onClick="onUserClick"
+                android:scaleType="centerCrop"
                 />
 
             <ImageView
                 android:id="@+id/profileImage"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:adjustViewBounds="true"
-                android:layout_marginLeft="15dp"
-                android:layout_alignTop="@+id/userInfo"
-                android:onClick="onUserClick"/>
+                android:onClick="onUserClick"
+                android:layout_marginTop="100dp"
+                android:layout_marginLeft="10dp"/>
 
 
             <TextView
@@ -55,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="115dp"
-                android:layout_marginLeft="100dp"
+                android:layout_marginLeft="115dp"
                 android:id="@+id/userInfo">
 
 
@@ -115,9 +118,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="300dp"
-                android:background="#F2F2F2"
-                android:alpha=".9">
+                android:layout_marginTop="350dp"
+                >
 
                 <ScrollView
                     android:layout_width="match_parent"
@@ -130,9 +132,10 @@
                         android:layout_height="100dp"
                         android:id="@+id/about"
                         android:hint="About"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/black"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
                         android:textSize="14dp"
+                        android:textStyle="bold"
                         android:singleLine="false"
                         android:paddingLeft="10dp"
                         android:scrollbars="vertical"/>
@@ -151,8 +154,8 @@
                         android:layout_height="60dp"
                         android:id="@+id/classes"
                         android:hint="Classes you are taking this semester followed by a space"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/black"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
                         android:textSize="14dp"
                         android:singleLine="false"
                         android:paddingLeft="10dp"

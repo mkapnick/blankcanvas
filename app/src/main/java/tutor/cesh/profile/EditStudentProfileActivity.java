@@ -1,24 +1,19 @@
 package tutor.cesh.profile;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.SpannableStringBuilder;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,39 +23,39 @@ import org.apache.http.client.methods.HttpPut;
 import org.json.JSONArray;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import tutor.cesh.R;
-import tutor.cesh.rest.AsyncDownloader;
+import tutor.cesh.rest.BackgroundImageTaskDelegate;
+import tutor.cesh.rest.ProfileImageTaskDelegate;
 import tutor.cesh.rest.RestClientExecute;
 import tutor.cesh.rest.RestClientFactory;
-import tutor.cesh.sampled.statik.BitMapOp;
+import tutor.cesh.rest.TaskDelegate;
+import tutor.cesh.sampled.statik.AsyncConvolution;
+import tutor.cesh.sampled.statik.AsyncProfileImage;
+import tutor.cesh.sampled.statik.BitmapOpFactory;
+import tutor.cesh.sampled.statik.ConvolveOp;
 
 public class EditStudentProfileActivity extends Activity
 {
-
-
-    private String              profileImagePath, coverImagePath;
-    private Bundle              info;
-    private EditText            name, major, year, about,   classes;
-    private ImageView           profileImageView, coverImageView;
-    private GenericTextWatcher  textWatcher;
-
+    private String                          profileImagePath, coverImagePath;
+    private Bundle                          info;
+    private EditText                        name, major, year, about,   classes;
+    private ImageView                       profileImageView, coverImageView;
+    private static GenericTextWatcher       textWatcher;
+    private static final int                CONVULTION_KERNEL_SIZE = 7;
+    public  static Bitmap                   profileImageBitmap, backgroundImageBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_student_profile);
 
-        /*if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }*/
-        this.info = getIntent().getExtras();
-
+        this.info       = getIntent().getExtras();
         initializeUI();
-        setUpUserInfo();
+        setUpUserData();
+        setUpUserClasses();
     }
 
 
@@ -79,133 +74,136 @@ public class EditStudentProfileActivity extends Activity
         profileImageView    = (ImageView)   findViewById(R.id.profileImage);
         coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
 
-        textWatcher         = new GenericTextWatcher(getApplicationContext(), classes);
+        textWatcher         = new GenericTextWatcher (getApplicationContext(), classes);
         classes.addTextChangedListener(textWatcher);
     }
 
     /**
      *
      */
-    private void setUpUserInfo()
+    private void setUpUserData()
     {
-        AsyncTask<Void, Integer, Bitmap>    asyncDownloader;
-        Drawable                            drawable;
-        String []                           classesFromBundle;
-        BubbleTextView                      bubbleTextView;
-        String                              courseName;
-        SpannableStringBuilder              sb;
-        int                                 start, end;
-        TextView                            tv;
-
-        start           = 0;
-        end             = 0;
-
         //set fields based on data from the bundle
         name.setText(info.getString("firstName"));
         major.setText(info.getString("major"));
         year.setText(info.getString("year"));
         about.setText(info.getString("about"));
-
-        try
-        {
-            //get profile image from bundle and set as profile image
-            asyncDownloader = new AsyncDownloader(info.getString("profileImage"), null,null).execute();
-            profileImageView.setImageBitmap(asyncDownloader.get());
-
-            //get background image from bundle and set as background image
-            asyncDownloader = new AsyncDownloader(info.getString("coverImage"), null,null).execute();
-            drawable = new BitmapDrawable(getResources(), asyncDownloader.get());
-            coverImageView.setBackground(drawable);
-
-            /************************* Handle classes field from server *******************/
-            classes.setText("");
-            classesFromBundle = info.getString("classes").split(",");
-            System.out.println("In edit student!! -- " + info.getString("classes"));
-            for (int i =0; i < classesFromBundle.length; i++)
-            {
-                courseName      = classesFromBundle[i];
-                System.out.println("courseName " + courseName);
-
-                courseName      = courseName.replaceAll("\\]", "");
-                courseName      = courseName.replaceAll("\\[", "");
-                courseName      = courseName.replaceAll("\"", "");
-                System.out.println(courseName);
-                tv              = new TextView(this);
-                this.textWatcher.addTextView(tv);
-
-                bubbleTextView  = new BubbleTextView(getApplicationContext(), tv);
-                sb              = bubbleTextView.createBubbleOverText(courseName, true);
-                end+=sb.length();
-
-
-                System.out.println("start " + start);
-                System.out.println("end " + end);
-
-                classes.append(sb);
-                classes.getText().replace(start, end, sb, 0, sb.length());
-                this.textWatcher.addLength(sb.length());
-
-
-
-                this.textWatcher.setPreviousEndPosition(end);
-                this.textWatcher.setPreviousStartPosition(end - sb.length());
-                this.textWatcher.addStartingPosition(end - sb.length());
-                //this.classes.setSelection(cursorPosition);
-
-                start += sb.length();
-                System.out.println("start " + start);
-
-
-            }
-            /******************************************************************************/
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-
-
+        profileImageView.setImageBitmap(profileImageBitmap);
+        coverImageView.setBackground(new BitmapDrawable(getResources(), backgroundImageBitmap));
     }
+
+    /**
+     *
+     */
+    private void setUpUserClasses()
+    {
+        TextFieldHelper                     classesTextFieldHelper;
+        String []                           classesFromBundle;
+
+        classesTextFieldHelper = new ClassesTextFieldHelper(this);
+        classesFromBundle = info.getString("classes").split(",");
+
+        classesTextFieldHelper.help(this.classes, this.textWatcher, classesFromBundle, true);
+    }
+
+    /**
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Bitmap          bitMap;
-        BitmapDrawable  drawable;
+        Bitmap                  bitmap;
+        BitmapFactory.Options   options;
+        ConvolveOp              convolveOp;
+        AsyncConvolution        asyncConvolution;
+        AsyncProfileImage       asyncProfileImage;
+        int                     orientation;
+        Matrix                  m;
+        TaskDelegate            taskDelegate;
+
 
         super.onActivityResult(requestCode, resultCode, data);
 
         try
         {
+            /******* PROFILE IMAGE CHANGE ***********************************************************/
             if (requestCode == 1)
             {
+                taskDelegate        = new ProfileImageTaskDelegate(profileImageView);
                 profileImagePath    = data.getData().getPath();
+
                 if(profileImagePath != null)
                 {
-                    profileImagePath = getRealPathFromURI(this, data.getData());
-                    bitMap              = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()));
-                    bitMap              = BitMapOp.getResizedBitmap(bitMap, 75,75);
-                    profileImageView.setImageBitmap(bitMap);
+                    profileImagePath            = getRealPathFromURI(this, data.getData());
+                    orientation                 = getOrientation(this, data.getData());
+
+                    options                     = new BitmapFactory.Options();
+                    options.inSampleSize        = 20;
+                    bitmap                      = BitmapFactory.decodeStream(
+                                                    getContentResolver().openInputStream
+                                                            (data.getData()),
+                                                                        null, options);
+                    if(orientation > 0)
+                    {
+                        m = new Matrix();
+                        m.postRotate(orientation);
+                        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                                bitmap.getHeight(), m, true);
+                    }
+
+                    asyncProfileImage              = new AsyncProfileImage(this, taskDelegate);
+                    asyncProfileImage.execute(bitmap);
                 }
             }
+            /******* BACKGROUND IMAGE CHANGE ***********************************************************/
             else
             {
+                taskDelegate        = new BackgroundImageTaskDelegate(getResources(), coverImageView);
+                convolveOp          = BitmapOpFactory.createBlurOp(CONVULTION_KERNEL_SIZE);
+                convolveOp.setDivider(1.5);
                 coverImagePath      = data.getData().getPath();
+
                 if(coverImagePath != null)
                 {
-                    coverImagePath = getRealPathFromURI(this, data.getData());
-                    bitMap = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()));
-                    drawable = new BitmapDrawable(getResources(), bitMap);
-                    coverImageView.setBackground(drawable);
-                }
+                    coverImagePath              = getRealPathFromURI(this, data.getData());
+                    orientation                 = getOrientation(this, data.getData());
+                    options                     = new BitmapFactory.Options();
+                    options.inSampleSize        = 20;
+                    bitmap                      = BitmapFactory.decodeStream(
+                                                    getContentResolver().openInputStream
+                                                                        (data.getData()),
+                                                                        null, options);
+                    if(orientation > 0)
+                    {
+                        m = new Matrix();
+                        m.postRotate(orientation);
+                        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                                bitmap.getHeight(), m, true);
+                    }
 
+                    //blur the background image
+                    asyncConvolution    = new AsyncConvolution(this, convolveOp, taskDelegate);
+                    try {
+                        asyncConvolution.execute(bitmap);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
             }
         }
         catch (FileNotFoundException e)
         {
             e.printStackTrace();
         }
+        catch(IOException io)
+        {
+            io.printStackTrace();
+        }
+        this.classes.addTextChangedListener(textWatcher);
     }
-
     /**
      *
      * @param view
@@ -214,18 +212,16 @@ public class EditStudentProfileActivity extends Activity
     {
         Intent intent;
 
-        System.out.println("in on user click");
         switch(view.getId())
         {
             case R.id.profileImage:
-                System.out.println("in profile image button");
                 intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, 1);
                 break;
 
             case R.id.profileBackgroundImage:
-                System.out.println("in profile background image button");
                 intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                this.classes.removeTextChangedListener(textWatcher);
                 startActivityForResult(intent, 2);
                 break;
 
@@ -234,6 +230,8 @@ public class EditStudentProfileActivity extends Activity
                 intent = new Intent();
                 intent.putExtras(info);
                 setResult(RESULT_OK, intent);
+                profileImageBitmap      = null;
+                backgroundImageBitmap   = null;
                 finish();
                 break;
         }
@@ -247,14 +245,12 @@ public class EditStudentProfileActivity extends Activity
     {
         ArrayList<HttpPut>  puts;
         ArrayList<TextView> tvClasses;
-        RestClientExecute   rce;
         String              id, enrollId, courseName, jsonArray;
         JSONArray           classesAsStudent;
 
         id                  = info.getString("id");
         enrollId            = info.getString("enrollId");
         tvClasses           = textWatcher.getTextViews();
-        classes             = null;
         jsonArray           = null;
         classesAsStudent    = null;
 
@@ -274,16 +270,11 @@ public class EditStudentProfileActivity extends Activity
             jsonArray += "]";
         }
 
-        System.out.println("Updating this to the server: " + jsonArray);
-        //Send a put request with the user's data up the server
+        //Send a put request with the user's data up to the server
         try
         {
             if (jsonArray != null)
-            {
-                System.out.println("JSON array is not null");
-                System.out.println(jsonArray);
                 classesAsStudent = new JSONArray(jsonArray);
-            }
 
             puts        = RestClientFactory.put(id, enrollId, coverImagePath, profileImagePath,
                     name.getText().toString(), major.getText().toString(),
@@ -291,27 +282,29 @@ public class EditStudentProfileActivity extends Activity
                     classesAsStudent);
 
             for (int i =0; i < puts.size(); i++)
-            {
-                rce = new RestClientExecute(puts.get(i));
-                rce.start();
-            }
+                new RestClientExecute(puts.get(i)).start();
 
             info.putString("firstName", name.getText().toString());
             info.putString("about", about.getText().toString());
             info.putString("year", year.getText().toString());
             info.putString("major", major.getText().toString());
-            System.out.println("JSONARAAY bitch: " + jsonArray);
             info.putString("classes", jsonArray);
 
             Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
         }
         catch(Exception e)
         {
-            System.out.println("Exception!!!---!!!");
             e.printStackTrace();
         }
     }
 
+    public void onBackPressed()
+    {
+        profileImageBitmap      = null;
+        backgroundImageBitmap   = null;
+
+        super.onBackPressed();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         
@@ -326,9 +319,8 @@ public class EditStudentProfileActivity extends Activity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings)
             return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -340,8 +332,8 @@ public class EditStudentProfileActivity extends Activity
      */
     private String getRealPathFromURI(Context context, Uri contentUri)
     {
-        Cursor cursor;
-        int columnIndex;
+        Cursor  cursor;
+        int     columnIndex;
         cursor = null;
         try
         {
@@ -354,26 +346,27 @@ public class EditStudentProfileActivity extends Activity
         finally
         {
             if (cursor != null)
-            {
                 cursor.close();
-            }
         }
     }
 
     /**
-     * A placeholder fragment containing a simple view.
+     *
+     * @param context
+     * @param photoUri
+     * @return
      */
-    public static class PlaceholderFragment extends Fragment {
+    private  int getOrientation(Context context, Uri photoUri)
+    {
+        Cursor cursor;
+        cursor  = context.getContentResolver().query(photoUri,
+                new String[] { MediaStore.Images.ImageColumns.ORIENTATION }, null, null, null);
 
-        public PlaceholderFragment() {
-        }
+        if (cursor.getCount() != 1)
+            return -1;
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_edit_student_profile, container, false);
-            return rootView;
-        }
+        cursor.moveToFirst();
+        return cursor.getInt(0);
     }
 
 }

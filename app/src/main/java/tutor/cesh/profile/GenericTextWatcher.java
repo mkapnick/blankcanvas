@@ -59,7 +59,6 @@ public class GenericTextWatcher implements TextWatcher
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count)
     {
-        System.out.println("3");
         int                     cursorPosition;
         String                  course;
         SpannableStringBuilder  sb;
@@ -70,7 +69,6 @@ public class GenericTextWatcher implements TextWatcher
         //user is backspacing on a textview
         if (start == previousStartPosition && before != 0 && count == 0 && this.lengths.size() != 0)
         {
-            System.out.println("DELETEEEEEEE-********************");
             //set cursor position
             this.editText.setSelection(previousStartPosition);
 
@@ -96,9 +94,6 @@ public class GenericTextWatcher implements TextWatcher
         else if(s.length() > 0)
         {
             //the string in question
-            System.out.println("Before substring ---- ");
-            System.out.println(previousEndPosition);
-
             s = s.toString().substring(previousEndPosition, s.length());
 
             //if user just enters the space bar

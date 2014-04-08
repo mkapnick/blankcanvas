@@ -47,13 +47,10 @@ public class BubbleTextView extends MultiAutoCompleteTextView
         sb       = new SpannableStringBuilder();
         drawable = convertTextViewToDrawable();
 
-        System.out.println("checkpoint 4");
-
         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+
         sb.append(text);
         sb.setSpan(new ImageSpan(drawable), 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        System.out.println("checkpoint 5");
 
         return sb;
 
@@ -74,6 +71,7 @@ public class BubbleTextView extends MultiAutoCompleteTextView
             tv.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.abc_ic_clear_search_api_holo_light, 0);
         else
             tv.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.oval, 0);
+
         return tv;
     }
 
@@ -84,7 +82,6 @@ public class BubbleTextView extends MultiAutoCompleteTextView
      */
     private BitmapDrawable convertTextViewToDrawable()
     {
-        System.out.println("inside convert edit text to drawable");
         int                     spec;
         Bitmap                  bm, cacheBmp, viewBmp;
         Canvas                  canvas;
@@ -93,22 +90,16 @@ public class BubbleTextView extends MultiAutoCompleteTextView
         tv.measure(spec, spec);
         tv.layout(0, 0, tv.getMeasuredWidth(), tv.getMeasuredHeight());
 
-        System.out.println("checkpoint 1");
-
         bm      = Bitmap.createBitmap(tv.getWidth(), tv.getHeight(),Bitmap.Config.ARGB_8888);
 
         canvas  = new Canvas(bm);
         canvas.translate(-tv.getScrollX(), -tv.getScrollY());
         tv.draw(canvas);
 
-        System.out.println("checkpoint 2");
-
         tv.setDrawingCacheEnabled(true);
         cacheBmp= tv.getDrawingCache();
         viewBmp = cacheBmp.copy(Bitmap.Config.ARGB_8888, true);
         tv.destroyDrawingCache();
-
-        System.out.println("checkpoint 3");
 
         return new BitmapDrawable(context.getResources(), viewBmp);
     }

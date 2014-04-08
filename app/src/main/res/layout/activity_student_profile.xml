@@ -90,9 +90,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="300dp"
-            android:background="#F2F2F2"
-            android:alpha=".9"
+            android:layout_marginTop="350dp"
             android:id="@+id/relativeLayout">
 
             <ScrollView
@@ -105,10 +103,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:id="@+id/about"
-                    android:hint="About"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/black"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:editable="false"
                     android:singleLine="false"
                     android:paddingLeft="10dp"
@@ -128,16 +126,14 @@
                     android:layout_height="100dp"
                     android:id="@+id/classes"
                     android:hint="Classes I'm taking"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="14dp"
+                    android:textColorHint="@color/white"
                     android:editable="false"
                     android:singleLine="false"
                     android:paddingLeft="10dp"
                     android:scrollbars="vertical"
                     />
-
-
 
             </ScrollView>
 
