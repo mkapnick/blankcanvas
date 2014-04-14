@@ -13,7 +13,7 @@ public abstract class AbstractTaskDelegate implements TaskDelegate {
     protected ProgressDialog pd;
 
     @Override
-    public void taskCompletionResult(Bitmap b)
+    public void taskCompletionResult(Bitmap b, boolean check)
     {
         //have children implement as necessary
     }

@@ -45,7 +45,7 @@ public class AsyncProfileImage extends AsyncTask<Bitmap, Void, Bitmap>
         if(pd!=null)
         {
             pd.dismiss();
-            taskDelegate.taskCompletionResult(roundedBitmap);
+            taskDelegate.taskCompletionResult(roundedBitmap, false);
         }
         super.onPostExecute(result);
     };

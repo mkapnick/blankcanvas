@@ -46,7 +46,6 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
     private static String   DOMAIN = "http://protected-earth-9689.herokuapp.com";
     private String []       listViewTitles;
     private ActionBar       actionBar;
-    private ProgressDialog  progressDialog;
 
 
     @Override
@@ -58,6 +57,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         TextView    actionBarTextView, actionBarEdit;
         View        actionBarView;
         ImageButton actionBarMenuButton;
+
 
 
         name                = (EditText)    findViewById(R.id.name);
@@ -93,9 +93,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         actionBarMenuButton = (ImageButton) actionBarView.findViewById(R.id.menu_button);
         actionBarMenuButton.setOnClickListener(this);
 
-
         setUpUserInfo();
-
     }
 
     @Override
@@ -149,12 +147,10 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
      * @param id
      * @return
      */
-    private JSONObject setUpAndExecuteGet(DatabaseTable table, String id)
+    private void setUpAndExecuteGet(DatabaseTable table, String id)
     {
-        JSONObject                                  json1;
         HttpGet                                     get1;
 
-        json1 = null;
         try
         {
             get1        = RestClientFactory.get(table, id);
@@ -164,8 +160,6 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         {
             e.printStackTrace();
         }
-
-        return json1;
     }
 
     /**
@@ -225,6 +219,9 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
             e.printStackTrace();
         }
     }
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -321,7 +318,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
     }
 
     @Override
-    public void taskCompletionResult(Bitmap b)
+    public void taskCompletionResult(Bitmap b, boolean check)
     {
         //nothing
     }
@@ -375,6 +372,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
                 asyncDownloader     = new AsyncDownloader(DOMAIN + response.getString("cover_image_url"),
                                                           this, taskDelegate);
                 asyncDownloader.execute();
+
                 info.putString("coverImage", DOMAIN + response.getString("cover_image_url"));
             }
             if(response.has("classes")) {
@@ -387,11 +385,11 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
             e.printStackTrace();
         }
 
-        this.progressDialog.dismiss();
+        //this.progressDialog.dismiss();
     }
+
     @Override
-    public void setProgressDialog(ProgressDialog pd)
-    {
-        this.progressDialog = pd;
+    public void setProgressDialog(ProgressDialog pd) {
+        //nothing
     }
 }

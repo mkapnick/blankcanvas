@@ -57,7 +57,7 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
         if(pd!=null)
         {
             pd.dismiss();
-            this.taskDelegate.taskCompletionResult(this.bmp);
+            this.taskDelegate.taskCompletionResult(this.bmp, false);
         }
         super.onPostExecute(result);
     };
@@ -84,6 +84,9 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
         URL                 url;
         HttpURLConnection   connection;
         InputStream         input;
+        BitmapFactory.Options       options;
+        options                     = new BitmapFactory.Options();
+        options.inSampleSize        = 20;
 
         try
         {

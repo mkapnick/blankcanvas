@@ -23,7 +23,7 @@ public class ProfileImageTaskDelegate implements TaskDelegate
     }
 
     @Override
-    public void taskCompletionResult(Bitmap b)
+    public void taskCompletionResult(Bitmap b, boolean check)
     {
         view.setImageBitmap(b);
         EditStudentProfileActivity.profileImageBitmap = b;

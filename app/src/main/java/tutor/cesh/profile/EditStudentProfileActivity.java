@@ -1,6 +1,7 @@
 package tutor.cesh.profile;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -8,14 +9,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +29,7 @@ import org.json.JSONArray;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import tutor.cesh.R;
 import tutor.cesh.rest.BackgroundImageTaskDelegate;
@@ -35,17 +40,29 @@ import tutor.cesh.rest.TaskDelegate;
 import tutor.cesh.sampled.statik.AsyncConvolution;
 import tutor.cesh.sampled.statik.AsyncProfileImage;
 import tutor.cesh.sampled.statik.BitmapOpFactory;
+import tutor.cesh.sampled.statik.BlurredImageLifeCycle;
 import tutor.cesh.sampled.statik.ConvolveOp;
+import tutor.cesh.sampled.statik.GrayExceptOp;
+import tutor.cesh.sampled.statik.LocalColors;
+import tutor.cesh.sampled.statik.Posterizer;
 
-public class EditStudentProfileActivity extends Activity
+public class EditStudentProfileActivity extends Activity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener
 {
-    private String                          profileImagePath, coverImagePath;
-    private Bundle                          info;
-    private EditText                        name, major, year, about,   classes;
-    private ImageView                       profileImageView, coverImageView;
-    private static GenericTextWatcher       textWatcher;
-    private static final int                CONVULTION_KERNEL_SIZE = 7;
-    public  static Bitmap                   profileImageBitmap, backgroundImageBitmap;
+    private String                                  profileImagePath, coverImagePath;
+    private Bundle                                  info;
+    private EditText                                name, major, year, about,   classes;
+    private ImageView                               profileImageView, coverImageView;
+    private SeekBar                                 seekBar;
+    private Button                                  blackAndWhite, exceptOrange, exceptBlue,
+                                                    exceptGreen, exceptYellow,exceptRed;
+    private static GenericTextWatcher               textWatcher;
+    private static final int                        CONVULTION_KERNEL_SIZE = 3;
+    private static final String                     BLACK_AND_WHITE = "Black and White Cover Image";
+    private static final String                     BLACK_AND_WHITE_EXCEPT = "Black and White Except";
+
+    public  static Bitmap                           profileImageBitmap, backgroundImageBitmap;
+    public  static BlurredImageLifeCycle            blurredImageLifeCycle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,16 +82,38 @@ public class EditStudentProfileActivity extends Activity
      */
     private void initializeUI()
     {
-        name                = (EditText)    findViewById(R.id.name);
-        major               = (EditText)    findViewById(R.id.major);
-        year                = (EditText)    findViewById(R.id.year);
-        about               = (EditText)    findViewById(R.id.about);
-        classes             = (EditText)    findViewById(R.id.classes);
 
-        profileImageView    = (ImageView)   findViewById(R.id.profileImage);
-        coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
+        name                    = (EditText)    findViewById(R.id.name);
+        major                   = (EditText)    findViewById(R.id.major);
+        year                    = (EditText)    findViewById(R.id.year);
+        about                   = (EditText)    findViewById(R.id.about);
+        classes                 = (EditText)    findViewById(R.id.classes);
 
-        textWatcher         = new GenericTextWatcher (getApplicationContext(), classes);
+        profileImageView        = (ImageView)   findViewById(R.id.profileImage);
+        coverImageView          = (ImageView)   findViewById(R.id.profileBackgroundImage);
+
+        blackAndWhite           = (Button)      findViewById(R.id.blackAndWhite);
+        exceptOrange            = (Button)      findViewById(R.id.exceptOrange);
+        exceptBlue              = (Button)      findViewById(R.id.exceptBlue);
+        exceptGreen             = (Button)      findViewById(R.id.exceptGreen);
+        exceptYellow            = (Button)      findViewById(R.id.exceptYellow);
+        exceptRed               = (Button)      findViewById(R.id.exceptRed);
+
+
+        blackAndWhite.setOnClickListener(this);
+        exceptOrange.setOnClickListener(this);
+        exceptBlue.setOnClickListener(this);
+        exceptGreen.setOnClickListener(this);
+        exceptYellow.setOnClickListener(this);
+        exceptRed.setOnClickListener(this);
+
+        seekBar                 = (SeekBar)     findViewById(R.id.seekBar);
+        seekBar.setProgress(0);
+        seekBar.setMax(100);
+        seekBar.setVisibility(View.INVISIBLE);
+        seekBar.setOnSeekBarChangeListener(this);
+
+        textWatcher             = new GenericTextWatcher (getApplicationContext(), classes);
         classes.addTextChangedListener(textWatcher);
     }
 
@@ -84,6 +123,7 @@ public class EditStudentProfileActivity extends Activity
     private void setUpUserData()
     {
         //set fields based on data from the bundle
+        EditStudentProfileActivity.blurredImageLifeCycle = new BlurredImageLifeCycle();
         name.setText(info.getString("firstName"));
         major.setText(info.getString("major"));
         year.setText(info.getString("year"));
@@ -108,6 +148,26 @@ public class EditStudentProfileActivity extends Activity
 
     /**
      *
+     * @param bitmap
+     */
+    public static void setUpBlurredBackgroundImages(Bitmap bitmap)
+    {
+
+        blurredImageLifeCycle.add(bitmap);
+        ConvolveOp                  op;
+        BackgroundImageTaskDelegate bt;
+        AsyncConvolution            blur;
+
+        op = BitmapOpFactory.createBlurOp(3);
+        op.setDivider(1.5);
+
+        bt      = new BackgroundImageTaskDelegate();
+        blur    = new AsyncConvolution(op, bt);
+        blur.execute(bitmap);
+    }
+
+    /**
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -123,7 +183,6 @@ public class EditStudentProfileActivity extends Activity
         int                     orientation;
         Matrix                  m;
         TaskDelegate            taskDelegate;
-
 
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -185,8 +244,11 @@ public class EditStudentProfileActivity extends Activity
                     }
 
                     //blur the background image
-                    asyncConvolution    = new AsyncConvolution(this, convolveOp, taskDelegate);
+                    asyncConvolution    = new AsyncConvolution(new ProgressDialog(this), convolveOp, taskDelegate);
                     try {
+                        seekBar.setVisibility(View.VISIBLE);
+                        seekBar.setProgress(0);
+                        blurredImageLifeCycle.reset();
                         asyncConvolution.execute(bitmap);
                     }catch(Exception e){
                         e.printStackTrace();
@@ -369,4 +431,113 @@ public class EditStudentProfileActivity extends Activity
         return cursor.getInt(0);
     }
 
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+    {
+        List<Bitmap> blurredImages;
+        Drawable            drawable;
+
+        blurredImages   = blurredImageLifeCycle.getList();
+        drawable        = null;
+        if(progress >= 0 && progress <= 24)
+        {
+            if(blurredImages.size() > 0) {
+                drawable = new BitmapDrawable(getResources(), blurredImages.get(0));
+                EditStudentProfileActivity.backgroundImageBitmap = blurredImages.get(0);
+            }
+        }
+        else if(progress >= 25 && progress <= 49)
+        {
+            if(blurredImages.size() > 1) {
+                drawable = new BitmapDrawable(getResources(), blurredImages.get(1));
+                EditStudentProfileActivity.backgroundImageBitmap = blurredImages.get(1);
+            }
+        }
+        else if (progress >= 50 && progress <= 74)
+        {
+            if(blurredImages.size() > 2) {
+                drawable = new BitmapDrawable(getResources(), blurredImages.get(2));
+                EditStudentProfileActivity.backgroundImageBitmap = blurredImages.get(2);
+            }
+        }
+        else if (progress >= 75 && progress <= 90)
+        {
+            if(blurredImages.size() > 3) {
+                drawable = new BitmapDrawable(getResources(), blurredImages.get(3));
+                EditStudentProfileActivity.backgroundImageBitmap = blurredImages.get(3);
+            }
+        }
+        else
+        {
+            if(blurredImages.size() > 4) {
+                drawable = new BitmapDrawable(getResources(), blurredImages.get(4));
+                EditStudentProfileActivity.backgroundImageBitmap = blurredImages.get(4);
+            }
+        }
+
+        if(drawable != null)
+            coverImageView.setBackground(drawable);
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar)
+    {
+        //nothing
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar)
+    {
+        //nothing
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        Posterizer      posterizer;
+        GrayExceptOp    greyExceptOp;
+        Bitmap          newBitmap;
+        Drawable        drawable;
+
+        newBitmap = null;
+        switch(v.getId())
+        {
+            case R.id.blackAndWhite:
+                posterizer  = new Posterizer();
+                newBitmap   = posterizer.toBlackAndWhite(EditStudentProfileActivity.backgroundImageBitmap);
+                break;
+            case R.id.exceptOrange:
+                greyExceptOp    = new GrayExceptOp(LocalColors.ORANGE.getRgb());
+                newBitmap       = greyExceptOp.filter(EditStudentProfileActivity.backgroundImageBitmap, null);
+                break;
+            case R.id.exceptPurple:
+                greyExceptOp    = new GrayExceptOp(LocalColors.PURPLE.getRgb());
+                newBitmap       = greyExceptOp.filter(EditStudentProfileActivity.backgroundImageBitmap, null);
+                break;
+            case R.id.exceptBlue:
+                greyExceptOp    = new GrayExceptOp(LocalColors.BLUE.getRgb());
+                newBitmap       = greyExceptOp.filter(EditStudentProfileActivity.backgroundImageBitmap, null);
+                break;
+            case R.id.exceptGreen:
+                greyExceptOp    = new GrayExceptOp(LocalColors.GREEN.getRgb());
+                newBitmap       = greyExceptOp.filter(EditStudentProfileActivity.backgroundImageBitmap, null);
+                break;
+            case R.id.exceptYellow:
+                greyExceptOp    = new GrayExceptOp(LocalColors.YELLOW.getRgb());
+                newBitmap       = greyExceptOp.filter(EditStudentProfileActivity.backgroundImageBitmap, null);
+                break;
+            case R.id.exceptRed:
+                greyExceptOp    = new GrayExceptOp(LocalColors.RED.getRgb());
+                newBitmap       = greyExceptOp.filter(EditStudentProfileActivity.backgroundImageBitmap, null);
+                break;
+        }
+
+        if(newBitmap!=null)
+        {
+            drawable    = new BitmapDrawable(getResources(), newBitmap);
+            coverImageView.setBackground(drawable);
+            EditStudentProfileActivity.backgroundImageBitmap = newBitmap;
+        }
+    }
 }

@@ -1,7 +1,6 @@
 package tutor.cesh.sampled.statik;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
@@ -18,10 +17,16 @@ public class AsyncConvolution extends AsyncTask <Bitmap, Integer, Bitmap>
     private TaskDelegate    taskDelegate;
 
 
-    public AsyncConvolution(Context c, ConvolveOp op, TaskDelegate td)
+    public AsyncConvolution(ProgressDialog pd, ConvolveOp op, TaskDelegate td)
     {
         this.op             = op;
-        this.pd             = new ProgressDialog(c);
+        this.pd             = pd;
+        this.taskDelegate   = td;
+    }
+
+    public AsyncConvolution(ConvolveOp op, TaskDelegate td)
+    {
+        this.op             = op;
         this.taskDelegate   = td;
     }
 
@@ -39,18 +44,21 @@ public class AsyncConvolution extends AsyncTask <Bitmap, Integer, Bitmap>
 
         if(pd!=null) {
             pd.dismiss();
-            taskDelegate.taskCompletionResult(this.convolvedBitmap);
         }
+        taskDelegate.taskCompletionResult(this.convolvedBitmap, true);
+
     };
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
 
-        pd.setTitle("Updating...");
-        pd.setMessage("Please wait");
-        pd.setCancelable(false);
-        pd.setIndeterminate(true);
-        pd.show();
+        if(pd != null) {
+            pd.setTitle("Updating...");
+            pd.setMessage("Please wait");
+            pd.setCancelable(false);
+            pd.setIndeterminate(true);
+            pd.show();
+        }
     }
 }

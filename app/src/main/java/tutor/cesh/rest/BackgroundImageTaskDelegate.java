@@ -16,8 +16,9 @@ import tutor.cesh.profile.EditStudentProfileActivity;
  */
 public class BackgroundImageTaskDelegate implements TaskDelegate
 {
-    private ImageView view;
-    private Resources resources;
+    private ImageView   view;
+    private Resources   resources;
+
 
     public BackgroundImageTaskDelegate(Resources r, ImageView view)
     {
@@ -25,14 +26,32 @@ public class BackgroundImageTaskDelegate implements TaskDelegate
         this.view       = view;
     }
 
-    @Override
-    public void taskCompletionResult(Bitmap b)
+    public BackgroundImageTaskDelegate()
     {
-        Drawable drawable;
+        this.view       = null;
+        this.resources  = null;
+    }
 
-        drawable = new BitmapDrawable(resources, b);
-        view.setBackground(drawable);
-        EditStudentProfileActivity.backgroundImageBitmap = b;
+    @Override
+    public void taskCompletionResult(Bitmap b, boolean check)
+    {
+        if(view != null && resources != null)
+        {
+
+            Drawable drawable;
+            drawable = new BitmapDrawable(resources, b);
+            view.setBackground(drawable);
+            EditStudentProfileActivity.backgroundImageBitmap = b;
+        }
+
+        if(check) {
+            try {
+                System.out.println("GOING");
+                EditStudentProfileActivity.setUpBlurredBackgroundImages(b);
+            } catch (Exception e) {
+                System.out.println("Stopping");
+            }
+        }
     }
 
     @Override

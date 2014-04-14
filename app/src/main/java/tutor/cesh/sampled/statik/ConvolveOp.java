@@ -32,9 +32,8 @@ public class ConvolveOp
     public Bitmap filter(Bitmap src, Bitmap dst)
     {
         Matrix          border;
-        int             startY, endX, endY, tempX, tempY,
-                        totalRed, totalGreen, totalBlue, kernelRows,
-                        kernelColumns, entryPoint;
+        int             startY, endX, endY, tempX, tempY,totalRed, totalGreen, totalBlue,
+                        kernelRows, kernelColumns, entryPoint;
         int [] []       red, green, blue;
 
         Matrix          mRed, mBlue, mGreen, kernelMatrix;
@@ -64,53 +63,42 @@ public class ConvolveOp
                 dst.setPixel(xx,yy, src.getPixel(xx, yy));
 
         //blur the rest of the dst image
-        for(int x = 0; x < endX; x++)
-        {
-            for(int y = startY; y < endY; y++)
-            {
+        for(int x = 0; x < endX; x++) {
+            for (int y = startY; y < endY; y++) {
                 tempY = y - entryPoint;
-                if((x >= entryPoint && x < endX - 1) && (y >= entryPoint && y < endY - 1))
-                {
-                    //fill in the border surrounding this pixel
-                    for (int r = 0; r < kernelRows && tempY < endY; r++)
-                    {
-                        tempX = x - entryPoint;
-                        if (tempX < 0) tempX = 0;
-                        if (tempY < 0) tempY = 0;
-                        for (int c = 0; c < kernelColumns && tempX < endX; c++){
-                            border.setValue(r, c, src.getPixel(tempX, tempY));
-                            red[r][c]   = Color.red(src.getPixel(tempX, tempY));
-                            green[r][c] = Color.green(src.getPixel(tempX, tempY));
-                            blue[r][c]  = Color.blue(src.getPixel(tempX, tempY));
-                            tempX++;
-                        }
-                        tempY++;
+
+                //fill in the border surrounding this pixel
+                for (int r = 0; r < kernelRows && tempY < endY; r++) {
+                    tempX = x - entryPoint;
+                    if (tempX < 0) tempX = 0;
+                    if (tempY < 0) tempY = 0;
+                    for (int c = 0; c < kernelColumns && tempX < endX; c++) {
+                        border.setValue(r, c, src.getPixel(tempX, tempY));
+                        red[r][c] = Color.red(src.getPixel(tempX, tempY));
+                        green[r][c] = Color.green(src.getPixel(tempX, tempY));
+                        blue[r][c] = Color.blue(src.getPixel(tempX, tempY));
+                        tempX++;
                     }
-                    //covert 2D array of specific color to a Matrix
-                    mRed    = Matrix.toMatrix(red, kernelRows, kernelColumns);
-                    mGreen  = Matrix.toMatrix(green, kernelRows, kernelColumns);
-                    mBlue   = Matrix.toMatrix(blue, kernelRows, kernelColumns);
-                    try
-                    {
-                        // take the dot product b/w each color and the kernel
-                        totalRed        = (int)mRed.dot(kernelMatrix);
-                        totalGreen      = (int)mGreen.dot(kernelMatrix);
-                        totalBlue       = (int)mBlue.dot(kernelMatrix);
-                        //set the new color value at this point
-                        dst.setPixel(x, y, Color.rgb(totalRed, totalGreen, totalBlue));
-                    }
-                    catch (LengthErrorException e)
-                    {
-                        e.printStackTrace();
-                    }
+                    tempY++;
                 }
-                else
-                {
-                    dst.setPixel(x,y, src.getPixel(x, y));
+
+                //covert 2D array of specific color to a Matrix
+                mRed = Matrix.toMatrix(red, kernelRows, kernelColumns);
+                mGreen = Matrix.toMatrix(green, kernelRows, kernelColumns);
+                mBlue = Matrix.toMatrix(blue, kernelRows, kernelColumns);
+
+                try {
+                    // take the dot product b/w each color and the kernel
+                    totalRed = (int) mRed.dot(kernelMatrix);
+                    totalGreen = (int) mGreen.dot(kernelMatrix);
+                    totalBlue = (int) mBlue.dot(kernelMatrix);
+                    //set the new color value at this point
+                    dst.setPixel(x, y, Color.rgb(totalRed, totalGreen, totalBlue));
+                } catch (LengthErrorException e) {
+                    e.printStackTrace();
                 }
             }
         }
-        src.recycle();
         return dst;
     }
 

@@ -10,7 +10,7 @@ import org.json.JSONObject;
  */
 public interface TaskDelegate
 {
-    public void taskCompletionResult(Bitmap b);
+    public void taskCompletionResult(Bitmap b, boolean check);
     public void taskCompletionResult(JSONObject response);
     public void setProgressDialog(ProgressDialog pd);
 
