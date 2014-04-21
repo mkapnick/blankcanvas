@@ -4,6 +4,9 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
+import tutor.cesh.profile.EditStudentProfileActivity;
+import tutor.cesh.profile.ImageController;
+import tutor.cesh.profile.ImageLocation;
 import tutor.cesh.rest.TaskDelegate;
 
 /**
@@ -33,7 +36,16 @@ public class AsyncConvolution extends AsyncTask <Bitmap, Integer, Bitmap>
     @Override
     protected Bitmap doInBackground(Bitmap... params)
     {
-        this.convolvedBitmap = this.op.filter(params[0], null);
+        Bitmap currentBitmap, tmp;
+        currentBitmap = params[0];
+
+        for(int i =0; i < 5; i++)
+        {
+            tmp = this.op.filter(currentBitmap, null);
+            currentBitmap = tmp;
+            EditStudentProfileActivity.blurredImageLifeCycle.add(currentBitmap);
+        }
+        this.convolvedBitmap = currentBitmap;
         return null;
     }
 
@@ -42,9 +54,14 @@ public class AsyncConvolution extends AsyncTask <Bitmap, Integer, Bitmap>
     {
         super.onPostExecute(result);
 
+        ImageController controller;
+        controller = ImageController.getInstance();
+
         if(pd!=null) {
             pd.dismiss();
         }
+
+        controller.push(convolvedBitmap, ImageLocation.BACKGROUND);
         taskDelegate.taskCompletionResult(this.convolvedBitmap, true);
 
     };

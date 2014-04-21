@@ -20,18 +20,19 @@
 
         <ImageView
             android:id="@+id/profileImage"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:adjustViewBounds="true"
             android:layout_alignTop="@+id/userInfo"
             android:layout_marginLeft="15dp"
+            android:onClick="onUserClick"
             />
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="115dp"
-            android:layout_marginLeft="100dp"
+            android:layout_marginLeft="115dp"
             android:id="@+id/userInfo">
 
             <EditText

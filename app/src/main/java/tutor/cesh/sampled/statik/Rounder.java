@@ -3,6 +3,7 @@ package tutor.cesh.sampled.statik;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
+import tutor.cesh.math.EuclideanMetric;
 import tutor.cesh.math.Metric;
 
 /**
@@ -19,6 +20,10 @@ public class Rounder
         this.metric = metric;
     }
 
+    public Rounder()
+    {
+        this.metric = new EuclideanMetric();
+    }
 
     public Bitmap round(Bitmap src)
     {
@@ -31,6 +36,9 @@ public class Rounder
         currentPoint    = new double[2];
         width           = src.getWidth();
         height          = src.getHeight();
+
+        System.out.println("Width is: " + width);
+        System.out.println("Height is: " + height);
         dst             = Bitmap.createBitmap(  src.getWidth(),
                                                 src.getHeight(),
                                                 Bitmap.Config.ARGB_8888);

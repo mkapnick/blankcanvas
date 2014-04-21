@@ -12,7 +12,7 @@ import tutor.cesh.math.Metric;
 public class GrayExceptOp
 {
     private int [] highlightColor;
-    private final int TOLERANCE = 210;
+    private final int TOLERANCE = 200;
     private double [] x, y;
     private Metric metric;
 

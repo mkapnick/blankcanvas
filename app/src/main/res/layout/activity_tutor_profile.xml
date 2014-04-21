@@ -20,8 +20,8 @@
 
         <ImageView
             android:id="@+id/profileImage"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:adjustViewBounds="true"
             android:layout_alignTop="@+id/userInfo"
             android:layout_marginLeft="15dp"
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="115dp"
-            android:layout_marginLeft="100dp"
+            android:layout_marginLeft="115dp"
             android:id="@+id/userInfo">
 
 
@@ -126,9 +126,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="300dp"
-        android:background="#F2F2F2"
-        android:alpha=".9">
+        android:layout_marginTop="350dp"
+        android:id="@+id/relativeLayout">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -140,15 +139,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:id="@+id/about"
-                android:hint="About"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
                 android:textSize="14dp"
+                android:textStyle="bold"
                 android:editable="false"
                 android:singleLine="false"
                 android:paddingLeft="10dp"
                 android:scrollbars="vertical"/>
-
         </ScrollView>
 
         <ScrollView
@@ -162,14 +160,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:id="@+id/classes"
-                android:hint="Classes I'm taking"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
+                android:hint="Classes I'm tutoring"
+                android:textColor="@color/white"
                 android:textSize="14dp"
+                android:textColorHint="@color/white"
                 android:editable="false"
                 android:singleLine="false"
                 android:paddingLeft="10dp"
-                android:scrollbars="vertical"/>
+                android:scrollbars="vertical"
+                />
 
         </ScrollView>
 

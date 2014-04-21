@@ -32,9 +32,10 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:adjustViewBounds="true"
+                android:layout_alignTop="@+id/userInfo"
+                android:layout_marginLeft="15dp"
                 android:onClick="onUserClick"
-                android:layout_marginTop="100dp"
-                android:layout_marginLeft="10dp"/>
+                />
 
 
             <TextView
@@ -294,9 +295,6 @@
 
                 </ScrollView>
             </RelativeLayout>
-
-
-
         </RelativeLayout>
 
     </ScrollView>

@@ -4,7 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -38,28 +38,38 @@ import tutor.cesh.rest.TaskDelegate;
 
 public class StudentProfileActivity extends ActionBarActivity implements View.OnClickListener, TaskDelegate
 {
-    private Bundle          info;
-    private ImageView       profileImageView, coverImageView;
-    private EditText        name, major, year, about, classes;
-    private DrawerLayout    drawerLayout;
-    private ListView        listView;
-    private static String   DOMAIN = "http://protected-earth-9689.herokuapp.com";
-    private String []       listViewTitles;
-    private ActionBar       actionBar;
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+    private Bundle                  info;
+    public static ImageView         profileImageView, coverImageView;
+    private EditText                name, major, year, about, classes;
+    private DrawerLayout            drawerLayout;
+    private ListView                listView;
+    private static String           DOMAIN = "http://protected-earth-9689.herokuapp.com";
+    private String []               listViewTitles;
+    private ActionBar               actionBar;
+    public static Subject           profileImageSubject, coverImageSubject;
+    private ImageController         imageController;
+    /**
+     * A private class responsible for handling click events on the
+     * DrawableLayout
+     *
+     * @author Michael Kapnick
+     * @version v1
+     */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener
     {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_student_profile);
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id)
+        {
+            listView.setItemChecked(position, true);
+            onOptionsItemSelected(position);
+        }
+    }
 
-        TextView    actionBarTextView, actionBarEdit;
-        View        actionBarView;
-        ImageButton actionBarMenuButton;
-
-
-
+    /**
+     *
+     */
+    private void initializeUI()
+    {
         name                = (EditText)    findViewById(R.id.name);
         major               = (EditText)    findViewById(R.id.major);
         year                = (EditText)    findViewById(R.id.year);
@@ -74,46 +84,16 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         listView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listViewTitles));
         listView.setOnItemClickListener(new DrawerItemClickListener());
 
+        /* Set up boolean value in bundle */
         info                = getIntent().getExtras();
         info.putString("ok", "false");
-
-        actionBar           = getSupportActionBar();
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setCustomView(R.layout.my_action_bar);
-
-        //displaying custom ActionBar
-        actionBarView       = getSupportActionBar().getCustomView();
-        actionBarTextView   = (TextView) actionBarView.findViewById(R.id.textViewActionBar);
-        actionBarTextView.setText("STUDENT");
-        actionBarTextView.setTextColor(Color.WHITE);
-
-        actionBarEdit       = (TextView)actionBarView.findViewById(R.id.editStudentProfile);
-        actionBarEdit.setOnClickListener(this);
-
-        actionBarMenuButton = (ImageButton) actionBarView.findViewById(R.id.menu_button);
-        actionBarMenuButton.setOnClickListener(this);
-
-        setUpUserInfo();
-    }
-
-    @Override
-    protected void onRestart()
-    {
-        super.onRestart();
-        setUpUserInfo();
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        setUpUserInfo();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Bundle      savedInstanceState;
+        Bundle          savedInstanceState;
+        BitmapDrawable  drawable;
 
         if (requestCode == 1)
         {
@@ -127,100 +107,58 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
                 info.putString("classes",   savedInstanceState.getString("classes"));
                 info.putString("ok", "true");
 
-                try
+                drawable = new BitmapDrawable(getResources(), imageController.peek(ImageLocation.BACKGROUND));
+                profileImageView.setImageBitmap(imageController.peek(ImageLocation.PROFILE));
+                coverImageView.setBackground(drawable);
+
+                //profileImageSubject.notifyObservers();
+                //coverImageSubject.notifyObservers();
+
+                /*try
                 {
                     setUpAndExecuteGet(DatabaseTable.USERS, info.getString("userId"));
                 }
                 catch(Exception e)
                 {
                     e.printStackTrace();
-                }
+                }*/
             }
         }
         setUpUserInfo();
     }
 
-
-    /**
-     * Helper method to set up an HttpGet request
-     * @param table
-     * @param id
-     * @return
-     */
-    private void setUpAndExecuteGet(DatabaseTable table, String id)
+    @Override
+    public void onClick(View v)
     {
-        HttpGet                                     get1;
+        Intent intent;
+        switch(v.getId())
+        {
+            case R.id.editCurrentProfile:
+                intent = new Intent(this, EditStudentProfileActivity.class);
+                intent.putExtras(info);
+                startActivityForResult(intent, 1);
+                break;
 
-        try
-        {
-            get1        = RestClientFactory.get(table, id);
-            new AsyncGet(this, this).execute(get1);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
+            case R.id.menu_button:
+                if(drawerLayout.isDrawerOpen(listView))
+                    drawerLayout.closeDrawer(listView);
+                else
+                    drawerLayout.openDrawer(listView);
+                break;
         }
     }
 
-    /**
-     *
-     */
-    private void setUpUserInfo()
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
     {
-        AsyncTask<Void, Integer, Bitmap>            asyncDownloader;
-        JSONArray                                   jsonArray;
-        Drawable                                    drawable;
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_student_profile);
 
-        TextFieldHelper                             classesTextFieldHelper;
-        String                                      formatted;
-        TaskDelegate                                taskDelegate;
-
-        classesTextFieldHelper  = new ClassesTextFieldHelper(this);
-
-        try
-        {
-            //get user info from the server
-            if(info.getString("ok").equalsIgnoreCase("false"))
-            {
-                setUpAndExecuteGet(DatabaseTable.USERS, info.getString("id"));
-                setUpAndExecuteGet(DatabaseTable.ENROLLS, info.getString("enrollId"));
-            }
-            else
-            {
-                //set fields based on data from the updated bundle
-                name.setText(info.getString("firstName"), TextView.BufferType.EDITABLE);
-                major.setText(info.getString("major"), TextView.BufferType.EDITABLE);
-                year.setText(info.getString("year"), TextView.BufferType.EDITABLE);
-                about.setText(info.getString("about"), TextView.BufferType.EDITABLE);
-
-                //get profile image from bundle and set profile image
-                taskDelegate        = new ProfileImageTaskDelegate(profileImageView);
-                asyncDownloader     = new AsyncDownloader(info.getString("profileImage"),
-                                                          this,taskDelegate);
-                asyncDownloader.execute();
-
-                //get background image from bundle and set the background
-                taskDelegate        = new BackgroundImageTaskDelegate(getResources(),
-                                                                      coverImageView);
-                asyncDownloader     = new AsyncDownloader(info.getString("coverImage"),
-                                                          this, taskDelegate);
-                asyncDownloader.execute();
-
-                if (!info.getString("classes").equalsIgnoreCase("null"))
-                {
-                    jsonArray = new JSONArray(info.getString("classes"));
-                    formatted = classesTextFieldHelper.help(this.classes, null, jsonArray);
-                    info.putString("classes", formatted);
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+        initializeUI();
+        setUpRelationships();
+        setUpActionBar();
+        setUpUserInfo();
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -240,7 +178,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
 
         if (id == R.id.action_settings)
             return true;
-        else if(id == R.id.editStudentProfile)
+        else if(id == R.id.editCurrentProfile)
         {
             position = -100;
         }
@@ -281,42 +219,143 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
     }
 
     @Override
-    public void onClick(View v)
+    protected void onResume()
     {
-        Intent intent;
-        switch(v.getId())
-        {
-            case R.id.editStudentProfile:
-                intent = new Intent(this, EditStudentProfileActivity.class);
-                intent.putExtras(info);
-                startActivityForResult(intent, 1);
-                break;
-
-            case R.id.menu_button:
-                if(drawerLayout.isDrawerOpen(listView))
-                    drawerLayout.closeDrawer(listView);
-                else
-                    drawerLayout.openDrawer(listView);
-                break;
-        }
+        super.onResume();
+        setUpUserInfo();
     }
+
+    @Override
+    protected void onRestart()
+    {
+        super.onRestart();
+        setUpUserInfo();
+    }
+
+    @Override
+    public void setProgressDialog(ProgressDialog pd) {
+        //nothing
+    }
+
     /**
-     * A private class responsible for handling click events on the
-     * DrawableLayout
      *
-     * @author Michael Kapnick
-     * @version v1
      */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener
+    private void setUpActionBar()
     {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id)
+        TextView    actionBarTextView, actionBarEdit;
+        View        actionBarView;
+        ImageButton actionBarMenuButton;
+
+        actionBar           = getSupportActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(R.layout.action_bar);
+
+        //displaying custom ActionBar
+        actionBarView       = getSupportActionBar().getCustomView();
+        actionBarTextView   = (TextView) actionBarView.findViewById(R.id.textViewActionBar);
+        actionBarTextView.setText("STUDENT");
+        actionBarTextView.setTextColor(Color.WHITE);
+
+        actionBarEdit       = (TextView)actionBarView.findViewById(R.id.editCurrentProfile);
+        actionBarEdit.setOnClickListener(this);
+
+        actionBarMenuButton = (ImageButton) actionBarView.findViewById(R.id.menu_button);
+        actionBarMenuButton.setOnClickListener(this);
+    }
+
+    /**
+     * Helper method to set up an HttpGet request
+     * @param table
+     * @param id
+     * @return
+     */
+    private void setUpAndExecuteGet(DatabaseTable table, String id)
+    {
+        HttpGet get1;
+
+        try
         {
-            listView.setItemChecked(position, true);
-            onOptionsItemSelected(position);
+            get1        = RestClientFactory.get(table, id);
+            new AsyncGet(this, this).execute(get1);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
         }
     }
 
+    /**
+     *
+     */
+    private void setUpRelationships()
+    {
+        /* Set up Subject-observer relationship */
+
+        imageController = ImageController.getInstance();
+
+        profileImageSubject         = new ImageSubject();
+        coverImageSubject           = new ImageSubject();
+
+        new ImageObserver(profileImageView, profileImageSubject);
+        new ImageDrawableObserver(coverImageView, coverImageSubject, getResources());
+    }
+
+    /**
+     *
+     */
+    private void setUpUserInfo()
+    {
+        AsyncTask<Void, Integer, Bitmap>            asyncDownloader;
+        JSONArray                                   jsonArray;
+        TextFieldHelper                             classesTextFieldHelper;
+        String                                      formatted;
+        TaskDelegate                                taskDelegate;
+
+        classesTextFieldHelper  = new ClassesTextFieldHelper(this);
+
+        try
+        {
+            //get user info from the server
+            if(info.getString("ok").equalsIgnoreCase("false"))
+            {
+                setUpAndExecuteGet(DatabaseTable.USERS, info.getString("id"));
+                setUpAndExecuteGet(DatabaseTable.ENROLLS, info.getString("enrollId"));
+            }
+            else
+            {
+                //set fields based on data from the updated bundle
+                name.setText(info.getString("firstName"), TextView.BufferType.EDITABLE);
+                major.setText(info.getString("major"), TextView.BufferType.EDITABLE);
+                year.setText(info.getString("year"), TextView.BufferType.EDITABLE);
+                about.setText(info.getString("about"), TextView.BufferType.EDITABLE);
+
+                //get profile image from bundle and set profile image
+                taskDelegate        = new ProfileImageTaskDelegate(profileImageSubject);
+                asyncDownloader     = new AsyncDownloader(info.getString("profileImage"),
+                                                          this,taskDelegate);
+                asyncDownloader.execute();
+
+                //get background image from bundle and set the background
+                taskDelegate        = new BackgroundImageTaskDelegate(  getResources(),
+                                                                        coverImageSubject);
+
+                asyncDownloader     = new AsyncDownloader(info.getString("coverImage"),
+                                                          this, taskDelegate);
+                asyncDownloader.execute();
+
+                if (!info.getString("classes").equalsIgnoreCase("null"))
+                {
+                    jsonArray = new JSONArray(info.getString("classes"));
+                    formatted = classesTextFieldHelper.help(this.classes, null, jsonArray);
+                    info.putString("classes", formatted);
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
     @Override
     public void taskCompletionResult(Bitmap b, boolean check)
     {
@@ -358,7 +397,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
 
             //get profile image from server and set profile image
             if(response.has("profile_image_url")) {
-                taskDelegate        = new ProfileImageTaskDelegate(profileImageView);
+                taskDelegate        = new ProfileImageTaskDelegate(profileImageSubject);
                 asyncDownloader     = new AsyncDownloader(DOMAIN + response.getString("profile_image_url"),
                                                           this, taskDelegate);
                 asyncDownloader.execute();
@@ -368,7 +407,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
             //get background image from server and set the background
             if(response.has("cover_image_url")) {
                 taskDelegate        = new BackgroundImageTaskDelegate(getResources(),
-                                                                      coverImageView);
+                                                                      coverImageSubject);
                 asyncDownloader     = new AsyncDownloader(DOMAIN + response.getString("cover_image_url"),
                                                           this, taskDelegate);
                 asyncDownloader.execute();
@@ -384,12 +423,5 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         catch (JSONException e){
             e.printStackTrace();
         }
-
-        //this.progressDialog.dismiss();
-    }
-
-    @Override
-    public void setProgressDialog(ProgressDialog pd) {
-        //nothing
     }
 }

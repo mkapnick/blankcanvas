@@ -3,54 +3,43 @@ package tutor.cesh.rest;
 import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.widget.ImageView;
 
 import org.json.JSONObject;
 
-import tutor.cesh.profile.EditStudentProfileActivity;
+import tutor.cesh.profile.ImageController;
+import tutor.cesh.profile.ImageLocation;
+import tutor.cesh.profile.Subject;
 
 /**
  * Created by michaelk18 on 4/7/14.
  */
 public class BackgroundImageTaskDelegate implements TaskDelegate
 {
-    private ImageView   view;
-    private Resources   resources;
+    private Resources       resources;
+    private Subject subject;
 
 
-    public BackgroundImageTaskDelegate(Resources r, ImageView view)
+    public BackgroundImageTaskDelegate(Resources r, Subject subject)
     {
         this.resources  = r;
-        this.view       = view;
+        this.subject    = subject;
     }
 
     public BackgroundImageTaskDelegate()
     {
-        this.view       = null;
-        this.resources  = null;
+
     }
 
     @Override
     public void taskCompletionResult(Bitmap b, boolean check)
     {
-        if(view != null && resources != null)
+        ImageController controller;
+
+        controller = ImageController.getInstance();
+        if(resources != null)
         {
-
-            Drawable drawable;
-            drawable = new BitmapDrawable(resources, b);
-            view.setBackground(drawable);
-            EditStudentProfileActivity.backgroundImageBitmap = b;
-        }
-
-        if(check) {
-            try {
-                System.out.println("GOING");
-                EditStudentProfileActivity.setUpBlurredBackgroundImages(b);
-            } catch (Exception e) {
-                System.out.println("Stopping");
-            }
+            controller.push(b, ImageLocation.BACKGROUND);
+            subject.notifyObservers();
         }
     }
 
