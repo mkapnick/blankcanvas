@@ -84,17 +84,6 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
                 drawable = new BitmapDrawable(getResources(), controller.peek(ImageLocation.BACKGROUND));
                 profileImageView.setImageBitmap(controller.peek(ImageLocation.PROFILE));
                 coverImageView.setBackground(drawable);
-
-                /*try
-                {
-                    json       = setUpGet(DatabaseTable.USERS, info.getString("userId"));
-                    info.putString("profileImage", DOMAIN + json.getString("profile_image_url"));
-                    info.putString("coverImage", DOMAIN + json.getString("cover_image_url"));
-                }
-                catch(Exception e)
-                {
-
-                }*/
             }
         }
         setUpUserInfo();

@@ -62,13 +62,14 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
     public  static BlurredImageLifeCycle            blurredImageLifeCycle;
     private int                                     originalSizeOfProfileStack, originalSizeOfBackgroundStack;
     private ImageController                         imageController;
+
     /**
      *
      * @param context
      * @param photoUri
      * @return
      */
-    private  int getOrientation(Context context, Uri photoUri)
+    private int getOrientation(Context context, Uri photoUri)
     {
         Cursor cursor;
         cursor  = context.getContentResolver().query(photoUri,
@@ -127,7 +128,6 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
         exceptGreen             = (Button)      findViewById(R.id.exceptGreen);
         exceptYellow            = (Button)      findViewById(R.id.exceptYellow);
         exceptRed               = (Button)      findViewById(R.id.exceptRed);
-
 
         blackAndWhite.setOnClickListener(this);
         exceptOrange.setOnClickListener(this);
@@ -214,7 +214,7 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
                         }
 
                         //blur the background image
-                        asyncConvolution = new AsyncConvolution(new ProgressDialog(this), convolveOp, taskDelegate);
+                        asyncConvolution = new AsyncConvolution(new ProgressDialog(this), convolveOp, taskDelegate, blurredImageLifeCycle);
                         try {
                             seekBar.setVisibility(View.VISIBLE);
                             seekBar.setProgress(100);
@@ -225,14 +225,11 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
                         }
                     }
                 }
-
             }
             else
             {
                 Bitmap              croppedImage;
                 String              tmp;
-
-                System.out.println("NEED TO BE HERE DAMMIT !!!");
                 extras              = data.getExtras();
                 croppedImage        = extras.getParcelable("data");
                 taskDelegate        = new ProfileImageTaskDelegate(StudentProfileActivity.profileImageSubject);
@@ -265,12 +262,12 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
 
         difference = localProfileSize- originalSizeOfProfileStack;
 
-        for(int i = originalSizeOfProfileStack; i < difference; i++)
+        for(int i = 0; i < difference; i++)
             imageController.pop(ImageLocation.PROFILE);
 
         difference = localBackgroundSize - originalSizeOfBackgroundStack;
 
-        for(int i = originalSizeOfProfileStack; i < difference; i++)
+        for(int i = 0; i < difference; i++)
             imageController.pop(ImageLocation.BACKGROUND);
 
         super.onBackPressed();
@@ -365,8 +362,6 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
 
         blurredImages   = blurredImageLifeCycle.getList();
 
-        System.out.println("size is: " + blurredImages.size());
-
         drawable        = null;
         if(progress >= 0 && progress <= 24)
         {
@@ -423,15 +418,11 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar)
-    {
-        //nothing
-    }
+    {    }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar)
-    {
-        //nothing
-    }
+    {    }
 
     /**
      *
@@ -559,7 +550,7 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
 
         originalSizeOfProfileStack                          = imageController.size(ImageLocation.PROFILE);
         originalSizeOfBackgroundStack                       = imageController.size(ImageLocation.BACKGROUND);
-        EditStudentProfileActivity.blurredImageLifeCycle    = new BlurredImageLifeCycle();
+        blurredImageLifeCycle                               = new BlurredImageLifeCycle();
 
         //set fields based on data from the bundle
         name.setText(info.getString("firstName"));

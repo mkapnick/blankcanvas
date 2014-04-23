@@ -20,7 +20,9 @@
                     android:id="@+id/profileBackgroundImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:adjustViewBounds="true"/>
+                    android:adjustViewBounds="true"
+                    android:onClick="onUserClick"
+                    />
 
                 <ImageView
                     android:id="@+id/profileImage"
@@ -136,6 +138,135 @@
 
                 </RelativeLayout>
 
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:scrollbars="horizontal"
+                android:layout_below="@+id/relativeLayout">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <SeekBar
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/seekBar"
+                        android:layout_marginTop="10dp"
+                        />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Black and White"
+                        android:id="@+id/blackAndWhite"
+                        android:textColor="@color/white"
+                        android:background="@drawable/filter_button"
+                        android:layout_toRightOf="@+id/seekBar"
+                        android:scrollHorizontally="true"
+                        android:scaleType="fitXY"
+                        android:padding="5dp"
+                        android:alpha=".7"
+                        android:textSize="13dp"
+                        android:layout_marginRight="10dp"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Except Orange"
+                        android:id="@+id/exceptOrange"
+                        android:textColor="@color/white"
+                        android:background="@drawable/filter_button"
+                        android:layout_toRightOf="@+id/blackAndWhite"
+                        android:scrollHorizontally="true"
+                        android:scaleType="fitXY"
+                        android:padding="5dp"
+                        android:textSize="13dp"
+                        android:alpha=".7"
+
+                        android:layout_marginRight="10dp"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Except Purple"
+                        android:id="@+id/exceptPurple"
+                        android:textColor="@color/white"
+                        android:background="@drawable/filter_button"
+                        android:layout_toRightOf="@id/exceptOrange"
+                        android:scrollHorizontally="true"
+                        android:scaleType="fitXY"
+                        android:padding="5dp"
+                        android:textSize="13dp"
+                        android:alpha=".7"
+
+                        android:layout_marginRight="10dp"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Except Blue"
+                        android:id="@+id/exceptBlue"
+                        android:textColor="@color/white"
+                        android:background="@drawable/filter_button"
+                        android:layout_toRightOf="@id/exceptPurple"
+                        android:scrollHorizontally="true"
+                        android:scaleType="fitXY"
+                        android:textSize="13dp"
+                        android:padding="5dp"
+                        android:alpha=".7"
+
+                        android:layout_marginRight="10dp"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Except Green"
+                        android:id="@+id/exceptGreen"
+                        android:textColor="@color/white"
+                        android:background="@drawable/filter_button"
+                        android:layout_toRightOf="@id/exceptBlue"
+                        android:scrollHorizontally="true"
+                        android:scaleType="fitXY"
+                        android:padding="5dp"
+                        android:textSize="13dp"
+                        android:alpha=".7"
+
+                        android:layout_marginRight="10dp"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Except Yellow"
+                        android:id="@+id/exceptYellow"
+                        android:textColor="@color/white"
+                        android:scrollHorizontally="true"
+                        android:background="@drawable/filter_button"
+                        android:layout_toRightOf="@id/exceptGreen"
+                        android:scaleType="fitXY"
+                        android:padding="5dp"
+                        android:textSize="13dp"
+                        android:alpha=".7"
+
+                        android:layout_marginRight="10dp"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Except Red"
+                        android:id="@+id/exceptRed"
+                        android:textColor="@color/white"
+                        android:scrollHorizontally="true"
+                        android:background="@drawable/filter_button"
+                        android:layout_toRightOf="@id/exceptYellow"
+                        android:scaleType="fitXY"
+                        android:padding="5dp"
+                        android:textSize="13dp"
+                        android:alpha=".7"
+
+                        android:layout_marginRight="10dp"/>
+                </RelativeLayout>
+            </HorizontalScrollView>
 
             <RelativeLayout
                 android:layout_width="match_parent"

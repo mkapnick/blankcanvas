@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
-import tutor.cesh.profile.EditStudentProfileActivity;
 import tutor.cesh.profile.ImageController;
 import tutor.cesh.profile.ImageLocation;
 import tutor.cesh.rest.TaskDelegate;
@@ -14,17 +13,19 @@ import tutor.cesh.rest.TaskDelegate;
  */
 public class AsyncConvolution extends AsyncTask <Bitmap, Integer, Bitmap>
 {
-    private ConvolveOp      op;
-    private ProgressDialog  pd;
-    private Bitmap          convolvedBitmap;
-    private TaskDelegate    taskDelegate;
+    private ConvolveOp              op;
+    private ProgressDialog          pd;
+    private Bitmap                  convolvedBitmap;
+    private TaskDelegate            taskDelegate;
+    private BlurredImageLifeCycle   blurredImageLifeCycle;
 
 
-    public AsyncConvolution(ProgressDialog pd, ConvolveOp op, TaskDelegate td)
+    public AsyncConvolution(ProgressDialog pd, ConvolveOp op, TaskDelegate td, BlurredImageLifeCycle blurredImageLifeCycle)
     {
-        this.op             = op;
-        this.pd             = pd;
-        this.taskDelegate   = td;
+        this.op                     = op;
+        this.pd                     = pd;
+        this.taskDelegate           = td;
+        this.blurredImageLifeCycle  = blurredImageLifeCycle;
     }
 
     public AsyncConvolution(ConvolveOp op, TaskDelegate td)
@@ -39,12 +40,21 @@ public class AsyncConvolution extends AsyncTask <Bitmap, Integer, Bitmap>
         Bitmap currentBitmap, tmp;
         currentBitmap = params[0];
 
-        for(int i =0; i < 5; i++)
+        if(blurredImageLifeCycle != null)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                tmp = this.op.filter(currentBitmap, null);
+                currentBitmap = tmp;
+                this.blurredImageLifeCycle.add(currentBitmap);
+            }
+        }
+        else
         {
             tmp = this.op.filter(currentBitmap, null);
             currentBitmap = tmp;
-            EditStudentProfileActivity.blurredImageLifeCycle.add(currentBitmap);
         }
+
         this.convolvedBitmap = currentBitmap;
         return null;
     }
