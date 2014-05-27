@@ -5,6 +5,8 @@
     android:gravity="center_vertical"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
     android:textColor="#fff"
     android:background="?android:attr/activatedBackgroundIndicator"
     android:minHeight="?android:attr/listPreferredItemHeightSmall"/>

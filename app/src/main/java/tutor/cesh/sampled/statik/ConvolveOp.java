@@ -59,14 +59,15 @@ public class ConvolveOp
 
         //Copy pixel by pixel the src image into the dst image, up to the calculated y
         for(int xx =0; xx < endX; xx++)
-            for(int yy = 0; yy < startY; yy++)
-                dst.setPixel(xx,yy, src.getPixel(xx, yy));
+            for(int yy = 0; yy < startY; yy++) {
+                dst.setPixel(xx, yy, src.getPixel(xx, yy));
+            }
 
+        //System.out.println("Went in " + count + " times");
         //blur the rest of the dst image
         for(int x = 0; x < endX; x++) {
             for (int y = startY; y < endY; y++) {
                 tempY = y - entryPoint;
-
                 //fill in the border surrounding this pixel
                 for (int r = 0; r < kernelRows && tempY < endY; r++) {
                     tempX = x - entryPoint;

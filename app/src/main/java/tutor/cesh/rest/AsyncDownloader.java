@@ -7,6 +7,12 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.ProgressBar;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -24,6 +30,7 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
     private Bitmap              bmp;
     private ProgressDialog      pd;
     private TaskDelegate        taskDelegate;
+    private int                 width, height;
 
 
     /**
@@ -34,12 +41,14 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
      * @param c   A context
      */
     public AsyncDownloader( String url,
-                            Context c, TaskDelegate td)
+                            Context c, TaskDelegate td, int widthBounds, int heightBounds)
     {
         this.url            = url;
         this.c              = c;
         pd                  = new ProgressDialog(c);
         this.taskDelegate   = td;
+        this.width          = widthBounds;
+        this.height         = heightBounds;
 
     }
 
@@ -85,18 +94,25 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
         HttpURLConnection   connection;
         InputStream         input;
         BitmapFactory.Options       options;
-        options                     = new BitmapFactory.Options();
-        options.inSampleSize        = 20;
+
+        HttpGet get;
+        HttpResponse response;
+        HttpClient client;
+        BufferedHttpEntity bufHttpEntity;
 
         try
         {
-            url         = new URL(link);
-            connection  = (HttpURLConnection)url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            input       = connection.getInputStream();
-            bmp         = BitmapFactory.decodeStream(input);
+            client  = new DefaultHttpClient();
+            get     = new HttpGet(this.url);
+            response= client.execute(get);
+            bufHttpEntity = new BufferedHttpEntity(response.getEntity());
+            input   = bufHttpEntity.getContent();
 
+            //options = new BitmapFactory.Options();
+            //options.inSampleSize = 20;
+            bmp = BitmapFactory.decodeStream(input);
+
+            input.close();
         }
         catch (IOException e)
         {

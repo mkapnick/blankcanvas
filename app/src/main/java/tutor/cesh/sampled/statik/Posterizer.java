@@ -42,33 +42,65 @@ public class Posterizer
 
     public Bitmap toBlackAndWhite(Bitmap image)
     {
-        double  distanceFromBlack, distanceFromWhite;
-        int []  rgb, grey;
+        return toBlackAndWhite(image, -100);
+    }
+
+    public Bitmap toBlackAndWhite(Bitmap image, double percentage) {
+
+        int[]   rgb, grey;
         Bitmap  dst;
+        int     startingHeight;
+        double  distance, multiplier;
+
+        if (percentage < 0)
+            startingHeight = 0;
+        else
+            startingHeight = (int) Math.floor(image.getHeight() * (1 - percentage));
 
         dst = Bitmap.createBitmap(image.getWidth(),
                 image.getHeight(),
                 Bitmap.Config.ARGB_8888);
 
-        rgb     = new int[3];
-        grey    = new int[3];
+        rgb             = new int[3];
+        grey            = new int[3];
+        distance        = 0;
+
+        if(startingHeight != 0) {
+            for (int r = 0; r < image.getWidth(); r++) {
+                for (int c = 0; c < startingHeight; c++) {
+                    dst.setPixel(r, c, image.getPixel(r, c));
+
+                }
+            }
+        }
 
         for (int r = 0; r < image.getWidth(); r++)
         {
-            for(int c=0; c < image.getHeight(); c++)
+            for (int c = startingHeight; c < image.getHeight(); c++)
             {
+
+                distance = this.metric.distance(new double[]{r, c}, new double[]{r, image.getHeight()});
                 rgb[0] = Color.red(image.getPixel(r, c));
                 rgb[1] = Color.green(image.getPixel(r, c));
                 rgb[2] = Color.blue(image.getPixel(r,c));
 
-                grey[0] = (rgb[0] + rgb[1] + rgb[2]) / 3;
-                grey[1] = grey[0];
-                grey[2] = grey[0];
+                multiplier = ((1-(1/distance)));
+                multiplier -= .5;
 
-                dst.setPixel(r,c,Color.rgb(grey[0], grey[1], grey[2]));
+                rgb[0] = (int)(rgb[0] * multiplier);
+                rgb[1] = (int)(rgb[1] * multiplier);
+                rgb[2] = (int)(rgb[2] * multiplier);
+
+
+
+                /*grey[0] = (rgb[0] + rgb[1] + rgb[2]) / 3;
+                grey[1] = grey[0];
+                grey[2] = grey[0];*/
+
+                dst.setPixel(r, c, Color.rgb(rgb[0], rgb[1],rgb[2]));
 
                 //distanceFromBlack   = distance(rgb, BLACK);
-                //distanceFromWhite   = distance(rgb, WHITE);
+                    //distanceFromWhite   = distance(rgb, WHITE);
 
                 /*if(distanceFromBlack < distanceFromWhite)
                     dst.setPixel(r,c, Color.BLACK);
@@ -76,6 +108,8 @@ public class Posterizer
                     dst.setPixel(r,c,Color.WHITE);*/
             }
         }
+
+
         return dst;
     }
 

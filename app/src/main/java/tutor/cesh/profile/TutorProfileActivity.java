@@ -132,12 +132,6 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         Intent intent;
         switch(v.getId())
         {
-            case R.id.editCurrentProfile:
-                intent = new Intent(this, EditTutorProfileActivity.class);
-                intent.putExtras(info);
-                startActivityForResult(intent, 1);
-                break;
-
             case R.id.menu_button:
                 if(drawerLayout.isDrawerOpen(listView))
                     drawerLayout.closeDrawer(listView);
@@ -165,7 +159,7 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
 
         if (id == R.id.action_settings)
             return true;
-        else if(id == R.id.action_edit_tutor_profile)
+        else if(id == R.id.action_edit_profile)
             position = -100;
         else if(id == R.id.action_switch_profile)
             position = 1;
@@ -226,7 +220,7 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
      */
     private void setUpActionBar()
     {
-        TextView    actionBarTextView, actionBarEdit;
+        TextView    actionBarTextView;
         View        actionBarView;
         ImageButton actionBarMenuButton;
 
@@ -240,8 +234,6 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         actionBarTextView.setText("TUTOR");
         actionBarTextView.setTextColor(Color.WHITE);
 
-        actionBarEdit       = (TextView)actionBarView.findViewById(R.id.editCurrentProfile);
-        actionBarEdit.setOnClickListener(this);
 
         actionBarMenuButton = (ImageButton) actionBarView.findViewById(R.id.menu_button);
         actionBarMenuButton.setOnClickListener(this);

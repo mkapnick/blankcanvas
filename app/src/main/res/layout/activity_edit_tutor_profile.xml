@@ -21,10 +21,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
-                    android:onClick="onUserClick"
-                    />
+                    android:scaleType="fitXY"
+                    android:layout_below="@+id/saveButton"
+                    android:layout_alignBottom="@+id/dummyLayout" />
 
                 <ImageView
+                    android:id="@+id/profileBackgroundImageButton"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:onClick="onUserClick"
+                    android:scaleType="fitXY"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="60dp"
+                    android:background="@drawable/edit_icon"
+                    />
+
+
+            <ImageView
                     android:id="@+id/profileImage"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
@@ -142,7 +156,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
                 android:scrollbars="horizontal"
-                android:layout_below="@+id/relativeLayout">
+                android:layout_below="@+id/userInfoSection">
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -271,8 +285,16 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/dummyLayout"
+                android:layout_marginTop="345dp">
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="350dp"
-                android:id="@+id/relativeLayout">
+                android:id="@+id/userInfoSection">
 
                 <ScrollView
                     android:layout_width="match_parent"

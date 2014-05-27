@@ -34,6 +34,7 @@ public class Rounder
 
         center          = new double[2];
         currentPoint    = new double[2];
+
         width           = src.getWidth();
         height          = src.getHeight();
 

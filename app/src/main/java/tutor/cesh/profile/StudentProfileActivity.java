@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -107,21 +108,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
                 info.putString("classes",   savedInstanceState.getString("classes"));
                 info.putString("ok", "true");
 
-                drawable = new BitmapDrawable(getResources(), imageController.peek(ImageLocation.BACKGROUND));
-                profileImageView.setImageBitmap(imageController.peek(ImageLocation.PROFILE));
-                coverImageView.setBackground(drawable);
-
-                //profileImageSubject.notifyObservers();
-                //coverImageSubject.notifyObservers();
-
-                /*try
-                {
-                    setUpAndExecuteGet(DatabaseTable.USERS, info.getString("userId"));
-                }
-                catch(Exception e)
-                {
-                    e.printStackTrace();
-                }*/
+                //The blurredImageContainer has been updated! no need to update it here
             }
         }
         setUpUserInfo();
@@ -130,14 +117,8 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
     @Override
     public void onClick(View v)
     {
-        Intent intent;
         switch(v.getId())
         {
-            case R.id.editCurrentProfile:
-                intent = new Intent(this, EditStudentProfileActivity.class);
-                intent.putExtras(info);
-                startActivityForResult(intent, 1);
-                break;
 
             case R.id.menu_button:
                 if(drawerLayout.isDrawerOpen(listView))
@@ -178,7 +159,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
 
         if (id == R.id.action_settings)
             return true;
-        else if(id == R.id.editCurrentProfile)
+        else if(id == R.id.action_edit_profile)
         {
             position = -100;
         }
@@ -242,7 +223,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
      */
     private void setUpActionBar()
     {
-        TextView    actionBarTextView, actionBarEdit;
+        TextView    actionBarTextView;
         View        actionBarView;
         ImageButton actionBarMenuButton;
 
@@ -250,14 +231,12 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.action_bar);
 
+
         //displaying custom ActionBar
         actionBarView       = getSupportActionBar().getCustomView();
         actionBarTextView   = (TextView) actionBarView.findViewById(R.id.textViewActionBar);
         actionBarTextView.setText("STUDENT");
         actionBarTextView.setTextColor(Color.WHITE);
-
-        actionBarEdit       = (TextView)actionBarView.findViewById(R.id.editCurrentProfile);
-        actionBarEdit.setOnClickListener(this);
 
         actionBarMenuButton = (ImageButton) actionBarView.findViewById(R.id.menu_button);
         actionBarMenuButton.setOnClickListener(this);
@@ -305,11 +284,10 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
      */
     private void setUpUserInfo()
     {
-        AsyncTask<Void, Integer, Bitmap>            asyncDownloader;
         JSONArray                                   jsonArray;
         TextFieldHelper                             classesTextFieldHelper;
         String                                      formatted;
-        TaskDelegate                                taskDelegate;
+        Drawable                                    drawable;
 
         classesTextFieldHelper  = new ClassesTextFieldHelper(this);
 
@@ -330,9 +308,10 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
                 about.setText(info.getString("about"), TextView.BufferType.EDITABLE);
 
                 //get profile image from bundle and set profile image
-                taskDelegate        = new ProfileImageTaskDelegate(profileImageSubject);
+               /*taskDelegate        = new ProfileImageTaskDelegate(profileImageSubject);
                 asyncDownloader     = new AsyncDownloader(info.getString("profileImage"),
-                                                          this,taskDelegate);
+                                                          this,taskDelegate, profileImageView.getWidth(),
+                                                            profileImageView.getHeight());
                 asyncDownloader.execute();
 
                 //get background image from bundle and set the background
@@ -340,8 +319,15 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
                                                                         coverImageSubject);
 
                 asyncDownloader     = new AsyncDownloader(info.getString("coverImage"),
-                                                          this, taskDelegate);
-                asyncDownloader.execute();
+                                                          this, taskDelegate,
+                                                            coverImageView.getWidth(),
+                                                            coverImageView.getHeight());
+                asyncDownloader.execute();*/
+
+
+                drawable = new BitmapDrawable(getResources(), imageController.peek(ImageLocation.BACKGROUND));
+                profileImageView.setImageBitmap(imageController.peek(ImageLocation.PROFILE));
+                coverImageView.setBackground(drawable);
 
                 if (!info.getString("classes").equalsIgnoreCase("null"))
                 {
@@ -399,7 +385,8 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
             if(response.has("profile_image_url")) {
                 taskDelegate        = new ProfileImageTaskDelegate(profileImageSubject);
                 asyncDownloader     = new AsyncDownloader(DOMAIN + response.getString("profile_image_url"),
-                                                          this, taskDelegate);
+                                                          this, taskDelegate, profileImageView.getWidth(),
+                                                            profileImageView.getHeight());
                 asyncDownloader.execute();
                 info.putString("profileImage", DOMAIN + response.getString("profile_image_url"));
 
@@ -409,9 +396,11 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
                 taskDelegate        = new BackgroundImageTaskDelegate(getResources(),
                                                                       coverImageSubject);
                 asyncDownloader     = new AsyncDownloader(DOMAIN + response.getString("cover_image_url"),
-                                                          this, taskDelegate);
-                asyncDownloader.execute();
+                                                          this, taskDelegate, coverImageView.getWidth(),
+                                                            coverImageView.getHeight());
 
+                System.out.println("Executing async downloader in student profile activity!");
+                asyncDownloader.execute();
                 info.putString("coverImage", DOMAIN + response.getString("cover_image_url"));
             }
             if(response.has("classes")) {

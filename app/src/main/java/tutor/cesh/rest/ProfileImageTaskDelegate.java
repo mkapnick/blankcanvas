@@ -26,12 +26,11 @@ public class ProfileImageTaskDelegate implements TaskDelegate
     public void taskCompletionResult(Bitmap b, boolean check)
     {
         Rounder         rounder;
-        Bitmap          roundedBitmap, tmp;
+        Bitmap          roundedBitmap,tmp;
         ImageController controller;
 
         controller = ImageController.getInstance();
-        tmp = Bitmap.createBitmap(b,0,0,160,160);
-
+        tmp         = Bitmap.createBitmap(b,0,0,160,160);
         rounder         = new Rounder();
         roundedBitmap   = rounder.round(tmp);
 
