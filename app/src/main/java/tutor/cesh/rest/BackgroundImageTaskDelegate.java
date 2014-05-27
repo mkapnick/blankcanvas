@@ -39,8 +39,8 @@ public class BackgroundImageTaskDelegate implements TaskDelegate
         Posterizer                  posterizer;
         Bitmap                      resultBitmap;
 
-        posterizer      = new Posterizer();
-        resultBitmap    = posterizer.toBlackAndWhite(b, .12);
+        //posterizer      = new Posterizer();
+        //resultBitmap    = posterizer.toBlackAndWhite(b, .12);
 
         //Every background image should have black pixels on the bottom
 
@@ -48,7 +48,7 @@ public class BackgroundImageTaskDelegate implements TaskDelegate
 
         if(resources != null)
         {
-            controller.push(resultBitmap, ImageLocation.BACKGROUND);
+            controller.push(b, ImageLocation.BACKGROUND);
             subject.notifyObservers();
         }
     }
