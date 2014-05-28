@@ -305,7 +305,7 @@ public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeek
     public boolean onCreateOptionsMenu(Menu menu) {
 
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.edit_profile, menu);
+        getMenuInflater().inflate(R.menu.edit_profile_tutor, menu);
         return true;
     }
 
@@ -314,11 +314,41 @@ public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeek
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        int position, id;
+
+        id          = item.getItemId();
+        position    = -1;
+
+        if (id == R.id.action_settings)
             return true;
-        }
+
+        else if(id == R.id.action_switch_profile)
+            position = 1;
+
+
+        onOptionsItemSelected(position);
         return super.onOptionsItemSelected(item);
+    }
+
+
+    /**
+     * Responding to clicks from the Action Bar and from
+     * the drawer layout
+     *
+     * @param position The position in the listViewTitles array
+     */
+    private void onOptionsItemSelected(int position)
+    {
+        Intent  intent;
+
+        if(position == 1)
+        {
+            //drawerLayout.closeDrawer(listView);
+            intent = new Intent(this, StudentProfileActivity.class);
+            intent.putExtras(info);
+            startActivity(intent);
+            finish();
+        }
     }
 
     @Override
