@@ -66,7 +66,6 @@ android:layout_height="match_parent">
             android:adjustViewBounds="true"
             android:layout_marginLeft="15dp"
             android:layout_centerHorizontal="true"
-            android:layout_alignBottom="@+id/userInfo"
             android:layout_marginBottom="200dp"
             android:visibility="invisible"
 
@@ -86,8 +85,8 @@ android:layout_height="match_parent">
                 android:layout_height="wrap_content"
                 android:id="@+id/name"
                 android:hint="Name"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
+                android:textColor="#4A4A4A"
+                android:textColorHint="#4A4A4A"
                 android:gravity="left"
                 android:textSize="25sp"
                 android:maxLines="2"
@@ -106,6 +105,7 @@ android:layout_height="match_parent">
                 android:layout_alignBottom="@+id/name"
                 android:layout_toEndOf="@+id/name"
                 android:layout_marginLeft="5dp"
+                android:layout_marginBottom="2dp"
                 />
         </RelativeLayout>
 

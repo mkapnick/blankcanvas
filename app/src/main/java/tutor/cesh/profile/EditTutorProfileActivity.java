@@ -38,9 +38,6 @@ import tutor.cesh.sampled.statik.BitmapOpFactory;
 import tutor.cesh.sampled.statik.BlurredImageLifeCycle;
 import tutor.cesh.sampled.statik.ConvolveOp;
 import tutor.cesh.sampled.statik.Cropper;
-import tutor.cesh.sampled.statik.GrayExceptOp;
-import tutor.cesh.sampled.statik.LocalColors;
-import tutor.cesh.sampled.statik.Posterizer;
 
 public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener{
 
@@ -145,7 +142,7 @@ public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeek
         profileImageView    = (ImageView)   findViewById(R.id.profileImage);
         coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
 
-        blackAndWhite           = (Button)      findViewById(R.id.blackAndWhite);
+        /*blackAndWhite           = (Button)      findViewById(R.id.blackAndWhite);
         exceptOrange            = (Button)      findViewById(R.id.exceptOrange);
         exceptBlue              = (Button)      findViewById(R.id.exceptBlue);
         exceptGreen             = (Button)      findViewById(R.id.exceptGreen);
@@ -163,7 +160,7 @@ public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeek
         seekBar.setProgress(0);
         seekBar.setMax(100);
         seekBar.setVisibility(View.INVISIBLE);
-        seekBar.setOnSeekBarChangeListener(this);
+        seekBar.setOnSeekBarChangeListener(this);*/
     }
 
 
@@ -244,7 +241,7 @@ public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeek
     @Override
     public void onClick(View v)
     {
-        Posterizer      posterizer;
+        /*Posterizer      posterizer;
         GrayExceptOp    greyExceptOp;
         Bitmap          newBitmap;
         Drawable        drawable;
@@ -287,7 +284,7 @@ public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeek
             drawable    = new BitmapDrawable(getResources(), newBitmap);
             coverImageView.setBackground(drawable);
             currentBackgroundBitmapFromStack = newBitmap;
-        }
+        }*/
     }
 
     @Override

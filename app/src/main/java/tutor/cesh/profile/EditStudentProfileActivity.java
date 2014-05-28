@@ -42,9 +42,6 @@ import tutor.cesh.sampled.statik.BitmapOpFactory;
 import tutor.cesh.sampled.statik.BlurredImageContainer;
 import tutor.cesh.sampled.statik.ConvolveOp;
 import tutor.cesh.sampled.statik.Cropper;
-import tutor.cesh.sampled.statik.GrayExceptOp;
-import tutor.cesh.sampled.statik.LocalColors;
-import tutor.cesh.sampled.statik.Posterizer;
 
 public class EditStudentProfileActivity extends Activity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener
 {
@@ -232,7 +229,7 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
     @Override
     public void onClick(View v)
     {
-        Posterizer      posterizer;
+        /*Posterizer      posterizer;
         GrayExceptOp    greyExceptOp;
         Bitmap          newBitmap;
         Drawable        drawable;
@@ -275,7 +272,7 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
             drawable    = new BitmapDrawable(getResources(), newBitmap);
             coverImageView.setBackground(drawable);
             currentBackgroundBitmapFromStack = newBitmap;
-        }
+        }*/
     }
 
     @Override
