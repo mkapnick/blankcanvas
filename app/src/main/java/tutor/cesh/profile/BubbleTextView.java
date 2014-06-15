@@ -18,8 +18,8 @@ import tutor.cesh.R;
  */
 public class BubbleTextView extends MultiAutoCompleteTextView
 {
-    private Context     context;
-    private TextView    tv;
+    private Context context;
+    private TextView tv;
 
     /**
      * Initializes a BubbleTextView object
@@ -44,7 +44,7 @@ public class BubbleTextView extends MultiAutoCompleteTextView
 
         this.tv = initializeTextView(text, edit);
 
-        sb       = new SpannableStringBuilder();
+        sb = new SpannableStringBuilder();
         drawable = convertTextViewToDrawable();
 
         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
@@ -82,17 +82,17 @@ public class BubbleTextView extends MultiAutoCompleteTextView
      */
     private BitmapDrawable convertTextViewToDrawable()
     {
-        int                     spec;
-        Bitmap                  bm, cacheBmp, viewBmp;
-        Canvas                  canvas;
+        int spec;
+        Bitmap bm, cacheBmp, viewBmp;
+        Canvas canvas;
 
-        spec    = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+        spec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         tv.measure(spec, spec);
         tv.layout(0, 0, tv.getMeasuredWidth(), tv.getMeasuredHeight());
 
-        bm      = Bitmap.createBitmap(tv.getWidth(), tv.getHeight(),Bitmap.Config.ARGB_8888);
+        bm = Bitmap.createBitmap(tv.getWidth(), tv.getHeight(),Bitmap.Config.ARGB_8888);
 
-        canvas  = new Canvas(bm);
+        canvas = new Canvas(bm);
         canvas.translate(-tv.getScrollX(), -tv.getScrollY());
         tv.draw(canvas);
 
@@ -109,5 +109,3 @@ public class BubbleTextView extends MultiAutoCompleteTextView
         this.tv = tv;
     }
 }
-
-

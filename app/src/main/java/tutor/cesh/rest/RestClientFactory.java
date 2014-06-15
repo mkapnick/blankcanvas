@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
@@ -30,11 +31,11 @@ import tutor.cesh.database.DatabaseTable;
  */
 public class RestClientFactory
 {
-    private static final String     POST_NEW_USER       = "http://protected-earth-9689.herokuapp.com/users/";
-    private static final String     DOMAIN              = "http://protected-earth-9689.herokuapp.com/";
-    private static final String     PUT_USER            = "http://protected-earth-9689.herokuapp.com/users/";
-    private static final String     PUT_ENROLL_DATA     = "http://protected-earth-9689.herokuapp.com/enrolls/";
-    private static final String     PUT_TUTOR_DATA      = "http://protected-earth-9689.herokuapp.com/tutors/";
+    private static final String     POST_NEW_USER       = "http://blankcanvas.pw/users/";
+    private static final String     DOMAIN              = "http://blankcanvas.pw/";
+    private static final String     PUT_USER            = "http://blankcanvas.pw/users/";
+    private static final String     PUT_ENROLL_DATA     = "http://blankcanvas.pw/enrolls/";
+    private static final String     PUT_TUTOR_DATA      = "http://blankcanvas.pw/tutors/";
 
 
     /**
@@ -80,19 +81,26 @@ public class RestClientFactory
     {
         HttpGet httpGet;
         httpGet = null;
-        switch(table)
+
+        try {
+            switch (table) {
+                case USERS:
+                    httpGet = new HttpGet(new URI(DOMAIN + "users" + "/" + id));
+
+                    break;
+                case TUTORS:
+                    httpGet = new HttpGet(new URI(DOMAIN + "tutors" + "/" + id));
+                    break;
+
+                case ENROLLS:
+                    httpGet = new HttpGet(new URI(DOMAIN + "enrolls" + "/" + id));
+
+                    break;
+            }
+        }
+        catch (URISyntaxException e)
         {
-            case USERS:
-                httpGet = new HttpGet(DOMAIN + "users" + "/" + id);
-                break;
-            case TUTORS:
-                httpGet = new HttpGet(DOMAIN + "tutors" + "/" + id);
-                break;
-
-            case ENROLLS:
-                httpGet = new HttpGet(DOMAIN + "enrolls" + "/" + id);
-
-                break;
+            e.printStackTrace();
         }
 
         httpGet.setHeader("Accept", "application/json");
@@ -241,7 +249,7 @@ public class RestClientFactory
         if(coverImagePath != null)
         {
             coverImageFile  = new File(coverImagePath);
-            cBody           = new FileBody(coverImageFile, "image/jpeg");
+            cBody           = new FileBody(coverImageFile, "image/jpg");
             entity.addPart("user[cover_image]", cBody);
         }
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="/Users/michaelk18/Documents/workspace/Android_Dev/TutorCesh/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-17b5b02802407c0b087653613e53d6e3801766ed.jar"
+        jar="/Users/michaelk18/Downloads/adt-bundle-mac-x86_64/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
+    <item
+        dex="/Users/michaelk18/Documents/workspace/Android_Dev/TutorCesh/app/build/intermediates/pre-dexed/debug/httpmime-4.1.2-5ff8a52c89b3872d19383848b4e7c1750acafcb5.jar"
+        jar="/Users/michaelk18/Documents/workspace/Android_Dev/TutorCesh/app/libs/httpmime-4.1.2.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="ed8b5ee0167cb27dea55851259eb34b609f31df0"/>
+    <item
+        dex="/Users/michaelk18/Documents/workspace/Android_Dev/TutorCesh/app/build/intermediates/pre-dexed/debug/classes-62d29ef130bc8251ec587a00e06daad120a75ab1.jar"
+        jar="/Users/michaelk18/Documents/workspace/Android_Dev/TutorCesh/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.1.0/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28"/>
+
+</pre-dex-items>

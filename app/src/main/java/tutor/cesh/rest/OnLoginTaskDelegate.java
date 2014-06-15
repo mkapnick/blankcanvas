@@ -27,8 +27,9 @@ public class OnLoginTaskDelegate extends AbstractTaskDelegate
     {
         Intent intent;
 
+        System.out.println("Object is: " + object.toString());
         try {
-            if (object != null) {
+            if (object.has("confirm")) {
                 if (object.getString("confirm").equalsIgnoreCase("true")) {
                     intent = new Intent(context, StudentProfileActivity.class);
                     intent.putExtra("id", object.getString("id"));
@@ -40,6 +41,7 @@ public class OnLoginTaskDelegate extends AbstractTaskDelegate
                     intent.putExtra("about", object.getString("about"));
                     intent.putExtra("profileImage", object.getString("profile_image_url"));
                     intent.putExtra("coverImage", object.getString("cover_image_url"));
+                    intent.putExtra("classes", object.getString("classes"));
 
                     this.pd.dismiss();
                     context.startActivity(intent);

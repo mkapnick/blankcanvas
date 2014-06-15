@@ -52,6 +52,8 @@ public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
             reader          = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             json            = reader.readLine();
 
+            System.out.println("iNSIDE ASYNC GET, APPARENTLY THIS IS WHERE THINGS ARE BLOWING UP -------");
+            System.out.println(json);
             this.response   = new JSONObject(json);
         }
         catch(Exception e)

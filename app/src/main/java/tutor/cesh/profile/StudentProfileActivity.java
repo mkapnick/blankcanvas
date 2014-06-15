@@ -44,7 +44,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
     private EditText                name, major, year, about, classes;
     private DrawerLayout            drawerLayout;
     private ListView                listView;
-    private static String           DOMAIN = "http://protected-earth-9689.herokuapp.com";
+    private static String           DOMAIN = "http://blankcanvas.pw/";
     private String []               listViewTitles;
     private ActionBar               actionBar;
     public static Subject           profileImageSubject, coverImageSubject;
@@ -203,6 +203,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
     protected void onResume()
     {
         super.onResume();
+        info.putString("ok", "true");
         setUpUserInfo();
     }
 
@@ -210,6 +211,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
     protected void onRestart()
     {
         super.onRestart();
+        info.putString("ok", "true");
         setUpUserInfo();
     }
 
@@ -329,11 +331,14 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
                 profileImageView.setImageBitmap(imageController.peek(ImageLocation.PROFILE));
                 coverImageView.setBackground(drawable);
 
-                if (!info.getString("classes").equalsIgnoreCase("null"))
+                if(info.containsKey("classes"))
                 {
-                    jsonArray = new JSONArray(info.getString("classes"));
-                    formatted = classesTextFieldHelper.help(this.classes, null, jsonArray);
-                    info.putString("classes", formatted);
+                    if (!info.getString("classes").equalsIgnoreCase("null"))
+                    {
+                        jsonArray = new JSONArray(info.getString("classes"));
+                        formatted = classesTextFieldHelper.help(this.classes, null, jsonArray);
+                        info.putString("classes", formatted);
+                    }
                 }
             }
         }
@@ -380,6 +385,11 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
                 about.setText(response.getString("about"), TextView.BufferType.EDITABLE);
                 info.putString("about", about.getText().toString());
             }
+            else {
+                this.about.setText("");
+                info.putString("about", "");
+            }
+
 
             //get profile image from server and set profile image
             if(response.has("profile_image_url")) {
@@ -407,6 +417,10 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
                 classesFromServer = response.getString("classes").split(",");
                 classesTextFieldHelper.help(this.classes, null, classesFromServer, false);
                 info.putString("classes", response.getString("classes"));
+            }
+            else {
+                this.classes.setText("");
+                info.putString("classes", "");
             }
         }
         catch (JSONException e){

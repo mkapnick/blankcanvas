@@ -15,7 +15,6 @@ public class AsyncConvolveExplicit implements AsyncConvolveOp
     private ProgressDialog          pd;
     private Bitmap                  convolvedBitmap;
     private TaskDelegate            taskDelegate;
-    private BlurredImageContainer   container;
 
 
     public AsyncConvolveExplicit(ProgressDialog pd, ConvolveOp op, TaskDelegate td)
@@ -23,7 +22,6 @@ public class AsyncConvolveExplicit implements AsyncConvolveOp
         this.op                     = op;
         this.pd                     = pd;
         this.taskDelegate           = td;
-        this.container              = BlurredImageContainer.getInstance();
     }
 
     @Override
@@ -34,9 +32,8 @@ public class AsyncConvolveExplicit implements AsyncConvolveOp
         Bitmap currentBitmap, tmp;
         currentBitmap = params[0];
 
-        tmp = this.op.filter(currentBitmap, null);
-        currentBitmap = tmp;
-        this.container.add(tmp);
+        //tmp = this.op.filter(currentBitmap, null);
+        //currentBitmap = tmp;
 
         this.convolvedBitmap = currentBitmap;
         return null;

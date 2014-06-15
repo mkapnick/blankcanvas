@@ -63,6 +63,12 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
     }
 
     @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         Bundle      savedInstanceState;
@@ -197,16 +203,18 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
 
 
     @Override
-    protected void onRestart()
+    protected void onResume()
     {
-        super.onRestart();
+        super.onResume();
+        info.putString("isRateSet", "true");
         setUpUserInfo();
     }
 
     @Override
-    protected void onResume()
+    protected void onRestart()
     {
-        super.onResume();
+        super.onRestart();
+        info.putString("isRateSet", "true");
         setUpUserInfo();
     }
     @Override
@@ -296,7 +304,7 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
             name.setText(info.getString("firstName"), TextView.BufferType.EDITABLE);
             major.setText(info.getString("major"), TextView.BufferType.EDITABLE);
             year.setText(info.getString("year"), TextView.BufferType.EDITABLE);
-            about.setText(info.getString("about"), TextView.BufferType.EDITABLE);
+            about.setText(info.getString("about"));
 
             //No need to download profile image and cover image.
             //These were set from StudentProfileActivity

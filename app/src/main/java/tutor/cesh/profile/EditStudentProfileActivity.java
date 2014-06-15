@@ -1,7 +1,6 @@
 package tutor.cesh.profile;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -35,15 +33,9 @@ import tutor.cesh.rest.ProfileImageTaskDelegate;
 import tutor.cesh.rest.RestClientExecute;
 import tutor.cesh.rest.RestClientFactory;
 import tutor.cesh.rest.TaskDelegate;
-import tutor.cesh.sampled.statik.AsyncConvolution;
-import tutor.cesh.sampled.statik.AsyncConvolveExplicit;
-import tutor.cesh.sampled.statik.AsyncConvolveOp;
-import tutor.cesh.sampled.statik.BitmapOpFactory;
-import tutor.cesh.sampled.statik.BlurredImageContainer;
-import tutor.cesh.sampled.statik.ConvolveOp;
 import tutor.cesh.sampled.statik.Cropper;
 
-public class EditStudentProfileActivity extends Activity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener
+public class EditStudentProfileActivity extends Activity implements View.OnClickListener
 {
     private static String                           profileImagePath, coverImagePath;
     private Bundle                                  info;
@@ -51,7 +43,7 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
     private ImageView                               profileImageView, coverImageView;
     private SeekBar                                 seekBar;
     private Button                                  blackAndWhite, exceptOrange, exceptBlue,
-                                                    exceptGreen, exceptYellow,exceptRed;
+            exceptGreen, exceptYellow,exceptRed;
     private static GenericTextWatcher               textWatcher;
     private static final int                        CONVULTION_KERNEL_SIZE = 3;
     public  static Bitmap                           currentProfileBitmapFromStack, currentBackgroundBitmapFromStack;
@@ -59,6 +51,30 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
     private ImageController                         imageController;
 
 
+    /**
+     *
+     */
+
+    private void doNotSaveUpdatedInfo()
+    {
+        int localProfileSize, localBackgroundSize, difference;
+
+        currentProfileBitmapFromStack      = null;
+        currentBackgroundBitmapFromStack   = null;
+
+        localProfileSize = imageController.size(ImageLocation.PROFILE);
+        localBackgroundSize = imageController.size(ImageLocation.BACKGROUND);
+
+        difference = localProfileSize- originalSizeOfProfileStack;
+
+        for(int i = 0; i < difference; i++)
+            imageController.pop(ImageLocation.PROFILE);
+
+        difference = localBackgroundSize - originalSizeOfBackgroundStack;
+
+        for(int i = 0; i < difference; i++)
+            imageController.pop(ImageLocation.BACKGROUND);
+    }
     /**
      *
      * @param context
@@ -94,6 +110,7 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
             cursor = context.getContentResolver().query(contentUri,proj, null, null, null);
             columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
+            System.out.println(cursor.getString(columnIndex));
             return cursor.getString(columnIndex);
         }
         finally
@@ -183,9 +200,8 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
         /******* BACKGROUND IMAGE CHANGE ***********************************************************/
         else if (requestCode == 2)
         {
-            if (data != null)
-            {
-                updateBlurredBackground(data);
+            if (data != null) {
+                updateBackgroundImage(data);
             }
         }
         else
@@ -206,24 +222,7 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
     @Override
     public void onBackPressed()
     {
-        int localProfileSize, localBackgroundSize, difference;
-
-        currentProfileBitmapFromStack      = null;
-        currentBackgroundBitmapFromStack   = null;
-
-        localProfileSize = imageController.size(ImageLocation.PROFILE);
-        localBackgroundSize = imageController.size(ImageLocation.BACKGROUND);
-
-        difference = localProfileSize- originalSizeOfProfileStack;
-
-        for(int i = 0; i < difference; i++)
-            imageController.pop(ImageLocation.PROFILE);
-
-        difference = localBackgroundSize - originalSizeOfBackgroundStack;
-
-        for(int i = 0; i < difference; i++)
-            imageController.pop(ImageLocation.BACKGROUND);
-
+        doNotSaveUpdatedInfo();
         super.onBackPressed();
     }
     @Override
@@ -285,7 +284,6 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
         setUpUserData();
         setUpRelationships();
         setUpUserClasses();
-        //setUpBlurredBackground(null, currentBackgroundBitmapFromStack);
     }
 
 
@@ -310,7 +308,10 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
             return true;
 
         else if(id == R.id.action_switch_profile)
+        {
+            doNotSaveUpdatedInfo();
             position = 1;
+        }
 
 
         onOptionsItemSelected(position);
@@ -339,61 +340,6 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
-    {
-        ArrayList<Bitmap>       blurredImages;
-        Drawable                drawable;
-        BlurredImageContainer   blurredImageContainer;
-
-        blurredImageContainer   = BlurredImageContainer.getInstance();
-        blurredImages           = blurredImageContainer.getList();
-        drawable                = null;
-
-        System.out.println(blurredImages.size());
-        if(progress >= 0 && progress <= 24)
-        {
-            if(blurredImages.size() > 0) {
-                drawable = new BitmapDrawable(getResources(), blurredImages.get(0));
-                currentBackgroundBitmapFromStack = blurredImages.get(0);
-            }
-        }
-        else if(progress >= 25 && progress <= 49)
-        {
-            if(blurredImages.size() > 1) {
-                drawable = new BitmapDrawable(getResources(), blurredImages.get(1));
-                currentBackgroundBitmapFromStack = blurredImages.get(1);
-            }
-        }
-        else if (progress >= 50 && progress <= 74)
-        {
-            if(blurredImages.size() > 2) {
-                drawable = new BitmapDrawable(getResources(), blurredImages.get(2));
-                currentBackgroundBitmapFromStack = blurredImages.get(2);
-            }
-        }
-        else if (progress >= 75 && progress <= 90)
-        {
-            if(blurredImages.size() > 3) {
-                drawable = new BitmapDrawable(getResources(), blurredImages.get(3));
-                currentBackgroundBitmapFromStack = blurredImages.get(3);
-            }
-        }
-        else
-        {
-            if(blurredImages.size() > 4) {
-                drawable = new BitmapDrawable(getResources(), blurredImages.get(4));
-                currentBackgroundBitmapFromStack = blurredImages.get(4);
-            }
-        }
-        if(drawable != null)
-        {
-            System.out.println("setting the background!!!!!!!");
-            coverImageView.setBackground(drawable);
-        }
-
-    }
-
-    @Override
     public void onResume()
     {
         super.onResume();
@@ -404,14 +350,6 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
     {
         super.onRestart();
     }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar)
-    {    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar)
-    {    }
 
     /**
      *
@@ -450,16 +388,18 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
      */
     private void saveUserProfile(View view)
     {
-        Bitmap changedProfileImage, changedBackgroundImage;
+        Bitmap  changedProfileImage, changedBackgroundImage;
+        String  classesEntered;
+        String [] classesEnteredArray;
 
+        /* Reset Profile and Cover Images */
         changedProfileImage     = imageController.pop(ImageLocation.PROFILE);
         changedBackgroundImage  = imageController.pop(ImageLocation.BACKGROUND);
-
         imageController.clear(ImageLocation.PROFILE);
         imageController.clear(ImageLocation.BACKGROUND);
-
         imageController.push(changedProfileImage, ImageLocation.PROFILE);
         imageController.push(changedBackgroundImage, ImageLocation.BACKGROUND);
+
 
         ArrayList<HttpPut>  puts;
         ArrayList<TextView> tvClasses;
@@ -472,14 +412,21 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
         jsonArray           = null;
         classesAsStudent    = null;
 
+        classesEntered      = this.classes.getText().toString();
+
+        System.out.println("ClassesEntered is: " + classesEntered);
+        System.out.println("tvClasses length is: " + tvClasses.size());
+        /* Format classes entered by the user correctly for the server to handle */
         //As long as the user entered in the classes he/she is taking
-        if (tvClasses.size() > 0)
+        if (classesEntered.length() > 0)
         {
             //convert to a valid JSON Array to send up to the server
+            classesEnteredArray = classesEntered.split(" ");
             jsonArray      = "[";
-            for (int i = 0; i < tvClasses.size(); i++)
+
+            for (int i = 0; i < classesEnteredArray.length; i++)
             {
-                courseName = tvClasses.get(i).getText().toString();
+                courseName = classesEnteredArray[i];
                 if (i != tvClasses.size() - 1)
                     jsonArray += "{\"name\": " + "\"" + courseName + "\"" + "},";
                 else
@@ -493,6 +440,8 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
         {
             if (jsonArray != null)
                 classesAsStudent = new JSONArray(jsonArray);
+
+            System.out.println(coverImagePath);
 
             puts        = RestClientFactory.put(id, enrollId, coverImagePath, profileImagePath,
                     name.getText().toString(), major.getText().toString(),
@@ -515,76 +464,6 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
             e.printStackTrace();
         }
     }
-    /**
-     *
-     * @param data
-     */
-    private void updateBlurredBackground(Intent data)
-    {
-        TaskDelegate taskDelegate;
-        Bitmap bitmap;
-        BitmapFactory.Options options;
-        ConvolveOp convolveOp;
-        AsyncConvolution asyncConvolution;
-        int orientation;
-        Matrix m;
-        AsyncConvolveOp asyncConvolveOp;
-
-        convolveOp      = BitmapOpFactory.createBlurOp(CONVULTION_KERNEL_SIZE);
-        convolveOp.setDivider(1.6);
-        bitmap          = null;
-
-
-        try
-        {
-            coverImagePath = data.getData().getPath();
-
-            if (coverImagePath != null)
-            {
-                coverImagePath  = getRealPathFromURI(this, data.getData());
-                orientation     = getOrientation(this, data.getData());
-
-                options         = new BitmapFactory.Options();
-                options.inSampleSize = 20;
-                bitmap          = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()), null, options);
-
-                if (orientation > 0)
-                {
-                    m = new Matrix();
-                    m.postRotate(orientation);
-                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
-                            bitmap.getHeight(), m, true);
-                }
-            }
-
-            taskDelegate    = new BackgroundImageTaskDelegate(getResources(), StudentProfileActivity.coverImageSubject);
-            asyncConvolveOp = new AsyncConvolveExplicit(new ProgressDialog(this),convolveOp, taskDelegate);
-            asyncConvolution = new AsyncConvolution(asyncConvolveOp);
-
-            try
-            {
-                seekBar.setVisibility(View.VISIBLE);
-                seekBar.setProgress(100);
-                asyncConvolution.execute(bitmap);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        //Things have been take care of by the StudentProfileActivity..The object BlurredImageContainer contains
-        //the blurredImages already
-
-        //blur the background image
-
-
-    }
 
     /**
      *
@@ -593,11 +472,23 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
     {
         TextFieldHelper                     classesTextFieldHelper;
         String []                           classesFromBundle;
+        ArrayList<TextView>                 textviews;
 
         classesTextFieldHelper = new ClassesTextFieldHelper(this);
-        classesFromBundle = info.getString("classes").split(",");
 
-        classesTextFieldHelper.help(this.classes, this.textWatcher, classesFromBundle, true);
+        if(!info.getString("classes").equals("")) {
+
+            classesFromBundle = info.getString("classes").split(",");
+
+            classesTextFieldHelper.help(this.classes, this.textWatcher, classesFromBundle, true);
+
+            this.classes.setText("");
+            textviews = this.textWatcher.getTextViews();
+
+            for (TextView tv : textviews) {
+                this.classes.append(tv.getText().toString() + " ");
+            }
+        }
     }
 
     /**
@@ -625,5 +516,50 @@ public class EditStudentProfileActivity extends Activity implements SeekBar.OnSe
     {
         new ImageObserver(profileImageView, StudentProfileActivity.profileImageSubject);
         new ImageDrawableObserver(coverImageView, StudentProfileActivity.coverImageSubject, getResources());
+    }
+
+    /**
+     *
+     * @param data
+     */
+    private void updateBackgroundImage(Intent data)
+    {
+        TaskDelegate    taskDelegate;
+        Bitmap          bitmap;
+        int             orientation;
+        Matrix          m;
+
+        bitmap          = null;
+
+
+        try
+        {
+            coverImagePath = data.getData().getPath();
+
+            if (coverImagePath != null)
+            {
+                //coverImagePath  = getRealPathFromURI(this, data.getData());
+                System.out.println(coverImagePath);
+                orientation     = getOrientation(this, data.getData());
+                bitmap          = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()));
+
+                if (orientation > 0)
+                {
+                    m = new Matrix();
+                    m.postRotate(orientation);
+                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                            bitmap.getHeight(), m, true);
+                }
+            }
+
+            taskDelegate        = new BackgroundImageTaskDelegate(getResources(), StudentProfileActivity.coverImageSubject);
+            taskDelegate.taskCompletionResult(bitmap, false);
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 }

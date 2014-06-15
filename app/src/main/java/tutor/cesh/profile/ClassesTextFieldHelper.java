@@ -24,15 +24,15 @@ public class ClassesTextFieldHelper implements TextFieldHelper {
     public void help(EditText classesTextField, GenericTextWatcher textWatcher, String[] classes, boolean isEditable)
     {
 
-        BubbleTextView          bubbleTextView;
-        String                  courseName;
-        SpannableStringBuilder  sb;
-        int                     start, end;
-        TextView                tv;
+        BubbleTextView bubbleTextView;
+        String courseName;
+        SpannableStringBuilder sb;
+        int start, end;
+        TextView tv;
 
-        start       = 0;
-        end         = 0;
-        classesTextField.setText("");
+        start = 0;
+        end = 0;
+        classesTextField.setText(" ");
 
         for (int i = 0; i < classes.length; i++)
         {
@@ -53,8 +53,7 @@ public class ClassesTextFieldHelper implements TextFieldHelper {
             end += sb.length();
 
             classesTextField.append(sb);
-            classesTextField.getText().replace(start, end, sb, 0, sb.length());
-
+            classesTextField.append(" ");
 
             if (isEditable)
             {
@@ -79,7 +78,7 @@ public class ClassesTextFieldHelper implements TextFieldHelper {
         end = 0;
 
         formattedClasses = "[";
-        classesTextField.setText("");
+        classesTextField.setText(" ");
 
 
         try
@@ -101,7 +100,7 @@ public class ClassesTextFieldHelper implements TextFieldHelper {
                 sb = bubbleTextView.createBubbleOverText(courseName, false);
                 end += sb.length();
                 classesTextField.append(sb);
-                classesTextField.getText().replace(start, end, sb, 0, sb.length());
+                classesTextField.append(" ");
                 start += sb.length();
             }
         }

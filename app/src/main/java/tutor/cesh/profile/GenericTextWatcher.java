@@ -2,7 +2,6 @@ package tutor.cesh.profile;
 
 import android.content.Context;
 import android.text.Editable;
-import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -57,18 +56,27 @@ public class GenericTextWatcher implements TextWatcher
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count)
-    {
-        int                     cursorPosition;
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        /*int                     cursorPosition;
         String                  course;
-        SpannableStringBuilder  sb;
+        SpannableStringBuilder sb;
         TextView                textViewOverString;
 
         cursorPosition  = 0;
 
+
+        System.out.println("start is: " + start);
+        System.out.println("previous start is: " + previousStartPosition);
+
+        System.out.println("before is: " + before);
+
+        System.out.println("count is: " + count);
+
+
         //user is backspacing on a textview
-        if (start == previousStartPosition && before != 0 && count == 0 && this.lengths.size() != 0)
+        if (start == previousEndPosition && this.lengths.size() != 0 && before != 0)
         {
+            System.out.println("DELETING BITCH!");
             //set cursor position
             this.editText.setSelection(previousStartPosition);
 
@@ -91,15 +99,18 @@ public class GenericTextWatcher implements TextWatcher
                 previousStartPosition = 0;
         }
 
-        else if(s.length() > 0)
+        else if(s.length() > 0 && count >= before)
         {
+            System.out.println("IN THIS ONE");
+
             //the string in question
+            System.out.println(previousEndPosition);
             s = s.toString().substring(previousEndPosition, s.length());
 
             //if user just enters the space bar
             if (s.toString().contains(" ") && s.length() == 1)
             {
-                this.editText.getText().replace(previousEndPosition, previousEndPosition + 1, "", 0, "".length());
+                this.editText.getText().replace(previousEndPosition, previousEndPosition+1, "", 0, "".length());
             }
 
             //if user enters a valid string followed by a space
@@ -142,6 +153,7 @@ public class GenericTextWatcher implements TextWatcher
                 this.editText.addTextChangedListener(this);
             }
         }
+    }*/
     }
 
     /**
