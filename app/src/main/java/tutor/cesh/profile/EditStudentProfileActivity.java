@@ -15,35 +15,38 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
-import org.json.JSONArray;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
+import tutor.cesh.MasterStudent;
 import tutor.cesh.R;
+import tutor.cesh.database.DatabaseFactory;
+import tutor.cesh.profile.classes.ClassesUtility;
 import tutor.cesh.rest.BackgroundImageTaskDelegate;
 import tutor.cesh.rest.ProfileImageTaskDelegate;
 import tutor.cesh.rest.RestClientExecute;
-import tutor.cesh.rest.RestClientFactory;
 import tutor.cesh.rest.TaskDelegate;
+import tutor.cesh.rest.http.CourseHttpObject;
+import tutor.cesh.rest.http.EnrollHttpObject;
+import tutor.cesh.rest.http.HttpObject;
+import tutor.cesh.rest.http.StudentHttpObject;
+import tutor.cesh.rest.http.TutorHttpObject;
 import tutor.cesh.sampled.statik.Cropper;
 
-public class EditStudentProfileActivity extends Activity implements View.OnClickListener
+public class EditStudentProfileActivity extends Activity
 {
     private static String                           profileImagePath, coverImagePath;
     private Bundle                                  info;
     private EditText                                name, major, year, about,   classes;
     private ImageView                               profileImageView, coverImageView;
-    private SeekBar                                 seekBar;
-    private Button                                  blackAndWhite, exceptOrange, exceptBlue,
-            exceptGreen, exceptYellow,exceptRed;
     private static GenericTextWatcher               textWatcher;
     private static final int                        CONVULTION_KERNEL_SIZE = 3;
     public  static Bitmap                           currentProfileBitmapFromStack, currentBackgroundBitmapFromStack;
@@ -54,7 +57,6 @@ public class EditStudentProfileActivity extends Activity implements View.OnClick
     /**
      *
      */
-
     private void doNotSaveUpdatedInfo()
     {
         int localProfileSize, localBackgroundSize, difference;
@@ -75,6 +77,57 @@ public class EditStudentProfileActivity extends Activity implements View.OnClick
         for(int i = 0; i < difference; i++)
             imageController.pop(ImageLocation.BACKGROUND);
     }
+
+    private String formatClassesForServer()
+    {
+        ArrayList<TextView> tvClasses;
+        String              courseName, jsonArray;
+        String              classesEntered;
+        String []           classesEnteredArray;
+
+        tvClasses           = textWatcher.getTextViews();
+        jsonArray           = "";
+
+        classesEntered      = this.classes.getText().toString().trim();
+
+        System.out.println("ClassesEntered is: " + classesEntered);
+        System.out.println("tvClasses length is: " + tvClasses.size());
+
+        /* Format classes entered by the user correctly for the server to handle */
+
+        //As long as the user entered in the classes he/she is taking
+        if (classesEntered.length() > 0)
+        {
+            //convert to a valid JSON Array to send up to the server
+            classesEnteredArray = classesEntered.split("\\s+");
+            jsonArray      = "[";
+
+            for (int i = 0; i < classesEnteredArray.length; i++)
+            {
+                courseName = classesEnteredArray[i];
+                if (i != classesEnteredArray.length - 1)
+                    jsonArray += "{\"name\": " + "\"" + courseName + "\"" + "},";
+                else
+                    jsonArray += "{\"name\": " + "\"" + courseName + "\""+ "}";
+            }
+            jsonArray += "]";
+        }
+
+        return jsonArray;
+    }
+    /**
+     *
+     * @param inContext
+     * @param inImage
+     * @return
+     */
+    public Uri getImageUri(Context inContext, Bitmap inImage)
+    {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
     /**
      *
      * @param context
@@ -93,31 +146,13 @@ public class EditStudentProfileActivity extends Activity implements View.OnClick
         cursor.moveToFirst();
         return cursor.getInt(0);
     }
-    /**
-     *
-     * @param context
-     * @param contentUri
-     * @return
-     */
-    private String getRealPathFromURI(Context context, Uri contentUri)
+
+    private String getRealPathFromURI(Uri uri)
     {
-        Cursor  cursor;
-        int     columnIndex;
-        cursor = null;
-        try
-        {
-            String[] proj = {MediaStore.Images.Media.DATA};
-            cursor = context.getContentResolver().query(contentUri,proj, null, null, null);
-            columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            System.out.println(cursor.getString(columnIndex));
-            return cursor.getString(columnIndex);
-        }
-        finally
-        {
-            if (cursor != null)
-                cursor.close();
-        }
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
     }
 
     /**
@@ -134,26 +169,6 @@ public class EditStudentProfileActivity extends Activity implements View.OnClick
 
         profileImageView        = (ImageView)   findViewById(R.id.profileImage);
         coverImageView          = (ImageView)   findViewById(R.id.profileBackgroundImage);
-
-        /*blackAndWhite           = (Button)      findViewById(R.id.blackAndWhite);
-        exceptOrange            = (Button)      findViewById(R.id.exceptOrange);
-        exceptBlue              = (Button)      findViewById(R.id.exceptBlue);
-        exceptGreen             = (Button)      findViewById(R.id.exceptGreen);
-        exceptYellow            = (Button)      findViewById(R.id.exceptYellow);
-        exceptRed               = (Button)      findViewById(R.id.exceptRed);
-
-        blackAndWhite.setOnClickListener(this);
-        exceptOrange.setOnClickListener(this);
-        exceptBlue.setOnClickListener(this);
-        exceptGreen.setOnClickListener(this);
-        exceptYellow.setOnClickListener(this);
-        exceptRed.setOnClickListener(this);
-
-        seekBar                 = (SeekBar)     findViewById(R.id.seekBar);
-        seekBar.setProgress(0);
-        seekBar.setMax(100);
-        //seekBar.setVisibility(View.INVISIBLE);
-        seekBar.setOnSeekBarChangeListener(this);*/
 
         textWatcher             = new GenericTextWatcher (getApplicationContext(), classes);
         classes.addTextChangedListener(textWatcher);
@@ -211,8 +226,8 @@ public class EditStudentProfileActivity extends Activity implements View.OnClick
             extras = data.getExtras();
             croppedImage = extras.getParcelable("data");
             taskDelegate = new ProfileImageTaskDelegate(StudentProfileActivity.profileImageSubject);
-            tmp = getRealPathFromURI(this, Uri.parse(profileImagePath));
-            profileImagePath = tmp;
+            //tmp = getRealPathFromURI(this, Uri.parse(profileImagePath));
+            //profileImagePath = tmp;
             taskDelegate.taskCompletionResult(croppedImage, false);
         }
 
@@ -224,54 +239,6 @@ public class EditStudentProfileActivity extends Activity implements View.OnClick
     {
         doNotSaveUpdatedInfo();
         super.onBackPressed();
-    }
-    @Override
-    public void onClick(View v)
-    {
-        /*Posterizer      posterizer;
-        GrayExceptOp    greyExceptOp;
-        Bitmap          newBitmap;
-        Drawable        drawable;
-
-        newBitmap = null;
-        switch(v.getId())
-        {
-            case R.id.blackAndWhite:
-                posterizer  = new Posterizer();
-                newBitmap   = posterizer.toBlackAndWhite(currentBackgroundBitmapFromStack);
-                break;
-            case R.id.exceptOrange:
-                greyExceptOp    = new GrayExceptOp(LocalColors.ORANGE.getRgb());
-                newBitmap       = greyExceptOp.filter(currentBackgroundBitmapFromStack, null);
-                break;
-            case R.id.exceptPurple:
-                greyExceptOp    = new GrayExceptOp(LocalColors.PURPLE.getRgb());
-                newBitmap       = greyExceptOp.filter(currentBackgroundBitmapFromStack, null);
-                break;
-            case R.id.exceptBlue:
-                greyExceptOp    = new GrayExceptOp(LocalColors.BLUE.getRgb());
-                newBitmap       = greyExceptOp.filter(currentBackgroundBitmapFromStack, null);
-                break;
-            case R.id.exceptGreen:
-                greyExceptOp    = new GrayExceptOp(LocalColors.GREEN.getRgb());
-                newBitmap       = greyExceptOp.filter(currentBackgroundBitmapFromStack, null);
-                break;
-            case R.id.exceptYellow:
-                greyExceptOp    = new GrayExceptOp(LocalColors.YELLOW.getRgb());
-                newBitmap       = greyExceptOp.filter(currentBackgroundBitmapFromStack, null);
-                break;
-            case R.id.exceptRed:
-                greyExceptOp    = new GrayExceptOp(LocalColors.RED.getRgb());
-                newBitmap       = greyExceptOp.filter(currentBackgroundBitmapFromStack, null);
-                break;
-        }
-
-        if(newBitmap!=null)
-        {
-            drawable    = new BitmapDrawable(getResources(), newBitmap);
-            coverImageView.setBackground(drawable);
-            currentBackgroundBitmapFromStack = newBitmap;
-        }*/
     }
 
     @Override
@@ -382,15 +349,10 @@ public class EditStudentProfileActivity extends Activity implements View.OnClick
                 break;
         }
     }
-    /**
-     * Save user data to the server
-     * @param view
-     */
-    private void saveUserProfile(View view)
+
+    private void resetUserImages()
     {
         Bitmap  changedProfileImage, changedBackgroundImage;
-        String  classesEntered;
-        String [] classesEnteredArray;
 
         /* Reset Profile and Cover Images */
         changedProfileImage     = imageController.pop(ImageLocation.PROFILE);
@@ -399,63 +361,54 @@ public class EditStudentProfileActivity extends Activity implements View.OnClick
         imageController.clear(ImageLocation.BACKGROUND);
         imageController.push(changedProfileImage, ImageLocation.PROFILE);
         imageController.push(changedBackgroundImage, ImageLocation.BACKGROUND);
+    }
+    /**
+     * Save user data to the server
+     * @param view
+     */
+    private void saveUserProfile(View view)
+    {
 
+        HttpPost            post;
+        HttpPut             put;
+        String              jsonArray;
+        HttpObject          enroll, course, tutor;
+        StudentHttpObject   student;
+        ClassesUtility      cUtility;
 
-        ArrayList<HttpPut>  puts;
-        ArrayList<TextView> tvClasses;
-        String              id, enrollId, courseName, jsonArray;
-        JSONArray           classesAsStudent;
-
-        id                  = info.getString("id");
-        enrollId            = info.getString("enrollId");
-        tvClasses           = textWatcher.getTextViews();
-        jsonArray           = null;
-        classesAsStudent    = null;
-
-        classesEntered      = this.classes.getText().toString();
-
-        System.out.println("ClassesEntered is: " + classesEntered);
-        System.out.println("tvClasses length is: " + tvClasses.size());
-        /* Format classes entered by the user correctly for the server to handle */
-        //As long as the user entered in the classes he/she is taking
-        if (classesEntered.length() > 0)
-        {
-            //convert to a valid JSON Array to send up to the server
-            classesEnteredArray = classesEntered.split(" ");
-            jsonArray      = "[";
-
-            for (int i = 0; i < classesEnteredArray.length; i++)
-            {
-                courseName = classesEnteredArray[i];
-                if (i != tvClasses.size() - 1)
-                    jsonArray += "{\"name\": " + "\"" + courseName + "\"" + "},";
-                else
-                    jsonArray += "{\"name\": " + "\"" + courseName + "\""+ "}";
-            }
-            jsonArray += "]";
-        }
+        resetUserImages();
+        cUtility = new ClassesUtility(DatabaseFactory.getMasterStudent(), this.classes);
+        jsonArray = cUtility.formatClassesBackend();
 
         //Send a put request with the user's data up to the server
         try
         {
-            if (jsonArray != null)
-                classesAsStudent = new JSONArray(jsonArray);
-
-            System.out.println(coverImagePath);
-
-            puts        = RestClientFactory.put(id, enrollId, coverImagePath, profileImagePath,
-                    name.getText().toString(), major.getText().toString(),
-                    year.getText().toString(), about.getText().toString(),
-                    classesAsStudent);
-
-            for (int i =0; i < puts.size(); i++)
-                new RestClientExecute(puts.get(i)).start();
-
             info.putString("firstName", name.getText().toString());
             info.putString("about", about.getText().toString());
             info.putString("year", year.getText().toString());
             info.putString("major", major.getText().toString());
-            info.putString("classes", jsonArray);
+
+            DatabaseFactory.updateMasterStudent(info);
+
+            student     = new StudentHttpObject(DatabaseFactory.getMasterStudent());
+            enroll      = new EnrollHttpObject(DatabaseFactory.getMasterStudent());
+            tutor       = new TutorHttpObject(DatabaseFactory.getMasterStudent());
+            course      = new CourseHttpObject(DatabaseFactory.getMasterStudent(), jsonArray);
+
+            student.setCoverImagePath(coverImagePath);
+            student.setProfileImagePath(profileImagePath);
+
+            post = course.post();
+            new RestClientExecute(post).start();
+
+            put = student.put();
+            new RestClientExecute(put).start();
+
+            put = enroll.put();
+            new RestClientExecute(put).start();
+
+            put = tutor.put();
+            if(put != null) new RestClientExecute(put).start();
 
             Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
         }
@@ -470,25 +423,12 @@ public class EditStudentProfileActivity extends Activity implements View.OnClick
      */
     private void setUpUserClasses()
     {
-        TextFieldHelper                     classesTextFieldHelper;
-        String []                           classesFromBundle;
-        ArrayList<TextView>                 textviews;
+        MasterStudent   ms;
+        ClassesUtility  cUtility;
 
-        classesTextFieldHelper = new ClassesTextFieldHelper(this);
-
-        if(!info.getString("classes").equals("")) {
-
-            classesFromBundle = info.getString("classes").split(",");
-
-            classesTextFieldHelper.help(this.classes, this.textWatcher, classesFromBundle, true);
-
-            this.classes.setText("");
-            textviews = this.textWatcher.getTextViews();
-
-            for (TextView tv : textviews) {
-                this.classes.append(tv.getText().toString() + " ");
-            }
-        }
+        ms          = DatabaseFactory.getMasterStudent();
+        cUtility    = new ClassesUtility(ms, this.classes, this);
+        cUtility.setClassesEditMode();
     }
 
     /**
@@ -496,16 +436,19 @@ public class EditStudentProfileActivity extends Activity implements View.OnClick
      */
     private void setUpUserData()
     {
+        MasterStudent ms;
+
+        ms              = DatabaseFactory.getMasterStudent();
         imageController = ImageController.getInstance();
 
         originalSizeOfProfileStack                          = imageController.size(ImageLocation.PROFILE);
         originalSizeOfBackgroundStack                       = imageController.size(ImageLocation.BACKGROUND);
 
         //set fields based on data from the bundle
-        name.setText(info.getString("firstName"));
-        major.setText(info.getString("major"));
-        year.setText(info.getString("year"));
-        about.setText(info.getString("about"));
+        name.setText(ms.getName());
+        major.setText(ms.getMajor());
+        year.setText(ms.getYear());
+        about.setText(ms.getAbout());
         profileImageView.setImageBitmap(imageController.peek(ImageLocation.PROFILE));
         coverImageView.setBackground(new BitmapDrawable(getResources(), imageController.peek(ImageLocation.BACKGROUND)));
 
@@ -531,15 +474,12 @@ public class EditStudentProfileActivity extends Activity implements View.OnClick
 
         bitmap          = null;
 
-
         try
         {
             coverImagePath = data.getData().getPath();
 
             if (coverImagePath != null)
             {
-                //coverImagePath  = getRealPathFromURI(this, data.getData());
-                System.out.println(coverImagePath);
                 orientation     = getOrientation(this, data.getData());
                 bitmap          = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()));
 
@@ -550,6 +490,10 @@ public class EditStudentProfileActivity extends Activity implements View.OnClick
                     bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
                             bitmap.getHeight(), m, true);
                 }
+
+                Uri uri = getImageUri(this, bitmap);
+                coverImagePath = getRealPathFromURI(uri);
+                System.out.println(coverImagePath);
             }
 
             taskDelegate        = new BackgroundImageTaskDelegate(getResources(), StudentProfileActivity.coverImageSubject);

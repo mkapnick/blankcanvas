@@ -21,7 +21,7 @@ public class ClassesTextFieldHelper implements TextFieldHelper {
     }
 
     @Override
-    public void help(EditText classesTextField, GenericTextWatcher textWatcher, String[] classes, boolean isEditable)
+    public void createBubbleOverText(EditText classesTextField, GenericTextWatcher textWatcher, String[] classes, boolean isEditable)
     {
 
         BubbleTextView bubbleTextView;
@@ -32,7 +32,7 @@ public class ClassesTextFieldHelper implements TextFieldHelper {
 
         start = 0;
         end = 0;
-        classesTextField.setText(" ");
+        classesTextField.setText("");
 
         for (int i = 0; i < classes.length; i++)
         {
@@ -68,7 +68,7 @@ public class ClassesTextFieldHelper implements TextFieldHelper {
     }
 
     @Override
-    public String help(EditText classesTextField, GenericTextWatcher textWatcher, JSONArray jsonArray) {
+    public String createBubbleOverText(EditText classesTextField, GenericTextWatcher textWatcher, JSONArray jsonArray) {
         BubbleTextView bubbleTextView;
         SpannableStringBuilder sb;
         String courseName, formattedClasses;
@@ -78,7 +78,7 @@ public class ClassesTextFieldHelper implements TextFieldHelper {
         end = 0;
 
         formattedClasses = "[";
-        classesTextField.setText(" ");
+        classesTextField.setText("");
 
 
         try

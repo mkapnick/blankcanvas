@@ -5,11 +5,11 @@ package tutor.cesh.database;
  */
 public enum DatabaseTable
 {
-    USERS,
+    STUDENTS,
     TUTORS,
     ENROLLS,
     SCHOOLS,
     COURSES,
-    OFFERS,
-    ADDRESSES;
+    TAKENS,
+    REVIEWS;
 }

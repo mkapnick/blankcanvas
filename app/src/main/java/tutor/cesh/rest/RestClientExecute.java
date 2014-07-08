@@ -40,7 +40,8 @@ public class RestClientExecute implements Runnable
 
             if (this.httpPost != null)
                 httpClient.execute(httpPost);
-            else
+
+            if(this.httpPut != null)
                 httpClient.execute(httpPut);
        }
 

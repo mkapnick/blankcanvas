@@ -53,8 +53,9 @@ public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
             json            = reader.readLine();
 
             System.out.println("iNSIDE ASYNC GET, APPARENTLY THIS IS WHERE THINGS ARE BLOWING UP -------");
-            System.out.println(json);
-            this.response   = new JSONObject(json);
+            //System.out.println(json);
+            if(!json.equalsIgnoreCase("null"))
+                this.response   = new JSONObject(json);
         }
         catch(Exception e)
         {
@@ -70,8 +71,9 @@ public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
         //super.onPostExecute(result);
         if(pd!=null)
         {
-            if(taskDelegate != null) {
-                this.pd.dismiss();
+            this.pd.dismiss();
+            if(taskDelegate != null && this.response != null) {
+
                 taskDelegate.taskCompletionResult(this.response);
             }
 

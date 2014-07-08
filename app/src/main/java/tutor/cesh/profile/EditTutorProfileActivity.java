@@ -9,81 +9,80 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.client.methods.HttpPut;
+import org.json.JSONArray;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 import tutor.cesh.R;
 import tutor.cesh.rest.BackgroundImageTaskDelegate;
 import tutor.cesh.rest.ProfileImageTaskDelegate;
-import tutor.cesh.rest.RestClientExecute;
-import tutor.cesh.rest.RestClientFactory;
 import tutor.cesh.rest.TaskDelegate;
-import tutor.cesh.sampled.statik.AsyncConvolution;
-import tutor.cesh.sampled.statik.BitmapOpFactory;
 import tutor.cesh.sampled.statik.BlurredImageLifeCycle;
-import tutor.cesh.sampled.statik.ConvolveOp;
 import tutor.cesh.sampled.statik.Cropper;
 
-public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener{
+public class EditTutorProfileActivity extends Activity
+{
 
     private static String                   profileImagePath,  coverImagePath;
     private Bundle                          info;
-    private EditText                        name, major, year, about, rate;
-    private SeekBar                         seekBar;
+    private EditText                        name, major, year, about, rate, tutorClasses;
     private ImageView                       profileImageView, coverImageView;
-    private ImageController                 controller;
+    private ImageController                 imageController;
+    private GenericTextWatcher              textWatcher;
     private static final int                CONVULTION_KERNEL_SIZE = 3;
     public  static BlurredImageLifeCycle    blurredImageLifeCycle;
     private int                             originalSizeOfProfileStack, originalSizeOfBackgroundStack;
     public  static Bitmap                   currentProfileBitmapFromStack, currentBackgroundBitmapFromStack;
-    private Button                          blackAndWhite, exceptOrange, exceptBlue,
-                                            exceptGreen, exceptYellow,exceptRed;
 
+
+    private void doNotSaveUpdatedInfo()
+    {
+        int localProfileSize, localBackgroundSize, difference;
+
+        currentProfileBitmapFromStack      = null;
+        currentBackgroundBitmapFromStack   = null;
+
+        localProfileSize = imageController.size(ImageLocation.PROFILE);
+        localBackgroundSize = imageController.size(ImageLocation.BACKGROUND);
+
+        difference = localProfileSize- originalSizeOfProfileStack;
+
+        for(int i = 0; i < difference; i++)
+            imageController.pop(ImageLocation.PROFILE);
+
+        difference = localBackgroundSize - originalSizeOfBackgroundStack;
+
+        for(int i = 0; i < difference; i++)
+            imageController.pop(ImageLocation.BACKGROUND);
+    }
 
     /**
-     * Google code, calculate inSampleSize
-     * @param options
-     * @param reqWidth
-     * @param reqHeight
+     *
+     * @param inContext
+     * @param inImage
      * @return
      */
-    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight)
+    public Uri getImageUri(Context inContext, Bitmap inImage)
     {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) > reqHeight
-                    && (halfWidth / inSampleSize) > reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
+
     /**
      *
      * @param context
@@ -102,30 +101,18 @@ public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeek
         cursor.moveToFirst();
         return cursor.getInt(0);
     }
+
     /**
      *
-     * @param context
-     * @param contentUri
+     * @param uri
      * @return
      */
-    private String getRealPathFromURI(Context context, Uri contentUri)
+    private String getRealPathFromURI(Uri uri)
     {
-        Cursor  cursor;
-        int     columnIndex;
-        cursor = null;
-        try
-        {
-            String[] proj = {MediaStore.Images.Media.DATA};
-            cursor = context.getContentResolver().query(contentUri,proj, null, null, null);
-            columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(columnIndex);
-        }
-        finally
-        {
-            if (cursor != null)
-                cursor.close();
-        }
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
     }
 
     /**
@@ -138,31 +125,14 @@ public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeek
         year                = (EditText)    findViewById(R.id.year);
         about               = (EditText)    findViewById(R.id.about);
         rate                = (EditText)    findViewById(R.id.rate);
+        tutorClasses        = (EditText)    findViewById(R.id.classes);
 
         profileImageView    = (ImageView)   findViewById(R.id.profileImage);
         coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
 
-        /*blackAndWhite           = (Button)      findViewById(R.id.blackAndWhite);
-        exceptOrange            = (Button)      findViewById(R.id.exceptOrange);
-        exceptBlue              = (Button)      findViewById(R.id.exceptBlue);
-        exceptGreen             = (Button)      findViewById(R.id.exceptGreen);
-        exceptYellow            = (Button)      findViewById(R.id.exceptYellow);
-        exceptRed               = (Button)      findViewById(R.id.exceptRed);
-
-        blackAndWhite.setOnClickListener(this);
-        exceptOrange.setOnClickListener(this);
-        exceptBlue.setOnClickListener(this);
-        exceptGreen.setOnClickListener(this);
-        exceptYellow.setOnClickListener(this);
-        exceptRed.setOnClickListener(this);
-
-        seekBar                 = (SeekBar)     findViewById(R.id.seekBar);
-        seekBar.setProgress(0);
-        seekBar.setMax(100);
-        seekBar.setVisibility(View.INVISIBLE);
-        seekBar.setOnSeekBarChangeListener(this);*/
+        textWatcher             = new GenericTextWatcher (getApplicationContext(), tutorClasses);
+        tutorClasses.addTextChangedListener(textWatcher);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -194,97 +164,33 @@ public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeek
             }
         }
         /******* BACKGROUND IMAGE CHANGE ***********************************************************/
-        else if(requestCode == 2)
+        else if (requestCode == 2)
         {
-            if(data != null)
-            {
-                setUpBlurredBackground(data, null);
+            if (data != null) {
+                updateBackgroundImage(data);
             }
         }
         else
         {
-            Bitmap              croppedImage;
-            String              tmp;
-            extras              = data.getExtras();
-            croppedImage        = extras.getParcelable("data");
-            taskDelegate        = new ProfileImageTaskDelegate(StudentProfileActivity.profileImageSubject);
-            tmp                 = getRealPathFromURI(this, Uri.parse(profileImagePath));
-            profileImagePath    = tmp;
+            Bitmap croppedImage;
+            String tmp;
+            extras = data.getExtras();
+            croppedImage = extras.getParcelable("data");
+            taskDelegate = new ProfileImageTaskDelegate(StudentProfileActivity.profileImageSubject);
+            //tmp = getRealPathFromURI(this, Uri.parse(profileImagePath));
+            //profileImagePath = tmp;
             taskDelegate.taskCompletionResult(croppedImage, false);
         }
+
+        this.tutorClasses.addTextChangedListener(textWatcher);
 
     }
     @Override
     public void onBackPressed()
     {
-        int localProfileSize, localBackgroundSize, difference;
-
-        currentProfileBitmapFromStack      = null;
-        currentBackgroundBitmapFromStack   = null;
-
-        localProfileSize = controller.size(ImageLocation.PROFILE);
-        localBackgroundSize = controller.size(ImageLocation.BACKGROUND);
-
-        difference = localProfileSize- originalSizeOfProfileStack;
-
-        for(int i = 0; i < difference; i++)
-            controller.pop(ImageLocation.PROFILE);
-
-        difference = localBackgroundSize - originalSizeOfBackgroundStack;
-
-        for(int i =0; i < difference; i++)
-            controller.pop(ImageLocation.BACKGROUND);
-
+        doNotSaveUpdatedInfo();
         super.onBackPressed();
-    }
 
-    @Override
-    public void onClick(View v)
-    {
-        /*Posterizer      posterizer;
-        GrayExceptOp    greyExceptOp;
-        Bitmap          newBitmap;
-        Drawable        drawable;
-
-        newBitmap = null;
-        switch(v.getId())
-        {
-            case R.id.blackAndWhite:
-                posterizer  = new Posterizer();
-                newBitmap   = posterizer.toBlackAndWhite(currentBackgroundBitmapFromStack);
-                break;
-            case R.id.exceptOrange:
-                greyExceptOp    = new GrayExceptOp(LocalColors.ORANGE.getRgb());
-                newBitmap       = greyExceptOp.filter(currentBackgroundBitmapFromStack, null);
-                break;
-            case R.id.exceptPurple:
-                greyExceptOp    = new GrayExceptOp(LocalColors.PURPLE.getRgb());
-                newBitmap       = greyExceptOp.filter(currentBackgroundBitmapFromStack, null);
-                break;
-            case R.id.exceptBlue:
-                greyExceptOp    = new GrayExceptOp(LocalColors.BLUE.getRgb());
-                newBitmap       = greyExceptOp.filter(currentBackgroundBitmapFromStack, null);
-                break;
-            case R.id.exceptGreen:
-                greyExceptOp    = new GrayExceptOp(LocalColors.GREEN.getRgb());
-                newBitmap       = greyExceptOp.filter(currentBackgroundBitmapFromStack, null);
-                break;
-            case R.id.exceptYellow:
-                greyExceptOp    = new GrayExceptOp(LocalColors.YELLOW.getRgb());
-                newBitmap       = greyExceptOp.filter(currentBackgroundBitmapFromStack, null);
-                break;
-            case R.id.exceptRed:
-                greyExceptOp    = new GrayExceptOp(LocalColors.RED.getRgb());
-                newBitmap       = greyExceptOp.filter(currentBackgroundBitmapFromStack, null);
-                break;
-        }
-
-        if(newBitmap!=null)
-        {
-            drawable    = new BitmapDrawable(getResources(), newBitmap);
-            coverImageView.setBackground(drawable);
-            currentBackgroundBitmapFromStack = newBitmap;
-        }*/
     }
 
     @Override
@@ -297,7 +203,7 @@ public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeek
         initializeUI();
         setUpUserData();
         setUpRelationships();
-        setUpBlurredBackground(null, currentBackgroundBitmapFromStack);
+        setUpUserClasses();
 
     }
 
@@ -352,55 +258,6 @@ public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeek
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
-    {
-        List<Bitmap>    blurredImages;
-        Drawable        drawable;
-
-        blurredImages   = blurredImageLifeCycle.getList();
-        drawable        = null;
-
-        if(progress >= 0 && progress <= 24)
-        {
-            if(blurredImages.size() > 0) {
-                drawable = new BitmapDrawable(getResources(), blurredImages.get(0));
-                currentBackgroundBitmapFromStack = blurredImages.get(0);
-            }
-        }
-        else if(progress >= 25 && progress <= 49)
-        {
-            if(blurredImages.size() > 1) {
-                drawable = new BitmapDrawable(getResources(), blurredImages.get(1));
-                currentBackgroundBitmapFromStack = blurredImages.get(1);
-            }
-        }
-        else if (progress >= 50 && progress <= 74)
-        {
-            if(blurredImages.size() > 2) {
-                drawable = new BitmapDrawable(getResources(), blurredImages.get(2));
-                currentBackgroundBitmapFromStack = blurredImages.get(2);
-            }
-        }
-        else if (progress >= 75 && progress <= 90)
-        {
-            if(blurredImages.size() > 3) {
-                drawable = new BitmapDrawable(getResources(), blurredImages.get(3));
-                currentBackgroundBitmapFromStack = blurredImages.get(3);
-            }
-        }
-        else
-        {
-            if(blurredImages.size() > 4) {
-                drawable = new BitmapDrawable(getResources(), blurredImages.get(4));
-                currentBackgroundBitmapFromStack = blurredImages.get(4);
-            }
-        }
-
-        if(drawable != null)
-            coverImageView.setBackground(drawable);
-    }
-
-    @Override
     public void onResume()
     {
         super.onResume();
@@ -412,15 +269,6 @@ public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeek
         super.onRestart();
     }
 
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
     /**
      *
      * @param view
@@ -454,39 +302,74 @@ public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeek
     }
 
     /**
-     * Save user data to the server and exit activity
-     *
+     * Save user data to the server
      * @param view
      */
     private void saveUserProfile(View view)
     {
-        /** Fix this guy up! */
-
+        Bitmap  changedProfileImage, changedBackgroundImage;
+        String  classesEntered;
+        String [] classesEnteredArray;
         ArrayList<HttpPut>  puts;
-        RestClientExecute   rce;
-        String              id, enrollId;
+        ArrayList<TextView> tvClasses;
+        String              id, enrollId, courseName, jsonArray, tutorId;
+        JSONArray classesAsStudent;
 
-        id              = info.getString("id");
-        enrollId        = info.getString("enrollId");
+        /* Reset Profile and Cover Images */
+        changedProfileImage     = imageController.pop(ImageLocation.PROFILE);
+        changedBackgroundImage  = imageController.pop(ImageLocation.BACKGROUND);
+        imageController.clear(ImageLocation.PROFILE);
+        imageController.clear(ImageLocation.BACKGROUND);
+        imageController.push(changedProfileImage, ImageLocation.PROFILE);
+        imageController.push(changedBackgroundImage, ImageLocation.BACKGROUND);
 
+        id                  = info.getString("id");
+        enrollId            = info.getString("enrollId");
+        tutorId             = info.getString("tutorId");
+        tvClasses           = textWatcher.getTextViews();
+        jsonArray           = null;
+        classesAsStudent    = null;
+
+        classesEntered      = this.tutorClasses.getText().toString().trim();
+
+        System.out.println("ClassesEntered is: " + classesEntered);
+        System.out.println("tvClasses length is: " + tvClasses.size());
+
+        /* Format classes entered by the user correctly for the server to handle */
+        //As long as the user entered in the classes he/she is taking
+        if (classesEntered.length() > 0)
+        {
+            //convert to a valid JSON Array to send up to the server
+            classesEnteredArray = classesEntered.split("\\s+");
+            jsonArray      = "[";
+
+            for (int i = 0; i < classesEnteredArray.length; i++)
+            {
+                courseName = classesEnteredArray[i];
+                if (i != classesEnteredArray.length - 1)
+                    jsonArray += "{\"name\": " + "\"" + courseName + "\"" + "},";
+                else
+                    jsonArray += "{\"name\": " + "\"" + courseName + "\""+ "}";
+            }
+            jsonArray += "]";
+        }
+
+        //Send a put request with the user's data up to the server
         try
         {
-            puts        = RestClientFactory.put(id, enrollId, coverImagePath, profileImagePath,
-                    name.getText().toString(), major.getText().toString(),
-                    year.getText().toString(), about.getText().toString(),
-                    null, rate.getText().toString());
+            if (jsonArray != null)
+                classesAsStudent = new JSONArray(jsonArray);
 
-            for (int i  = 0; i < puts.size(); i++)
-            {
-                rce = new RestClientExecute(puts.get(i));
-                rce.start();
-            }
+            //puts        = RestClientFactory.put(coverImagePath, profileImagePath);
+
+            //for (int i =0; i < puts.size(); i++)
+                //new RestClientExecute(puts.get(i)).start();
 
             info.putString("firstName", name.getText().toString());
             info.putString("about", about.getText().toString());
             info.putString("year", year.getText().toString());
             info.putString("major", major.getText().toString());
-            info.putString("rate", rate.getText().toString());
+            info.putString("classes", jsonArray);
 
             Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
         }
@@ -498,81 +381,39 @@ public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeek
 
     /**
      *
-     * @param data
-     * @param localBitmap
      */
-    private void setUpBlurredBackground(Intent data, Bitmap localBitmap)
+    private void setUpUserClasses()
     {
-        TaskDelegate taskDelegate;
-        Bitmap bitmap;
-        BitmapFactory.Options options;
-        ConvolveOp convolveOp;
-        AsyncConvolution asyncConvolution;
-        int orientation;
-        Matrix m;
+        TextFieldHelper                     classesTextFieldHelper;
+        String []                           classesFromBundle;
+        ArrayList<TextView>                 textviews;
 
-        taskDelegate    = new BackgroundImageTaskDelegate(getResources(), StudentProfileActivity.coverImageSubject);
-        convolveOp      = BitmapOpFactory.createBlurOp(CONVULTION_KERNEL_SIZE);
-        convolveOp.setDivider(1.6);
-        bitmap          = null;
+        classesTextFieldHelper = new ClassesTextFieldHelper(this);
 
-        if (data != null)
-        {
-            try
-            {
-                coverImagePath = data.getData().getPath();
-                if (coverImagePath != null) {
-                    coverImagePath = getRealPathFromURI(this, data.getData());
-                    orientation = getOrientation(this, data.getData());
+        /*if(!info.getString("classes").equals("")) {
 
-                    options = new BitmapFactory.Options();
-                    options.inSampleSize = 20;
-                    bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()), null, options);
+            classesFromBundle = info.getString("classes").split(",");
 
-                    if (orientation > 0) {
-                        m = new Matrix();
-                        m.postRotate(orientation);
-                        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
-                                bitmap.getHeight(), m, true);
-                    }
-                }
+            classesTextFieldHelper.help(this.tutorClasses, this.textWatcher, classesFromBundle, true);
+
+            this.tutorClasses.setText("");
+            textviews = this.textWatcher.getTextViews();
+
+            for (TextView tv : textviews) {
+                this.tutorClasses.append(tv.getText().toString() + " ");
             }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-        else
-        {
-            m = new Matrix();
-            m.postScale(.4f, .4f);
-            bitmap = Bitmap.createBitmap(localBitmap,0,0,localBitmap.getWidth(), localBitmap.getHeight(), m ,true);
-        }
-
-        //blur the background image
-        blurredImageLifeCycle.reset();
-        //asyncConvolution = new AsyncConvolution(new ProgressDialog(this), convolveOp, taskDelegate, blurredImageLifeCycle);
-
-        try
-        {
-            seekBar.setVisibility(View.VISIBLE);
-            seekBar.setProgress(100);
-            //asyncConvolution.execute(bitmap);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        }*/
     }
+
     /**
      *
      */
     private void setUpUserData()
     {
-        controller = ImageController.getInstance();
+        imageController = ImageController.getInstance();
 
-        originalSizeOfProfileStack      = controller.size(ImageLocation.PROFILE);
-        originalSizeOfBackgroundStack   = controller.size(ImageLocation.BACKGROUND);
+        originalSizeOfProfileStack      = imageController.size(ImageLocation.PROFILE);
+        originalSizeOfBackgroundStack   = imageController.size(ImageLocation.BACKGROUND);
         blurredImageLifeCycle           = new BlurredImageLifeCycle();
 
         name.setText(info.getString("firstName"));
@@ -580,11 +421,11 @@ public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeek
         year.setText(info.getString("year"));
         about.setText(info.getString("about"));
         rate.setText(info.getString("rate"));
-        profileImageView.setImageBitmap(controller.peek(ImageLocation.PROFILE));
-        coverImageView.setBackground(new BitmapDrawable(getResources(), controller.peek(ImageLocation.BACKGROUND)));
+        profileImageView.setImageBitmap(imageController.peek(ImageLocation.PROFILE));
+        coverImageView.setBackground(new BitmapDrawable(getResources(), imageController.peek(ImageLocation.BACKGROUND)));
 
-        currentBackgroundBitmapFromStack   = controller.peek(ImageLocation.BACKGROUND);
-        currentProfileBitmapFromStack      = controller.peek(ImageLocation.PROFILE);
+        currentBackgroundBitmapFromStack   = imageController.peek(ImageLocation.BACKGROUND);
+        currentProfileBitmapFromStack      = imageController.peek(ImageLocation.PROFILE);
     }
 
     private void setUpRelationships()
@@ -593,5 +434,49 @@ public class EditTutorProfileActivity extends Activity implements SeekBar.OnSeek
         new ImageDrawableObserver(coverImageView, StudentProfileActivity.coverImageSubject, getResources());
     }
 
+    /**
+     *
+     * @param data
+     */
+    private void updateBackgroundImage(Intent data)
+    {
+        TaskDelegate    taskDelegate;
+        Bitmap          bitmap;
+        int             orientation;
+        Matrix          m;
 
+        bitmap          = null;
+
+        try
+        {
+            coverImagePath = data.getData().getPath();
+
+            if (coverImagePath != null)
+            {
+                orientation     = getOrientation(this, data.getData());
+                bitmap          = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()));
+
+                if (orientation > 0)
+                {
+                    m = new Matrix();
+                    m.postRotate(orientation);
+                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                            bitmap.getHeight(), m, true);
+                }
+
+                Uri uri = getImageUri(this, bitmap);
+                coverImagePath = getRealPathFromURI(uri);
+                System.out.println(coverImagePath);
+            }
+
+            taskDelegate        = new BackgroundImageTaskDelegate(getResources(), StudentProfileActivity.coverImageSubject);
+            taskDelegate.taskCompletionResult(bitmap, false);
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
 }

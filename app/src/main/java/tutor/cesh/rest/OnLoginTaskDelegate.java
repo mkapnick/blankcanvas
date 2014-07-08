@@ -8,6 +8,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import tutor.cesh.MasterStudent;
 import tutor.cesh.profile.StudentProfileActivity;
 
 /**
@@ -26,7 +27,9 @@ public class OnLoginTaskDelegate extends AbstractTaskDelegate
     public void taskCompletionResult(JSONObject object)
     {
         Intent intent;
+        MasterStudent masterStudent;
 
+        masterStudent = MasterStudent.getInstance();
         System.out.println("Object is: " + object.toString());
         try {
             if (object.has("confirm")) {
@@ -34,6 +37,7 @@ public class OnLoginTaskDelegate extends AbstractTaskDelegate
                     intent = new Intent(context, StudentProfileActivity.class);
                     intent.putExtra("id", object.getString("id"));
                     intent.putExtra("enrollId", object.getString("enroll_id"));
+                    intent.putExtra("schoolId", object.getString("school_id"));
                     intent.putExtra("tutorId", object.getString("tutor_id"));
                     intent.putExtra("email", object.getString("email"));
                     intent.putExtra("firstName", object.getString("first_name"));
@@ -41,7 +45,14 @@ public class OnLoginTaskDelegate extends AbstractTaskDelegate
                     intent.putExtra("about", object.getString("about"));
                     intent.putExtra("profileImage", object.getString("profile_image_url"));
                     intent.putExtra("coverImage", object.getString("cover_image_url"));
-                    intent.putExtra("classes", object.getString("classes"));
+                    intent.putExtra("classes", "");
+
+                    masterStudent.setId(object.getString("id"));
+                    masterStudent.setEnrollId(object.getString("enroll_id"));
+                    masterStudent.setTutorId(object.getString("tutor_id"));
+                    masterStudent.setName(object.getString("first_name"));
+                    masterStudent.setAbout(object.getString("about"));
+                    masterStudent.setSchoolId(object.getString("school_id"));
 
                     this.pd.dismiss();
                     context.startActivity(intent);

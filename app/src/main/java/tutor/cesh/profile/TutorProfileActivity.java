@@ -28,8 +28,6 @@ import org.json.JSONObject;
 
 import tutor.cesh.R;
 import tutor.cesh.database.DatabaseTable;
-import tutor.cesh.rest.AsyncGet;
-import tutor.cesh.rest.RestClientFactory;
 import tutor.cesh.rest.TaskDelegate;
 
 public class TutorProfileActivity extends ActionBarActivity implements View.OnClickListener, TaskDelegate {
@@ -62,10 +60,28 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         }
     }
 
-    @Override
-    public void onBackPressed()
+    /**
+     *
+     */
+    private void initializeUI()
     {
-        super.onBackPressed();
+        name                = (EditText)    this.findViewById(R.id.name);
+        major               = (EditText)    this.findViewById(R.id.major);
+        year                = (EditText)    this.findViewById(R.id.year);
+        about               = (EditText)    this.findViewById(R.id.about);
+        classes             = (EditText)    this.findViewById(R.id.classes);
+        rate                = (EditText)    this.findViewById(R.id.rate);
+        profileImageView    = (ImageView)   findViewById(R.id.profileImage);
+        coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
+        drawerLayout        = (DrawerLayout)findViewById(R.id.drawer_layout_tutor);
+        listView            = (ListView)    findViewById(R.id.left_drawer_tutor);
+
+        listViewTitles = getResources().getStringArray(R.array.drawable_list_items_tutor);
+        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listViewTitles));
+        listView.setOnItemClickListener(new DrawerItemClickListener());
+
+        info = getIntent().getExtras();
+        info.putString("isRateSet", "false");
     }
 
     @Override
@@ -73,7 +89,6 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
     {
         Bundle      savedInstanceState;
         BitmapDrawable  drawable;
-
 
         if (requestCode == 1)
         {
@@ -96,40 +111,9 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onBackPressed()
     {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tutor_profile);
-
-        initializeUI();
-        setUpRelationships();
-        setUpActionBar();
-        setUpUserInfo();
-    }
-
-    /**
-     *
-     */
-    private void initializeUI()
-    {
-        name                = (EditText)    this.findViewById(R.id.name);
-        major               = (EditText)    this.findViewById(R.id.major);
-        year                = (EditText)    this.findViewById(R.id.year);
-        about               = (EditText)    this.findViewById(R.id.about);
-        classes             = (EditText)    this.findViewById(R.id.classes);
-        rate                = (EditText)    this.findViewById(R.id.rate);
-        profileImageView    = (ImageView)   findViewById(R.id.profileImage);
-        coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
-        drawerLayout        = (DrawerLayout)findViewById(R.id.drawer_layout_tutor);
-        listView            = (ListView)    findViewById(R.id.left_drawer_tutor);
-
-
-        listViewTitles = getResources().getStringArray(R.array.drawable_list_items_tutor);
-        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listViewTitles));
-        listView.setOnItemClickListener(new DrawerItemClickListener());
-
-        info = getIntent().getExtras();
-        info.putString("isRateSet", "false");
+        super.onBackPressed();
     }
 
     @Override
@@ -146,6 +130,20 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
                 break;
         }
     }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_tutor_profile);
+
+        initializeUI();
+        setUpRelationships();
+        setUpActionBar();
+        setUpUserInfo();
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -201,6 +199,13 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         }
     }
 
+    @Override
+    protected void onRestart()
+    {
+        super.onRestart();
+        info.putString("isRateSet", "true");
+        setUpUserInfo();
+    }
 
     @Override
     protected void onResume()
@@ -210,13 +215,6 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         setUpUserInfo();
     }
 
-    @Override
-    protected void onRestart()
-    {
-        super.onRestart();
-        info.putString("isRateSet", "true");
-        setUpUserInfo();
-    }
     @Override
     public void setProgressDialog(ProgressDialog pd) {
 
@@ -259,8 +257,8 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
 
         try
         {
-            get1        = RestClientFactory.get(table, id);
-            new AsyncGet(this, this).execute(get1);
+            //get1        = RestClientFactory.get(table, id);
+            //new AsyncGet(this, this).execute(get1);
         }
         catch(Exception e)
         {

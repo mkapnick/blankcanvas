@@ -9,8 +9,8 @@ import org.json.JSONArray;
  */
 public interface TextFieldHelper
 {
-    public void     help(EditText textField, GenericTextWatcher textWatcher, String [] strings, boolean inEditable);
-    public String   help(EditText textField, GenericTextWatcher textWatcher, JSONArray jsonArray);
+    public void     createBubbleOverText(EditText textField, GenericTextWatcher textWatcher, String [] strings, boolean inEditable);
+    public String   createBubbleOverText(EditText textField, GenericTextWatcher textWatcher, JSONArray jsonArray);
 
 
 }
