@@ -42,6 +42,8 @@ public class BubbleTextView extends MultiAutoCompleteTextView
         BitmapDrawable drawable;
         SpannableStringBuilder sb;
 
+        text = text.toUpperCase();
+
         this.tv = initializeTextView(text, edit);
 
         sb = new SpannableStringBuilder();

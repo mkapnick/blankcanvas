@@ -8,44 +8,53 @@ import org.json.JSONObject;
 
 import java.net.URI;
 
-import tutor.cesh.AbstractStudent;
+import tutor.cesh.Student;
+import tutor.cesh.User;
 
 /**
  * Created by michaelk18 on 7/7/14.
  */
-public class CourseHttpObject implements HttpObject
+public abstract class CourseHttpObject implements HttpObject
 {
-    private static final String POST = "http://blankcanvas.pw/courses/";
-    private static final String PUT = "blankcanvas.pw/courses/";
-    private static final String GET = "http://blankcanvas.pw/join/courses/";
-    private static final String DOMAIN  = "http://blankcanvas.pw/";
+    protected String post;
+    protected String get;
+    protected String put;
 
-    private AbstractStudent     student;
-    private String              classesFormattedForServer;
+    protected User user;
+    protected String              classesFormattedForServer;
 
-    public CourseHttpObject(AbstractStudent student)
+    public CourseHttpObject(User user, String post, String put, String get)
     {
-        this.student = student;
+        this.user = user;
+        this.post = post;
+        this.put = put;
+        this.get = get;
     }
 
-    public CourseHttpObject(AbstractStudent student, String classes)
+    public CourseHttpObject(User user, String post, String put, String get, String classes)
     {
-        this(student);
+        this(user, post, put, get);
         this.classesFormattedForServer = classes;
     }
+
+    public abstract String getId();
 
     @Override
     public HttpPost post() throws Exception
     {
         HttpPost                httpPost;
-        JSONObject              params;
-        StringEntity            entity;
+        JSONObject params;
+        StringEntity entity;
+        Student student;
 
-        httpPost    = new HttpPost(POST);
+
+        System.out.println("Post url is: .... " + post);
+        httpPost    = new HttpPost(post);
         params      = new JSONObject();
+        student     = user.getStudent();
 
-        params.put("classes", this.classesFormattedForServer);
-        params.put("id", student.getId());
+        params.put("classes", classesFormattedForServer);
+        params.put("id", getId());
         params.put("school_id", student.getSchoolId());
 
         entity          = new StringEntity(params.toString());
@@ -69,12 +78,10 @@ public class CourseHttpObject implements HttpObject
     {
         HttpGet httpGet;
 
-        httpGet = new HttpGet(new URI(GET + student.getId()));
+        httpGet = new HttpGet(new URI(get + getId()));
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-Type", "application/json");
 
         return httpGet;
-
-
     }
 }

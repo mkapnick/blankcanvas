@@ -11,7 +11,8 @@ import org.apache.http.entity.mime.content.StringBody;
 import java.io.File;
 import java.net.URI;
 
-import tutor.cesh.AbstractStudent;
+import tutor.cesh.Student;
+import tutor.cesh.User;
 
 /**
  * Created by michaelk18 on 7/7/14.
@@ -22,11 +23,12 @@ public class StudentHttpObject implements HttpObject {
     private static final String GET     = "http://blankcanvas.pw/students/";
 
     private String              coverImagePath, profileImagePath;
-    private AbstractStudent     student;
+    private User user;
 
-    public StudentHttpObject(AbstractStudent student)
+    public StudentHttpObject(User user)
     {
-        this.student = student;
+
+        this.user = user;
     }
     public String getCoverImagePath() {
         return coverImagePath;
@@ -57,6 +59,9 @@ public class StudentHttpObject implements HttpObject {
         MultipartEntity entity;
         File            coverImageFile, profileImageFile;
         FileBody        cBody, pBody;
+        Student         student;
+
+        student = user.getStudent();
 
         put             = new HttpPut(PUT + student.getId());
         entity          = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -90,6 +95,9 @@ public class StudentHttpObject implements HttpObject {
     {
 
         HttpGet httpGet;
+        Student student;
+
+        student = user.getStudent();
 
         httpGet = new HttpGet(new URI(GET + student.getId()));
         httpGet.setHeader("Accept", "application/json");

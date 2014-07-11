@@ -4,8 +4,9 @@ import android.os.Bundle;
 
 import java.util.ArrayList;
 
-import tutor.cesh.MasterStudent;
 import tutor.cesh.Student;
+import tutor.cesh.Tutor;
+import tutor.cesh.User;
 
 /**
  * Created by michaelk18 on 6/26/14.
@@ -22,26 +23,33 @@ public class DatabaseFactory
         return null;
     }
 
-    public static MasterStudent getMasterStudent()
-    {
-        return MasterStudent.getInstance();
-    }
 
-    public static void updateMasterStudent(Bundle info)
+    public static void updateObjects(Bundle info)
     {
-        MasterStudent ms = getMasterStudent();
+        User user;
+        Student student;
+        Tutor tutor;
+
+        user = User.getInstance();
+        student = user.getStudent();
+        tutor = user.getTutor();
 
         if(info.containsKey("firstName"))
-            ms.setName(info.getString("firstName"));
+            student.setName(info.getString("firstName"));
         if(info.containsKey("major"))
-            ms.setMajor(info.getString("major"));
+            student.setMajor(info.getString("major"));
         if(info.containsKey("year"))
-            ms.setYear(info.getString("year"));
+            student.setYear(info.getString("year"));
         if(info.containsKey("about"))
-            ms.setAbout(info.getString("about"));
+            student.setAbout(info.getString("about"));
+        if(info.containsKey("tutorabout"))
+            tutor.setAbout(info.getString("tutorabout"));
+        if(info.containsKey("rate"))
+            tutor.setRate(info.getString("rate"));
         if(info.containsKey("profileImage"))
-            ms.setProfileImagePath(info.getString("profileImage"));
+            student.setProfileImagePath(info.getString("profileImage"));
         if(info.containsKey("coverImage"))
-            ms.setCoverImagePath(info.getString("coverImage"));
+            student.setCoverImagePath(info.getString("coverImage"));
+
     }
 }

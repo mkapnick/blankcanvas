@@ -8,8 +8,10 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import tutor.cesh.MasterStudent;
+import tutor.cesh.Student;
+import tutor.cesh.User;
 import tutor.cesh.profile.StudentProfileActivity;
+import tutor.cesh.Tutor;
 
 /**
  * Created by michaelk18 on 4/7/14.
@@ -27,10 +29,15 @@ public class OnLoginTaskDelegate extends AbstractTaskDelegate
     public void taskCompletionResult(JSONObject object)
     {
         Intent intent;
-        MasterStudent masterStudent;
+        User user;
+        Student student;
+        Tutor tutor;
 
-        masterStudent = MasterStudent.getInstance();
         System.out.println("Object is: " + object.toString());
+        user = User.getInstance();
+        student = user.getStudent();
+        tutor = user.getTutor();
+
         try {
             if (object.has("confirm")) {
                 if (object.getString("confirm").equalsIgnoreCase("true")) {
@@ -45,14 +52,14 @@ public class OnLoginTaskDelegate extends AbstractTaskDelegate
                     intent.putExtra("about", object.getString("about"));
                     intent.putExtra("profileImage", object.getString("profile_image_url"));
                     intent.putExtra("coverImage", object.getString("cover_image_url"));
-                    intent.putExtra("classes", "");
 
-                    masterStudent.setId(object.getString("id"));
-                    masterStudent.setEnrollId(object.getString("enroll_id"));
-                    masterStudent.setTutorId(object.getString("tutor_id"));
-                    masterStudent.setName(object.getString("first_name"));
-                    masterStudent.setAbout(object.getString("about"));
-                    masterStudent.setSchoolId(object.getString("school_id"));
+                    student.setId(object.getString("id"));
+                    student.setEnrollId(object.getString("enroll_id"));
+                    student.setTutorId(object.getString("tutor_id"));
+                    tutor.setId(object.getString("tutor_id"));
+                    student.setName(object.getString("first_name"));
+                    student.setAbout(object.getString("about"));
+                    student.setSchoolId(object.getString("school_id"));
 
                     this.pd.dismiss();
                     context.startActivity(intent);

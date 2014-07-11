@@ -8,7 +8,8 @@ import org.json.JSONObject;
 
 import java.net.URI;
 
-import tutor.cesh.AbstractStudent;
+import tutor.cesh.Student;
+import tutor.cesh.User;
 
 /**
  * Created by michaelk18 on 7/7/14.
@@ -18,11 +19,11 @@ public class EnrollHttpObject implements HttpObject
     private static final String PUT     = "http://blankcanvas.pw/enrolls/";
     private static final String GET     = "http://blankcanvas.pw/join/enrolls/";
 
-    private AbstractStudent student;
+    private User user;
 
-    public EnrollHttpObject(AbstractStudent student)
+    public EnrollHttpObject(User user)
     {
-        this.student = student;
+        this.user = user;
     }
     @Override
     public HttpPost post() throws Exception {
@@ -35,6 +36,9 @@ public class EnrollHttpObject implements HttpObject
 
         HttpPut         put;
         JSONObject      params;
+        Student student;
+
+        student = user.getStudent();
 
         put             = new HttpPut(PUT + student.getEnrollId());
         params          = new JSONObject();
@@ -54,6 +58,9 @@ public class EnrollHttpObject implements HttpObject
     public HttpGet get() throws Exception
     {
         HttpGet httpGet;
+        Student student;
+
+        student = user.getStudent();
 
         httpGet = new HttpGet(new URI(GET + student.getId()));
         httpGet.setHeader("Accept", "application/json");

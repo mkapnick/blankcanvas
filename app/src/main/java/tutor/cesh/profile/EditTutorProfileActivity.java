@@ -1,7 +1,6 @@
 package tutor.cesh.profile;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,21 +16,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
-import org.json.JSONArray;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 
 import tutor.cesh.R;
+import tutor.cesh.Student;
+import tutor.cesh.Tutor;
+import tutor.cesh.User;
+import tutor.cesh.database.DatabaseFactory;
+import tutor.cesh.profile.classes.ClassesUtility;
+import tutor.cesh.profile.classes.TutorClassesUtility;
 import tutor.cesh.rest.BackgroundImageTaskDelegate;
-import tutor.cesh.rest.ProfileImageTaskDelegate;
+import tutor.cesh.rest.RestClientExecute;
 import tutor.cesh.rest.TaskDelegate;
-import tutor.cesh.sampled.statik.BlurredImageLifeCycle;
-import tutor.cesh.sampled.statik.Cropper;
+import tutor.cesh.rest.http.EnrollHttpObject;
+import tutor.cesh.rest.http.HttpObject;
+import tutor.cesh.rest.http.StudentHttpObject;
+import tutor.cesh.rest.http.TutorCourseHttpObject;
+import tutor.cesh.rest.http.TutorHttpObject;
 
 public class EditTutorProfileActivity extends Activity
 {
@@ -40,32 +46,20 @@ public class EditTutorProfileActivity extends Activity
     private Bundle                          info;
     private EditText                        name, major, year, about, rate, tutorClasses;
     private ImageView                       profileImageView, coverImageView;
-    private ImageController                 imageController;
     private GenericTextWatcher              textWatcher;
-    private static final int                CONVULTION_KERNEL_SIZE = 3;
-    public  static BlurredImageLifeCycle    blurredImageLifeCycle;
-    private int                             originalSizeOfProfileStack, originalSizeOfBackgroundStack;
-    public  static Bitmap                   currentProfileBitmapFromStack, currentBackgroundBitmapFromStack;
 
-
+    /**
+     *
+     */
     private void doNotSaveUpdatedInfo()
     {
-        int localProfileSize, localBackgroundSize, difference;
+        int             localBackgroundSize;
+        ImageController imageController;
 
-        currentProfileBitmapFromStack      = null;
-        currentBackgroundBitmapFromStack   = null;
-
-        localProfileSize = imageController.size(ImageLocation.PROFILE);
+        imageController     = ImageController.getInstance();
         localBackgroundSize = imageController.size(ImageLocation.BACKGROUND);
 
-        difference = localProfileSize- originalSizeOfProfileStack;
-
-        for(int i = 0; i < difference; i++)
-            imageController.pop(ImageLocation.PROFILE);
-
-        difference = localBackgroundSize - originalSizeOfBackgroundStack;
-
-        for(int i = 0; i < difference; i++)
+        for(int i = 0; i < localBackgroundSize - 1; i++)
             imageController.pop(ImageLocation.BACKGROUND);
     }
 
@@ -139,32 +133,13 @@ public class EditTutorProfileActivity extends Activity
     {
 
         TaskDelegate            taskDelegate;
-        Cropper                 cropper;
         Bundle                  extras;
 
         super.onActivityResult(requestCode, resultCode, data);
 
 
-        /******* PROFILE IMAGE CHANGE ***********************************************************/
-        if (requestCode == 1)
-        {
-            if(data != null) {
-                cropper = new Cropper();
-                try {
-                    profileImagePath = data.getData().toString();
-                    Intent intent;
-                    intent = cropper.performCrop();
-                    startActivityForResult(intent, 3);
-                } catch (ActivityNotFoundException anfe) {
-                    // display an error message
-                    String errorMessage = "Your device doesn't support the crop action!";
-                    Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        }
         /******* BACKGROUND IMAGE CHANGE ***********************************************************/
-        else if (requestCode == 2)
+        if (requestCode == 2)
         {
             if (data != null) {
                 updateBackgroundImage(data);
@@ -172,14 +147,14 @@ public class EditTutorProfileActivity extends Activity
         }
         else
         {
-            Bitmap croppedImage;
+            /*Bitmap croppedImage;
             String tmp;
             extras = data.getExtras();
             croppedImage = extras.getParcelable("data");
             taskDelegate = new ProfileImageTaskDelegate(StudentProfileActivity.profileImageSubject);
             //tmp = getRealPathFromURI(this, Uri.parse(profileImagePath));
             //profileImagePath = tmp;
-            taskDelegate.taskCompletionResult(croppedImage, false);
+            taskDelegate.taskCompletionResult(croppedImage, false);*/
         }
 
         this.tutorClasses.addTextChangedListener(textWatcher);
@@ -294,11 +269,22 @@ public class EditTutorProfileActivity extends Activity
                 intent = new Intent();
                 intent.putExtras(info);
                 setResult(RESULT_OK, intent);
-                currentProfileBitmapFromStack      = null;
-                currentBackgroundBitmapFromStack   = null;
                 finish();
                 break;
         }
+    }
+
+    private void resetUserImages()
+    {
+        Bitmap          changedBackgroundImage;
+        ImageController imageController;
+
+        imageController = ImageController.getInstance();
+
+        /* Reset Profile and Cover Images */
+        changedBackgroundImage  = imageController.pop(ImageLocation.BACKGROUND);
+        imageController.clear(ImageLocation.BACKGROUND);
+        imageController.push(changedBackgroundImage, ImageLocation.BACKGROUND);
     }
 
     /**
@@ -307,69 +293,51 @@ public class EditTutorProfileActivity extends Activity
      */
     private void saveUserProfile(View view)
     {
-        Bitmap  changedProfileImage, changedBackgroundImage;
-        String  classesEntered;
-        String [] classesEnteredArray;
-        ArrayList<HttpPut>  puts;
-        ArrayList<TextView> tvClasses;
-        String              id, enrollId, courseName, jsonArray, tutorId;
-        JSONArray classesAsStudent;
+        HttpPost post;
+        HttpPut             put;
+        String              jsonArray;
+        HttpObject enroll, course, tutorHttp;
+        StudentHttpObject studentHttp;
+        ClassesUtility cUtility;
+        User            user;
 
-        /* Reset Profile and Cover Images */
-        changedProfileImage     = imageController.pop(ImageLocation.PROFILE);
-        changedBackgroundImage  = imageController.pop(ImageLocation.BACKGROUND);
-        imageController.clear(ImageLocation.PROFILE);
-        imageController.clear(ImageLocation.BACKGROUND);
-        imageController.push(changedProfileImage, ImageLocation.PROFILE);
-        imageController.push(changedBackgroundImage, ImageLocation.BACKGROUND);
+        user    = User.getInstance();
 
-        id                  = info.getString("id");
-        enrollId            = info.getString("enrollId");
-        tutorId             = info.getString("tutorId");
-        tvClasses           = textWatcher.getTextViews();
-        jsonArray           = null;
-        classesAsStudent    = null;
+        resetUserImages();
+        cUtility    = new TutorClassesUtility(user, this.tutorClasses);
+        jsonArray   = cUtility.formatClassesBackend();
 
-        classesEntered      = this.tutorClasses.getText().toString().trim();
+        //update info bundle
+        info.putString("firstName", name.getText().toString());
+        info.putString("tutorabout", about.getText().toString());
+        info.putString("year", year.getText().toString());
+        info.putString("major", major.getText().toString());
+        info.putString("rate", rate.getText().toString());
 
-        System.out.println("ClassesEntered is: " + classesEntered);
-        System.out.println("tvClasses length is: " + tvClasses.size());
-
-        /* Format classes entered by the user correctly for the server to handle */
-        //As long as the user entered in the classes he/she is taking
-        if (classesEntered.length() > 0)
-        {
-            //convert to a valid JSON Array to send up to the server
-            classesEnteredArray = classesEntered.split("\\s+");
-            jsonArray      = "[";
-
-            for (int i = 0; i < classesEnteredArray.length; i++)
-            {
-                courseName = classesEnteredArray[i];
-                if (i != classesEnteredArray.length - 1)
-                    jsonArray += "{\"name\": " + "\"" + courseName + "\"" + "},";
-                else
-                    jsonArray += "{\"name\": " + "\"" + courseName + "\""+ "}";
-            }
-            jsonArray += "]";
-        }
+        DatabaseFactory.updateObjects(info);
 
         //Send a put request with the user's data up to the server
         try
         {
-            if (jsonArray != null)
-                classesAsStudent = new JSONArray(jsonArray);
+            studentHttp     = new StudentHttpObject(user);
+            studentHttp.setCoverImagePath(coverImagePath);
+            studentHttp.setProfileImagePath(profileImagePath);
 
-            //puts        = RestClientFactory.put(coverImagePath, profileImagePath);
+            enroll      = new EnrollHttpObject(user);
+            tutorHttp       = new TutorHttpObject(user);
+            course      = new TutorCourseHttpObject(user, jsonArray);
 
-            //for (int i =0; i < puts.size(); i++)
-                //new RestClientExecute(puts.get(i)).start();
+            post = course.post();
+            new RestClientExecute(post).start();
 
-            info.putString("firstName", name.getText().toString());
-            info.putString("about", about.getText().toString());
-            info.putString("year", year.getText().toString());
-            info.putString("major", major.getText().toString());
-            info.putString("classes", jsonArray);
+            put = studentHttp.put();
+            new RestClientExecute(put).start();
+
+            put = enroll.put();
+            new RestClientExecute(put).start();
+
+            put = tutorHttp.put();
+            if(put != null) new RestClientExecute(put).start();
 
             Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
         }
@@ -384,25 +352,13 @@ public class EditTutorProfileActivity extends Activity
      */
     private void setUpUserClasses()
     {
-        TextFieldHelper                     classesTextFieldHelper;
-        String []                           classesFromBundle;
-        ArrayList<TextView>                 textviews;
+        ClassesUtility  cUtility;
+        User user;
+        user    = User.getInstance();
 
-        classesTextFieldHelper = new ClassesTextFieldHelper(this);
+        cUtility    = new TutorClassesUtility(user, this.tutorClasses, this);
+        cUtility.setClassesEditMode();
 
-        /*if(!info.getString("classes").equals("")) {
-
-            classesFromBundle = info.getString("classes").split(",");
-
-            classesTextFieldHelper.help(this.tutorClasses, this.textWatcher, classesFromBundle, true);
-
-            this.tutorClasses.setText("");
-            textviews = this.textWatcher.getTextViews();
-
-            for (TextView tv : textviews) {
-                this.tutorClasses.append(tv.getText().toString() + " ");
-            }
-        }*/
     }
 
     /**
@@ -410,27 +366,28 @@ public class EditTutorProfileActivity extends Activity
      */
     private void setUpUserData()
     {
+        ImageController imageController;
+        User            user;
+        Student         student;
+        Tutor           tutor;
+
         imageController = ImageController.getInstance();
 
-        originalSizeOfProfileStack      = imageController.size(ImageLocation.PROFILE);
-        originalSizeOfBackgroundStack   = imageController.size(ImageLocation.BACKGROUND);
-        blurredImageLifeCycle           = new BlurredImageLifeCycle();
+        user = User.getInstance();
+        student = user.getStudent();
+        tutor   = user.getTutor();
 
-        name.setText(info.getString("firstName"));
-        major.setText(info.getString("major"));
-        year.setText(info.getString("year"));
-        about.setText(info.getString("about"));
-        rate.setText(info.getString("rate"));
-        profileImageView.setImageBitmap(imageController.peek(ImageLocation.PROFILE));
+        //set fields based on data from the bundle
+        name.setText(student.getName());
+        major.setText(student.getMajor());
+        year.setText(student.getYear());
+        about.setText(tutor.getAbout());
+        rate.setText(tutor.getRate());
         coverImageView.setBackground(new BitmapDrawable(getResources(), imageController.peek(ImageLocation.BACKGROUND)));
-
-        currentBackgroundBitmapFromStack   = imageController.peek(ImageLocation.BACKGROUND);
-        currentProfileBitmapFromStack      = imageController.peek(ImageLocation.PROFILE);
     }
 
     private void setUpRelationships()
     {
-        new ImageObserver(profileImageView, StudentProfileActivity.profileImageSubject);
         new ImageDrawableObserver(coverImageView, StudentProfileActivity.coverImageSubject, getResources());
     }
 

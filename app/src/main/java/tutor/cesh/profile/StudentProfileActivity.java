@@ -22,20 +22,24 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.apache.http.client.methods.HttpGet;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import tutor.cesh.MasterStudent;
 import tutor.cesh.R;
+import tutor.cesh.Student;
+import tutor.cesh.Tutor;
+import tutor.cesh.User;
 import tutor.cesh.database.DatabaseFactory;
 import tutor.cesh.profile.classes.ClassesUtility;
+import tutor.cesh.profile.classes.StudentClassesUtility;
+import tutor.cesh.profile.classes.TutorClassesUtility;
 import tutor.cesh.rest.AsyncDownloader;
 import tutor.cesh.rest.AsyncGet;
 import tutor.cesh.rest.BackgroundImageTaskDelegate;
 import tutor.cesh.rest.TaskDelegate;
-import tutor.cesh.rest.http.CourseHttpObject;
 import tutor.cesh.rest.http.EnrollHttpObject;
+import tutor.cesh.rest.http.StudentCourseHttpObject;
+import tutor.cesh.rest.http.TutorCourseHttpObject;
 import tutor.cesh.rest.http.TutorHttpObject;
 
 
@@ -46,11 +50,9 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
     private EditText                name, major, year, about, classes;
     private DrawerLayout            drawerLayout;
     private ListView                listView;
-    private static String           DOMAIN = "http://blankcanvas.pw/";
     private String []               listViewTitles;
     private ActionBar               actionBar;
     public static Subject           profileImageSubject, coverImageSubject;
-    private ImageController         imageController;
 
     /**
      * A private class responsible for handling click events on the
@@ -90,25 +92,18 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
 
         /* Set up boolean value in bundle */
         info                = getIntent().getExtras();
-        info.putString("ok", "false");
+        if(!info.containsKey("ok"))
+            info.putString("ok", "false");
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Bundle          savedInstanceState;
         if (requestCode == 1)
         {
             if (resultCode == RESULT_OK)
             {
-                savedInstanceState = data.getExtras();
-                info.putString("firstName", savedInstanceState.getString("firstName"));
-                info.putString("about",     savedInstanceState.getString("about"));
-                info.putString("year",      savedInstanceState.getString("year"));
-                info.putString("major",     savedInstanceState.getString("major"));
                 info.putString("ok", "true");
-
-                DatabaseFactory.updateMasterStudent(info);
             }
         }
         setUpUserInfo();
@@ -135,7 +130,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         setContentView(R.layout.activity_student_profile);
 
         initializeUI();
-        setUpRelationships();
+        setUpSubjectObservers();
         setUpActionBar();
         setUpUserInfo();
     }
@@ -159,12 +154,9 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         if (id == R.id.action_settings)
             return true;
         else if(id == R.id.action_edit_profile)
-        {
             position = -100;
-        }
         else if(id == R.id.action_switch_profile)
             position = 1;
-
 
         onOptionsItemSelected(position);
         return super.onOptionsItemSelected(item);
@@ -245,11 +237,9 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
     /**
      *
      */
-    private void setUpRelationships()
+    private void setUpSubjectObservers()
     {
         /* Set up Subject-observer relationship */
-
-        imageController = ImageController.getInstance();
 
         profileImageSubject         = new ImageSubject();
         coverImageSubject           = new ImageSubject();
@@ -260,26 +250,22 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
 
     private void setUpQueriedUserInfo()
     {
-        MasterStudent   ms;
+        User            user;
+        Student         student;
         TaskDelegate    taskDelegate;
         AsyncDownloader asyncDownloader;
 
-        ms = DatabaseFactory.getMasterStudent();
+
+        user    = User.getInstance();
+        student = user.getStudent();
 
         /* Data that has already been retrieved from the server */
-        name.setText(ms.getName(), TextView.BufferType.EDITABLE);
-        info.putString("firstName", ms.getName());
-        about.setText(ms.getAbout(), TextView.BufferType.EDITABLE);
-        info.putString("about", ms.getAbout());
+        name.setText(student.getName(), TextView.BufferType.EDITABLE);
+        info.putString("firstName", student.getName());
+        about.setText(student.getAbout(), TextView.BufferType.EDITABLE);
+        info.putString("about", student.getAbout());
 
-        //get profile image from server and set profile image
-        //taskDelegate        = new ProfileImageTaskDelegate(profileImageSubject);
-        /*asyncDownloader     = new AsyncDownloader(  info.getString("profile_image_url"),
-                                                    this, taskDelegate, profileImageView.getWidth(),
-                                                    profileImageView.getHeight());*/
-        //asyncDownloader.execute();
-
-        //get background image from server and set the background
+        // Download cover image from server
         taskDelegate        = new BackgroundImageTaskDelegate(  getResources(),
                                                                 coverImageSubject);
         asyncDownloader     = new AsyncDownloader(  info.getString("coverImage"),
@@ -294,47 +280,50 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
      */
     private void setUpUserInfo()
     {
-        JSONArray                                   jsonArray;
-        TextFieldHelper                             classesTextFieldHelper;
         HttpGet                                     get;
-        String                                      formatted;
         Drawable                                    drawable;
-        MasterStudent                               ms;
         ClassesUtility                              cUtility;
+        ImageController                             imageController;
+        User                                        user;
+        Student                                     student;
 
-        classesTextFieldHelper  = new ClassesTextFieldHelper(this);
-        ms                      = DatabaseFactory.getMasterStudent();
+
+        imageController = ImageController.getInstance();
+        user            = User.getInstance();
+        student         = user.getStudent();
 
         try
         {
             if(info.getString("ok").equalsIgnoreCase("false"))
             {
+                System.out.println("-------------------------------------------------");
                 setUpQueriedUserInfo();
                 /* Data that needs to be queried from the server */
-                get = new EnrollHttpObject(ms).get();
+                get = new EnrollHttpObject(user).get();
                 new AsyncGet(this, this).execute(get);
 
-                get = new TutorHttpObject(ms).get();
+                get = new TutorHttpObject(user).get();
                 new AsyncGet(this, this).execute(get);
 
-                get = new CourseHttpObject(ms).get();
+                get = new StudentCourseHttpObject(user).get();
+                new AsyncGet(this, this).execute(get);
+
+                get = new TutorCourseHttpObject(user).get();
                 new AsyncGet(this, this).execute(get);
             }
             else
             {
                 //set fields based on data from the updated bundle
-                name.setText(ms.getName(), TextView.BufferType.EDITABLE);
-                major.setText(ms.getMajor(), TextView.BufferType.EDITABLE);
-                year.setText(ms.getYear(), TextView.BufferType.EDITABLE);
-                about.setText(ms.getAbout(), TextView.BufferType.EDITABLE);
+                name.setText(student.getName(), TextView.BufferType.EDITABLE);
+                major.setText(student.getMajor(), TextView.BufferType.EDITABLE);
+                year.setText(student.getYear(), TextView.BufferType.EDITABLE);
+                about.setText(student.getAbout(), TextView.BufferType.EDITABLE);
 
                 drawable = new BitmapDrawable(getResources(), imageController.peek(ImageLocation.BACKGROUND));
-                //profileImageView.setImageBitmap(imageController.peek(ImageLocation.PROFILE));
                 coverImageView.setBackground(drawable);
 
-                cUtility = new ClassesUtility(ms, this.classes, this);
+                cUtility = new StudentClassesUtility(user, this.classes, this);
                 cUtility.setClassesRegularMode();
-
             }
         }
         catch(Exception e)
@@ -353,11 +342,14 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
     {
         //set fields based on JSON response from the server
         ClassesUtility  cUtility;
-        String  []      classes;
-        MasterStudent   ms;
+        User            user;
+        Student         student;
+        Tutor           tutor;
 
-        ms = DatabaseFactory.getMasterStudent();
-        cUtility = new ClassesUtility(ms, this.classes, this);
+        user = User.getInstance();
+        student = user.getStudent();
+        tutor = user.getTutor();
+
 
         try
         {
@@ -371,18 +363,31 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
                 info.putString("year", year.getText().toString());
             }
 
-            if(response.has("cname"))
-            {
-                System.out.println(response.getString("cname"));
-                cUtility.formatClassesFrontEnd(response.getString("cname"));
-                cUtility.setClassesRegularMode();
+            if(response.has("rate"))
+                info.putString("rate", response.getString("rate"));
+
+            if(response.has("tutorabout")) {
+                info.putString("tutorabout", response.getString("tutorabout"));
             }
 
+            if(response.has("coursesTaking"))
+            {
+                System.out.println("Courses taking... " + response.getString("coursesTaking"));
+                cUtility    = new StudentClassesUtility(user, this.classes, this);
+                cUtility.formatClassesFrontEnd(response.getString("coursesTaking"));
+                cUtility.setClassesRegularMode();
+            }
+            if(response.has("coursesTutoring"))
+            {
+                System.out.println(response.getString("coursesTutoring"));
+                cUtility    = new TutorClassesUtility(user, null, this);
+                cUtility.formatClassesFrontEnd(response.getString("coursesTutoring"));
+            }
         }
         catch (JSONException e){
             e.printStackTrace();
         }
 
-        DatabaseFactory.updateMasterStudent(info);
+        DatabaseFactory.updateObjects(info);
     }
 }

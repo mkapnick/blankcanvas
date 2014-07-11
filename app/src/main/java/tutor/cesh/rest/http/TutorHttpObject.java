@@ -8,7 +8,9 @@ import org.json.JSONObject;
 
 import java.net.URI;
 
-import tutor.cesh.AbstractStudent;
+import tutor.cesh.Student;
+import tutor.cesh.User;
+import tutor.cesh.Tutor;
 
 /**
  * Created by michaelk18 on 7/7/14.
@@ -18,11 +20,11 @@ public class TutorHttpObject implements HttpObject {
     private static final String PUT = "http://blankcanvas.pw/tutors/";
     private static final String GET = "http://blankcanvas.pw/join/tutors/";
 
-    private AbstractStudent     student;
+    private User user;
 
-    public TutorHttpObject(AbstractStudent student)
+    public TutorHttpObject(User user)
     {
-        this.student = student;
+        this.user = user;
     }
 
     @Override
@@ -37,20 +39,23 @@ public class TutorHttpObject implements HttpObject {
 
         HttpPut     put;
         JSONObject  params;
+        Tutor       tutor;
+        Student     student;
 
-        put = null;
+        tutor = user.getTutor();
+        student = user.getStudent();
 
-        if (!student.getRate().equalsIgnoreCase(""));
-        {
-            put     = new HttpPut(PUT + student.getTutorId());
-            params  = new JSONObject();
-            params.put("rate",student.getRate());
 
-            put.setEntity(new StringEntity(params.toString()));
-            put.setHeader("Accept", "application/json");
-            put.setHeader("Content-Type", "application/json");
+        put     = new HttpPut(PUT + student.getTutorId());
+        params  = new JSONObject();
+        params.put("rate",tutor.getRate());
+        params.put("about", tutor.getAbout());
 
-        }
+        put.setEntity(new StringEntity(params.toString()));
+        put.setHeader("Accept", "application/json");
+        put.setHeader("Content-Type", "application/json");
+
+
 
         return put;
     }
@@ -59,6 +64,9 @@ public class TutorHttpObject implements HttpObject {
     public HttpGet get() throws Exception
     {
         HttpGet httpGet;
+        Student student;
+        student = user.getStudent();
+
 
         httpGet = new HttpGet(new URI(GET + student.getId()));
         httpGet.setHeader("Accept", "application/json");

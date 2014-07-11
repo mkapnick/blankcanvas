@@ -5,28 +5,28 @@ import android.text.SpannableStringBuilder;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import tutor.cesh.AbstractStudent;
+import tutor.cesh.User;
 import tutor.cesh.profile.BubbleTextView;
 
 /**
  * Created by michaelk18 on 7/8/14.
  */
-public class ClassesUtility
+public abstract class ClassesUtility
 {
-    private AbstractStudent student;
-    private EditText        textBox;
-    private Context         context;
+    protected User user;
+    protected EditText        textBox;
+    protected Context         context;
 
-    public ClassesUtility(AbstractStudent student, EditText textBox, Context context)
+    public ClassesUtility(User user, EditText textBox, Context context)
     {
-        this.student = student;
+        this.user = user;
         this.textBox = textBox;
         this.context = context;
     }
 
-    public ClassesUtility(AbstractStudent student, EditText textBox)
+    public ClassesUtility(User user, EditText textBox)
     {
-        this.student = student;
+        this.user = user;
         this.textBox = textBox;
         this.context = null;
     }
@@ -58,9 +58,12 @@ public class ClassesUtility
                e.printStackTrace();
         }
 
-        this.student.setClasses(classesFromServer);
+        setClasses(classesFromServer);
         return classesFromServer;
     }
+
+    public abstract void setClasses(String [] classesFromServer);
+    public abstract String [] getClasses();
 
     public String formatClassesBackend()
     {
@@ -78,7 +81,7 @@ public class ClassesUtility
         {
             //convert to a valid JSON Array to send up to the server
             classesEnteredArray = classesEntered.split("\\s+");
-            this.student.setClasses(classesEnteredArray);
+            setClasses(classesEnteredArray);
             jsonArray      = "[";
 
             for (int i = 0; i < classesEnteredArray.length; i++)
@@ -98,12 +101,15 @@ public class ClassesUtility
     public void setClassesEditMode()
     {
         String [] classes;
-        classes = this.student.getClasses();
+        classes = getClasses();
 
         this.textBox.setText("");
-        for(int i =0; i < classes.length; i++)
+
+        if(!classes[0].equalsIgnoreCase(""))
         {
-            this.textBox.append(classes[i] + " ");
+            for (int i = 0; i < classes.length; i++) {
+                this.textBox.append(classes[i] + " ");
+            }
         }
     }
     public void setClassesRegularMode()
@@ -113,9 +119,11 @@ public class ClassesUtility
         SpannableStringBuilder sb;
 
         this.textBox.setText("");
-        classes = student.getClasses();
+        classes = getClasses();
 
-        if(classes != null)
+        System.out.println("classes length!!!!! -----------------------------" + classes.length);
+        System.out.println("1st element in array is: " + classes[0]);
+        if(!classes[0].equalsIgnoreCase(""))
         {
             try
             {

@@ -1,7 +1,6 @@
 package tutor.cesh.profile;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,26 +16,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 
-import tutor.cesh.MasterStudent;
 import tutor.cesh.R;
+import tutor.cesh.Student;
+import tutor.cesh.User;
 import tutor.cesh.database.DatabaseFactory;
 import tutor.cesh.profile.classes.ClassesUtility;
+import tutor.cesh.profile.classes.StudentClassesUtility;
 import tutor.cesh.rest.BackgroundImageTaskDelegate;
-import tutor.cesh.rest.ProfileImageTaskDelegate;
 import tutor.cesh.rest.RestClientExecute;
 import tutor.cesh.rest.TaskDelegate;
-import tutor.cesh.rest.http.CourseHttpObject;
 import tutor.cesh.rest.http.EnrollHttpObject;
 import tutor.cesh.rest.http.HttpObject;
+import tutor.cesh.rest.http.StudentCourseHttpObject;
 import tutor.cesh.rest.http.StudentHttpObject;
 import tutor.cesh.rest.http.TutorHttpObject;
 import tutor.cesh.sampled.statik.Cropper;
@@ -48,72 +46,20 @@ public class EditStudentProfileActivity extends Activity
     private EditText                                name, major, year, about,   classes;
     private ImageView                               profileImageView, coverImageView;
     private static GenericTextWatcher               textWatcher;
-    private static final int                        CONVULTION_KERNEL_SIZE = 3;
-    public  static Bitmap                           currentProfileBitmapFromStack, currentBackgroundBitmapFromStack;
-    private int                                     originalSizeOfProfileStack, originalSizeOfBackgroundStack;
-    private ImageController                         imageController;
-
 
     /**
      *
      */
     private void doNotSaveUpdatedInfo()
     {
-        int localProfileSize, localBackgroundSize, difference;
+        int             localBackgroundSize;
+        ImageController imageController;
 
-        currentProfileBitmapFromStack      = null;
-        currentBackgroundBitmapFromStack   = null;
-
-        localProfileSize = imageController.size(ImageLocation.PROFILE);
+        imageController     = ImageController.getInstance();
         localBackgroundSize = imageController.size(ImageLocation.BACKGROUND);
 
-        difference = localProfileSize- originalSizeOfProfileStack;
-
-        for(int i = 0; i < difference; i++)
-            imageController.pop(ImageLocation.PROFILE);
-
-        difference = localBackgroundSize - originalSizeOfBackgroundStack;
-
-        for(int i = 0; i < difference; i++)
+        for(int i = 0; i < localBackgroundSize - 1; i++)
             imageController.pop(ImageLocation.BACKGROUND);
-    }
-
-    private String formatClassesForServer()
-    {
-        ArrayList<TextView> tvClasses;
-        String              courseName, jsonArray;
-        String              classesEntered;
-        String []           classesEnteredArray;
-
-        tvClasses           = textWatcher.getTextViews();
-        jsonArray           = "";
-
-        classesEntered      = this.classes.getText().toString().trim();
-
-        System.out.println("ClassesEntered is: " + classesEntered);
-        System.out.println("tvClasses length is: " + tvClasses.size());
-
-        /* Format classes entered by the user correctly for the server to handle */
-
-        //As long as the user entered in the classes he/she is taking
-        if (classesEntered.length() > 0)
-        {
-            //convert to a valid JSON Array to send up to the server
-            classesEnteredArray = classesEntered.split("\\s+");
-            jsonArray      = "[";
-
-            for (int i = 0; i < classesEnteredArray.length; i++)
-            {
-                courseName = classesEnteredArray[i];
-                if (i != classesEnteredArray.length - 1)
-                    jsonArray += "{\"name\": " + "\"" + courseName + "\"" + "},";
-                else
-                    jsonArray += "{\"name\": " + "\"" + courseName + "\""+ "}";
-            }
-            jsonArray += "]";
-        }
-
-        return jsonArray;
     }
     /**
      *
@@ -190,30 +136,7 @@ public class EditStudentProfileActivity extends Activity
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        /******* PROFILE IMAGE CHANGE ***********************************************************/
-        if (requestCode == 1)
-        {
-            if (data != null)
-            {
-                cropper = new Cropper();
-                try
-                {
-                    profileImagePath = data.getData().toString();
-                    Intent intent;
-                    intent = cropper.performCrop();
-                    startActivityForResult(intent, 3);
-                }
-                catch (ActivityNotFoundException anfe)
-                {
-                    // display an error message
-                    String errorMessage = "Your device doesn't support the crop action!";
-                    Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        }
-        /******* BACKGROUND IMAGE CHANGE ***********************************************************/
-        else if (requestCode == 2)
+        if (requestCode == 2)
         {
             if (data != null) {
                 updateBackgroundImage(data);
@@ -221,14 +144,14 @@ public class EditStudentProfileActivity extends Activity
         }
         else
         {
-            Bitmap croppedImage;
+            /*Bitmap croppedImage;
             String tmp;
             extras = data.getExtras();
             croppedImage = extras.getParcelable("data");
             taskDelegate = new ProfileImageTaskDelegate(StudentProfileActivity.profileImageSubject);
             //tmp = getRealPathFromURI(this, Uri.parse(profileImagePath));
             //profileImagePath = tmp;
-            taskDelegate.taskCompletionResult(croppedImage, false);
+            taskDelegate.taskCompletionResult(croppedImage, false);*/
         }
 
         this.classes.addTextChangedListener(textWatcher);
@@ -252,7 +175,6 @@ public class EditStudentProfileActivity extends Activity
         setUpRelationships();
         setUpUserClasses();
     }
-
 
 
     @Override
@@ -279,7 +201,6 @@ public class EditStudentProfileActivity extends Activity
             doNotSaveUpdatedInfo();
             position = 1;
         }
-
 
         onOptionsItemSelected(position);
         return super.onOptionsItemSelected(item);
@@ -343,8 +264,6 @@ public class EditStudentProfileActivity extends Activity
                 intent = new Intent();
                 intent.putExtras(info);
                 setResult(RESULT_OK, intent);
-                currentProfileBitmapFromStack      = null;
-                currentBackgroundBitmapFromStack   = null;
                 finish();
                 break;
         }
@@ -352,14 +271,14 @@ public class EditStudentProfileActivity extends Activity
 
     private void resetUserImages()
     {
-        Bitmap  changedProfileImage, changedBackgroundImage;
+        Bitmap          changedBackgroundImage;
+        ImageController imageController;
+
+        imageController = ImageController.getInstance();
 
         /* Reset Profile and Cover Images */
-        changedProfileImage     = imageController.pop(ImageLocation.PROFILE);
         changedBackgroundImage  = imageController.pop(ImageLocation.BACKGROUND);
-        imageController.clear(ImageLocation.PROFILE);
         imageController.clear(ImageLocation.BACKGROUND);
-        imageController.push(changedProfileImage, ImageLocation.PROFILE);
         imageController.push(changedBackgroundImage, ImageLocation.BACKGROUND);
     }
     /**
@@ -375,28 +294,30 @@ public class EditStudentProfileActivity extends Activity
         HttpObject          enroll, course, tutor;
         StudentHttpObject   student;
         ClassesUtility      cUtility;
+        User                user;
 
+        user = User.getInstance();
         resetUserImages();
-        cUtility = new ClassesUtility(DatabaseFactory.getMasterStudent(), this.classes);
-        jsonArray = cUtility.formatClassesBackend();
+        cUtility    = new StudentClassesUtility(user, this.classes);
+        jsonArray   = cUtility.formatClassesBackend();
+
+        //update info bundle
+        info.putString("firstName", name.getText().toString());
+        info.putString("about", about.getText().toString());
+        info.putString("year", year.getText().toString());
+        info.putString("major", major.getText().toString());
+        DatabaseFactory.updateObjects(info);
 
         //Send a put request with the user's data up to the server
         try
         {
-            info.putString("firstName", name.getText().toString());
-            info.putString("about", about.getText().toString());
-            info.putString("year", year.getText().toString());
-            info.putString("major", major.getText().toString());
-
-            DatabaseFactory.updateMasterStudent(info);
-
-            student     = new StudentHttpObject(DatabaseFactory.getMasterStudent());
-            enroll      = new EnrollHttpObject(DatabaseFactory.getMasterStudent());
-            tutor       = new TutorHttpObject(DatabaseFactory.getMasterStudent());
-            course      = new CourseHttpObject(DatabaseFactory.getMasterStudent(), jsonArray);
-
+            student     = new StudentHttpObject(user);
             student.setCoverImagePath(coverImagePath);
             student.setProfileImagePath(profileImagePath);
+
+            enroll      = new EnrollHttpObject(user);
+            tutor       = new TutorHttpObject(user);
+            course      = new StudentCourseHttpObject(user, jsonArray);
 
             post = course.post();
             new RestClientExecute(post).start();
@@ -423,12 +344,19 @@ public class EditStudentProfileActivity extends Activity
      */
     private void setUpUserClasses()
     {
-        MasterStudent   ms;
         ClassesUtility  cUtility;
+        User user;
+        Student student;
 
-        ms          = DatabaseFactory.getMasterStudent();
-        cUtility    = new ClassesUtility(ms, this.classes, this);
-        cUtility.setClassesEditMode();
+        user    = User.getInstance();
+        student = user.getStudent();
+
+        if(student.getClasses().length > 0)
+        {
+            cUtility    = new StudentClassesUtility(user, this.classes, this);
+            cUtility.setClassesEditMode();
+        }
+
     }
 
     /**
@@ -436,28 +364,24 @@ public class EditStudentProfileActivity extends Activity
      */
     private void setUpUserData()
     {
-        MasterStudent ms;
+        ImageController imageController;
+        User            user;
+        Student         student;
 
-        ms              = DatabaseFactory.getMasterStudent();
         imageController = ImageController.getInstance();
 
-        originalSizeOfProfileStack                          = imageController.size(ImageLocation.PROFILE);
-        originalSizeOfBackgroundStack                       = imageController.size(ImageLocation.BACKGROUND);
+        user = User.getInstance();
+        student = user.getStudent();
 
         //set fields based on data from the bundle
-        name.setText(ms.getName());
-        major.setText(ms.getMajor());
-        year.setText(ms.getYear());
-        about.setText(ms.getAbout());
-        profileImageView.setImageBitmap(imageController.peek(ImageLocation.PROFILE));
+        name.setText(student.getName());
+        major.setText(student.getMajor());
+        year.setText(student.getYear());
+        about.setText(student.getAbout());
         coverImageView.setBackground(new BitmapDrawable(getResources(), imageController.peek(ImageLocation.BACKGROUND)));
-
-        currentBackgroundBitmapFromStack   = imageController.peek(ImageLocation.BACKGROUND);
-        currentProfileBitmapFromStack      = imageController.peek(ImageLocation.PROFILE);
     }
     private void setUpRelationships()
     {
-        new ImageObserver(profileImageView, StudentProfileActivity.profileImageSubject);
         new ImageDrawableObserver(coverImageView, StudentProfileActivity.coverImageSubject, getResources());
     }
 
@@ -493,7 +417,6 @@ public class EditStudentProfileActivity extends Activity
 
                 Uri uri = getImageUri(this, bitmap);
                 coverImagePath = getRealPathFromURI(uri);
-                System.out.println(coverImagePath);
             }
 
             taskDelegate        = new BackgroundImageTaskDelegate(getResources(), StudentProfileActivity.coverImageSubject);

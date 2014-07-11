@@ -1,11 +1,9 @@
 package tutor.cesh.profile;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -21,27 +19,23 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.apache.http.client.methods.HttpGet;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import tutor.cesh.R;
-import tutor.cesh.database.DatabaseTable;
-import tutor.cesh.rest.TaskDelegate;
+import tutor.cesh.Student;
+import tutor.cesh.Tutor;
+import tutor.cesh.User;
+import tutor.cesh.profile.classes.ClassesUtility;
+import tutor.cesh.profile.classes.TutorClassesUtility;
 
-public class TutorProfileActivity extends ActionBarActivity implements View.OnClickListener, TaskDelegate {
+public class TutorProfileActivity extends ActionBarActivity implements View.OnClickListener {
 
     private Bundle                  info;
-    public static ImageView        profileImageView, coverImageView;
+    public static ImageView         profileImageView, coverImageView;
 
     private EditText                name, major, year, about, classes, rate;
-    private static String           DOMAIN = "http://protected-earth-9689.herokuapp.com";
     private DrawerLayout            drawerLayout;
     private ListView                listView;
     private String []               listViewTitles;
     private ActionBar               actionBar;
-    private ImageController         controller;
 
     /**
      * A private class responsible for handling click events on the
@@ -87,24 +81,11 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Bundle      savedInstanceState;
-        BitmapDrawable  drawable;
-
         if (requestCode == 1)
         {
             if (resultCode == RESULT_OK)
             {
-                savedInstanceState = data.getExtras();
-                info.putString("firstName", savedInstanceState.getString("firstName"));
-                info.putString("about", savedInstanceState.getString("about"));
-                info.putString("year", savedInstanceState.getString("year"));
-                info.putString("major", savedInstanceState.getString("major"));
-                info.putString("rate", savedInstanceState.getString("rate"));
                 info.putString("isRateSet", "true");
-
-                drawable = new BitmapDrawable(getResources(), controller.peek(ImageLocation.BACKGROUND));
-                profileImageView.setImageBitmap(controller.peek(ImageLocation.PROFILE));
-                coverImageView.setBackground(drawable);
             }
         }
         setUpUserInfo();
@@ -119,7 +100,6 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
     @Override
     public void onClick(View v)
     {
-        Intent intent;
         switch(v.getId())
         {
             case R.id.menu_button:
@@ -138,7 +118,7 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         setContentView(R.layout.activity_tutor_profile);
 
         initializeUI();
-        setUpRelationships();
+        setUpSubjectObservers();
         setUpActionBar();
         setUpUserInfo();
     }
@@ -150,7 +130,7 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.tutor_profile, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -193,6 +173,8 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         {
             drawerLayout.closeDrawer(listView);
             intent = new Intent(this, StudentProfileActivity.class);
+            System.out.println("Before the storm!");
+            info.putString("ok", "true");
             intent.putExtras(info);
             startActivity(intent);
             finish();
@@ -215,12 +197,6 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         setUpUserInfo();
     }
 
-    @Override
-    public void setProgressDialog(ProgressDialog pd) {
-
-    }
-
-
     /**
      *
      */
@@ -240,36 +216,12 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         actionBarTextView.setText("TUTOR");
         actionBarTextView.setTextColor(Color.WHITE);
 
-
         actionBarMenuButton = (ImageButton) actionBarView.findViewById(R.id.menu_button);
         actionBarMenuButton.setOnClickListener(this);
     }
 
-    /**
-     * Helper method to set up an HttpGet request
-     * @param table
-     * @param id
-     * @return
-     */
-    private void setUpAndExecuteGet(DatabaseTable table, String id)
+    private void setUpSubjectObservers()
     {
-        HttpGet                                     get1;
-
-        try
-        {
-            //get1        = RestClientFactory.get(table, id);
-            //new AsyncGet(this, this).execute(get1);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private void setUpRelationships()
-    {
-        controller = ImageController.getInstance();
-        //may need to only do this in TutorProfileActivity
         new ImageObserver(profileImageView, StudentProfileActivity.profileImageSubject);
         new ImageDrawableObserver(coverImageView, StudentProfileActivity.coverImageSubject, getResources());
     }
@@ -278,76 +230,32 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
      */
     private void setUpUserInfo()
     {
-        JSONArray                                   jsonArray;
-        TextFieldHelper                             classesTextFieldHelper;
-        String                                      formatted;
         BitmapDrawable                              drawable;
         Bitmap                                      tmp;
+        ImageController                             imageController;
+        ClassesUtility                              cUtility;
+        User                                        user;
+        Student                                     student;
+        Tutor                                       tutor;
 
-        classesTextFieldHelper  = new ClassesTextFieldHelper(this);
+        imageController = ImageController.getInstance();
+        user            = User.getInstance();
+        student         = user.getStudent();
+        tutor           = user.getTutor();
 
-        try
-        {
-            //Stuff unique to TutorProfileActivity
-            if(info.getString("isRateSet").equalsIgnoreCase("false")){
-                setUpAndExecuteGet(DatabaseTable.TUTORS, info.getString("tutorId"));
-                //rate.setText(json.getString("rate"), TextView.BufferType.EDITABLE);
-            }
-            else{
-                rate.setText(info.getString("rate"), TextView.BufferType.EDITABLE);
-            }
+        name.setText(student.getName());
+        major.setText(student.getMajor());
+        year.setText(student.getYear());
+        about.setText(tutor.getAbout());
+        rate.setText(tutor.getRate());
 
-            //This info is already set from the StudentProfileActivity. Do not need
-            //to query the server for this
-            name.setText(info.getString("firstName"), TextView.BufferType.EDITABLE);
-            major.setText(info.getString("major"), TextView.BufferType.EDITABLE);
-            year.setText(info.getString("year"), TextView.BufferType.EDITABLE);
-            about.setText(info.getString("about"));
+        //classes already formatted in StudentProfileActivity
+        cUtility = new TutorClassesUtility(user, this.classes, this);
+        cUtility.setClassesRegularMode();
 
-            //No need to download profile image and cover image.
-            //These were set from StudentProfileActivity
-
-            tmp         = controller.peek(ImageLocation.PROFILE);
-            profileImageView.setImageBitmap(tmp);
-            tmp         = controller.peek(ImageLocation.BACKGROUND);
-            drawable    = new BitmapDrawable(getResources(), tmp);
-            coverImageView.setBackground(drawable);
-
-            /****** ADD CODE FOR USER ENTERING IN CLASSES HE/SHE IS TUTORING***/
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+        tmp         = imageController.peek(ImageLocation.BACKGROUND);
+        drawable    = new BitmapDrawable(getResources(), tmp);
+        coverImageView.setBackground(drawable);
     }
 
-    @Override
-    public void taskCompletionResult(Bitmap b, boolean check)
-    {
-        //nothing
-    }
-
-    @Override
-    public void taskCompletionResult(JSONObject response)
-    {
-        //set fields based on JSON response from the server
-        AsyncTask<Void, Integer, Bitmap>            asyncDownloader;
-        String []                                   classesFromServer;
-        TextFieldHelper                             classesTextFieldHelper;
-        TaskDelegate                                taskDelegate;
-
-        classesTextFieldHelper  = new ClassesTextFieldHelper(this);
-
-        try
-        {
-            if(response.has("rate")) {
-                rate.setText(response.getString("rate"));
-                info.putString("rate", rate.getText().toString());
-            }
-            //Also have to set up tutor classes here
-        }
-        catch (JSONException e){
-            e.printStackTrace();
-        }
-    }
 }
