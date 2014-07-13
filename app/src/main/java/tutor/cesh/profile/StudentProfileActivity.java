@@ -52,7 +52,6 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
     private ListView                listView;
     private String []               listViewTitles;
     private ActionBar               actionBar;
-    public static Subject           profileImageSubject, coverImageSubject;
 
     /**
      * A private class responsible for handling click events on the
@@ -247,12 +246,6 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
     private void setUpSubjectObservers()
     {
         /* Set up Subject-observer relationship */
-
-        profileImageSubject         = new ImageSubject();
-        coverImageSubject           = new ImageSubject();
-
-        new ImageObserver(profileImageView, profileImageSubject);
-        new ImageDrawableObserver(coverImageView, coverImageSubject, getResources());
     }
 
     private void setUpQueriedUserInfo()
@@ -381,6 +374,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
 
             if(response.has("tutor_cover_image_url"))
             {
+                System.out.println("inisde here");
                 tmp = response.getString("tutor_cover_image_url");
                 tutor.setCoverImageUrl(tmp);
 

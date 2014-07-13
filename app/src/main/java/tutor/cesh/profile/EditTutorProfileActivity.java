@@ -29,9 +29,6 @@ import tutor.cesh.Tutor;
 import tutor.cesh.User;
 import tutor.cesh.profile.classes.ClassesUtility;
 import tutor.cesh.profile.classes.TutorClassesUtility;
-import tutor.cesh.rest.AsyncDownloader;
-import tutor.cesh.rest.CoverImageHandler;
-import tutor.cesh.rest.ImageHandler;
 import tutor.cesh.rest.RestClientExecute;
 import tutor.cesh.rest.http.EnrollHttpObject;
 import tutor.cesh.rest.http.HttpObject;
@@ -138,7 +135,6 @@ public class EditTutorProfileActivity extends Activity
         this.info = getIntent().getExtras();
         initializeUI();
         setUpUserData();
-        setUpRelationships();
         setUpUserClasses();
 
     }
@@ -235,20 +231,6 @@ public class EditTutorProfileActivity extends Activity
         }
     }
 
-    private void resetUserImages()
-    {
-        /*Bitmap          changedBackgroundImage;
-        ImageController imageController;
-
-        imageController = ImageController.getInstance();
-
-        /* Reset Profile and Cover Images
-        changedBackgroundImage  = imageController.pop(ImageLocation.BACKGROUND);
-        imageController.clear(ImageLocation.BACKGROUND);
-        imageController.push(changedBackgroundImage, ImageLocation.BACKGROUND);
-        */
-    }
-
     /**
      * Save user data to the server
      * @param view
@@ -265,15 +247,11 @@ public class EditTutorProfileActivity extends Activity
         User                user;
         Student             student;
         Tutor               tutor;
-        ImageHandler        handler;
-        AsyncDownloader     asyncDownloader;
 
         user    = User.getInstance();
         student = user.getStudent();
         tutor   = user.getTutor();
-        handler = new CoverImageHandler(getResources(), this.coverImageView);
 
-        resetUserImages();
         cUtility    = new TutorClassesUtility(user, this.tutorClasses);
         jsonArray   = cUtility.formatClassesBackend();
 
@@ -359,11 +337,6 @@ public class EditTutorProfileActivity extends Activity
         about.setText(tutor.getAbout());
         rate.setText(tutor.getRate());
         coverImageView.setBackground(new BitmapDrawable(getResources(), tutor.getCoverImage()));
-    }
-
-    private void setUpRelationships()
-    {
-        new ImageDrawableObserver(coverImageView, StudentProfileActivity.coverImageSubject, getResources());
     }
 
     /**

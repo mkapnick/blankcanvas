@@ -132,7 +132,6 @@ public class EditStudentProfileActivity extends Activity
         this.info       = getIntent().getExtras();
         initializeUI();
         setUpUserData();
-        setUpRelationships();
         setUpUserClasses();
     }
 
@@ -324,10 +323,6 @@ public class EditStudentProfileActivity extends Activity
         year.setText(student.getYear());
         about.setText(student.getAbout());
         coverImageView.setBackground(new BitmapDrawable(getResources(), student.getCoverImage()));
-    }
-    private void setUpRelationships()
-    {
-        new ImageDrawableObserver(coverImageView, StudentProfileActivity.coverImageSubject, getResources());
     }
 
     /**

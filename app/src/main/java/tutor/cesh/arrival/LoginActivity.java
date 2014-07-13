@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 import tutor.cesh.R;
-import tutor.cesh.database.DatabaseFacility;
 import tutor.cesh.rest.AsyncGet;
 import tutor.cesh.rest.OnLoginTaskDelegate;
 import tutor.cesh.rest.RestClientFactory;
@@ -33,7 +32,6 @@ public class LoginActivity extends ActionBarActivity implements Arrival
 
     private String              email;
     private String              password;
-    private DatabaseFacility databaseFacility;
     private SQLiteDatabase      database;
 
     @Override

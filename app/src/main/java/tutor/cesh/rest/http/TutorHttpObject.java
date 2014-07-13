@@ -54,6 +54,9 @@ public class TutorHttpObject implements HttpObject {
         entity          = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
         entity.addPart("tutor[about]", new StringBody(tutor.getAbout()));
+        entity.addPart("tutor[rate]", new StringBody(tutor.getRate()));
+
+
 
         if(coverImagePath != null)
         {

@@ -75,19 +75,11 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         listView.setOnItemClickListener(new DrawerItemClickListener());
 
         info = getIntent().getExtras();
-        info.putString("isRateSet", "false");
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (requestCode == 1)
-        {
-            if (resultCode == RESULT_OK)
-            {
-                info.putString("isRateSet", "true");
-            }
-        }
         setUpUserInfo();
     }
 
@@ -118,7 +110,6 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         setContentView(R.layout.activity_tutor_profile);
 
         initializeUI();
-        setUpSubjectObservers();
         setUpActionBar();
         setUpUserInfo();
     }
@@ -184,7 +175,6 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
     protected void onRestart()
     {
         super.onRestart();
-        info.putString("isRateSet", "true");
         setUpUserInfo();
     }
 
@@ -192,7 +182,6 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
     protected void onResume()
     {
         super.onResume();
-        info.putString("isRateSet", "true");
         setUpUserInfo();
     }
 
@@ -219,11 +208,6 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         actionBarMenuButton.setOnClickListener(this);
     }
 
-    private void setUpSubjectObservers()
-    {
-        new ImageObserver(profileImageView, StudentProfileActivity.profileImageSubject);
-        new ImageDrawableObserver(coverImageView, StudentProfileActivity.coverImageSubject, getResources());
-    }
     /**
      *
      */
