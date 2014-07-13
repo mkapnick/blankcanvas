@@ -43,20 +43,6 @@ public class EditStudentProfileActivity extends Activity
 
     /**
      *
-     */
-    private void doNotSaveUpdatedInfo()
-    {
-        int             localBackgroundSize;
-        ImageController imageController;
-
-        imageController     = ImageController.getInstance();
-        localBackgroundSize = imageController.size(ImageLocation.BACKGROUND);
-
-        for(int i = 0; i < localBackgroundSize - 1; i++)
-            imageController.pop(ImageLocation.BACKGROUND);
-    }
-    /**
-     *
      * @param inContext
      * @param inImage
      * @return
@@ -172,7 +158,6 @@ public class EditStudentProfileActivity extends Activity
 
         else if(id == R.id.action_switch_profile)
         {
-            doNotSaveUpdatedInfo();
             position = 1;
         }
 

@@ -47,20 +47,6 @@ public class EditTutorProfileActivity extends Activity
     private EditText                        name, major, year, about, rate, tutorClasses;
     private ImageView                       profileImageView, coverImageView;
 
-    /**
-     *
-     */
-    private void doNotSaveUpdatedInfo()
-    {
-        int             localBackgroundSize;
-        ImageController imageController;
-
-        imageController     = ImageController.getInstance();
-        localBackgroundSize = imageController.size(ImageLocation.BACKGROUND);
-
-        for(int i = 0; i < localBackgroundSize - 1; i++)
-            imageController.pop(ImageLocation.BACKGROUND);
-    }
 
     /**
      *
