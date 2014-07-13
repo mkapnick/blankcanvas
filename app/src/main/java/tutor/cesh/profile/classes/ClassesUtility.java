@@ -33,7 +33,6 @@ public abstract class ClassesUtility
 
     public String [] formatClassesFrontEnd(String classes)
     {
-        System.out.println(classes);
         String [] classesFromServer;
         String    course;
 
@@ -54,7 +53,6 @@ public abstract class ClassesUtility
         }
         catch(Exception e)
         {
-               System.out.println("Expected...Exception in cname");
                e.printStackTrace();
         }
 
@@ -72,7 +70,6 @@ public abstract class ClassesUtility
         String []           classesEnteredArray;
 
         classesEntered = this.textBox.getText().toString();
-        System.out.println("----" + classesEntered);
         jsonArray = "";
 
         /* Format classes entered by the user correctly for the server to handle */
@@ -108,7 +105,7 @@ public abstract class ClassesUtility
         if(!classes[0].equalsIgnoreCase(""))
         {
             for (int i = 0; i < classes.length; i++) {
-                this.textBox.append(classes[i] + " ");
+                this.textBox.append(classes[i].toUpperCase()     + " ");
             }
         }
     }
@@ -121,9 +118,7 @@ public abstract class ClassesUtility
         this.textBox.setText("");
         classes = getClasses();
 
-        System.out.println("classes length!!!!! -----------------------------" + classes.length);
-        System.out.println("1st element in array is: " + classes[0]);
-        if(!classes[0].equalsIgnoreCase(""))
+        if(classes.length > 0 && !classes[0].equalsIgnoreCase(""))
         {
             try
             {

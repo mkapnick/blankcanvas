@@ -26,14 +26,11 @@ public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
     private TaskDelegate            taskDelegate;
 
 
-    public AsyncGet(Context c, TaskDelegate td)
+    public AsyncGet(Context c, TaskDelegate td, ProgressDialog pd)
     {
         this.context        = c;
         this.taskDelegate   = td;
-        this.pd             = new ProgressDialog(c);
-        if(this.taskDelegate != null)
-            this.taskDelegate.setProgressDialog(this.pd);
-
+        this.pd             = pd;
     }
 
     @Override
@@ -52,8 +49,6 @@ public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
             reader          = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             json            = reader.readLine();
 
-            System.out.println("iNSIDE ASYNC GET, APPARENTLY THIS IS WHERE THINGS ARE BLOWING UP -------");
-            //System.out.println(json);
             if(!json.equalsIgnoreCase("null"))
                 this.response   = new JSONObject(json);
         }
@@ -85,11 +80,10 @@ public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
     @Override
     protected void onPreExecute() {
         //super.onPreExecute();
-        pd.setTitle("Processing...");
-        pd.setMessage("Please wait");
-        pd.setCancelable(false);
-        pd.setIndeterminate(true);
-        pd.show();
+        if(pd != null)
+        {
+            pd.show();
+        }
         super.onPreExecute();
     }
 

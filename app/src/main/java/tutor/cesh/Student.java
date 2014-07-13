@@ -1,13 +1,16 @@
 package tutor.cesh;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by michaelk18 on 7/2/14.
  */
-public class Student
+public class Student implements Profile
 {
-    private String name, major, year, about, profileImagePath,
-            coverImagePath, id, enrollId, tutorId, schoolId;
+    private String name, major, year, about, profileImageUrl,
+            coverImageUrl, id, enrollId, tutorId, schoolId;
     private String [] classes;
+    private Bitmap coverImage, profileImage;
 
 
     public Student()
@@ -62,20 +65,20 @@ public class Student
         this.id = id;
     }
 
-    public String getCoverImagePath() {
-        return coverImagePath;
+    public String getCoverImageUrl() {
+        return coverImageUrl;
     }
 
-    public void setCoverImagePath(String coverImagePath) {
-        this.coverImagePath = coverImagePath;
+    public void setCoverImageUrl(String coverImageUrl) {
+        this.coverImageUrl = coverImageUrl;
     }
 
-    public String getProfileImagePath() {
-        return profileImagePath;
+    public String getProfileImageUrl() {
+        return profileImageUrl;
     }
 
-    public void setProfileImagePath(String profileImagePath) {
-        this.profileImagePath = profileImagePath;
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 
     public String getAbout() {
@@ -100,5 +103,22 @@ public class Student
 
     public void setMajor(String major) {
         this.major = major;
+    }
+
+    public Bitmap getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(Bitmap profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public Bitmap getCoverImage() {
+
+        return coverImage;
+    }
+
+    public void setCoverImage(Bitmap coverImage) {
+        this.coverImage = coverImage;
     }
 }

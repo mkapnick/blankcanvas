@@ -1,11 +1,9 @@
 package tutor.cesh.rest;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.widget.ProgressBar;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -15,8 +13,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+
+import tutor.cesh.Profile;
 
 /**
  * A simple class to download images from the internet
@@ -24,13 +22,11 @@ import java.net.URL;
 public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
 {
 
-    private ProgressBar         pb;
     private String              url;
-    private Context             c;
     private Bitmap              bmp;
     private ProgressDialog      pd;
-    private TaskDelegate        taskDelegate;
-    private int                 width, height;
+    private ImageHandler        handler;
+    private Profile             profile;
 
 
     /**
@@ -38,24 +34,20 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
      * URL, progress bar, and context
      *
      * @param url A valid URL that points to an image on the web
-     * @param c   A context
      */
-    public AsyncDownloader( String url,
-                            Context c, TaskDelegate td, int widthBounds, int heightBounds)
+    public AsyncDownloader(String url, ImageHandler handler, Profile p, ProgressDialog pd)
     {
         this.url            = url;
-        this.c              = c;
-        pd                  = new ProgressDialog(c);
-        this.taskDelegate   = td;
-        this.width          = widthBounds;
-        this.height         = heightBounds;
-
+        this.handler        = handler;
+        this.profile        = p;
+        this.pd             = pd;
     }
 
 
     @Override
     protected Bitmap doInBackground(Void... arg0)
     {
+        System.out.println("url is: " + url);
         this.bmp = downloadBitmapFromURL(url);
         return this.bmp;
     }
@@ -63,21 +55,22 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
     @Override
     protected void onPostExecute(Bitmap result)
     {
-        if(pd!=null)
-        {
+        if(pd != null)
             pd.dismiss();
-            this.taskDelegate.taskCompletionResult(this.bmp, false);
-        }
+
+        handler.handle(result, profile);
         super.onPostExecute(result);
     };
 
     @Override
     protected void onPreExecute()
     {
-        pd.setTitle("Downloading...");
-        pd.setCancelable(false);
-        pd.setIndeterminate(true);
-        pd.show();
+        if(pd != null) {
+            pd.setTitle("Downloading...");
+            pd.setCancelable(false);
+            pd.setIndeterminate(true);
+            pd.show();
+        }
         super.onPreExecute();
     }
 
@@ -90,10 +83,7 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
      */
     private Bitmap downloadBitmapFromURL(String link)
     {
-        URL                 url;
-        HttpURLConnection   connection;
         InputStream         input;
-        BitmapFactory.Options       options;
 
         HttpGet get;
         HttpResponse response;
@@ -108,8 +98,6 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
             bufHttpEntity = new BufferedHttpEntity(response.getEntity());
             input   = bufHttpEntity.getContent();
 
-            //options = new BitmapFactory.Options();
-            //options.inSampleSize = 20;
             bmp = BitmapFactory.decodeStream(input);
 
             input.close();

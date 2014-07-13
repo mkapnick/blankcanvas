@@ -48,7 +48,6 @@ public abstract class CourseHttpObject implements HttpObject
         Student student;
 
 
-        System.out.println("Post url is: .... " + post);
         httpPost    = new HttpPost(post);
         params      = new JSONObject();
         student     = user.getStudent();

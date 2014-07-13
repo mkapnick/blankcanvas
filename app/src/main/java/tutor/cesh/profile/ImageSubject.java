@@ -39,7 +39,6 @@ public class ImageSubject implements Subject
     {
         for(Observer o: list)
         {
-            System.out.println("Observer in te list --");
             o.update();
         }
     }

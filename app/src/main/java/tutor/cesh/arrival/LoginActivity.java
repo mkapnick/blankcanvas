@@ -1,5 +1,6 @@
 package tutor.cesh.arrival;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -22,10 +23,10 @@ import java.security.NoSuchAlgorithmException;
 
 import tutor.cesh.R;
 import tutor.cesh.database.DatabaseFacility;
-import tutor.cesh.rest.AbstractTaskDelegate;
 import tutor.cesh.rest.AsyncGet;
 import tutor.cesh.rest.OnLoginTaskDelegate;
 import tutor.cesh.rest.RestClientFactory;
+import tutor.cesh.rest.TaskDelegate;
 
 public class LoginActivity extends ActionBarActivity implements Arrival
 {
@@ -119,13 +120,20 @@ public class LoginActivity extends ActionBarActivity implements Arrival
     private void validate()
     {
         HttpGet                                     get;
-        AbstractTaskDelegate                        delegate;
+        TaskDelegate                                delegate;
+        ProgressDialog                              pd;
+
+        pd = new ProgressDialog(this);
+        pd.setTitle("Processing...");
+        pd.setMessage("Please wait");
+        pd.setCancelable(false);
+        pd.setIndeterminate(true);
 
         try
         {
             delegate    = new OnLoginTaskDelegate(this);
             get         = RestClientFactory.authenticate(email, password);
-            new AsyncGet(this, delegate).execute(get);
+            new AsyncGet(this, delegate, pd).execute(get);
         }
         catch(NetworkOnMainThreadException e)
         {

@@ -26,18 +26,13 @@ import java.io.ByteArrayOutputStream;
 import tutor.cesh.R;
 import tutor.cesh.Student;
 import tutor.cesh.User;
-import tutor.cesh.database.DatabaseFactory;
 import tutor.cesh.profile.classes.ClassesUtility;
 import tutor.cesh.profile.classes.StudentClassesUtility;
-import tutor.cesh.rest.BackgroundImageTaskDelegate;
 import tutor.cesh.rest.RestClientExecute;
-import tutor.cesh.rest.TaskDelegate;
 import tutor.cesh.rest.http.EnrollHttpObject;
 import tutor.cesh.rest.http.HttpObject;
 import tutor.cesh.rest.http.StudentCourseHttpObject;
 import tutor.cesh.rest.http.StudentHttpObject;
-import tutor.cesh.rest.http.TutorHttpObject;
-import tutor.cesh.sampled.statik.Cropper;
 
 public class EditStudentProfileActivity extends Activity
 {
@@ -45,7 +40,6 @@ public class EditStudentProfileActivity extends Activity
     private Bundle                                  info;
     private EditText                                name, major, year, about,   classes;
     private ImageView                               profileImageView, coverImageView;
-    private static GenericTextWatcher               textWatcher;
 
     /**
      *
@@ -115,9 +109,6 @@ public class EditStudentProfileActivity extends Activity
 
         profileImageView        = (ImageView)   findViewById(R.id.profileImage);
         coverImageView          = (ImageView)   findViewById(R.id.profileBackgroundImage);
-
-        textWatcher             = new GenericTextWatcher (getApplicationContext(), classes);
-        classes.addTextChangedListener(textWatcher);
     }
 
     /**
@@ -130,37 +121,20 @@ public class EditStudentProfileActivity extends Activity
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
 
-        TaskDelegate taskDelegate;
-        Cropper cropper;
-        Bundle extras;
-
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 2)
         {
-            if (data != null) {
+            if (data != null)
                 updateBackgroundImage(data);
-            }
-        }
-        else
-        {
-            /*Bitmap croppedImage;
-            String tmp;
-            extras = data.getExtras();
-            croppedImage = extras.getParcelable("data");
-            taskDelegate = new ProfileImageTaskDelegate(StudentProfileActivity.profileImageSubject);
-            //tmp = getRealPathFromURI(this, Uri.parse(profileImagePath));
-            //profileImagePath = tmp;
-            taskDelegate.taskCompletionResult(croppedImage, false);*/
         }
 
-        this.classes.addTextChangedListener(textWatcher);
     }
 
     @Override
     public void onBackPressed()
     {
-        doNotSaveUpdatedInfo();
+        //doNotSaveUpdatedInfo();
         super.onBackPressed();
     }
 
@@ -269,18 +243,6 @@ public class EditStudentProfileActivity extends Activity
         }
     }
 
-    private void resetUserImages()
-    {
-        Bitmap          changedBackgroundImage;
-        ImageController imageController;
-
-        imageController = ImageController.getInstance();
-
-        /* Reset Profile and Cover Images */
-        changedBackgroundImage  = imageController.pop(ImageLocation.BACKGROUND);
-        imageController.clear(ImageLocation.BACKGROUND);
-        imageController.push(changedBackgroundImage, ImageLocation.BACKGROUND);
-    }
     /**
      * Save user data to the server
      * @param view
@@ -292,44 +254,51 @@ public class EditStudentProfileActivity extends Activity
         HttpPut             put;
         String              jsonArray;
         HttpObject          enroll, course, tutor;
-        StudentHttpObject   student;
+        StudentHttpObject   studentHttp;
+        Student             student;
         ClassesUtility      cUtility;
         User                user;
 
-        user = User.getInstance();
-        resetUserImages();
+        user    = User.getInstance();
+        student = user.getStudent();
+
         cUtility    = new StudentClassesUtility(user, this.classes);
         jsonArray   = cUtility.formatClassesBackend();
 
-        //update info bundle
+        //update student attributes
         info.putString("firstName", name.getText().toString());
+        student.setName(name.getText().toString());
+
         info.putString("about", about.getText().toString());
+        student.setAbout(about.getText().toString());
+
         info.putString("year", year.getText().toString());
+        student.setYear(year.getText().toString());
+
         info.putString("major", major.getText().toString());
-        DatabaseFactory.updateObjects(info);
+        student.setMajor(major.getText().toString());
 
         //Send a put request with the user's data up to the server
         try
         {
-            student     = new StudentHttpObject(user);
-            student.setCoverImagePath(coverImagePath);
-            student.setProfileImagePath(profileImagePath);
+            studentHttp     = new StudentHttpObject(user);
+            studentHttp.setCoverImagePath(coverImagePath);
+            studentHttp.setProfileImagePath(profileImagePath);
 
             enroll      = new EnrollHttpObject(user);
-            tutor       = new TutorHttpObject(user);
             course      = new StudentCourseHttpObject(user, jsonArray);
 
             post = course.post();
             new RestClientExecute(post).start();
 
-            put = student.put();
+            put = studentHttp.put();
             new RestClientExecute(put).start();
 
             put = enroll.put();
             new RestClientExecute(put).start();
 
-            put = tutor.put();
-            if(put != null) new RestClientExecute(put).start();
+            //put = tutor.put();
+            //if(put != null) new RestClientExecute(put).start();
 
             Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
         }
@@ -346,17 +315,11 @@ public class EditStudentProfileActivity extends Activity
     {
         ClassesUtility  cUtility;
         User user;
-        Student student;
 
         user    = User.getInstance();
-        student = user.getStudent();
 
-        if(student.getClasses().length > 0)
-        {
-            cUtility    = new StudentClassesUtility(user, this.classes, this);
-            cUtility.setClassesEditMode();
-        }
-
+        cUtility    = new StudentClassesUtility(user, this.classes, this);
+        cUtility.setClassesEditMode();
     }
 
     /**
@@ -364,11 +327,8 @@ public class EditStudentProfileActivity extends Activity
      */
     private void setUpUserData()
     {
-        ImageController imageController;
         User            user;
         Student         student;
-
-        imageController = ImageController.getInstance();
 
         user = User.getInstance();
         student = user.getStudent();
@@ -378,7 +338,7 @@ public class EditStudentProfileActivity extends Activity
         major.setText(student.getMajor());
         year.setText(student.getYear());
         about.setText(student.getAbout());
-        coverImageView.setBackground(new BitmapDrawable(getResources(), imageController.peek(ImageLocation.BACKGROUND)));
+        coverImageView.setBackground(new BitmapDrawable(getResources(), student.getCoverImage()));
     }
     private void setUpRelationships()
     {
@@ -391,12 +351,9 @@ public class EditStudentProfileActivity extends Activity
      */
     private void updateBackgroundImage(Intent data)
     {
-        TaskDelegate    taskDelegate;
         Bitmap          bitmap;
         int             orientation;
         Matrix          m;
-
-        bitmap          = null;
 
         try
         {
@@ -417,11 +374,8 @@ public class EditStudentProfileActivity extends Activity
 
                 Uri uri = getImageUri(this, bitmap);
                 coverImagePath = getRealPathFromURI(uri);
+                coverImageView.setBackground(new BitmapDrawable(getResources(), bitmap));
             }
-
-            taskDelegate        = new BackgroundImageTaskDelegate(getResources(), StudentProfileActivity.coverImageSubject);
-            taskDelegate.taskCompletionResult(bitmap, false);
-
         }
         catch (Exception e)
         {

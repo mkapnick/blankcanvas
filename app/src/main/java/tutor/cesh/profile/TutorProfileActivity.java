@@ -173,7 +173,6 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         {
             drawerLayout.closeDrawer(listView);
             intent = new Intent(this, StudentProfileActivity.class);
-            System.out.println("Before the storm!");
             info.putString("ok", "true");
             intent.putExtras(info);
             startActivity(intent);
@@ -232,13 +231,11 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
     {
         BitmapDrawable                              drawable;
         Bitmap                                      tmp;
-        ImageController                             imageController;
         ClassesUtility                              cUtility;
         User                                        user;
         Student                                     student;
         Tutor                                       tutor;
 
-        imageController = ImageController.getInstance();
         user            = User.getInstance();
         student         = user.getStudent();
         tutor           = user.getTutor();
@@ -253,7 +250,7 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         cUtility = new TutorClassesUtility(user, this.classes, this);
         cUtility.setClassesRegularMode();
 
-        tmp         = imageController.peek(ImageLocation.BACKGROUND);
+        tmp         = tutor.getCoverImage();
         drawable    = new BitmapDrawable(getResources(), tmp);
         coverImageView.setBackground(drawable);
     }

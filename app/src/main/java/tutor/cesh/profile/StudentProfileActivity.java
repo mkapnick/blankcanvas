@@ -29,13 +29,13 @@ import tutor.cesh.R;
 import tutor.cesh.Student;
 import tutor.cesh.Tutor;
 import tutor.cesh.User;
-import tutor.cesh.database.DatabaseFactory;
 import tutor.cesh.profile.classes.ClassesUtility;
 import tutor.cesh.profile.classes.StudentClassesUtility;
 import tutor.cesh.profile.classes.TutorClassesUtility;
 import tutor.cesh.rest.AsyncDownloader;
 import tutor.cesh.rest.AsyncGet;
-import tutor.cesh.rest.BackgroundImageTaskDelegate;
+import tutor.cesh.rest.CoverImageHandler;
+import tutor.cesh.rest.ImageHandler;
 import tutor.cesh.rest.TaskDelegate;
 import tutor.cesh.rest.http.EnrollHttpObject;
 import tutor.cesh.rest.http.StudentCourseHttpObject;
@@ -99,10 +99,17 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        User    user;
+        Student student;
+
+        user    = User.getInstance();
+        student = user.getStudent();
+
         if (requestCode == 1)
         {
             if (resultCode == RESULT_OK)
             {
+                System.out.println("In here!!!");
                 info.putString("ok", "true");
             }
         }
@@ -252,27 +259,20 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
     {
         User            user;
         Student         student;
-        TaskDelegate    taskDelegate;
+        ImageHandler    handler;
         AsyncDownloader asyncDownloader;
-
 
         user    = User.getInstance();
         student = user.getStudent();
 
         /* Data that has already been retrieved from the server */
         name.setText(student.getName(), TextView.BufferType.EDITABLE);
-        info.putString("firstName", student.getName());
         about.setText(student.getAbout(), TextView.BufferType.EDITABLE);
-        info.putString("about", student.getAbout());
 
-        // Download cover image from server
-        taskDelegate        = new BackgroundImageTaskDelegate(  getResources(),
-                                                                coverImageSubject);
-        asyncDownloader     = new AsyncDownloader(  info.getString("coverImage"),
-                                                    this, taskDelegate, coverImageView.getWidth(),
-                                                    coverImageView.getHeight());
+        // Download cover image from server, belongs to student
+        handler             = new CoverImageHandler(getResources(), this.coverImageView);
+        asyncDownloader     = new AsyncDownloader(student.getCoverImageUrl(), handler, student, new ProgressDialog(this));
         asyncDownloader.execute();
-
     }
 
     /**
@@ -283,33 +283,37 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         HttpGet                                     get;
         Drawable                                    drawable;
         ClassesUtility                              cUtility;
-        ImageController                             imageController;
         User                                        user;
         Student                                     student;
+        ProgressDialog                              pd;
 
-
-        imageController = ImageController.getInstance();
         user            = User.getInstance();
         student         = user.getStudent();
+        pd              = new ProgressDialog(this);
+
 
         try
         {
             if(info.getString("ok").equalsIgnoreCase("false"))
             {
-                System.out.println("-------------------------------------------------");
                 setUpQueriedUserInfo();
+                pd.setTitle("Downloading...");
+                pd.setMessage("Please wait");
+                pd.setCancelable(false);
+                pd.setIndeterminate(true);
+
                 /* Data that needs to be queried from the server */
                 get = new EnrollHttpObject(user).get();
-                new AsyncGet(this, this).execute(get);
+                new AsyncGet(this, this, pd).execute(get);
 
                 get = new TutorHttpObject(user).get();
-                new AsyncGet(this, this).execute(get);
+                new AsyncGet(this, this, pd).execute(get);
 
                 get = new StudentCourseHttpObject(user).get();
-                new AsyncGet(this, this).execute(get);
+                new AsyncGet(this, this, pd).execute(get);
 
                 get = new TutorCourseHttpObject(user).get();
-                new AsyncGet(this, this).execute(get);
+                new AsyncGet(this, this, pd).execute(get);
             }
             else
             {
@@ -318,9 +322,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
                 major.setText(student.getMajor(), TextView.BufferType.EDITABLE);
                 year.setText(student.getYear(), TextView.BufferType.EDITABLE);
                 about.setText(student.getAbout(), TextView.BufferType.EDITABLE);
-
-                drawable = new BitmapDrawable(getResources(), imageController.peek(ImageLocation.BACKGROUND));
-                coverImageView.setBackground(drawable);
+                coverImageView.setBackground(new BitmapDrawable(getResources(), student.getCoverImage()));
 
                 cUtility = new StudentClassesUtility(user, this.classes, this);
                 cUtility.setClassesRegularMode();
@@ -345,41 +347,62 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         User            user;
         Student         student;
         Tutor           tutor;
+        String          tmp;
+        ImageHandler    handler;
+        AsyncDownloader asyncDownloader;
 
         user = User.getInstance();
         student = user.getStudent();
         tutor = user.getTutor();
 
-
         try
         {
             if(response.has("major")) {
-                major.setText(response.getString("major"), TextView.BufferType.EDITABLE);
-                info.putString("major", major.getText().toString());
+                tmp = response.getString("major");
+                major.setText(tmp, TextView.BufferType.EDITABLE);
+                student.setMajor(tmp);
             }
 
             if(response.has("year")) {
-                year.setText(response.getString("year"), TextView.BufferType.EDITABLE);
-                info.putString("year", year.getText().toString());
+                tmp = response.getString("year");
+                year.setText(tmp, TextView.BufferType.EDITABLE);
+                student.setYear(tmp);
             }
 
-            if(response.has("rate"))
-                info.putString("rate", response.getString("rate"));
+            if(response.has("rate")) {
+                tmp = response.getString("rate");
+                tutor.setRate(tmp);
+            }
 
             if(response.has("tutorabout")) {
-                info.putString("tutorabout", response.getString("tutorabout"));
+                tmp = response.getString("tutorabout");
+                tutor.setAbout(tmp);
+            }
+
+            if(response.has("tutor_cover_image_url"))
+            {
+                tmp = response.getString("tutor_cover_image_url");
+                tutor.setCoverImageUrl(tmp);
+
+                // Download cover image from server, belongs to tutor
+                handler             = new CoverImageHandler(getResources(), null);
+                asyncDownloader     = new AsyncDownloader(tutor.getCoverImageUrl(), handler, tutor, null);
+                asyncDownloader.execute();
+            }
+
+            if(response.has("tutor_profile_image_url"))
+            {
+                //nothing for now
             }
 
             if(response.has("coursesTaking"))
             {
-                System.out.println("Courses taking... " + response.getString("coursesTaking"));
                 cUtility    = new StudentClassesUtility(user, this.classes, this);
                 cUtility.formatClassesFrontEnd(response.getString("coursesTaking"));
                 cUtility.setClassesRegularMode();
             }
             if(response.has("coursesTutoring"))
             {
-                System.out.println(response.getString("coursesTutoring"));
                 cUtility    = new TutorClassesUtility(user, null, this);
                 cUtility.formatClassesFrontEnd(response.getString("coursesTutoring"));
             }
@@ -387,7 +410,5 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         catch (JSONException e){
             e.printStackTrace();
         }
-
-        DatabaseFactory.updateObjects(info);
     }
 }

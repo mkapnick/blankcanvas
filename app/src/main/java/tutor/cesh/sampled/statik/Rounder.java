@@ -38,8 +38,6 @@ public class Rounder
         width           = src.getWidth();
         height          = src.getHeight();
 
-        System.out.println("Width is: " + width);
-        System.out.println("Height is: " + height);
         dst             = Bitmap.createBitmap(  src.getWidth(),
                                                 src.getHeight(),
                                                 Bitmap.Config.ARGB_8888);

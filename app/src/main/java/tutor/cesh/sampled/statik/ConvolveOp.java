@@ -63,7 +63,6 @@ public class ConvolveOp
                 dst.setPixel(xx, yy, src.getPixel(xx, yy));
             }
 
-        //System.out.println("Went in " + count + " times");
         //blur the rest of the dst image
         for(int x = 0; x < endX; x++) {
             for (int y = startY; y < endY; y++) {

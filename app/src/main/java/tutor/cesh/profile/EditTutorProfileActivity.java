@@ -27,12 +27,12 @@ import tutor.cesh.R;
 import tutor.cesh.Student;
 import tutor.cesh.Tutor;
 import tutor.cesh.User;
-import tutor.cesh.database.DatabaseFactory;
 import tutor.cesh.profile.classes.ClassesUtility;
 import tutor.cesh.profile.classes.TutorClassesUtility;
-import tutor.cesh.rest.BackgroundImageTaskDelegate;
+import tutor.cesh.rest.AsyncDownloader;
+import tutor.cesh.rest.CoverImageHandler;
+import tutor.cesh.rest.ImageHandler;
 import tutor.cesh.rest.RestClientExecute;
-import tutor.cesh.rest.TaskDelegate;
 import tutor.cesh.rest.http.EnrollHttpObject;
 import tutor.cesh.rest.http.HttpObject;
 import tutor.cesh.rest.http.StudentHttpObject;
@@ -46,7 +46,6 @@ public class EditTutorProfileActivity extends Activity
     private Bundle                          info;
     private EditText                        name, major, year, about, rate, tutorClasses;
     private ImageView                       profileImageView, coverImageView;
-    private GenericTextWatcher              textWatcher;
 
     /**
      *
@@ -123,47 +122,23 @@ public class EditTutorProfileActivity extends Activity
 
         profileImageView    = (ImageView)   findViewById(R.id.profileImage);
         coverImageView      = (ImageView)   findViewById(R.id.profileBackgroundImage);
-
-        textWatcher             = new GenericTextWatcher (getApplicationContext(), tutorClasses);
-        tutorClasses.addTextChangedListener(textWatcher);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-
-        TaskDelegate            taskDelegate;
-        Bundle                  extras;
-
         super.onActivityResult(requestCode, resultCode, data);
 
-
-        /******* BACKGROUND IMAGE CHANGE ***********************************************************/
         if (requestCode == 2)
         {
-            if (data != null) {
+            if (data != null)
                 updateBackgroundImage(data);
-            }
         }
-        else
-        {
-            /*Bitmap croppedImage;
-            String tmp;
-            extras = data.getExtras();
-            croppedImage = extras.getParcelable("data");
-            taskDelegate = new ProfileImageTaskDelegate(StudentProfileActivity.profileImageSubject);
-            //tmp = getRealPathFromURI(this, Uri.parse(profileImagePath));
-            //profileImagePath = tmp;
-            taskDelegate.taskCompletionResult(croppedImage, false);*/
-        }
-
-        this.tutorClasses.addTextChangedListener(textWatcher);
-
     }
     @Override
     public void onBackPressed()
     {
-        doNotSaveUpdatedInfo();
+        //doNotSaveUpdatedInfo();
         super.onBackPressed();
 
     }
@@ -259,7 +234,7 @@ public class EditTutorProfileActivity extends Activity
                 startActivityForResult(intent, 1);
                 break;
 
-            case R.id.profileBackgroundImage:
+            case R.id.profileBackgroundImageButton:
                 intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, 2);
                 break;
@@ -276,15 +251,16 @@ public class EditTutorProfileActivity extends Activity
 
     private void resetUserImages()
     {
-        Bitmap          changedBackgroundImage;
+        /*Bitmap          changedBackgroundImage;
         ImageController imageController;
 
         imageController = ImageController.getInstance();
 
-        /* Reset Profile and Cover Images */
+        /* Reset Profile and Cover Images
         changedBackgroundImage  = imageController.pop(ImageLocation.BACKGROUND);
         imageController.clear(ImageLocation.BACKGROUND);
         imageController.push(changedBackgroundImage, ImageLocation.BACKGROUND);
+        */
     }
 
     /**
@@ -296,35 +272,51 @@ public class EditTutorProfileActivity extends Activity
         HttpPost post;
         HttpPut             put;
         String              jsonArray;
-        HttpObject enroll, course, tutorHttp;
-        StudentHttpObject studentHttp;
-        ClassesUtility cUtility;
-        User            user;
+        HttpObject          enroll, course;
+        TutorHttpObject     tutorHttp;
+        StudentHttpObject   studentHttp;
+        ClassesUtility      cUtility;
+        User                user;
+        Student             student;
+        Tutor               tutor;
+        ImageHandler        handler;
+        AsyncDownloader     asyncDownloader;
 
         user    = User.getInstance();
+        student = user.getStudent();
+        tutor   = user.getTutor();
+        handler = new CoverImageHandler(getResources(), this.coverImageView);
 
         resetUserImages();
         cUtility    = new TutorClassesUtility(user, this.tutorClasses);
         jsonArray   = cUtility.formatClassesBackend();
 
-        //update info bundle
+        //update student and tutor attributes
         info.putString("firstName", name.getText().toString());
-        info.putString("tutorabout", about.getText().toString());
-        info.putString("year", year.getText().toString());
-        info.putString("major", major.getText().toString());
-        info.putString("rate", rate.getText().toString());
+        student.setName(name.getText().toString());
 
-        DatabaseFactory.updateObjects(info);
+        info.putString("tutorabout", about.getText().toString());
+        tutor.setAbout(about.getText().toString());
+
+        info.putString("year", year.getText().toString());
+        student.setYear(year.getText().toString());
+
+        info.putString("major", major.getText().toString());
+        student.setMajor(major.getText().toString());
+
+        info.putString("rate", rate.getText().toString());
+        tutor.setRate(rate.getText().toString());
 
         //Send a put request with the user's data up to the server
         try
         {
             studentHttp     = new StudentHttpObject(user);
-            studentHttp.setCoverImagePath(coverImagePath);
-            studentHttp.setProfileImagePath(profileImagePath);
+            enroll          = new EnrollHttpObject(user);
 
-            enroll      = new EnrollHttpObject(user);
             tutorHttp       = new TutorHttpObject(user);
+            tutorHttp.setCoverImagePath(coverImagePath);
+            tutorHttp.setProfileImagePath(profileImagePath);
+
             course      = new TutorCourseHttpObject(user, jsonArray);
 
             post = course.post();
@@ -366,12 +358,9 @@ public class EditTutorProfileActivity extends Activity
      */
     private void setUpUserData()
     {
-        ImageController imageController;
         User            user;
         Student         student;
         Tutor           tutor;
-
-        imageController = ImageController.getInstance();
 
         user = User.getInstance();
         student = user.getStudent();
@@ -383,7 +372,7 @@ public class EditTutorProfileActivity extends Activity
         year.setText(student.getYear());
         about.setText(tutor.getAbout());
         rate.setText(tutor.getRate());
-        coverImageView.setBackground(new BitmapDrawable(getResources(), imageController.peek(ImageLocation.BACKGROUND)));
+        coverImageView.setBackground(new BitmapDrawable(getResources(), tutor.getCoverImage()));
     }
 
     private void setUpRelationships()
@@ -397,12 +386,9 @@ public class EditTutorProfileActivity extends Activity
      */
     private void updateBackgroundImage(Intent data)
     {
-        TaskDelegate    taskDelegate;
         Bitmap          bitmap;
         int             orientation;
         Matrix          m;
-
-        bitmap          = null;
 
         try
         {
@@ -423,12 +409,10 @@ public class EditTutorProfileActivity extends Activity
 
                 Uri uri = getImageUri(this, bitmap);
                 coverImagePath = getRealPathFromURI(uri);
-                System.out.println(coverImagePath);
+
+                coverImageView.setBackground(new BitmapDrawable(getResources(), bitmap));
+
             }
-
-            taskDelegate        = new BackgroundImageTaskDelegate(getResources(), StudentProfileActivity.coverImageSubject);
-            taskDelegate.taskCompletionResult(bitmap, false);
-
         }
         catch (Exception e)
         {

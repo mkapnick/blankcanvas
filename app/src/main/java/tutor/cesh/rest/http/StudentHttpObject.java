@@ -1,5 +1,7 @@
 package tutor.cesh.rest.http;
 
+import android.graphics.BitmapFactory;
+
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -27,7 +29,6 @@ public class StudentHttpObject implements HttpObject {
 
     public StudentHttpObject(User user)
     {
-
         this.user = user;
     }
     public String getCoverImagePath() {
@@ -75,6 +76,8 @@ public class StudentHttpObject implements HttpObject {
             coverImageFile  = new File(coverImagePath);
             cBody           = new FileBody(coverImageFile, "image/jpg");
             entity.addPart("student[cover_image]", cBody);
+            student.setCoverImageUrl(coverImagePath);
+            student.setCoverImage(BitmapFactory.decodeFile(coverImagePath));
         }
 
         if(profileImagePath != null)
@@ -82,6 +85,8 @@ public class StudentHttpObject implements HttpObject {
             profileImageFile = new File(profileImagePath);
             pBody            = new FileBody(profileImageFile, "image/jpg");
             entity.addPart("student[profile_image]", pBody);
+            student.setCoverImageUrl(profileImagePath);
+            student.setCoverImage(BitmapFactory.decodeFile(profileImagePath));
         }
 
         put.setEntity(entity);
