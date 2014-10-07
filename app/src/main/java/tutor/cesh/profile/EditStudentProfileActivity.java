@@ -26,8 +26,8 @@ import java.io.ByteArrayOutputStream;
 import tutor.cesh.R;
 import tutor.cesh.Student;
 import tutor.cesh.User;
-import tutor.cesh.profile.classes.ClassesUtility;
-import tutor.cesh.profile.classes.StudentClassesUtility;
+import tutor.cesh.profile.util.classes.ClassesUtility;
+import tutor.cesh.profile.util.classes.StudentClassesUtility;
 import tutor.cesh.rest.RestClientExecute;
 import tutor.cesh.rest.http.EnrollHttpObject;
 import tutor.cesh.rest.http.HttpObject;
@@ -237,7 +237,7 @@ public class EditStudentProfileActivity extends Activity
         HttpPost            post;
         HttpPut             put;
         String              jsonArray;
-        HttpObject          enroll, course, tutor;
+        HttpObject          enroll, course;
         StudentHttpObject   studentHttp;
         Student             student;
         ClassesUtility      cUtility;
@@ -281,9 +281,6 @@ public class EditStudentProfileActivity extends Activity
             put = enroll.put();
             new RestClientExecute(put).start();
 
-            //put = tutor.put();
-            //if(put != null) new RestClientExecute(put).start();
-
             Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
         }
         catch(Exception e)
@@ -314,7 +311,7 @@ public class EditStudentProfileActivity extends Activity
         User            user;
         Student         student;
 
-        user = User.getInstance();
+        user    = User.getInstance();
         student = user.getStudent();
 
         //set fields based on data from the bundle

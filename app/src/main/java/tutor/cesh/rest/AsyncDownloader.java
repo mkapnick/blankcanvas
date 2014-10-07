@@ -22,11 +22,14 @@ import tutor.cesh.Profile;
 public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
 {
 
-    private String              url;
-    private Bitmap              bmp;
-    private ProgressDialog      pd;
-    private ImageHandler        handler;
-    private Profile             profile;
+    private String                  url;
+    private Bitmap                  bmp;
+    private ProgressDialog          pd;
+    private ImageHandler            handler;
+    private Profile                 profile;
+    private int                     width;
+    private int                     height;
+    boolean                         resize;
 
 
     /**
@@ -41,13 +44,22 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
         this.handler        = handler;
         this.profile        = p;
         this.pd             = pd;
+        resize              = false;
     }
+
+    public AsyncDownloader(String url, ImageHandler handler, int width, int height, ProgressDialog pd)
+    {
+        this(url, handler, null, pd);
+        this.width = width;
+        this.height = height;
+        resize  = true;
+    }
+
 
 
     @Override
     protected Bitmap doInBackground(Void... arg0)
     {
-        System.out.println("url is: " + url);
         this.bmp = downloadBitmapFromURL(url);
         return this.bmp;
     }
@@ -98,7 +110,10 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
             bufHttpEntity = new BufferedHttpEntity(response.getEntity());
             input   = bufHttpEntity.getContent();
 
-            bmp = BitmapFactory.decodeStream(input);
+            if(resize)
+                bmp = BitmapFactory.decodeStream(input);
+            else
+                bmp = BitmapFactory.decodeStream(input);
 
             input.close();
         }
@@ -106,6 +121,7 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
         {
             e.printStackTrace();
         }
+
 
         return bmp;
     }

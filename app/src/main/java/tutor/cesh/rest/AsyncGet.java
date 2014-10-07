@@ -8,6 +8,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -16,13 +17,13 @@ import java.io.InputStreamReader;
 /**
  * Created by michaelk18 on 2/2/14.
  */
-public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
+public class AsyncGet extends AsyncTask<HttpGet, Integer, Object>
 {
     private HttpGet                 httpGet;
     private HttpClient              httpClient;
     private Context                 context;
     private ProgressDialog          pd;
-    private JSONObject              response;
+    private Object                  response;
     private TaskDelegate            taskDelegate;
 
 
@@ -34,7 +35,7 @@ public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
     }
 
     @Override
-    protected JSONObject doInBackground(HttpGet... httpGets)
+    protected Object doInBackground(HttpGet... httpGets)
     {
 
         HttpResponse    response;
@@ -50,7 +51,17 @@ public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
             json            = reader.readLine();
 
             if(!json.equalsIgnoreCase("null"))
-                this.response   = new JSONObject(json);
+            {
+                try
+                {
+                    this.response   = new JSONObject(json);
+                }
+                catch(Exception e)
+                {
+                    System.out.println(json);
+                    this.response   = new JSONArray(json);
+                }
+            }
         }
         catch(Exception e)
         {
@@ -61,7 +72,7 @@ public class AsyncGet extends AsyncTask<HttpGet, Integer, JSONObject>
     }
 
     @Override
-    protected void onPostExecute(JSONObject result)
+    protected void onPostExecute(Object result)
     {
         //super.onPostExecute(result);
         if(pd!=null)

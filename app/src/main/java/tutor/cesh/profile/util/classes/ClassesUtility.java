@@ -1,9 +1,12 @@
-package tutor.cesh.profile.classes;
+package tutor.cesh.profile.util.classes;
 
 import android.content.Context;
 import android.text.SpannableStringBuilder;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import tutor.cesh.User;
 import tutor.cesh.profile.BubbleTextView;
@@ -33,27 +36,27 @@ public abstract class ClassesUtility
 
     public String [] formatClassesFrontEnd(String classes)
     {
-        String [] classesFromServer;
-        String    course;
+        String []   classesFromServer;
+        String      course;
+        JSONArray   jsonArray;
+        JSONObject  jsonObject;
 
         classesFromServer = null;
-
         try
         {
-            classesFromServer = classes.split(",");
+            jsonArray           = new JSONArray(classes);
+            classesFromServer   = new String[jsonArray.length()];
 
-            for(int i =0; i < classesFromServer.length; i++)
+            for(int i =0; i < jsonArray.length(); i++)
             {
-                course = classesFromServer[i];
-                course = course.replaceAll("\\]", "");
-                course = course.replaceAll("\\[", "");
-                course = course.replaceAll("\"", "");
-                classesFromServer[i] = course;
+                jsonObject          = jsonArray.getJSONObject(i);
+                course              = jsonObject.getString("name");
+                classesFromServer[i]= course;
             }
         }
         catch(Exception e)
         {
-               e.printStackTrace();
+            e.printStackTrace();
         }
 
         setClasses(classesFromServer);
@@ -102,10 +105,10 @@ public abstract class ClassesUtility
 
         this.textBox.setText("");
 
-        if(!classes[0].equalsIgnoreCase(""))
-        {
-            for (int i = 0; i < classes.length; i++) {
-                this.textBox.append(classes[i].toUpperCase()     + " ");
+        if(classes.length > 0) {
+            if (!classes[0].equalsIgnoreCase("")) {
+                for (int i = 0; i < classes.length; i++)
+                    this.textBox.append(classes[i].toUpperCase() + " ");
             }
         }
     }

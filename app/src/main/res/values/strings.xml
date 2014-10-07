@@ -21,15 +21,20 @@
     <string name="title_activity_edit_tutor_profile">Tutor</string>
     <string name="prompt">Filters</string>
     <string name="on_create_new_account">Thanks for creating an account with BlankCanvas! We just sent a confirmation link to the email you provided. Click that link and you\'ll be able to login and get started. </string>
+
     <string-array name="drawable_list_items">
-        <item>SMILE </item>
+        <item>SEARCH USERS</item>
+        <item>CREATE GROUP SESSION</item>
+        <item>PENDING GROUP SESSIONS</item>
         <item>ABOUT</item>
-        <item>OPEN TUTOR SESSIONS</item>
+    </string-array>
+    <string-array name="drawable_list_items_tutor">
+        <item>SEARCH USERS</item>
+        <item>CREATE GROUP SESSION</item>
+        <item>PENDING GROUP SESSIONS</item>
+        <item>ABOUT</item>
     </string-array>
 
-    <string-array name="drawable_list_items_tutor">
-        <item>SMILE </item>
-        <item>ABOUT</item>
-        <item>OPEN TUTOR SESSIONS</item>
-    </string-array>
+    <string name="title_activity_tutor_list">TutorList</string>
+
 </resources>

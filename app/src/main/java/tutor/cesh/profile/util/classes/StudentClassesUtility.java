@@ -1,4 +1,4 @@
-package tutor.cesh.profile.classes;
+package tutor.cesh.profile.util.classes;
 
 import android.content.Context;
 import android.widget.EditText;

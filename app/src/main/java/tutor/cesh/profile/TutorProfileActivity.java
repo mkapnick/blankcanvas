@@ -23,8 +23,8 @@ import tutor.cesh.R;
 import tutor.cesh.Student;
 import tutor.cesh.Tutor;
 import tutor.cesh.User;
-import tutor.cesh.profile.classes.ClassesUtility;
-import tutor.cesh.profile.classes.TutorClassesUtility;
+import tutor.cesh.profile.util.classes.ClassesUtility;
+import tutor.cesh.profile.util.classes.TutorClassesUtility;
 
 public class TutorProfileActivity extends ActionBarActivity implements View.OnClickListener {
 
@@ -70,7 +70,7 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         drawerLayout        = (DrawerLayout)findViewById(R.id.drawer_layout_tutor);
         listView            = (ListView)    findViewById(R.id.left_drawer_tutor);
 
-        listViewTitles = getResources().getStringArray(R.array.drawable_list_items_tutor);
+        listViewTitles      = getResources().getStringArray(R.array.drawable_list_items_tutor);
         listView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listViewTitles));
         listView.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -111,7 +111,14 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
 
         initializeUI();
         setUpActionBar();
-        setUpUserInfo();
+
+        if(null == savedInstanceState)
+            setUpUserInfo();
+        else
+        {
+            //setUpUserInfo(savedInstanceState);
+        }
+
     }
 
 
@@ -238,5 +245,30 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         drawable    = new BitmapDrawable(getResources(), tmp);
         coverImageView.setBackground(drawable);
     }
+
+
+    /**
+     *
+     */
+   /* private void setUpUserInfo(Bundle bundle)
+    {
+        BitmapDrawable                              drawable;
+        Bitmap                                      tmp;
+        ClassesUtility                              cUtility;
+
+        name.setText(bundle.getString(TutorListActivity.FIRST_NAME));
+        major.setText(bundle.getString(TutorListActivity.);
+        year.setText(bundle.getString(TutorListActivity.FIRST_NAME));
+        about.setText(bundle.getString(TutorListActivity.FIRST_NAME));
+        rate.setText(bundle.getString(TutorListActivity.RATE);
+
+        //classes already formatted in StudentProfileActivity
+        cUtility = new TutorClassesUtility(user, this.classes, this);
+        cUtility.setClassesRegularMode();
+
+        tmp         = tutor.getCoverImage();
+        drawable    = new BitmapDrawable(getResources(), tmp);
+        coverImageView.setBackground(drawable);
+    }*/
 
 }

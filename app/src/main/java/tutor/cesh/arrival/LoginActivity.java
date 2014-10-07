@@ -89,10 +89,10 @@ public class LoginActivity extends ActionBarActivity implements Arrival
         //Validate with tutor.app.database query
 
         String extension;
+
         this.email      = ((EditText) findViewById(R.id.emailTextView)).getText().toString();
         this.password   = ((EditText) findViewById(R.id.passwordTextView)).getText().toString();
-
-        extension = this.email.substring(this.email.lastIndexOf('.') + 1);
+        extension       = this.email.substring(this.email.lastIndexOf('.') + 1);
 
         if (this.email.length() > 0 )
         {

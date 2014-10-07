@@ -21,8 +21,8 @@ import tutor.cesh.User;
  */
 public class StudentHttpObject implements HttpObject {
 
-    private static final String PUT     = "http://blankcanvas.pw/students/";
-    private static final String GET     = "http://blankcanvas.pw/students/";
+    private String putEndPoint  = "http://blankcanvas.pw/students/";
+    private String getEndPoint  = "http://blankcanvas.pw/students/";
 
     private String              coverImagePath, profileImagePath;
     private User user;
@@ -64,7 +64,7 @@ public class StudentHttpObject implements HttpObject {
 
         student = user.getStudent();
 
-        put             = new HttpPut(PUT + student.getId());
+        put             = new HttpPut(putEndPoint + student.getId());
         entity          = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
         entity.addPart("student[first_name]", new StringBody(student.getName()));
@@ -104,7 +104,7 @@ public class StudentHttpObject implements HttpObject {
 
         student = user.getStudent();
 
-        httpGet = new HttpGet(new URI(GET + student.getId()));
+        httpGet = new HttpGet(new URI(getEndPoint + student.getId()));
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-Type", "application/json");
 

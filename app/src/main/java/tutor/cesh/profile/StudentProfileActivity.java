@@ -2,7 +2,6 @@ package tutor.cesh.profile;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -29,9 +28,10 @@ import tutor.cesh.R;
 import tutor.cesh.Student;
 import tutor.cesh.Tutor;
 import tutor.cesh.User;
-import tutor.cesh.profile.classes.ClassesUtility;
-import tutor.cesh.profile.classes.StudentClassesUtility;
-import tutor.cesh.profile.classes.TutorClassesUtility;
+import tutor.cesh.list.TutorListActivity;
+import tutor.cesh.profile.util.classes.ClassesUtility;
+import tutor.cesh.profile.util.classes.StudentClassesUtility;
+import tutor.cesh.profile.util.classes.TutorClassesUtility;
 import tutor.cesh.rest.AsyncDownloader;
 import tutor.cesh.rest.AsyncGet;
 import tutor.cesh.rest.CoverImageHandler;
@@ -65,7 +65,23 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id)
         {
+            Intent intent;
             listView.setItemChecked(position, true);
+
+            switch(position)
+            {
+                case 0:
+                    intent = new Intent(getApplicationContext(), TutorListActivity.class);
+                    startActivity(intent);
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+
+            }
             onOptionsItemSelected(position);
         }
     }
@@ -89,6 +105,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         listView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listViewTitles));
         listView.setOnItemClickListener(new DrawerItemClickListener());
 
+
         /* Set up boolean value in bundle */
         info                = getIntent().getExtras();
         if(!info.containsKey("ok"))
@@ -98,17 +115,11 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        User    user;
-        Student student;
-
-        user    = User.getInstance();
-        student = user.getStudent();
 
         if (requestCode == 1)
         {
             if (resultCode == RESULT_OK)
             {
-                System.out.println("In here!!!");
                 info.putString("ok", "true");
             }
         }
@@ -136,7 +147,6 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         setContentView(R.layout.activity_student_profile);
 
         initializeUI();
-        setUpSubjectObservers();
         setUpActionBar();
         setUpUserInfo();
     }
@@ -158,7 +168,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         position    = -1;
 
         if (id == R.id.action_settings)
-            return true;
+            position = 2;
         else if(id == R.id.action_edit_profile)
             position = -100;
         else if(id == R.id.action_switch_profile)
@@ -193,6 +203,10 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
             intent.putExtras(info);
             startActivity(intent);
             finish();
+        }
+        else if (position == 2)
+        {
+
         }
     }
 
@@ -240,14 +254,6 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         actionBarMenuButton.setOnClickListener(this);
     }
 
-    /**
-     *
-     */
-    private void setUpSubjectObservers()
-    {
-        /* Set up Subject-observer relationship */
-    }
-
     private void setUpQueriedUserInfo()
     {
         User            user;
@@ -263,7 +269,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         about.setText(student.getAbout(), TextView.BufferType.EDITABLE);
 
         // Download cover image from server, belongs to student
-        handler             = new CoverImageHandler(getResources(), this.coverImageView);
+        handler             = new CoverImageHandler(getResources(), this.coverImageView, getApplicationContext());
         asyncDownloader     = new AsyncDownloader(student.getCoverImageUrl(), handler, student, new ProgressDialog(this));
         asyncDownloader.execute();
     }
@@ -283,7 +289,6 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         user            = User.getInstance();
         student         = user.getStudent();
         pd              = new ProgressDialog(this);
-
 
         try
         {
@@ -326,14 +331,9 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
             e.printStackTrace();
         }
     }
-    @Override
-    public void taskCompletionResult(Bitmap b, boolean check)
-    {
-        //nothing
-    }
 
     @Override
-    public void taskCompletionResult(JSONObject response)
+    public void taskCompletionResult(Object resp)
     {
         //set fields based on JSON response from the server
         ClassesUtility  cUtility;
@@ -343,6 +343,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         String          tmp;
         ImageHandler    handler;
         AsyncDownloader asyncDownloader;
+        JSONObject      response;
 
         user = User.getInstance();
         student = user.getStudent();
@@ -350,6 +351,8 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
 
         try
         {
+            response = (JSONObject) resp;
+
             if(response.has("major")) {
                 tmp = response.getString("major");
                 major.setText(tmp, TextView.BufferType.EDITABLE);
@@ -367,19 +370,18 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
                 tutor.setRate(tmp);
             }
 
-            if(response.has("tutorabout")) {
-                tmp = response.getString("tutorabout");
+            if(response.has("about")) {
+                tmp = response.getString("about");
                 tutor.setAbout(tmp);
             }
 
             if(response.has("tutor_cover_image_url"))
             {
-                System.out.println("inisde here");
                 tmp = response.getString("tutor_cover_image_url");
                 tutor.setCoverImageUrl(tmp);
 
                 // Download cover image from server, belongs to tutor
-                handler             = new CoverImageHandler(getResources(), null);
+                handler             = new CoverImageHandler(getResources(), null, getApplicationContext());
                 asyncDownloader     = new AsyncDownloader(tutor.getCoverImageUrl(), handler, tutor, null);
                 asyncDownloader.execute();
             }
@@ -389,19 +391,23 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
                 //nothing for now
             }
 
-            if(response.has("coursesTaking"))
+            if(response.has("student_courses"))
             {
                 cUtility    = new StudentClassesUtility(user, this.classes, this);
-                cUtility.formatClassesFrontEnd(response.getString("coursesTaking"));
+                cUtility.formatClassesFrontEnd(response.getString("student_courses"));
                 cUtility.setClassesRegularMode();
             }
-            if(response.has("coursesTutoring"))
+            if(response.has("tutor_courses"))
             {
                 cUtility    = new TutorClassesUtility(user, null, this);
-                cUtility.formatClassesFrontEnd(response.getString("coursesTutoring"));
+                cUtility.formatClassesFrontEnd(response.getString("tutor_courses"));
             }
         }
         catch (JSONException e){
+            e.printStackTrace();
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }

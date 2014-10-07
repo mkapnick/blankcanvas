@@ -16,28 +16,19 @@ import tutor.cesh.User;
  */
 public abstract class CourseHttpObject implements HttpObject
 {
-    protected String post;
-    protected String get;
-    protected String put;
-
     protected User user;
-    protected String              classesFormattedForServer;
+    protected String classesFormattedForServer;
 
-    public CourseHttpObject(User user, String post, String put, String get)
+    public CourseHttpObject(User user)
     {
         this.user = user;
-        this.post = post;
-        this.put = put;
-        this.get = get;
     }
 
-    public CourseHttpObject(User user, String post, String put, String get, String classes)
+    public CourseHttpObject(User user, String classes)
     {
-        this(user, post, put, get);
+        this.user = user;
         this.classesFormattedForServer = classes;
     }
-
-    public abstract String getId();
 
     @Override
     public HttpPost post() throws Exception
@@ -47,16 +38,15 @@ public abstract class CourseHttpObject implements HttpObject
         StringEntity entity;
         Student student;
 
-
-        httpPost    = new HttpPost(post);
+        httpPost    = new HttpPost(getPostEndpoint());
         params      = new JSONObject();
         student     = user.getStudent();
 
         params.put("classes", classesFormattedForServer);
-        params.put("id", getId());
+        params.put("id", student.getId());
         params.put("school_id", student.getSchoolId());
 
-        entity          = new StringEntity(params.toString());
+        entity      = new StringEntity(params.toString());
 
         httpPost.setHeader("Accept", "application/json");
         httpPost.setHeader("Content-Type", "application/json");
@@ -69,18 +59,37 @@ public abstract class CourseHttpObject implements HttpObject
     public HttpPut put() throws Exception
     {
         return null;
-
     }
 
     @Override
     public HttpGet get() throws Exception
     {
+
         HttpGet httpGet;
 
-        httpGet = new HttpGet(new URI(get + getId()));
+        httpGet = new HttpGet(new URI(getGetEndPoint()));
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-Type", "application/json");
 
         return httpGet;
     }
+
+    /**
+     *
+     * @return
+     */
+    public abstract String getGetEndPoint();
+
+    /**
+     *
+     * @return
+     */
+    public abstract String getPostEndpoint();
+
+    /**
+     *
+     * @return
+     */
+    public abstract String getPutEndpoint();
+
 }

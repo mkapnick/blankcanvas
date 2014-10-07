@@ -16,8 +16,8 @@ import tutor.cesh.User;
  */
 public class EnrollHttpObject implements HttpObject
 {
-    private static final String PUT     = "http://blankcanvas.pw/enrolls/";
-    private static final String GET     = "http://blankcanvas.pw/join/enrolls/";
+    private static final String PUT     = "http://blankcanvas.pw/students/";
+    private static final String GET     = "http://blankcanvas.pw/students/";
 
     private User user;
 
@@ -40,11 +40,12 @@ public class EnrollHttpObject implements HttpObject
 
         student = user.getStudent();
 
-        put             = new HttpPut(PUT + student.getEnrollId());
+        put             = new HttpPut(PUT + student.getId() + "/view/enrolls");
         params          = new JSONObject();
 
         params.put("major", student.getMajor());
         params.put("year", student.getYear());
+        params.put("minor", "testing101");
 
         put.setEntity(new StringEntity(params.toString()));
         put.setHeader("Accept", "application/json");
@@ -62,7 +63,8 @@ public class EnrollHttpObject implements HttpObject
 
         student = user.getStudent();
 
-        httpGet = new HttpGet(new URI(GET + student.getId()));
+        //get student enroll data
+        httpGet = new HttpGet(new URI(GET + student.getId() + "/view/enrolls"));
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-Type", "application/json");
 

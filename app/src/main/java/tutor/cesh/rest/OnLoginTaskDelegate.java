@@ -3,7 +3,6 @@ package tutor.cesh.rest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.NetworkOnMainThreadException;
 import android.widget.Toast;
 
@@ -13,7 +12,6 @@ import org.json.JSONObject;
 import tutor.cesh.Student;
 import tutor.cesh.User;
 import tutor.cesh.profile.StudentProfileActivity;
-import tutor.cesh.Tutor;
 
 /**
  * Created by michaelk18 on 4/7/14.
@@ -29,32 +27,29 @@ public class OnLoginTaskDelegate implements TaskDelegate
     }
 
     @Override
-    public void taskCompletionResult(Bitmap b, boolean check) {
-        //nothing
-    }
-
-    @Override
-    public void taskCompletionResult(JSONObject object)
+    public void taskCompletionResult(Object obj)
     {
         Intent intent;
         User user;
         Student student;
-        Tutor tutor;
+        //Tutor tutor;
+        JSONObject  object;
 
         user = User.getInstance();
         student = user.getStudent();
-        tutor = user.getTutor();
+        //tutor = user.getTutor();
 
-        System.out.println("object is: " + object.toString());
-
-        try {
+        try
+        {
+            object = (JSONObject) obj;
             if (object.has("confirm")) {
-                if (object.getString("confirm").equalsIgnoreCase("true")) {
+                if (object.getString("confirm").equalsIgnoreCase("true"))
+                {
                     intent = new Intent(context, StudentProfileActivity.class);
                     intent.putExtra("id", object.getString("id"));
                     intent.putExtra("enrollId", object.getString("enroll_id"));
                     intent.putExtra("schoolId", object.getString("school_id"));
-                    intent.putExtra("tutorId", object.getString("tutor_id"));
+                    //intent.putExtra("tutorId", object.getString("student_id"));
                     intent.putExtra("email", object.getString("email"));
                     intent.putExtra("firstName", object.getString("first_name"));
                     intent.putExtra("lastName", object.getString("last_name"));
@@ -64,8 +59,8 @@ public class OnLoginTaskDelegate implements TaskDelegate
 
                     student.setId(object.getString("id"));
                     student.setEnrollId(object.getString("enroll_id"));
-                    student.setTutorId(object.getString("tutor_id"));
-                    tutor.setId(object.getString("tutor_id"));
+                    //student.setTutorId(object.getString("tutor_id"));
+                    //tutor.setId(object.getString("tutor_id"));
                     student.setName(object.getString("first_name"));
                     student.setAbout(object.getString("about"));
                     student.setSchoolId(object.getString("school_id"));
@@ -74,7 +69,7 @@ public class OnLoginTaskDelegate implements TaskDelegate
                     context.startActivity(intent);
 
                 } else {
-                    Toast.makeText(context, "Confirm your Email!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Please confirm your email", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(context, "Email or password incorrect", Toast.LENGTH_SHORT).show();

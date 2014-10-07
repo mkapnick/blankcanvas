@@ -1,5 +1,6 @@
 package tutor.cesh.rest;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,25 +13,29 @@ import tutor.cesh.Profile;
  */
 public class CoverImageHandler implements ImageHandler
 {
-    private ImageView view;
-    private Resources  resources;
+    private ImageView   view;
+    private Resources   resources;
+    private Context     context;
 
-    public CoverImageHandler(Resources resources, ImageView view)
+    public CoverImageHandler(Resources resources, ImageView view, Context c)
     {
         this.resources    = resources;
         this.view = view;
+        this.context    = c;
     }
 
     @Override
     public void handle(Bitmap b, Profile profile)
     {
         BitmapDrawable  drawable;
-        drawable = new BitmapDrawable(resources, b);
+        drawable                = new BitmapDrawable(resources, b);
 
-        if(view != null)
+        if(view != null) {
             view.setBackground(drawable);
+        }
 
-        profile.setCoverImage(b);
+        if(profile != null)
+            profile.setCoverImage(b);
 
     }
 }

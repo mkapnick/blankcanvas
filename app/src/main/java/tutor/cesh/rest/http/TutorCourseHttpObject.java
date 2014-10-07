@@ -1,6 +1,5 @@
 package tutor.cesh.rest.http;
 
-import tutor.cesh.Student;
 import tutor.cesh.User;
 
 /**
@@ -8,27 +7,33 @@ import tutor.cesh.User;
  */
 public class TutorCourseHttpObject extends CourseHttpObject
 {
-    private static final String POST = "http://blankcanvas.pw/tutorcourses/";
-    private static final String PUT = "http://blankcanvas.pw/tutorcourses/";
-    private static final String GET = "http://blankcanvas.pw/join/tutorcourses/";
+    private String postEndPoint = "http://blankcanvas.pw/students/";
+    private String putEndPoint  = "http://blankcanvas.pw/students/";
+    private String getEndPoint  = "http://blankcanvas.pw/students/";
+
 
     public TutorCourseHttpObject(User user)
     {
-        super(user,POST, PUT, GET);
+        super(user);
     }
 
     public TutorCourseHttpObject(User user, String classes)
     {
-        super(user,POST, PUT, GET, classes);
+        super(user, classes);
     }
 
-
-    @Override
-    public String getId()
+    public String getGetEndPoint()
     {
-        Student student;
-        student = this.user.getStudent();
+        return getEndPoint + this.user.getStudent().getId() + "/view/tutor_courses";
+    }
 
-        return student.getTutorId();
+    public String getPostEndpoint()
+    {
+        return postEndPoint + this.user.getStudent().getId() + "/view/tutor_courses";
+    }
+
+    public String getPutEndpoint()
+    {
+        return putEndPoint + this.user.getStudent().getId() + "/view/tutor_courses";
     }
 }
