@@ -1,15 +1,12 @@
 package tutor.cesh.profile.util.classes;
 
 import android.content.Context;
-import android.text.SpannableStringBuilder;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import tutor.cesh.User;
-import tutor.cesh.profile.BubbleTextView;
 
 /**
  * Created by michaelk18 on 7/8/14.
@@ -114,29 +111,6 @@ public abstract class ClassesUtility
     }
     public void setClassesRegularMode()
     {
-        String [] classes;
-        BubbleTextView bubbleTextView;
-        SpannableStringBuilder sb;
-
-        this.textBox.setText("");
-        classes = getClasses();
-
-        if(classes.length > 0 && !classes[0].equalsIgnoreCase(""))
-        {
-            try
-            {
-                for(String c : classes)
-                {
-                    bubbleTextView = new BubbleTextView(context, new TextView(context));
-                    sb = bubbleTextView.createBubbleOverText(c, false);
-                    this.textBox.append(sb);
-                    this.textBox.append(" ");
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
+       FormatClassesUtility.setClassesRegularMode(getClasses(), this.context, this.textBox);
     }
 }

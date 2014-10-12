@@ -2,7 +2,6 @@ package tutor.cesh.profile;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -48,7 +47,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
     private Bundle                  info;
     public static ImageView         profileImageView, coverImageView;
     private EditText                name, major, year, about, classes;
-    private DrawerLayout            drawerLayout;
+    protected DrawerLayout            drawerLayout;
     private ListView                listView;
     private String []               listViewTitles;
     private ActionBar               actionBar;
@@ -71,6 +70,14 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
             switch(position)
             {
                 case 0:
+
+                    //update drawer layout
+                    if(drawerLayout.isDrawerOpen(listView))
+                        drawerLayout.closeDrawer(listView);
+                    else
+                        drawerLayout.openDrawer(listView);
+
+                    //call the correct class
                     intent = new Intent(getApplicationContext(), TutorListActivity.class);
                     startActivity(intent);
                     break;
@@ -202,7 +209,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
             intent = new Intent(this, TutorProfileActivity.class);
             intent.putExtras(info);
             startActivity(intent);
-            finish();
+            //finish(); //TODO don't finish on switch
         }
         else if (position == 2)
         {
@@ -241,17 +248,24 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         ImageButton actionBarMenuButton;
 
         actionBar           = getSupportActionBar();
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+
+        //actionBar.addTab(actionBar.newTab().setText("Tutor Profile").setTabListener(new android.app.ActionBar.TabListener()))
+
+
+
+        /*actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.action_bar);
 
         //displaying custom ActionBar
         actionBarView       = getSupportActionBar().getCustomView();
         actionBarTextView   = (TextView) actionBarView.findViewById(R.id.textViewActionBar);
-        actionBarTextView.setText("STUDENT");
+        actionBarTextView.setText("STUDENT PROFILE");
         actionBarTextView.setTextColor(Color.WHITE);
 
         actionBarMenuButton = (ImageButton) actionBarView.findViewById(R.id.menu_button);
-        actionBarMenuButton.setOnClickListener(this);
+        actionBarMenuButton.setOnClickListener(this);*/
     }
 
     private void setUpQueriedUserInfo()
@@ -401,6 +415,14 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
             {
                 cUtility    = new TutorClassesUtility(user, null, this);
                 cUtility.formatClassesFrontEnd(response.getString("tutor_courses"));
+            }
+
+            if(response.has("courses_taken")){
+                //TODO implement
+            }
+
+            if(response.has("courses_tutored")){
+                //TODO implement
             }
         }
         catch (JSONException e){

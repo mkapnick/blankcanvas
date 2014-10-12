@@ -2,6 +2,7 @@ package tutor.cesh.list;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import tutor.cesh.R;
+import tutor.cesh.profile.ReadOnlyTutorProfileActivity;
 import tutor.cesh.rest.AsyncGet;
 import tutor.cesh.rest.TaskDelegate;
 
@@ -27,12 +29,22 @@ public class TutorListActivity extends Activity implements TaskDelegate {
     private ListView listView;
     private JSONAdapter adapter;
     private ArrayList<HashMap<String, String>> data;
-    private final String ALL_TUTORS     = "http://blankcanvas.pw/all/tutors";
-    static final String ID             = "id"; // parent node
+    private final String ALL_TUTORS     = "http://blankcanvas.pw/tutors/view/all";
+
+    public static final String ID             = "id"; // parent node
     public static final String FIRST_NAME     = "firstName";
     public static final String COVER_IMAGE    = "coverImage";
     public static final String RATE           = "rate";
     public static final String RATING         = "rating";
+    public static final String MAJOR          = "major";
+    public static final String MINOR          = "minor";
+    public static final String YEAR           = "year";
+    public static final String TUTOR_COURSES  = "tutorCourses";
+    public static final String ABOUT          = "about";
+
+
+
+    public Context context                    = this;
 
 
     @Override
@@ -80,23 +92,43 @@ public class TutorListActivity extends Activity implements TaskDelegate {
     @Override
     public void taskCompletionResult(Object response)
     {
-        JSONArray               jsonArray;
-        JSONObject              jsonObject;
+        JSONArray               jsonArray, tutorCoursesJSONArray;
+        JSONObject              jsonObjectTmp, jsonObject;
         HashMap<String, String> map;
+        String                  courseNames;
 
-        jsonArray = (JSONArray) response;
+        jsonObjectTmp   = (JSONObject) response;
+        courseNames     = "";
 
         try
         {
+            jsonArray   = new JSONArray(jsonObjectTmp.getString("all_tutors"));
             for(int i =0; i < jsonArray.length(); i++)
             {
                 map         = new HashMap<String, String>();
                 jsonObject  = jsonArray.getJSONObject(i);
-                map.put(ID, jsonObject.getString("id"));
+
+                /* info from the server api */
                 map.put(FIRST_NAME, jsonObject.getString("first_name"));
                 map.put(COVER_IMAGE, jsonObject.getString("tutor_cover_image_url"));
                 map.put(RATE, jsonObject.getString("rate"));
                 map.put(RATING, jsonObject.getString("rating"));
+                map.put(MAJOR, jsonObject.getString("major"));
+                map.put(MINOR, jsonObject.getString("minor"));
+                map.put(YEAR, jsonObject.getString("year"));
+                map.put(ABOUT, jsonObject.getString("about"));
+
+                tutorCoursesJSONArray   = jsonObject.getJSONArray("tutor_courses");
+
+                for(int j =0; j < tutorCoursesJSONArray.length(); j++)
+                {
+                    if(j != tutorCoursesJSONArray.length() -1)
+                        courseNames += tutorCoursesJSONArray.getString(i) + ", ";
+                    else
+                        courseNames += tutorCoursesJSONArray.getString(i);
+                }
+
+                map.put(TUTOR_COURSES, courseNames);
                 this.data.add(map);
             }
         }
@@ -109,11 +141,13 @@ public class TutorListActivity extends Activity implements TaskDelegate {
         this.listView.setAdapter(adapter);
 
         // Click event for single list row
-        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get the adapter, get the data, get the hashmap associated with the position the user clicked
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                // Get the adapter, get the data, get the hashmap associated with the position the user clicked,
+                //start a new read only tutor list activity
                 // @version by Michael Kapnick
 
                 JSONAdapter                         adapter;
@@ -125,17 +159,27 @@ public class TutorListActivity extends Activity implements TaskDelegate {
                 adapter = (JSONAdapter) parent.getAdapter();
                 data    = adapter.getData();
                 map     = data.get(position);
+                bundle  = new Bundle();
 
+                /** Include info related to specific tutor clicked on */
+                bundle.putString(ID, map.get(ID));
+                bundle.putString(FIRST_NAME, map.get(FIRST_NAME));
+                bundle.putString(COVER_IMAGE, map.get(COVER_IMAGE));
+                bundle.putString(RATE, map.get(RATE));
+                bundle.putString(RATING, map.get(RATING));
+                bundle.putString(MAJOR, map.get(MAJOR));
+                bundle.putString(MINOR, map.get(MINOR));
+                bundle.putString(YEAR, map.get(YEAR));
+                bundle.putString(ABOUT, map.get(ABOUT));
+                bundle.putString(TUTOR_COURSES, map.get(TUTOR_COURSES));
 
-                //intent = new Intent(this,)
+                intent = new Intent(context, ReadOnlyTutorProfileActivity.class);
+                intent.putExtras(bundle);
 
-
-
+                startActivity(intent);
             }
         });
     }
-
-
 
     @Override
     public void setProgressDialog(ProgressDialog pd) {

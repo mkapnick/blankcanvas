@@ -58,8 +58,6 @@ public class TutorHttpObject implements HttpObject {
         entity.addPart("tutor[about]", new StringBody(tutor.getAbout()));
         entity.addPart("tutor[rate]", new StringBody(tutor.getRate()));
 
-
-
         if(coverImagePath != null)
         {
             coverImageFile  = new File(coverImagePath);

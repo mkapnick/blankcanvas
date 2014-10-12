@@ -33,7 +33,6 @@ android:layout_height="match_parent">
             android:adjustViewBounds="true"
             android:layout_marginLeft="15dp"
             android:layout_centerHorizontal="true"
-            android:layout_alignBottom="@+id/userInfo"
             android:layout_marginBottom="200dp"
             android:visibility="invisible"
 
@@ -248,14 +247,15 @@ android:layout_height="match_parent">
     </RelativeLayout>
 </ScrollView>
 
-<!-- The navigation drawer -->
-<ListView android:id="@+id/left_drawer_tutor"
-    android:layout_width="280dp"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:choiceMode="singleChoice"
-    android:divider="#ffffff"
-    android:background="#111"/>
+    <!-- The navigation drawer -->
+    <ListView android:id="@+id/left_drawer_tutor"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:background="#80000000"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"/>
 
 
 </android.support.v4.widget.DrawerLayout>

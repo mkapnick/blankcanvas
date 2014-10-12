@@ -111,14 +111,7 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
 
         initializeUI();
         setUpActionBar();
-
-        if(null == savedInstanceState)
-            setUpUserInfo();
-        else
-        {
-            //setUpUserInfo(savedInstanceState);
-        }
-
+        setUpUserInfo();
     }
 
 
@@ -174,7 +167,7 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
             info.putString("ok", "true");
             intent.putExtras(info);
             startActivity(intent);
-            finish();
+            //finish(); //TODO -- don't finish on switch
         }
     }
 
@@ -208,7 +201,7 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         //displaying custom ActionBar
         actionBarView       = getSupportActionBar().getCustomView();
         actionBarTextView   = (TextView) actionBarView.findViewById(R.id.textViewActionBar);
-        actionBarTextView.setText("TUTOR");
+        actionBarTextView.setText("TUTOR PROFILE");
         actionBarTextView.setTextColor(Color.WHITE);
 
         actionBarMenuButton = (ImageButton) actionBarView.findViewById(R.id.menu_button);
@@ -245,30 +238,4 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         drawable    = new BitmapDrawable(getResources(), tmp);
         coverImageView.setBackground(drawable);
     }
-
-
-    /**
-     *
-     */
-   /* private void setUpUserInfo(Bundle bundle)
-    {
-        BitmapDrawable                              drawable;
-        Bitmap                                      tmp;
-        ClassesUtility                              cUtility;
-
-        name.setText(bundle.getString(TutorListActivity.FIRST_NAME));
-        major.setText(bundle.getString(TutorListActivity.);
-        year.setText(bundle.getString(TutorListActivity.FIRST_NAME));
-        about.setText(bundle.getString(TutorListActivity.FIRST_NAME));
-        rate.setText(bundle.getString(TutorListActivity.RATE);
-
-        //classes already formatted in StudentProfileActivity
-        cUtility = new TutorClassesUtility(user, this.classes, this);
-        cUtility.setClassesRegularMode();
-
-        tmp         = tutor.getCoverImage();
-        drawable    = new BitmapDrawable(getResources(), tmp);
-        coverImageView.setBackground(drawable);
-    }*/
-
 }

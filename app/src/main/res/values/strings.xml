@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">TutorCesh</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name_default">BlankCanvas</string>
+    <string name="app_name"></string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_new_account">NewAccountActivity</string>
+    <string name="title_activity_new_account"></string>
     <string name="email"> University Email Address</string>
     <string name="password"> Password</string>
     <string name="login">Login</string>
@@ -12,29 +12,32 @@
     <string name="forgotPassword"> Forgot your password?</string>
     <string name="newAccountText">Don\'t have an account? </string>
     <string name="SignUpText"> Sign Up</string>
-    <string name="title_activity_beginning">BeginningActivity</string>
+    <string name="title_activity_beginning"></string>
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>
-    <string name="title_activity_profile">Student</string>
-    <string name="title_activity_edit_profile">Student</string>
-    <string name="title_activity_tutor_profile">Tutor</string>
-    <string name="title_activity_edit_tutor_profile">Tutor</string>
+    <string name="title_activity_profile"></string>
+    <string name="title_activity_edit_profile"></string>
+    <string name="title_activity_tutor_profile"></string>
+    <string name="title_activity_edit_tutor_profile"></string>
     <string name="prompt">Filters</string>
-    <string name="on_create_new_account">Thanks for creating an account with BlankCanvas! We just sent a confirmation link to the email you provided. Click that link and you\'ll be able to login and get started. </string>
+    <string name="on_create_new_account">Thank you for creating an account with BlankCanvas! A confirmation link has been sent to the email you provided. Please confirm your email to login and get started. </string>
 
     <string-array name="drawable_list_items">
-        <item>SEARCH USERS</item>
-        <item>CREATE GROUP SESSION</item>
-        <item>PENDING GROUP SESSIONS</item>
+        <item>SEARCH AVAILABLE TUTORS</item>
+        <!-- <item>CREATE GROUP SESSION</item>! -->
+        <!-- <item>PENDING GROUP SESSIONS</item>! -->
         <item>ABOUT</item>
     </string-array>
     <string-array name="drawable_list_items_tutor">
-        <item>SEARCH USERS</item>
-        <item>CREATE GROUP SESSION</item>
-        <item>PENDING GROUP SESSIONS</item>
+        <item>SEARCH AVAILABLE TUTORS</item>
+        <!-- <item>CREATE GROUP SESSION</item>! -->
+        <!-- <item>PENDING GROUP SESSIONS</item>! -->
         <item>ABOUT</item>
     </string-array>
 
-    <string name="title_activity_tutor_list">TutorList</string>
+    <string name="title_activity_tutor_list"></string>
+    <string name="title_activity_read_only_tutor_profile"></string>
+    <string name="title_activity_student_tutor_profile_container">StudentTutorProfileContainerActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

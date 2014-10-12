@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="fill_horizontal"
+    android:background="#80000000"
     >
 
     <ImageButton
@@ -14,7 +15,6 @@
         android:layout_marginLeft="5dp"
         />
 
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,8 +22,7 @@
         android:text="Custom Action Bar"
         android:id="@+id/textViewActionBar"
         android:textColor="#000"
-        android:layout_toRightOf="@id/menu_button"
-        android:layout_marginLeft="25dp"/>
+        android:layout_centerHorizontal="true"/>
 
 
 </RelativeLayout>
