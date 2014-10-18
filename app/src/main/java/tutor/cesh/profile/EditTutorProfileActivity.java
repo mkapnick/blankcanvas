@@ -248,7 +248,7 @@ public class EditTutorProfileActivity extends Activity
         Student             student;
         Tutor               tutor;
 
-        user    = User.getInstance();
+        user    = User.getInstance(this);
         student = user.getStudent();
         tutor   = user.getTutor();
 
@@ -310,7 +310,7 @@ public class EditTutorProfileActivity extends Activity
     {
         ClassesUtility  cUtility;
         User user;
-        user    = User.getInstance();
+        user    = User.getInstance(this);
 
         cUtility    = new TutorClassesUtility(user, this.tutorClasses, this);
         cUtility.setClassesEditMode();
@@ -326,7 +326,7 @@ public class EditTutorProfileActivity extends Activity
         Student         student;
         Tutor           tutor;
 
-        user = User.getInstance();
+        user = User.getInstance(this);
         student = user.getStudent();
         tutor   = user.getTutor();
 

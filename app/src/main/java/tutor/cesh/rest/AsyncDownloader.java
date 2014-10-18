@@ -70,6 +70,8 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
         if(pd != null)
             pd.dismiss();
 
+        System.out.println("inside async downloader, got the bitmpa");
+        System.out.println(result);
         handler.handle(result, profile);
         super.onPostExecute(result);
     };
@@ -110,10 +112,7 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
             bufHttpEntity = new BufferedHttpEntity(response.getEntity());
             input   = bufHttpEntity.getContent();
 
-            if(resize)
-                bmp = BitmapFactory.decodeStream(input);
-            else
-                bmp = BitmapFactory.decodeStream(input);
+            bmp = BitmapFactory.decodeStream(input);
 
             input.close();
         }
@@ -121,7 +120,6 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
         {
             e.printStackTrace();
         }
-
 
         return bmp;
     }

@@ -1,6 +1,9 @@
 package tutor.cesh;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+
+import tutor.cesh.database.LocalDatabaseHelper;
 
 /**
  * Created by michaelk18 on 7/2/14.
@@ -11,11 +14,12 @@ public class Student implements Profile
             coverImageUrl, id, enrollId, tutorId, schoolId;
     private String [] classes;
     private Bitmap coverImage, profileImage;
+    private LocalDatabaseHelper localDatabaseHelper;
 
-
-    public Student()
+    public Student(Context c)
     {
-        this.classes = new String[0];
+        this.classes                = new String[0];
+        this.localDatabaseHelper    = new LocalDatabaseHelper(c);
     }
     public String getName() {
         return name;
@@ -118,7 +122,9 @@ public class Student implements Profile
         return coverImage;
     }
 
-    public void setCoverImage(Bitmap coverImage) {
+    public void setCoverImage(Bitmap coverImage)
+    {
         this.coverImage = coverImage;
+        localDatabaseHelper.saveStudentCoverImageRecord(coverImage);
     }
 }

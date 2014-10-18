@@ -1,20 +1,25 @@
 package tutor.cesh;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+
+import tutor.cesh.database.LocalDatabaseHelper;
 
 /**
  * Created by michaelk18 on 7/10/14.
  */
 public class Tutor implements Profile
 {
-    private String rate,rating, id, about, coverImageUrl, profileImageUrl;
-    private String [] classes;
-    private Bitmap profileImage, coverImage;
+    private String              rate,rating, id, about, coverImageUrl, profileImageUrl;
+    private String []           classes;
+    private Bitmap              profileImage, coverImage;
+    private LocalDatabaseHelper localDatabaseHelper;
 
 
-    public Tutor()
+    public Tutor(Context c)
     {
         classes = new String[0];
+        this.localDatabaseHelper = new LocalDatabaseHelper(c);
     }
     public String getAbout() {
         return about;
@@ -84,7 +89,9 @@ public class Tutor implements Profile
         return coverImage;
     }
 
-    public void setCoverImage(Bitmap coverImage) {
+    public void setCoverImage(Bitmap coverImage)
+    {
         this.coverImage = coverImage;
+        localDatabaseHelper.saveTutorCoverImageRecord(coverImage);
     }
 }

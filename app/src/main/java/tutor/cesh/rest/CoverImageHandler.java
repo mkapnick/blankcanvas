@@ -13,9 +13,9 @@ import tutor.cesh.Profile;
  */
 public class CoverImageHandler implements ImageHandler
 {
-    private ImageView   view;
-    private Resources   resources;
-    private Context     context;
+    private ImageView           view;
+    private Resources           resources;
+    private Context             context;
 
     public CoverImageHandler(Resources resources, ImageView view, Context c)
     {
@@ -28,7 +28,7 @@ public class CoverImageHandler implements ImageHandler
     public void handle(Bitmap b, Profile profile)
     {
         BitmapDrawable  drawable;
-        drawable                = new BitmapDrawable(resources, b);
+        drawable    = new BitmapDrawable(resources, b);
 
         if(view != null) {
             view.setBackground(drawable);
@@ -36,6 +36,5 @@ public class CoverImageHandler implements ImageHandler
 
         if(profile != null)
             profile.setCoverImage(b);
-
     }
 }

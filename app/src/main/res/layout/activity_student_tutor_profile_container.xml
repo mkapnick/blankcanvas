@@ -11,13 +11,13 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/studentProfile"
+        android:id="@+id/studentProfileFragment"
         class = "tutor.cesh.profile.fragment.StudentProfileFragment"/>
 
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/tutorProfile"
+        android:id="@+id/tutorProfileFragment"
         class = "tutor.cesh.profile.fragment.TutorProfileFragment"/>
 
 </RelativeLayout>

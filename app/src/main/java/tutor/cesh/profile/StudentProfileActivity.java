@@ -275,7 +275,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         ImageHandler    handler;
         AsyncDownloader asyncDownloader;
 
-        user    = User.getInstance();
+        user    = User.getInstance(this);
         student = user.getStudent();
 
         /* Data that has already been retrieved from the server */
@@ -300,7 +300,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         Student                                     student;
         ProgressDialog                              pd;
 
-        user            = User.getInstance();
+        user            = User.getInstance(this);
         student         = user.getStudent();
         pd              = new ProgressDialog(this);
 
@@ -359,7 +359,7 @@ public class StudentProfileActivity extends ActionBarActivity implements View.On
         AsyncDownloader asyncDownloader;
         JSONObject      response;
 
-        user = User.getInstance();
+        user = User.getInstance(this);
         student = user.getStudent();
         tutor = user.getTutor();
 

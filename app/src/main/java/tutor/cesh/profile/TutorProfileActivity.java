@@ -220,7 +220,7 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         Student                                     student;
         Tutor                                       tutor;
 
-        user            = User.getInstance();
+        user            = User.getInstance(this);
         student         = user.getStudent();
         tutor           = user.getTutor();
 

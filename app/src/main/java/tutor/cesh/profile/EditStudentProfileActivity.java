@@ -243,7 +243,7 @@ public class EditStudentProfileActivity extends Activity
         ClassesUtility      cUtility;
         User                user;
 
-        user    = User.getInstance();
+        user    = User.getInstance(this);
         student = user.getStudent();
 
         cUtility    = new StudentClassesUtility(user, this.classes);
@@ -297,7 +297,7 @@ public class EditStudentProfileActivity extends Activity
         ClassesUtility  cUtility;
         User user;
 
-        user    = User.getInstance();
+        user    = User.getInstance(this);
 
         cUtility    = new StudentClassesUtility(user, this.classes, this);
         cUtility.setClassesEditMode();
@@ -311,7 +311,7 @@ public class EditStudentProfileActivity extends Activity
         User            user;
         Student         student;
 
-        user    = User.getInstance();
+        user    = User.getInstance(this);
         student = user.getStudent();
 
         //set fields based on data from the bundle

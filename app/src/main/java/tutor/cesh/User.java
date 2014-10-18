@@ -1,5 +1,7 @@
 package tutor.cesh;
 
+import android.content.Context;
+
 /**
  * Created by michaelk18 on 7/2/14.
  */
@@ -10,10 +12,10 @@ public class User
 
     private static User user;
 
-    private User()
+    private User(Context context)
     {
-        this.student = new Student();
-        this.tutor  = new Tutor();
+        this.student = new Student(context);
+        this.tutor  = new Tutor(context);
     }
     private User(Student s, Tutor t)
     {
@@ -29,10 +31,10 @@ public class User
         return tutor;
     }
 
-    public static User getInstance()
+    public static User getInstance(Context context)
     {
         if(user == null)
-            user = new User();
+            user = new User(context);
 
         return user;
     }
