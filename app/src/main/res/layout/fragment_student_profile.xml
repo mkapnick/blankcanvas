@@ -26,6 +26,16 @@
                 android:layout_alignBottom="@+id/dummyLayout"
                 android:layout_alignParentTop="true"/>
 
+            <ImageButton
+                android:id="@+id/cameraIcon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_above="@+id/relativeLayout"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/camera"
+                />
+
             <ImageView
                 android:id="@+id/profileImage"
                 android:layout_width="80dp"
@@ -43,7 +53,8 @@
                 android:layout_alignBottom="@+id/profileBackgroundImage"
                 android:background="@drawable/border2"
                 android:padding="5dp"
-                android:alpha=".9">
+                android:alpha=".9"
+                android:id="@+id/relativeLayout">
 
                 <EditText
                     android:layout_width="wrap_content"

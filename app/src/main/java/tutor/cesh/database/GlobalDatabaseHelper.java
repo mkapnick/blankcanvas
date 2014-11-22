@@ -28,6 +28,10 @@ public class GlobalDatabaseHelper {
     private static Context context;
     private static ProgressDialog pd;
 
+    /**
+     *
+     * @param c
+     */
     public GlobalDatabaseHelper(Context c)
     {
         this.context = c;
@@ -38,6 +42,11 @@ public class GlobalDatabaseHelper {
         pd.setIndeterminate(true);
     }
 
+    /**
+     *
+     * @param resources
+     * @param imageView
+     */
     public void downloadStudentCoverImageFromServer(Resources resources, ImageView imageView)
     {
         User            user;
@@ -55,6 +64,10 @@ public class GlobalDatabaseHelper {
         asyncDownloader.execute();
     }
 
+    /**
+     *
+     * @param delegate
+     */
     public void downloadStudentDataFromServer(TaskDelegate delegate)
     {
         HttpGet get;
@@ -77,6 +90,10 @@ public class GlobalDatabaseHelper {
         }
     }
 
+    /**
+     *
+     * @param delegate
+     */
     public void downloadTutorDataFromServer(TaskDelegate delegate)
     {
         HttpGet get;
@@ -97,6 +114,11 @@ public class GlobalDatabaseHelper {
         }
     }
 
+    /**
+     *
+     * @param resources
+     * @param imageView
+     */
     public void downloadTutorCoverImageFromServer(Resources resources, ImageView imageView)
     {
         User            user;
@@ -107,7 +129,7 @@ public class GlobalDatabaseHelper {
         user    = User.getInstance(context);
         tutor   = user.getTutor();
 
-        // Download cover image from server, belongs to student
+        // Download cover image from server, belongs to tutor
         handler             = new CoverImageHandler(resources,  imageView, context);
         asyncDownloader     = new AsyncDownloader(tutor.getCoverImageUrl(), handler,
                tutor, new ProgressDialog(context));

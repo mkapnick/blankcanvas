@@ -30,9 +30,8 @@ public class CoverImageHandler implements ImageHandler
         BitmapDrawable  drawable;
         drawable    = new BitmapDrawable(resources, b);
 
-        if(view != null) {
+        if(view != null)
             view.setBackground(drawable);
-        }
 
         if(profile != null)
             profile.setCoverImage(b);

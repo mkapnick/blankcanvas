@@ -61,6 +61,7 @@ public class OnLoginTaskDelegate implements TaskDelegate
                     intent.putExtra("profileImage", object.getString("student_profile_image_url"));
                     intent.putExtra("coverImage", object.getString("student_cover_image_url"));
 
+                    //student
                     student.setId(object.getString("id"));
                     student.setEnrollId(object.getString("enroll_id"));
                     student.setName(object.getString("first_name"));
@@ -68,6 +69,7 @@ public class OnLoginTaskDelegate implements TaskDelegate
                     student.setSchoolId(object.getString("school_id"));
                     student.setCoverImageUrl(object.getString("student_cover_image_url"));
 
+                    //tutor
                     tutor.setCoverImageUrl(object.getString("tutor_cover_image_url"));
 
                     context.startActivity(intent);

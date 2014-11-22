@@ -45,7 +45,7 @@ public class EnrollHttpObject implements HttpObject
 
         params.put("major", student.getMajor());
         params.put("year", student.getYear());
-        params.put("minor", "testing101");
+        params.put("minor", "STATIC - INSIDE EnrollHttpObj on front");
 
         put.setEntity(new StringEntity(params.toString()));
         put.setHeader("Accept", "application/json");

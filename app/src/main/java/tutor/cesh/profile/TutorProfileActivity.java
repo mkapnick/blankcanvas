@@ -70,7 +70,7 @@ public class TutorProfileActivity extends ActionBarActivity implements View.OnCl
         drawerLayout        = (DrawerLayout)findViewById(R.id.drawer_layout_tutor);
         listView            = (ListView)    findViewById(R.id.left_drawer_tutor);
 
-        listViewTitles      = getResources().getStringArray(R.array.drawable_list_items_tutor);
+        listViewTitles      = getResources().getStringArray(R.array.drawable_list_items);
         listView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listViewTitles));
         listView.setOnItemClickListener(new DrawerItemClickListener());
 

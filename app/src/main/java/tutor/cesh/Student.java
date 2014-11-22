@@ -2,6 +2,8 @@ package tutor.cesh;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.widget.ImageView;
 
 import tutor.cesh.database.LocalDatabaseHelper;
 
@@ -14,10 +16,13 @@ public class Student implements Profile
             coverImageUrl, id, enrollId, tutorId, schoolId;
     private String [] classes;
     private Bitmap coverImage, profileImage;
+    private ImageView coverImageView;
     private LocalDatabaseHelper localDatabaseHelper;
+    private Context context;
 
     public Student(Context c)
     {
+        this.context                = c;
         this.classes                = new String[0];
         this.localDatabaseHelper    = new LocalDatabaseHelper(c);
     }
@@ -122,9 +127,14 @@ public class Student implements Profile
         return coverImage;
     }
 
+    public void setCoverImageView(ImageView coverImageView){
+        this.coverImageView = coverImageView;
+    }
+
     public void setCoverImage(Bitmap coverImage)
     {
         this.coverImage = coverImage;
+        coverImageView.setBackground(new BitmapDrawable(this.context.getResources(), coverImage));
         localDatabaseHelper.saveStudentCoverImageRecord(coverImage);
     }
 }

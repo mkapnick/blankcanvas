@@ -58,8 +58,6 @@ public class StudentHttpObject implements HttpObject {
     {
         HttpPut         put;
         MultipartEntity entity;
-        File            coverImageFile, profileImageFile;
-        FileBody        cBody, pBody;
         Student         student;
 
         student = user.getStudent();
@@ -71,6 +69,28 @@ public class StudentHttpObject implements HttpObject {
         entity.addPart("student[last_name]", new StringBody(" "));
         entity.addPart("student[about]", new StringBody(student.getAbout()));
 
+        put.setEntity(entity);
+
+        return put;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public HttpPut putStudentCoverImage()
+    {
+        HttpPut         put;
+        MultipartEntity entity;
+        File            coverImageFile;
+        FileBody        cBody;
+        Student         student;
+
+        student = user.getStudent();
+
+        put             = new HttpPut(putEndPoint + student.getId());
+        entity          = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+
         if(coverImagePath != null)
         {
             coverImageFile  = new File(coverImagePath);
@@ -79,6 +99,28 @@ public class StudentHttpObject implements HttpObject {
             student.setCoverImageUrl(coverImagePath);
             student.setCoverImage(BitmapFactory.decodeFile(coverImagePath));
         }
+
+        put.setEntity(entity);
+
+        return put;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public HttpPut putStudentProfileImage()
+    {
+        HttpPut         put;
+        MultipartEntity entity;
+        File            profileImageFile;
+        FileBody        pBody;
+        Student         student;
+
+        student = user.getStudent();
+
+        put             = new HttpPut(putEndPoint + student.getId());
+        entity          = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
         if(profileImagePath != null)
         {
@@ -92,7 +134,6 @@ public class StudentHttpObject implements HttpObject {
         put.setEntity(entity);
 
         return put;
-
     }
 
     @Override

@@ -26,18 +26,12 @@
         <item>SEARCH AVAILABLE TUTORS</item>
         <!-- <item>CREATE GROUP SESSION</item>! -->
         <!-- <item>PENDING GROUP SESSIONS</item>! -->
-        <item>ABOUT</item>
-    </string-array>
-    <string-array name="drawable_list_items_tutor">
-        <item>SEARCH AVAILABLE TUTORS</item>
-        <!-- <item>CREATE GROUP SESSION</item>! -->
-        <!-- <item>PENDING GROUP SESSIONS</item>! -->
-        <item>ABOUT</item>
     </string-array>
 
     <string name="title_activity_tutor_list"></string>
     <string name="title_activity_read_only_tutor_profile"></string>
-    <string name="title_activity_student_tutor_profile_container">StudentTutorProfileContainerActivity</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_student_tutor_profile_container"></string>
+    <string name="hello_world"></string>
+    <string name="title_activity_edit_student_and_tutor_profile">EditStudentAndTutorProfileActivity</string>
 
 </resources>
