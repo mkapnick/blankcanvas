@@ -1,10 +1,8 @@
 package tutor.cesh.profile;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +29,7 @@ import tutor.cesh.rest.http.StudentHttpObject;
 import tutor.cesh.rest.http.TutorCourseHttpObject;
 import tutor.cesh.rest.http.TutorHttpObject;
 
-public class EditStudentAndTutorProfileActivity extends ActionBarActivity implements View.OnClickListener
+public class EditStudentAndTutorProfileActivity extends Activity implements View.OnClickListener
 {
     private static String profileImagePath, coverImagePath;
     private Bundle bundle;
@@ -47,11 +45,18 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
      */
     private void initializeUI()
     {
-        name = (EditText) findViewById(R.id.name);
-        major = (EditText) findViewById(R.id.major);
-        year = (EditText) findViewById(R.id.year);
-        minor = (EditText) findViewById(R.id.minor);
-        rate  = (EditText) findViewById(R.id.rate);
+        name        = (EditText) findViewById(R.id.name);
+        major       = (EditText) findViewById(R.id.major);
+        year        = (EditText) findViewById(R.id.year);
+        minor       = (EditText) findViewById(R.id.minor);
+        rate        = (EditText) findViewById(R.id.rate);
+        saveButton  = (TextView) findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(this);
+
+        //format the save button
+        saveButton.setBackgroundResource(R.drawable.oval_save);
+        saveButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.oval_save, 0);
+
 
         studentAbout = (EditText) findViewById(R.id.student_about);
         tutorAbout = (EditText) findViewById(R.id.tutor_about);
@@ -59,7 +64,7 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         classesTaking = (EditText) findViewById(R.id.classes_taking);
         classesTutoring= (EditText) findViewById(R.id.classes_tutoring);
 
-        actionBar = getSupportActionBar();
+        /*actionBar = getSupportActionBar();
 
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowHomeEnabled(false);
@@ -68,7 +73,7 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         View v = inflator.inflate(R.layout.edit_info_custom_action_bar, null);
         saveButton = (TextView) v.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(this);
-        actionBar.setCustomView(v);
+        actionBar.setCustomView(v);*/
     }
     /**
      *

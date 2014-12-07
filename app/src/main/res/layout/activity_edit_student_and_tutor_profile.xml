@@ -21,13 +21,25 @@
             android:paddingBottom="40dp">
 
             <TextView
+                android:text="Save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/saveButton"
+                android:textColor="#fff"
+                android:gravity="center"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="GENERAL INFO"
                 android:textSize="10sp"
                 android:id="@+id/general_label"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="60dp"
                 />
 
                 <RelativeLayout
@@ -205,8 +217,6 @@
                             android:scrollbars="vertical"
                             android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 "
                             android:gravity="right"
-                            android:ellipsize="end"
-                            android:singleLine="true"
                             android:layout_marginLeft="160dp"
                         />
 
@@ -233,7 +243,6 @@
                             android:scrollbars="vertical"
                             android:layout_below="@+id/classes_taking"
                             android:gravity="right"
-                            android:ellipsize="end"
                             android:layout_marginLeft="85dp"
 
                             />
@@ -317,8 +326,6 @@
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/rate"
                             android:gravity="right"
-                            android:ellipsize="end"
-                            android:singleLine="true"
                             android:layout_marginLeft="160dp"
                             />
 
@@ -345,7 +352,6 @@
                             android:scrollbars="vertical"
                             android:layout_below="@+id/classes_tutoring"
                             android:gravity="right"
-                            android:ellipsize="end"
                             android:layout_marginLeft="85dp"
                             />
 

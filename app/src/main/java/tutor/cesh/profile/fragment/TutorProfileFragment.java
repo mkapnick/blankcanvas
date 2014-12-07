@@ -184,11 +184,13 @@ public class TutorProfileFragment extends FragmentTabController implements TaskD
         ClassesUtility  cUtility;
         User            user;
         Tutor           tutor;
+        Student         student;
         String          tmp;
         JSONObject      response;
 
         user    = User.getInstance(super.activity);
         tutor   = user.getTutor();
+        student = user.getStudent();
 
         try
         {
@@ -200,18 +202,20 @@ public class TutorProfileFragment extends FragmentTabController implements TaskD
             }
             if(response.has("tutor_courses"))
             {
-                super.activity.getApplicationContext();
-                cUtility    = new TutorClassesUtility(user, null, super.activity.getApplicationContext());
+                cUtility    = new TutorClassesUtility(user, this.classes, super.activity.getApplicationContext());
                 cUtility.formatClassesFrontEnd(response.getString("tutor_courses"));
+                cUtility.setClassesRegularMode();
             }
 
             if(response.has("rate")) {
                 tmp = response.getString("rate");
+                rate.setText(tmp);
                 tutor.setRate(tmp);
             }
 
             if(response.has("about")) {
                 tmp = response.getString("about");
+                about.setText(tmp);
                 tutor.setAbout(tmp);
             }
 
@@ -219,6 +223,12 @@ public class TutorProfileFragment extends FragmentTabController implements TaskD
                 //TODO implement
             }
 
+            //Check to make sure these fields are set!!
+            if(this.major.getText().toString().length() == 0)
+                this.major.setText(student.getMajor());
+
+            if(this.year.getText().toString().length() == 0)
+                this.year.setText(student.getYear());
         }
         catch(Exception e){
             e.printStackTrace();

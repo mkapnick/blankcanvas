@@ -223,69 +223,6 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity imple
         return intent;
     }
 
-    private void setToolBar()
-    {
-        //this.actionBar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-        //setSupportActionBar(actionBar);
-
-        /* Set an OnMenuItemClickListener to handle menu item clicks
-        actionBar.setOnMenuItemClickListener(
-                new Toolbar.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        // Handle the menu item
-                        return true;
-                    }
-                });
-
-        // Inflate a menu to be displayed in the toolbar
-        //actionBar.inflateMenu(R.menu.your_toolbar_menu);*/
-    }
-    /**
-     *
-     */
-
-   /* private void setUpActionBar()
-    {
-        ActionBar.Tab   studentTab, tutorTab;
-        LayoutInflater  inflator;
-        View            v;
-
-        inflator    = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        v           = inflator.inflate(R.layout.custom_action_bar, null);
-
-        //actionBar = getSupportActionBar(); --deprecated
-
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        actionBar.setDisplayShowHomeEnabled(false);
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //actionBar.setDisplayShowTitleEnabled(false);
-
-        // create new tabs and and set up the titles of the tabs
-        studentTab  = actionBar.newTab();//setText("Student Profile");
-        tutorTab    = actionBar.newTab();//setText("Tutor Profile");
-
-        studentTab.setIcon(R.drawable.student_dark);
-        tutorTab.setIcon(R.drawable.tutor_light);
-
-        // bind the fragments to the tabs - set up tabListeners for each tab
-        studentTab.setTabListener(new TabListener(studentProfileFragment, getApplicationContext(),
-                "student", v));
-        tutorTab.setTabListener(new TabListener(tutorProfileFragment, getApplicationContext(),
-                "tutor", v));
-
-        actionBar.addTab(studentTab);
-        actionBar.addTab(tutorTab);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setCustomView(v);
-
-        editActionBarButton = (ImageButton)actionBar.getCustomView().findViewById(R.id.edit_action_bar_icon);
-
-        editActionBarButton.setOnClickListener(this);
-    }*/
-
     private void setUpDrawerLayout()
     {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
