@@ -1,12 +1,12 @@
 apply plugin: 'android'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    compileSdkVersion 21
+    buildToolsVersion '21.0.0'
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 19
+        minSdkVersion 21
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
@@ -21,6 +21,6 @@ android {
 dependencies {
     compile files('libs/httpmime-4.0.1.jar')
     compile files('libs/httpmime-4.1.2.jar')
-    compile 'com.android.support:appcompat-v7:+'
-    compile 'com.android.support:support-v4:19.0.0'
+    compile 'com.android.support:appcompat-v7:21.0.0'
+    compile 'com.android.support:support-v4:21.0.0'
 }

@@ -19,13 +19,16 @@
     <string name="title_activity_edit_profile"></string>
     <string name="title_activity_tutor_profile"></string>
     <string name="title_activity_edit_tutor_profile"></string>
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_closed">Close Drawer</string>
+
     <string name="prompt">Filters</string>
     <string name="on_create_new_account">Thank you for creating an account with BlankCanvas! A confirmation link has been sent to the email you provided. Please confirm your email to login and get started. </string>
 
     <string-array name="drawable_list_items">
         <item>SEARCH AVAILABLE TUTORS</item>
-        <!-- <item>CREATE GROUP SESSION</item>! -->
-        <!-- <item>PENDING GROUP SESSIONS</item>! -->
+        <item>CREATE GROUP SESSION</item>
+        <item>PENDING GROUP SESSIONS</item>
     </string-array>
 
     <string name="title_activity_tutor_list"></string>

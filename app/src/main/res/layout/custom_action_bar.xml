@@ -3,23 +3,13 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <ImageButton android:src="@drawable/ic_action_left"
-        android:background="?attr/actionBarItemBackground"
-        android:layout_width="?attr/actionBarSize"
-        android:layout_height="match_parent"
-        android:scaleType="centerInside"
-        android:id="@+id/left_action_bar_image"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        />
-
-    <TextView
+   <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/actionBarTitle"
         android:text="Student Profile"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/left_action_bar_image"
+        android:layout_marginLeft="15dp"
         />
 
     <ImageButton android:src="@drawable/ic_action_edit_dark"

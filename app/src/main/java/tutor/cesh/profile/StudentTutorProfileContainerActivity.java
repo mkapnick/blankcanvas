@@ -1,13 +1,13 @@
 package tutor.cesh.profile;
 
 
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,22 +16,33 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import tutor.cesh.R;
 import tutor.cesh.Tutor;
 import tutor.cesh.User;
-import tutor.cesh.database.GlobalDatabaseHelper;
+import tutor.cesh.profile.fragment.FragmentTabBehavior;
+import tutor.cesh.profile.fragment.FragmentTabController;
 import tutor.cesh.profile.fragment.StudentProfileFragment;
 import tutor.cesh.profile.fragment.TutorProfileFragment;
 
-public class StudentTutorProfileContainerActivity extends ActionBarActivity implements View.OnClickListener {
+public class StudentTutorProfileContainerActivity extends FragmentActivity implements View.OnClickListener {
 
     protected DrawerLayout          drawerLayout;
+    private FragmentTabBehavior     studentProfileFragment;
+    private FragmentTabBehavior     tutorProfileFragment;
+    private ImageButton             editActionBarButton;
     private ListView                listView;
     private String []               listViewTitles;
-    private android.support.v7.app.ActionBar actionBar;
-    private StudentProfileFragment  studentProfileFragment;
-    private TutorProfileFragment    tutorProfileFragment;
-    private ImageButton             drawerLayoutButton, editActionBarButton;
+    private Toolbar                 actionBar;
+    private FragmentTabController   fragmentController;
+    //private ViewPager               viewPager;
+    //private SlidingTabLayout        slidingTabLayout;
+
+    public StudentTutorProfileContainerActivity() {
+    }
+
 
     /**
      * A private class responsible for handling click events on the
@@ -46,15 +57,21 @@ public class StudentTutorProfileContainerActivity extends ActionBarActivity impl
         public void onItemClick(AdapterView parent, View view, int position, long id)
         {
             Intent intent;
+            System.out.println ("inside here");
             listView.setItemChecked(position, true);
             switch(position)
             {
                 case 0:
                     //update drawer layout
-                    if(drawerLayout.isDrawerOpen(listView))
+                    if(drawerLayout.isDrawerOpen(listView)){
                         drawerLayout.closeDrawer(listView);
+                        //setUpActionBar();
+                    }
                     else
+                    {
                         drawerLayout.openDrawer(listView);
+                        //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+                    }
                     //call the correct class
                     //intent = new Intent(getApplicationContext(), TutorListActivity.class);
                     //startActivity(intent);
@@ -70,49 +87,52 @@ public class StudentTutorProfileContainerActivity extends ActionBarActivity impl
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1)
-        {
-            if (resultCode == RESULT_OK){
-                //setUpActionBar();
-            }
-        }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        //delegate power to the fragment controller
+        this.fragmentController.onActivityResult(requestCode, resultCode, data);
 
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        GlobalDatabaseHelper    globalDatabaseHelper;
+        List<FragmentTabBehavior>   tabs;
 
-        globalDatabaseHelper        = new GlobalDatabaseHelper(this);
         this.studentProfileFragment = new StudentProfileFragment();
         this.tutorProfileFragment   = new TutorProfileFragment();
-        TutorProfileFragment.setActivity(this);
+        this.fragmentController     = new FragmentTabController();
+        tabs                        = new ArrayList<FragmentTabBehavior>();
 
-        globalDatabaseHelper.downloadStudentDataFromServer(studentProfileFragment);
-        globalDatabaseHelper.downloadStudentCoverImageFromServer(getResources(),
-                studentProfileFragment.coverImageView);
+        //set the list of tabs for the fragment controller
+        tabs.add(this.studentProfileFragment);
+        tabs.add(this.tutorProfileFragment);
 
-        globalDatabaseHelper.downloadTutorDataFromServer(tutorProfileFragment);
-        globalDatabaseHelper.downloadTutorCoverImageFromServer(getResources(),
-                tutorProfileFragment.coverImageView);
+        //add data to the fragment controller -- mutable object
+        this.fragmentController.setStaticActivity(this); //must set the activity before anything!!!
+        this.fragmentController.setSamplePagerAdapter(tabs);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_tutor_profile_container);
 
-        setUpActionBar();
+        //NEED THIS CODE FOR ADDING THE TABS
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.sample_content_fragment, this.fragmentController);
+            transaction.commit();
+        }
+
+        //setToolBar();
+        //setUpActionBar();
         setUpDrawerLayout();
-        setUpOtherVariables();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.student_tutor_profile_container, menu);
+        getMenuInflater().inflate(R.menu.student_tutor_profile_container, menu);
         return true;
     }
 
@@ -128,12 +148,6 @@ public class StudentTutorProfileContainerActivity extends ActionBarActivity impl
             return true;
         }
 
-        if(id == R.id.left_action_bar_image){
-            if(drawerLayout.isDrawerOpen(listView))
-                drawerLayout.closeDrawer(listView);
-            else
-                drawerLayout.openDrawer(listView);
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -145,12 +159,7 @@ public class StudentTutorProfileContainerActivity extends ActionBarActivity impl
 
         switch(v.getId())
         {
-            case R.id.left_action_bar_image:
-                if(drawerLayout.isDrawerOpen(listView))
-                    drawerLayout.closeDrawer(listView);
-                else
-                    drawerLayout.openDrawer(listView);
-                break;
+
             case R.id.edit_action_bar_icon:
                 intent = setIntentOnEdit();
                 startActivityForResult(intent, RESULT_OK);
@@ -214,24 +223,44 @@ public class StudentTutorProfileContainerActivity extends ActionBarActivity impl
         return intent;
     }
 
+    private void setToolBar()
+    {
+        //this.actionBar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+        //setSupportActionBar(actionBar);
+
+        /* Set an OnMenuItemClickListener to handle menu item clicks
+        actionBar.setOnMenuItemClickListener(
+                new Toolbar.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        // Handle the menu item
+                        return true;
+                    }
+                });
+
+        // Inflate a menu to be displayed in the toolbar
+        //actionBar.inflateMenu(R.menu.your_toolbar_menu);*/
+    }
     /**
      *
      */
-    private void setUpActionBar()
+
+   /* private void setUpActionBar()
     {
         ActionBar.Tab   studentTab, tutorTab;
         LayoutInflater  inflator;
         View            v;
 
-        /* Initialize this first */
         inflator    = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v           = inflator.inflate(R.layout.custom_action_bar, null);
 
-        actionBar = getSupportActionBar();
+        //actionBar = getSupportActionBar(); --deprecated
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         actionBar.setDisplayShowHomeEnabled(false);
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
+
         //actionBar.setDisplayShowTitleEnabled(false);
 
         // create new tabs and and set up the titles of the tabs
@@ -249,36 +278,22 @@ public class StudentTutorProfileContainerActivity extends ActionBarActivity impl
 
         actionBar.addTab(studentTab);
         actionBar.addTab(tutorTab);
-
-        //tutorTab.select();
-        //studentTab.select();
-
-        //actionBar.addTab(studentTab);
-
         actionBar.setDisplayShowCustomEnabled(true);
-
-
         actionBar.setCustomView(v);
 
-        drawerLayoutButton = (ImageButton) actionBar.getCustomView().findViewById(R.id.left_action_bar_image);
         editActionBarButton = (ImageButton)actionBar.getCustomView().findViewById(R.id.edit_action_bar_icon);
 
-        drawerLayoutButton.setOnClickListener(this);
         editActionBarButton.setOnClickListener(this);
-
-    }
+    }*/
 
     private void setUpDrawerLayout()
     {
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout.setStatusBarBackgroundColor(Color.BLACK);
         listView     = (ListView) findViewById(R.id.left_drawer);
 
         listViewTitles = getResources().getStringArray(R.array.drawable_list_items);
         listView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listViewTitles));
         listView.setOnItemClickListener(new DrawerItemClickListener());
-    }
-
-    private void setUpOtherVariables()
-    {
     }
 }
