@@ -5,10 +5,12 @@ import android.graphics.BitmapFactory;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.net.URI;
@@ -59,17 +61,23 @@ public class StudentHttpObject implements HttpObject {
         HttpPut         put;
         MultipartEntity entity;
         Student         student;
+        JSONObject      params;
+        StringEntity    stringEntity;
 
         student = user.getStudent();
+        params  = new JSONObject();
+        put     = new HttpPut(putEndPoint + student.getId());
 
-        put             = new HttpPut(putEndPoint + student.getId());
-        entity          = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        params.put("firstName", student.getName());
+        params.put("studentAbout", student.getAbout());
 
-        entity.addPart("student[first_name]", new StringBody(student.getName()));
-        entity.addPart("student[last_name]", new StringBody(" "));
-        entity.addPart("student[about]", new StringBody(student.getAbout()));
+        stringEntity = new StringEntity(params.toString());
+        //entity.addPart("firstName", new StringBody(student.getName()));
+        //entity.addPart("studentAbout", new StringBody(student.getAbout()));
 
-        put.setEntity(entity);
+        put.setHeader("Accept", "application/json");
+        put.setHeader("Content-Type", "application/json");
+        put.setEntity(stringEntity);
 
         return put;
     }
@@ -95,7 +103,7 @@ public class StudentHttpObject implements HttpObject {
         {
             coverImageFile  = new File(coverImagePath);
             cBody           = new FileBody(coverImageFile, "image/jpg");
-            entity.addPart("student[cover_image]", cBody);
+            entity.addPart("studentCoverImage", cBody);
             student.setCoverImageUrl(coverImagePath);
             student.setCoverImage(BitmapFactory.decodeFile(coverImagePath));
         }
@@ -126,7 +134,7 @@ public class StudentHttpObject implements HttpObject {
         {
             profileImageFile = new File(profileImagePath);
             pBody            = new FileBody(profileImageFile, "image/jpg");
-            entity.addPart("student[profile_image]", pBody);
+            entity.addPart("studentProfileImage", pBody);
             student.setCoverImageUrl(profileImagePath);
             student.setCoverImage(BitmapFactory.decodeFile(profileImagePath));
         }

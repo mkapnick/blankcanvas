@@ -1,27 +1,32 @@
 package tutor.cesh.profile;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import tutor.cesh.R;
+import tutor.cesh.list.StaticCurrentBitmapReadOnlyView;
 import tutor.cesh.profile.util.classes.FormatClassesUtility;
-import tutor.cesh.rest.AsyncDownloader;
-import tutor.cesh.rest.CoverImageHandler;
-import tutor.cesh.rest.ImageHandler;
 
-public class ReadOnlyTutorProfileActivity extends Activity {
+public class ReadOnlyTutorProfileActivity extends Activity implements View.OnClickListener {
 
-    private String      rate, rating, firstName,
-                        coverImagePath, major,minor,year, about;
+    private String      rate, rating, firstName, major,minor,year, about;
 
+    private Bitmap      coverImageBitmap;
     private TextView    nameTextView, majorTextView,
                         yearTextView, aboutTextView,
                         classesTextView, rateTextView;
+
+    private Button      getInTouchButton;
 
     private ImageView   profileImageView, coverImageView;
 
@@ -49,6 +54,8 @@ public class ReadOnlyTutorProfileActivity extends Activity {
         rateTextView                = (TextView)    this.findViewById(R.id.rate);
         profileImageView            = (ImageView)   findViewById(R.id.profileImage);
         coverImageView              = (ImageView)   findViewById(R.id.profileBackgroundImage);
+        getInTouchButton            = (Button)      findViewById(R.id.get_in_touch_button);
+        getInTouchButton.setOnClickListener(this);
     }
 
     @Override
@@ -92,14 +99,14 @@ public class ReadOnlyTutorProfileActivity extends Activity {
         Bundle bundle;
         bundle = getIntent().getExtras();
 
-        this.rate           = bundle.getString(RATE);
-        this.rating         = bundle.getString(RATING);
-        this.firstName      = bundle.getString(FIRST_NAME);
-        this.coverImagePath = bundle.getString(COVER_IMAGE);
-        this.major          = bundle.getString(MAJOR);
-        this.minor          = bundle.getString(MINOR);
-        this.year           = bundle.getString(YEAR);
-        this.about          = bundle.getString(ABOUT);
+        this.rate               = bundle.getString(RATE);
+        this.rating             = bundle.getString(RATING);
+        this.firstName          = bundle.getString(FIRST_NAME);
+        this.coverImageBitmap   = StaticCurrentBitmapReadOnlyView.currentCoverImageBitmap;
+        this.major              = bundle.getString(MAJOR);
+        this.minor              = bundle.getString(MINOR);
+        this.year               = bundle.getString(YEAR);
+        this.about              = bundle.getString(ABOUT);
     }
 
     /**
@@ -107,24 +114,34 @@ public class ReadOnlyTutorProfileActivity extends Activity {
      */
     private void setUpUserInfo()
     {
-        AsyncDownloader asyncDownloader;
-        ImageHandler    coverImageHandler;
         String []       tutorCourses;
         Bundle          bundle;
+        Drawable        drawable;
 
         bundle              = getIntent().getExtras();
-
-        coverImageHandler   = new CoverImageHandler(getResources(), this.coverImageView, this);
-        asyncDownloader     = new AsyncDownloader(this.coverImagePath, coverImageHandler, null, new ProgressDialog(this));
-        asyncDownloader.execute(); //TODO find a way to cache the bitmap
+        drawable            = new BitmapDrawable(getResources(), this.coverImageBitmap);
 
         nameTextView.setText(this.firstName);
         majorTextView.setText(this.major);
         yearTextView.setText(this.year);
         aboutTextView.setText(this.about);
         rateTextView.setText(this.rate);
+        coverImageView.setBackground(drawable);
+        getInTouchButton.setText("Get in touch with " + this.firstName);
+        getInTouchButton.setAllCaps(false);
 
         tutorCourses        = bundle.getString(TUTOR_COURSES).split(",");
         FormatClassesUtility.setClassesRegularMode(tutorCourses, this, this.classesTextView);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch(v.getId())
+        {
+            case R.id.get_in_touch_button:
+                Toast.makeText(this, "This is not implemented yet", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

@@ -21,8 +21,8 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 import tutor.cesh.R;
-import tutor.cesh.rest.RestClientExecute;
-import tutor.cesh.rest.RestClientFactory;
+import tutor.cesh.rest.asynchronous.RestClientExecute;
+import tutor.cesh.rest.factory.RestClientFactory;
 
 public class NewAccountActivity extends ActionBarActivity implements Arrival
 {
@@ -110,7 +110,7 @@ public class NewAccountActivity extends ActionBarActivity implements Arrival
 
         try
         {
-            httpPost        = RestClientFactory.post(this.email, this.password);
+            httpPost        = RestClientFactory.postNewUser(this.email, this.password);
             rce             = new RestClientExecute(httpPost);
             rce.start();
 
@@ -130,6 +130,10 @@ public class NewAccountActivity extends ActionBarActivity implements Arrival
             e.printStackTrace();
         }
         catch(NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+        }
+        catch(Exception e)
         {
             e.printStackTrace();
         }

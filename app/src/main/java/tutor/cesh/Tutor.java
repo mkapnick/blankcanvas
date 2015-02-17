@@ -3,6 +3,8 @@ package tutor.cesh;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import java.util.ArrayList;
+
 import tutor.cesh.database.LocalDatabaseHelper;
 
 /**
@@ -12,6 +14,7 @@ public class Tutor implements Profile
 {
     private String              rate,rating, id, about, coverImageUrl, profileImageUrl;
     private String []           classes;
+    private ArrayList<String>   currentClasses, pastClasses;
     private Bitmap              profileImage, coverImage;
     private LocalDatabaseHelper localDatabaseHelper;
 
@@ -93,5 +96,25 @@ public class Tutor implements Profile
     {
         this.coverImage = coverImage;
         localDatabaseHelper.saveTutorCoverImageRecord(coverImage);
+    }
+
+    public void setCurrentClasses(ArrayList<String> classes)
+    {
+        this.currentClasses = classes;
+    }
+
+    public ArrayList<String> getCurrentClasses()
+    {
+        return this.currentClasses;
+    }
+
+    public void setPastClasses(ArrayList<String> pastClasses)
+    {
+        this.pastClasses = pastClasses;
+    }
+
+    public ArrayList<String> getPastClasses()
+    {
+        return this.pastClasses;
     }
 }

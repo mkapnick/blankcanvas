@@ -11,15 +11,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import org.apache.http.client.methods.HttpPut;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import tutor.cesh.Profile;
@@ -30,14 +33,16 @@ import tutor.cesh.User;
 import tutor.cesh.google.SlidingTabLayout;
 import tutor.cesh.image.BitmapHandlerFactory;
 import tutor.cesh.profile.EditStudentAndTutorProfileActivity;
-import tutor.cesh.rest.RestClientExecute;
+import tutor.cesh.profile.fragment.observer.TabObserver;
+import tutor.cesh.profile.fragment.subject.TabSubject;
+import tutor.cesh.rest.asynchronous.RestClientExecute;
 import tutor.cesh.rest.http.StudentHttpObject;
 import tutor.cesh.rest.http.TutorHttpObject;
 
 /**
  * Created by michaelk18 on 12/4/14.
  */
-public class FragmentTabController extends Fragment implements  View.OnClickListener
+public class FragmentTabController extends Fragment implements View.OnClickListener, TabSubject
 {
     private String                  profileImagePath, coverImagePath;
     private SlidingTabLayout        slidingTabLayout;
@@ -45,9 +50,11 @@ public class FragmentTabController extends Fragment implements  View.OnClickList
     private static final int        COVER_IMAGE_REQUEST_CODE    = 1;
     private static final int        EDIT_INFO                   = 2;
     private SamplePagerAdapter      samplePagerAdapter;
-    protected static Activity                activity;
+    protected static Activity       activity;
     private ImageButton             editButton, drawerLayoutButton;
-
+    private DrawerLayout            drawerLayout;
+    private ListView                drawerLayoutListView;
+    private ArrayList<TabObserver>  tabObservers = new ArrayList<TabObserver>();
 
     public Resources getGeneralResources()
     {
@@ -64,7 +71,6 @@ public class FragmentTabController extends Fragment implements  View.OnClickList
         int                 position; //marks the current tab
 
         position = this.viewPager.getCurrentItem();
-
 
         if(requestCode == COVER_IMAGE_REQUEST_CODE)
         {
@@ -99,11 +105,18 @@ public class FragmentTabController extends Fragment implements  View.OnClickList
                 new RestClientExecute(put).start();
             }
         }
+
         else if(requestCode == EDIT_INFO)
         {
-            //DO NOTHING...
-        }
+            //update on the front end (back end save is taken care of)
+            List<TabObserver> tabs;
+            tabs = this.samplePagerAdapter.getTabs();
 
+            for(int i =0; i < tabs.size(); i++)
+            {
+                tabs.get(i).updateFrontEnd();
+            }
+        }
     }
 
     @Override
@@ -128,13 +141,20 @@ public class FragmentTabController extends Fragment implements  View.OnClickList
                 intent = setIntentOnEdit();
                 startActivityForResult(intent, EDIT_INFO);
                 break;
+
+            case R.id.left_action_bar_image:
+                if(this.drawerLayout.isDrawerOpen(this.drawerLayoutListView))
+                    this.drawerLayout.closeDrawer(this.drawerLayoutListView);
+                else
+                    this.drawerLayout.openDrawer(this.drawerLayoutListView);
+                break;
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+                             Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         //view containing the fragments UI
         View v;
@@ -184,7 +204,6 @@ public class FragmentTabController extends Fragment implements  View.OnClickList
 
         onOptionsItemSelected(position);
         return super.onOptionsItemSelected(item);
-
     }
 
     /**
@@ -230,70 +249,95 @@ public class FragmentTabController extends Fragment implements  View.OnClickList
     }
 
     /**
+     *
+     * @param drawerLayout
+     */
+    public void setDrawerLayout(DrawerLayout drawerLayout)
+    {
+        this.drawerLayout= drawerLayout;
+    }
+
+    /**
+     *
+     */
+    public void setDrawerLayoutListView(ListView listView)
+    {
+        this.drawerLayoutListView = listView;
+    }
+    /**
      * Main entry point is when user clicks the edit button field
      */
     private Intent setIntentOnEdit()
     {
-        Bundle bundle;
-        Intent intent;
-        User user;
-        Tutor tutor;
+        Bundle  bundle;
+        Intent  intent;
+        User    user;
+        Tutor   tutor;
         Student student;
-        String name, major, minor, year, studentAbout,
-                tutorAbout, classesTaking, classesTutoring, rate;
+        String  name, major, minor, year, studentAbout,
+                tutorAbout, studentCurrentClasses, tutorCurrentClasses, rate;
 
-        String [] classesTutoringArray, classesTakingArray;
-        intent = null;
-        user = User.getInstance(activity);
-        tutor = user.getTutor();
-        student = user.getStudent();
+        ArrayList<String> studentCurrentClassesList, tutorCurrentClassesList;
+
+        intent                  = null;
+        user                    = User.getInstance(activity);
+        student                 = user.getStudent();
+        tutor                   = user.getTutor();
+        studentCurrentClasses   = "";
+        tutorCurrentClasses     = "";
 
         try
         {
-            intent              = new Intent(activity, EditStudentAndTutorProfileActivity.class);
-            bundle              = new Bundle();
-            name                = student.getName();
-            major               = student.getMajor();
-            //minor             = this.studentProfileFragment.getMinor();
-            year                = student.getYear();
-            studentAbout        = student.getAbout();
-            tutorAbout          = tutor.getAbout();
-            classesTakingArray  = student.getClasses();
+            intent                      = new Intent(activity, EditStudentAndTutorProfileActivity.class);
+            bundle                      = new Bundle();
+            name                        = student.getName();
+            major                       = student.getMajor();
+            rate                        = tutor.getRate();
+            //minor                     = this.studentProfileFragment.getMinor();
+            year                        = student.getYear();
+            studentAbout                = student.getAbout();
+            tutorAbout                  = tutor.getAbout();
+            studentCurrentClassesList   = student.getCurrentClasses();
+            tutorCurrentClassesList     = tutor.getCurrentClasses();
 
-            classesTutoringArray= tutor.getClasses();
-            classesTutoring     = "";
-            classesTaking       = "";
+            if(studentCurrentClassesList.size() > 0)
+            {
+                for(String c: studentCurrentClassesList)
+                    studentCurrentClasses += c + " ";
+            }
 
-            for (String studentClass: classesTakingArray)
-                classesTaking   += studentClass + " ";
+            if(tutorCurrentClassesList.size() > 0)
+            {
+                for(String c: tutorCurrentClassesList)
+                    tutorCurrentClasses += c + " ";
+            }
 
-            for (String tutorClass: classesTutoringArray)
-                classesTutoring += tutorClass + " ";
-
-            rate                = tutor.getRate();
             bundle.putString("name", name);
             bundle.putString("major", major);
             bundle.putString("year", year);
             bundle.putString("studentAbout", studentAbout);
             bundle.putString("tutorAbout", tutorAbout);
-            bundle.putString("classesTaking", classesTaking);
-            bundle.putString("classesTutoring", classesTutoring);
+            bundle.putString("studentCurrentClasses", studentCurrentClasses);
+            bundle.putString("tutorCurrentClasses", tutorCurrentClasses);
             bundle.putString("rate", rate);
+
             intent.putExtras(bundle);
         }
         catch(Exception e){
             e.printStackTrace();
         }
+
         return intent;
     }
 
-    public void setSamplePagerAdapter(List<FragmentTabBehavior> list)
+    public void setSamplePagerAdapter(List<TabObserver> list)
     {
         this.samplePagerAdapter = new SamplePagerAdapter(activity, activity, list);
     }
 
 
-    public static void setStaticActivity(Activity a){
+    public static void setStaticActivity(Activity a)
+    {
         activity = a;
     }
 
@@ -338,4 +382,23 @@ public class FragmentTabController extends Fragment implements  View.OnClickList
         }
     }
 
+    @Override
+    public void addObserver(TabObserver observer)
+    {
+        this.tabObservers.add(observer);
+    }
+
+    @Override
+    public void notifyObservers()
+    {
+        for(TabObserver observer: this.tabObservers)
+            observer.updateFrontEnd();
+    }
+
+    @Override
+    public void removeObserver(TabObserver observer)
+    {
+        if(this.tabObservers.contains(observer))
+            this.tabObservers.remove(observer);
+    }
 }

@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 import tutor.cesh.database.LocalDatabaseHelper;
 
 /**
@@ -15,6 +17,7 @@ public class Student implements Profile
     private String name, major, year, about, profileImageUrl,
             coverImageUrl, id, enrollId, tutorId, schoolId;
     private String [] classes;
+    private ArrayList<String> currentClasses, pastClasses;
     private Bitmap coverImage, profileImage;
     private ImageView coverImageView;
     private LocalDatabaseHelper localDatabaseHelper;
@@ -120,6 +123,26 @@ public class Student implements Profile
 
     public void setProfileImage(Bitmap profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public void setCurrentClasses(ArrayList<String> classes)
+    {
+        this.currentClasses = classes;
+    }
+
+    public ArrayList<String> getCurrentClasses()
+    {
+        return this.currentClasses;
+    }
+
+    public void setPastClasses(ArrayList<String> pastClasses)
+    {
+        this.pastClasses = pastClasses;
+    }
+
+    public ArrayList<String> getPastClasses()
+    {
+        return this.pastClasses;
     }
 
     public Bitmap getCoverImage() {

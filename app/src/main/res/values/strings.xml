@@ -27,8 +27,8 @@
 
     <string-array name="drawable_list_items">
         <item>SEARCH AVAILABLE TUTORS</item>
-        <item>CREATE GROUP SESSION</item>
-        <item>PENDING GROUP SESSIONS</item>
+        <!--<item>SEARCH GROUP SESSIONS</item>
+        <item>CREATE GROUP SESSION</item>!-->
     </string-array>
 
     <string name="title_activity_tutor_list"></string>

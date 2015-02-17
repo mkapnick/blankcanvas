@@ -30,7 +30,7 @@
                 android:id="@+id/cameraIcon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_above="@+id/relativeLayout"
+                android:layout_above="@+id/nameRL"
                 android:layout_alignParentEnd="true"
                 android:src="@drawable/camera"
                 android:layout_marginRight="20dp" />
@@ -53,9 +53,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/profileBackgroundImage"
                 android:background="@drawable/border2"
-                android:padding="5dp"
+                android:paddingBottom="15dp"
+                android:paddingTop="5dp"
                 android:alpha=".9"
-                android:id="@+id/relativeLayout">
+                android:id="@+id/nameRL">
 
                 <EditText
                     android:layout_width="wrap_content"
@@ -74,25 +75,68 @@
                     android:background="#00000000"
 
                     />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha=".9"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:layout_alignBottom="@+id/nameRL"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/dollarSign"
+                    android:text="$"
+                    android:textColor="#4A4A4A"
+                    android:textColorHint="#4A4A4A"
+                    android:textSize="12dp"
+                    android:background="#00000000"
+                    android:maxLines="2"
+                    android:textCursorDrawable="@null"
+                    android:layout_centerHorizontal="true"
+                    android:editable="false"
+                    android:clickable="false"
+                    android:layout_toLeftOf="@+id/rate"
+                    />
 
                 <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/rate"
-                    android:hint="Rate"
+                    android:hint="rate"
                     android:textColor="#4A4A4A"
                     android:textColorHint="#4A4A4A"
-                    android:gravity="center"
                     android:textSize="12dp"
                     android:background="#00000000"
                     android:maxLines="2"
                     android:textCursorDrawable="@null"
-                    android:layout_below="@+id/name"
                     android:layout_centerHorizontal="true"
                     android:editable="false"
                     android:clickable="false"
                     />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/perHour"
+                    android:text="/hour"
+                    android:textColor="#4A4A4A"
+                    android:textColorHint="#4A4A4A"
+                    android:textSize="12dp"
+                    android:background="#00000000"
+                    android:maxLines="2"
+                    android:textCursorDrawable="@null"
+                    android:layout_centerHorizontal="true"
+                    android:editable="false"
+                    android:clickable="false"
+                    android:layout_toRightOf="@+id/rate"
+                    />
             </RelativeLayout>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"

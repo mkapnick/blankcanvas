@@ -13,23 +13,28 @@ import android.widget.ImageView;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import tutor.cesh.R;
 import tutor.cesh.Student;
 import tutor.cesh.Tutor;
 import tutor.cesh.User;
 import tutor.cesh.database.GlobalDatabaseHelper;
+import tutor.cesh.profile.fragment.observer.TabObserver;
+import tutor.cesh.profile.fragment.subject.TabSubject;
 import tutor.cesh.profile.util.classes.ClassesUtility;
+import tutor.cesh.profile.util.classes.FormatClassesUtility;
 import tutor.cesh.profile.util.classes.TutorClassesUtility;
-import tutor.cesh.rest.TaskDelegate;
+import tutor.cesh.rest.delegate.TaskDelegate;
 
-public class TutorProfileFragment extends FragmentTabController implements TaskDelegate, FragmentTabBehavior
+public class TutorProfileFragment extends FragmentTabController implements TabObserver
 {
 
     public  ImageView               profileImageView, coverImageView;
     private EditText                name, major, year, about, classes, rate;
     private ImageButton             cameraIcon;
     private boolean                 downloadedCoverImageFromServer  = false;
-    private boolean                 downloadedDataFromServer        = false;
+    private TabSubject              tabSubject;
 
 
     @Override
@@ -44,31 +49,6 @@ public class TutorProfileFragment extends FragmentTabController implements TaskD
                     this.coverImageView);
             downloadedCoverImageFromServer = true;
         }
-
-    }
-
-    @Override
-    public void downloadDataFromServer()
-    {
-        GlobalDatabaseHelper globalDatabaseHelper;
-        globalDatabaseHelper        = new GlobalDatabaseHelper(super.activity);
-
-        if(!downloadedDataFromServer)
-        {
-            globalDatabaseHelper.downloadTutorDataFromServer(this);
-            downloadedDataFromServer = true;
-        }
-    }
-
-    @Override
-    public String getAbout()
-    {
-        return about.getText().toString();
-    }
-
-    @Override
-    public String getClasses() {
-        return classes.getText().toString();
     }
 
     @Override
@@ -79,16 +59,6 @@ public class TutorProfileFragment extends FragmentTabController implements TaskD
     @Override
     public int getLayout() {
         return R.layout.pager_tutor_fragment;
-    }
-
-    @Override
-    public String getMajor() {
-        return major.getText().toString();
-    }
-
-    @Override
-    public String getName() {
-        return name.getText().toString();
     }
 
     public String getRate() {
@@ -112,21 +82,9 @@ public class TutorProfileFragment extends FragmentTabController implements TaskD
         return sb;
     }
 
-
-    @Override
-    public String getYear() {
-        return year.getText().toString();
-    }
-
     @Override
     public void initializeUI(View inflatedView)
     {
-        User    user;
-        Tutor   tutor;
-
-        user    = User.getInstance(super.activity.getApplicationContext());
-        tutor   = user.getTutor();
-
         name                = (EditText)    inflatedView.findViewById(R.id.name);
         major               = (EditText)    inflatedView.findViewById(R.id.major);
         year                = (EditText)    inflatedView.findViewById(R.id.year);
@@ -137,17 +95,7 @@ public class TutorProfileFragment extends FragmentTabController implements TaskD
         coverImageView      = (ImageView)   inflatedView.findViewById(R.id.profileBackgroundImage);
 
         cameraIcon          = (ImageButton) inflatedView.findViewById(R.id.cameraIcon);
-
         cameraIcon.setOnClickListener(this);
-
-        //immediately set the cover image view, don't need this here
-        //tutor.setCoverImageView(coverImageView);
-
-    }
-
-    @Override
-    public void setProgressDialog(ProgressDialog pd) {
-        //nothing
 
     }
 
@@ -158,85 +106,34 @@ public class TutorProfileFragment extends FragmentTabController implements TaskD
         User                                        user;
         Student                                     student;
         Tutor                                       tutor;
+        ArrayList<String>                           currentClasses;
 
         user            = User.getInstance(super.activity);
         student         = user.getStudent();
         tutor           = user.getTutor();
+        currentClasses  = tutor.getCurrentClasses();
 
         name.setText(student.getName());
         major.setText(student.getMajor());
         year.setText(student.getYear());
         about.setText(tutor.getAbout());
         rate.setText(tutor.getRate());
+        coverImageView.setBackground(new BitmapDrawable(super.getGeneralResources(),
+                                                        tutor.getCoverImage()));
 
-        coverImageView.setBackground(new BitmapDrawable(super.getGeneralResources(), tutor.getCoverImage()));
+        FormatClassesUtility.setClassesRegularMode(currentClasses, super.activity, this.classes);
+    }
 
-        //set courses front end
-        cUtility = new TutorClassesUtility(user, classes, super.activity);
-        cUtility.setClassesRegularMode();
-
+    public void setSubject(TabSubject subject)
+    {
+        this.tabSubject = subject;
+        this.tabSubject.addObserver(this);
     }
 
     @Override
-    public void taskCompletionResult(Object resp) {
-
-        //set fields based on JSON response from the server
-        ClassesUtility  cUtility;
-        User            user;
-        Tutor           tutor;
-        Student         student;
-        String          tmp;
-        JSONObject      response;
-
-        user    = User.getInstance(super.activity);
-        tutor   = user.getTutor();
-        student = user.getStudent();
-
-        try
-        {
-            response = (JSONObject) resp;
-
-            if(response.has("tutor_profile_image_url"))
-            {
-                //nothing for now
-            }
-            if(response.has("tutor_courses"))
-            {
-                cUtility    = new TutorClassesUtility(user, this.classes, super.activity.getApplicationContext());
-                cUtility.formatClassesFrontEnd(response.getString("tutor_courses"));
-                cUtility.setClassesRegularMode();
-            }
-
-            if(response.has("rate")) {
-                tmp = response.getString("rate");
-                rate.setText(tmp);
-                tutor.setRate(tmp);
-            }
-
-            if(response.has("about")) {
-                tmp = response.getString("about");
-                about.setText(tmp);
-                tutor.setAbout(tmp);
-            }
-
-            if(response.has("courses_tutored")){
-                //TODO implement
-            }
-
-            //Check to make sure these fields are set!!
-            if(this.major.getText().toString().length() == 0)
-                this.major.setText(student.getMajor());
-
-            if(this.year.getText().toString().length() == 0)
-                this.year.setText(student.getYear());
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+    public void updateFrontEnd()
+    {
+        setUpUserInfo();
     }
-
-
-
-
 }
 

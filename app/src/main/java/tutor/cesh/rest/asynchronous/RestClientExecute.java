@@ -1,4 +1,4 @@
-package tutor.cesh.rest;
+package tutor.cesh.rest.asynchronous;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;

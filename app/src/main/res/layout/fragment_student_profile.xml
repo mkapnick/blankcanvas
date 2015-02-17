@@ -10,11 +10,11 @@
         android:layout_height="wrap_content">
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="36dp"
             android:id="@+id/left_action_bar_image"
             android:src="@drawable/ic_action_left"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="7dp"
             />
 
@@ -42,15 +42,15 @@
         </LinearLayout>
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="36dp"
             android:id="@+id/edit_action_bar_icon"
             android:src="@drawable/ic_action_edit_dark"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="10dp"
             />
+
     </RelativeLayout>
 
 

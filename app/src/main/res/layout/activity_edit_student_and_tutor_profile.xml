@@ -276,7 +276,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/rateTV"
-                            android:text="Rate"
+                            android:text="Rate (per hour)"
                             android:textColor="#4A4A4A"
                             android:textColorHint="#4A4A4A"
                             android:textSize="14dp"
@@ -293,7 +293,8 @@
                             android:gravity="right"
                             android:ellipsize="end"
                             android:singleLine="true"
-                            android:layout_marginLeft="85dp"
+                            android:layout_marginLeft="160dp"
+                            android:digits="0123456789.,"
                             />
 
                         <TextView

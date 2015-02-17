@@ -1,4 +1,4 @@
-package tutor.cesh.rest;
+package tutor.cesh.rest.handler;
 
 import android.graphics.Bitmap;
 

@@ -10,34 +10,35 @@
     tools:context="tutor.cesh.arrival.BeginningActivity$PlaceholderFragment">
 
     <RelativeLayout
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:alpha=".8">
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="39dp"
+        android:layout_marginRight="20dp">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/login"
         android:id="@+id/loginButton"
-        android:background="@drawable/rounded_button_gray"
         android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
-        android:onClick="validateArrival"/>
+        android:onClick="validateArrival"
+        android:textStyle="bold"/>
 
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/CreateAccountText"
         android:id="@+id/createAccountButton"
-        android:background="@drawable/rounded_button_gray"
         android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/loginButton"
         android:layout_marginTop="10dp"
-        android:onClick="validateArrival"/>
+        android:onClick="validateArrival"
+        android:textStyle="bold"/>
 
     </RelativeLayout>
 

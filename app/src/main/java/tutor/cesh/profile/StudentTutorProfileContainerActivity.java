@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,35 +15,32 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import tutor.cesh.R;
+import tutor.cesh.Student;
 import tutor.cesh.Tutor;
 import tutor.cesh.User;
+import tutor.cesh.list.TutorListActivity;
 import tutor.cesh.profile.fragment.FragmentTabBehavior;
 import tutor.cesh.profile.fragment.FragmentTabController;
 import tutor.cesh.profile.fragment.StudentProfileFragment;
 import tutor.cesh.profile.fragment.TutorProfileFragment;
 
-public class StudentTutorProfileContainerActivity extends FragmentActivity implements View.OnClickListener {
-
+public class StudentTutorProfileContainerActivity extends FragmentActivity
+{
     protected DrawerLayout          drawerLayout;
     private FragmentTabBehavior     studentProfileFragment;
     private FragmentTabBehavior     tutorProfileFragment;
-    private ImageButton             editActionBarButton;
     private ListView                listView;
     private String []               listViewTitles;
-    private Toolbar                 actionBar;
-    private FragmentTabController   fragmentController;
-    //private ViewPager               viewPager;
-    //private SlidingTabLayout        slidingTabLayout;
-
-    public StudentTutorProfileContainerActivity() {
-    }
-
+    private FragmentTabController   tabController;
+    private ActionBarDrawerToggle   mDrawerToggle;
+    private LinearLayout            mainLayout;
 
     /**
      * A private class responsible for handling click events on the
@@ -57,7 +55,6 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity imple
         public void onItemClick(AdapterView parent, View view, int position, long id)
         {
             Intent intent;
-            System.out.println ("inside here");
             listView.setItemChecked(position, true);
             switch(position)
             {
@@ -65,16 +62,16 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity imple
                     //update drawer layout
                     if(drawerLayout.isDrawerOpen(listView)){
                         drawerLayout.closeDrawer(listView);
-                        //setUpActionBar();
+
+                        //call the correct class
+                        intent = new Intent(getApplicationContext(), TutorListActivity.class);
+                        startActivity(intent);
                     }
                     else
                     {
                         drawerLayout.openDrawer(listView);
-                        //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
                     }
-                    //call the correct class
-                    //intent = new Intent(getApplicationContext(), TutorListActivity.class);
-                    //startActivity(intent);
+
                     break;
                 case 1:
                     break;
@@ -92,18 +89,17 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity imple
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         //delegate power to the fragment controller
-        this.fragmentController.onActivityResult(requestCode, resultCode, data);
-
+        this.tabController.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
+    protected void onCreate(Bundle savedInstanceState)
+    {
         List<FragmentTabBehavior>   tabs;
 
         this.studentProfileFragment = new StudentProfileFragment();
         this.tutorProfileFragment   = new TutorProfileFragment();
-        this.fragmentController     = new FragmentTabController();
+        this.tabController          = new FragmentTabController();
         tabs                        = new ArrayList<FragmentTabBehavior>();
 
         //set the list of tabs for the fragment controller
@@ -111,22 +107,26 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity imple
         tabs.add(this.tutorProfileFragment);
 
         //add data to the fragment controller -- mutable object
-        this.fragmentController.setStaticActivity(this); //must set the activity before anything!!!
-        this.fragmentController.setSamplePagerAdapter(tabs);
+        this.tabController.setStaticActivity(this); //must set the activity before anything!!!
+        this.tabController.setSamplePagerAdapter(tabs); //look in pager adapter instantiate item,
+        //to see how data gets populated in fragments
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_tutor_profile_container);
 
         //NEED THIS CODE FOR ADDING THE TABS
-        if (savedInstanceState == null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.sample_content_fragment, this.fragmentController);
+        if (savedInstanceState == null)
+        {
+            FragmentTransaction transaction;
+            transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.sample_content_fragment, this.tabController);
             transaction.commit();
         }
 
-        //setToolBar();
-        //setUpActionBar();
         setUpDrawerLayout();
+        //set the drawer layout/listview in the fragment tab controller
+        this.tabController.setDrawerLayout(this.drawerLayout);
+        this.tabController.setDrawerLayoutListView(this.listView);
     }
 
     @Override
@@ -151,77 +151,7 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity imple
 
         return super.onOptionsItemSelected(item);
     }
-    @Override
-    public void onClick(View v)
-    {
-        Intent intent;
-        Bundle bundle;
 
-        switch(v.getId())
-        {
-
-            case R.id.edit_action_bar_icon:
-                intent = setIntentOnEdit();
-                startActivityForResult(intent, RESULT_OK);
-                break;
-        }
-    }
-
-    /**
-     * Main entry point is when user clicks the edit button field
-     */
-    private Intent setIntentOnEdit()
-    {
-        Bundle  bundle;
-        Intent  intent;
-        User    user;
-        Tutor   tutor;
-        String  name, major, minor, year, studentAbout,
-                tutorAbout, classesTaking, classesTutoring, rate;
-
-        String [] classesTutoringArray;
-
-        intent  = null;
-        user    = User.getInstance(this);
-        tutor   = user.getTutor();
-
-        try
-        {
-            intent              = new Intent(this, EditStudentAndTutorProfileActivity.class);
-            bundle              = new Bundle();
-            name                = this.studentProfileFragment.getName();
-            major               = this.studentProfileFragment.getMajor();
-            //minor             = this.studentProfileFragment.getMinor();
-            year                = this.studentProfileFragment.getYear();
-            studentAbout        = this.studentProfileFragment.getAbout();
-            tutorAbout          = tutor.getAbout();
-            classesTaking       = this.studentProfileFragment.getClasses();
-            classesTutoringArray= tutor.getClasses();
-            classesTutoring     = "";
-
-            for (String tutorClass: classesTutoringArray)
-                classesTutoring += tutorClass + " ";
-
-            rate                = tutor.getRate();
-
-            bundle.putString("name", name);
-            bundle.putString("major", major);
-            bundle.putString("year", year);
-            bundle.putString("studentAbout", studentAbout);
-            bundle.putString("tutorAbout", tutorAbout);
-            bundle.putString("classesTaking", classesTaking);
-            bundle.putString("classesTutoring", classesTutoring);
-            bundle.putString("rate", rate);
-
-            intent.putExtras(bundle);
-        }
-        catch(Exception e){
-            e.printStackTrace();
-
-        }
-
-        return intent;
-    }
 
     private void setUpDrawerLayout()
     {
@@ -232,5 +162,28 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity imple
         listViewTitles = getResources().getStringArray(R.array.drawable_list_items);
         listView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listViewTitles));
         listView.setOnItemClickListener(new DrawerItemClickListener());
+
+        //Set up animation for on slide of the drawer layout
+        mainLayout = (LinearLayout) findViewById(R.id.main_layout);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, null, R.string.app_name, R.string.app_name) {
+            public void onDrawerClosed(View view) {
+                supportInvalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                supportInvalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                mainLayout.setTranslationX((slideOffset * drawerView.getWidth()));
+                drawerLayout.bringChildToFront(drawerView);
+                drawerLayout.requestLayout();
+            }
+        };
+
+        drawerLayout.setDrawerListener(mDrawerToggle);
     }
 }

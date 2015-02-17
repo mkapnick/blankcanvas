@@ -10,11 +10,11 @@ import org.apache.http.client.methods.HttpGet;
 import tutor.cesh.Student;
 import tutor.cesh.Tutor;
 import tutor.cesh.User;
-import tutor.cesh.rest.AsyncDownloader;
-import tutor.cesh.rest.AsyncGet;
-import tutor.cesh.rest.CoverImageHandler;
-import tutor.cesh.rest.ImageHandler;
-import tutor.cesh.rest.TaskDelegate;
+import tutor.cesh.rest.asynchronous.AsyncDownloader;
+import tutor.cesh.rest.asynchronous.AsyncGet;
+import tutor.cesh.rest.handler.CoverImageHandler;
+import tutor.cesh.rest.handler.ImageHandler;
+import tutor.cesh.rest.delegate.TaskDelegate;
 import tutor.cesh.rest.http.EnrollHttpObject;
 import tutor.cesh.rest.http.StudentCourseHttpObject;
 import tutor.cesh.rest.http.TutorCourseHttpObject;
@@ -66,56 +66,6 @@ public class GlobalDatabaseHelper {
 
     /**
      *
-     * @param delegate
-     */
-    public void downloadStudentDataFromServer(TaskDelegate delegate)
-    {
-        HttpGet get;
-        User user;
-
-        user = User.getInstance(context);
-
-        try
-        {
-            /* Data that needs to be queried from the server */
-            get = new EnrollHttpObject(user).get();
-            new AsyncGet(context, delegate, pd).execute(get);
-
-            get = new StudentCourseHttpObject(user).get();
-            new AsyncGet(context, delegate, pd).execute(get);
-        }
-        catch(Exception e)
-        {
-
-        }
-    }
-
-    /**
-     *
-     * @param delegate
-     */
-    public void downloadTutorDataFromServer(TaskDelegate delegate)
-    {
-        HttpGet get;
-        User user;
-
-        user = User.getInstance(context);
-
-        try
-        {
-            get = new TutorHttpObject(user).get();
-            new AsyncGet(context, delegate, pd).execute(get);
-
-            get = new TutorCourseHttpObject(user).get();
-            new AsyncGet(context, delegate, pd).execute(get);
-        }
-        catch(Exception e){
-
-        }
-    }
-
-    /**
-     *
      * @param resources
      * @param imageView
      */
@@ -132,7 +82,79 @@ public class GlobalDatabaseHelper {
         // Download cover image from server, belongs to tutor
         handler             = new CoverImageHandler(resources,  imageView, context);
         asyncDownloader     = new AsyncDownloader(tutor.getCoverImageUrl(), handler,
-               tutor, new ProgressDialog(context));
+                tutor, new ProgressDialog(context));
         asyncDownloader.execute();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     *
+     * @param delegate
+     */
+    public void downloadStudentDataFromServer(TaskDelegate delegate)
+    {
+        /*HttpGet get;
+        User user;
+
+        user = User.getInstance(context);
+
+        try
+        {
+             Data that needs to be queried from the server
+
+            get = new StudentCourseHttpObject(user).get();
+            new AsyncGet(context, delegate, pd).execute(get);
+        }
+        catch(Exception e)
+        {
+
+        }*/
+    }
+
+    /**
+     *
+     * @param delegate
+     */
+    public void downloadTutorDataFromServer(TaskDelegate delegate)
+    {
+        /*HttpGet get;
+        User user;
+
+        user = User.getInstance(context);
+
+        try
+        {
+            get = new TutorHttpObject(user).get();
+            new AsyncGet(context, delegate, pd).execute(get);
+
+            get = new TutorCourseHttpObject(user).get();
+            new AsyncGet(context, delegate, pd).execute(get);
+        }
+        catch(Exception e){
+
+        }*/
+    }
+
+
 }

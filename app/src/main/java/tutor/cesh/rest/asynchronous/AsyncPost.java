@@ -1,4 +1,4 @@
-package tutor.cesh.rest;
+package tutor.cesh.rest.asynchronous;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,20 +15,22 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import tutor.cesh.rest.delegate.TaskDelegate;
+
 /**
  * Created by michaelk18 on 2/2/14.
  */
-public class AsyncGet extends AsyncTask<HttpGet, Integer, Object>
+public class AsyncPost extends AsyncTask<HttpPost, Integer, Object>
 {
-    private HttpGet                 httpGet;
+    private HttpPost                httpPost;
     private HttpClient              httpClient;
     private Context                 context;
     private ProgressDialog          pd;
     private Object                  response;
-    private TaskDelegate            taskDelegate;
+    private TaskDelegate taskDelegate;
 
 
-    public AsyncGet(Context c, TaskDelegate td, ProgressDialog pd)
+    public AsyncPost(Context c, TaskDelegate td, ProgressDialog pd)
     {
         this.context        = c;
         this.taskDelegate   = td;
@@ -35,18 +38,18 @@ public class AsyncGet extends AsyncTask<HttpGet, Integer, Object>
     }
 
     @Override
-    protected Object doInBackground(HttpGet... httpGets)
+    protected Object doInBackground(HttpPost... httpPosts)
     {
 
         HttpResponse    response;
         BufferedReader  reader;
         String          json;
 
-        this.httpGet    = httpGets[0];
+        this.httpPost   = httpPosts[0];
         this.httpClient = new DefaultHttpClient();
         try
         {
-            response        = httpClient.execute(httpGet);
+            response        = httpClient.execute(httpPost);
             reader          = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             json            = reader.readLine();
 

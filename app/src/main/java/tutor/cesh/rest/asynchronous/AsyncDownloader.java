@@ -1,4 +1,4 @@
-package tutor.cesh.rest;
+package tutor.cesh.rest.asynchronous;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import tutor.cesh.Profile;
+import tutor.cesh.list.BitmapCacheBehavior;
+import tutor.cesh.rest.handler.ImageHandler;
 
 /**
  * A simple class to download images from the internet
@@ -25,8 +27,9 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
     private String                  url;
     private Bitmap                  bmp;
     private ProgressDialog          pd;
-    private ImageHandler            handler;
+    private ImageHandler handler;
     private Profile                 profile;
+    private BitmapCacheBehavior     cacheBehavior;
     private int                     width;
     private int                     height;
     boolean                         resize;
@@ -55,7 +58,11 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
         resize  = true;
     }
 
-
+    public AsyncDownloader(String url, BitmapCacheBehavior cacheBehavior)
+    {
+        this.url            = url;
+        this.cacheBehavior  = cacheBehavior;
+    }
 
     @Override
     protected Bitmap doInBackground(Void... arg0)
@@ -70,9 +77,12 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
         if(pd != null)
             pd.dismiss();
 
-        System.out.println("inside async downloader, got the bitmpa");
-        System.out.println(result);
-        handler.handle(result, profile);
+        if(handler != null)
+            handler.handle(result, profile);
+
+        if(cacheBehavior != null)
+            cacheBehavior.cache(this.url, result);
+
         super.onPostExecute(result);
     };
 

@@ -5,10 +5,12 @@ import android.graphics.BitmapFactory;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.net.URI;
@@ -20,14 +22,12 @@ import tutor.cesh.User;
 /**
  * Created by michaelk18 on 7/7/14.
  */
-public class TutorHttpObject implements HttpObject {
-
-    private String  putEndPoint  = "http://blankcanvas.pw/students/";
-    private String  getEndPoint  = "http://blankcanvas.pw/students/";
-
+public class TutorHttpObject implements HttpObject
+{
+    private String  putEndPoint  = "http://blankcanvas.pw/tutors/";
+    private String  getEndPoint  = "http://blankcanvas.pw/tutors/";
     private User    user;
     private String  coverImagePath, profileImagePath;
-
 
     public TutorHttpObject(User user)
     {
@@ -45,18 +45,26 @@ public class TutorHttpObject implements HttpObject {
     {
         HttpPut         put;
         MultipartEntity entity;
-        Student         student;
+        StringEntity    stringEntity;
+        JSONObject      params;
+
         Tutor           tutor;
 
-        student         = user.getStudent();
         tutor           = user.getTutor();
-        put             = new HttpPut(putEndPoint + student.getId() + "/view/tutors");
-        entity          = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        put             = new HttpPut(putEndPoint + tutor.getId());
+        //entity          = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        params          = new JSONObject();
 
-        entity.addPart("tutor[about]", new StringBody(tutor.getAbout()));
-        entity.addPart("tutor[rate]", new StringBody(tutor.getRate()));
+        //entity.addPart("tutorAbout", new StringBody(tutor.getAbout()));
+        //entity.addPart("tutorRate", new StringBody(tutor.getRate()));
+        params.put("tutorAbout", tutor.getAbout());
+        params.put("tutorRate", tutor.getRate());
 
-        put.setEntity(entity);
+        stringEntity    = new StringEntity(params.toString());
+
+        put.setHeader("Accept", "application/json");
+        put.setHeader("Content-Type", "application/json");
+        put.setEntity(stringEntity);
 
         return put;
     }
@@ -75,14 +83,14 @@ public class TutorHttpObject implements HttpObject {
 
         tutor = user.getTutor();
 
-        put             = new HttpPut(putEndPoint + user.getStudent().getId() + "/view/tutors");
+        put             = new HttpPut(putEndPoint + tutor.getId());
         entity          = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
         if(coverImagePath != null)
         {
             coverImageFile  = new File(coverImagePath);
             cBody           = new FileBody(coverImageFile, "image/jpg");
-            entity.addPart("tutor[cover_image]", cBody);
+            entity.addPart("tutorCoverImage", cBody);
             tutor.setCoverImageUrl(coverImagePath);
             tutor.setCoverImage(BitmapFactory.decodeFile(coverImagePath));
         }
@@ -105,14 +113,14 @@ public class TutorHttpObject implements HttpObject {
 
         tutor = user.getTutor();
 
-        put             = new HttpPut(putEndPoint + user.getStudent().getId() + "/view/tutors");
+        put             = new HttpPut(putEndPoint + tutor.getId());
         entity          = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
         if(profileImagePath != null)
         {
             profileImageFile = new File(profileImagePath);
             pBody            = new FileBody(profileImageFile, "image/jpg");
-            entity.addPart("tutor[profile_image]", pBody);
+            entity.addPart("tutorProfileImage", pBody);
             tutor.setProfileImageUrl(profileImagePath);
             tutor.setProfileImage(BitmapFactory.decodeFile(profileImagePath));
         }
@@ -126,16 +134,12 @@ public class TutorHttpObject implements HttpObject {
     public HttpGet get() throws Exception
     {
         HttpGet httpGet;
-        Student student;
-        student = user.getStudent();
 
-
-        httpGet = new HttpGet(new URI(getEndPoint + student.getId() + "/view/tutors"));
+        httpGet = new HttpGet(new URI(getEndPoint + user.getTutor().getId()));
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-Type", "application/json");
 
         return httpGet;
-
     }
 
     public String getCoverImagePath() {

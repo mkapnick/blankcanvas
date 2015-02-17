@@ -2,7 +2,10 @@ package tutor.cesh.profile.util.classes;
 
 import android.content.Context;
 import android.text.SpannableStringBuilder;
+import android.util.Log;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import tutor.cesh.profile.BubbleTextView;
 
@@ -35,5 +38,33 @@ public class FormatClassesUtility
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void setClassesRegularMode(ArrayList<String> classes, Context context, TextView tv)
+    {
+        BubbleTextView bubbleTextView;
+        SpannableStringBuilder sb;
+
+        tv.setText("");
+
+        if(classes.size() > 0)
+        {
+            try
+            {
+                for(String c : classes)
+                {
+                    bubbleTextView = new BubbleTextView(context, new TextView(context));
+                    sb = bubbleTextView.createBubbleOverText(c, false);
+                    tv.append(sb);
+                    tv.append(" ");
+                }
+            }
+            catch (Exception e)
+            {
+                Log.e("Error", "");
+            }
+        }
+
+        System.out.println("text is: " + tv.getText().toString());
     }
 }

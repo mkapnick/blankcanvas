@@ -2,46 +2,39 @@
 <items version="2" >
 
     <item
-        jar="/Users/michaelk18/Downloads/adt-bundle-mac-x86_64/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.0/support-annotations-21.0.0.jar"
-        jumboMode="false"
-        revision="21.0.0"
-        sha1="1a578b9607b36266c63d43a4fa0ab5664dbe911e">
-        <dex dex="/Users/michaelk18/Documents/workspace/Android_Dev/TutorCesh/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.0-52839b64c4b732bf6a0578be31e37f2036bb0063.jar" />
-    </item>
-    <item
-        jar="/Users/michaelk18/Documents/workspace/Android_Dev/TutorCesh/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.0.0"
-        sha1="686344a780033e4ba22b926cd225f8d4941247e6">
-        <dex dex="/Users/michaelk18/Documents/workspace/Android_Dev/TutorCesh/app/build/intermediates/pre-dexed/debug/classes-35473013118235bccd0e3466686f686060646966.jar" />
-    </item>
-    <item
-        jar="/Users/michaelk18/Documents/workspace/Android_Dev/TutorCesh/app/libs/httpmime-4.1.2.jar"
+        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/libs/httpmime-4.1.2.jar"
         jumboMode="false"
         revision="21.0.0"
         sha1="ed8b5ee0167cb27dea55851259eb34b609f31df0">
-        <dex dex="/Users/michaelk18/Documents/workspace/Android_Dev/TutorCesh/app/build/intermediates/pre-dexed/debug/httpmime-4.1.2-5ff8a52c89b3872d19383848b4e7c1750acafcb5.jar" />
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/httpmime-4.1.2-d4ea571b71888849467b120897ffbfaa84dd76d9.jar" />
     </item>
     <item
-        jar="/Users/michaelk18/Documents/workspace/Android_Dev/TutorCesh/app/libs/httpmime-4.1.2.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="ed8b5ee0167cb27dea55851259eb34b609f31df0">
-        <dex dex="/Users/michaelk18/Documents/workspace/Android_Dev/TutorCesh/app/build/intermediates/pre-dexed/debug/httpmime-4.1.2-5ff8a52c89b3872d19383848b4e7c1750acafcb5.jar" />
-    </item>
-    <item
-        jar="/Users/michaelk18/Documents/workspace/Android_Dev/TutorCesh/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.0.0"
-        sha1="95fd37732ec852e99f07eeb516a3650172f1d136">
-        <dex dex="/Users/michaelk18/Documents/workspace/Android_Dev/TutorCesh/app/build/intermediates/pre-dexed/debug/classes-3a80aaa1181b5098045671b6152914d6e3888e6f.jar" />
-    </item>
-    <item
-        jar="/Users/michaelk18/Documents/workspace/Android_Dev/TutorCesh/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar"
+        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar"
         jumboMode="false"
         revision="21.0.0"
         sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0">
-        <dex dex="/Users/michaelk18/Documents/workspace/Android_Dev/TutorCesh/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-a3712badd7dc4980dc9d001eac07a6cef1d12ce5.jar" />
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-1a81b56ac79507d1bb4829d4f89c3d242c9549bc.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/android-sdk-macosx/extras/android/m2repository/com/android/support/support-annotations/21.0.0/support-annotations-21.0.0.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="1a578b9607b36266c63d43a4fa0ab5664dbe911e">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.0-a40ccb0d15cafaf3c925869b50d5afb4394b188e.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="95fd37732ec852e99f07eeb516a3650172f1d136">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/classes-90b4ae6ff84746e40212028b31551c250e4aa81e.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="686344a780033e4ba22b926cd225f8d4941247e6">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/classes-d679192406fdf0b8e1ad732a76ade81099e5fbb1.jar" />
     </item>
 
 </items>

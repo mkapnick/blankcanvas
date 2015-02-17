@@ -1,33 +1,31 @@
 package tutor.cesh.arrival;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 import tutor.cesh.R;
-import tutor.cesh.rest.AsyncGet;
-import tutor.cesh.rest.OnLoginTaskDelegate;
-import tutor.cesh.rest.RestClientFactory;
-import tutor.cesh.rest.TaskDelegate;
+import tutor.cesh.rest.asynchronous.AsyncPost;
+import tutor.cesh.rest.delegate.OnLoginTaskDelegate;
+import tutor.cesh.rest.asynchronous.RestClientExecute;
+import tutor.cesh.rest.factory.RestClientFactory;
+import tutor.cesh.rest.delegate.TaskDelegate;
 
-public class LoginActivity extends ActionBarActivity implements Arrival
+public class LoginActivity extends Activity implements Arrival
 {
 
     private String              email;
@@ -37,13 +35,7 @@ public class LoginActivity extends ActionBarActivity implements Arrival
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
+        setContentView(R.layout.fragment_login);
     }
 
     @Override
@@ -117,7 +109,7 @@ public class LoginActivity extends ActionBarActivity implements Arrival
      */
     private void validate()
     {
-        HttpGet                                     get;
+        HttpPost                                    post;
         TaskDelegate                                delegate;
         ProgressDialog                              pd;
 
@@ -130,8 +122,8 @@ public class LoginActivity extends ActionBarActivity implements Arrival
         try
         {
             delegate    = new OnLoginTaskDelegate(this);
-            get         = RestClientFactory.authenticate(email, password);
-            new AsyncGet(this, delegate, pd).execute(get);
+            post        = RestClientFactory.authenticateViaPost(email, password);
+            new AsyncPost(this, delegate, pd).execute(post);
         }
         catch(NetworkOnMainThreadException e)
         {
@@ -150,20 +142,4 @@ public class LoginActivity extends ActionBarActivity implements Arrival
             e.printStackTrace();
         }
     }
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_login, container, false);
-            return rootView;
-        }
-    }
-
 }

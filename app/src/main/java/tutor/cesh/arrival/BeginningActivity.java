@@ -1,5 +1,6 @@
 package tutor.cesh.arrival;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
@@ -12,18 +13,12 @@ import android.view.ViewGroup;
 
 import tutor.cesh.R;
 
-public class BeginningActivity extends ActionBarActivity implements Arrival {
+public class BeginningActivity extends Activity implements Arrival {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_beginning);
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
+        setContentView(R.layout.fragment_beginning);
     }
 
 
@@ -71,21 +66,4 @@ public class BeginningActivity extends ActionBarActivity implements Arrival {
         }
 
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_beginning, container, false);
-            return rootView;
-        }
-    }
-
 }

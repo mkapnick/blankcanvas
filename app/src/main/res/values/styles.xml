@@ -5,49 +5,12 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:actionBarStyle">@style/Theme.AppCompat</item>
-        <item name="android:actionBarTabStyle">@style/MyActionTabs</item>
-        <item name="android:actionBarTabBarStyle">@style/MyActionBarTabs</item>
-
-    </style>
-
-    <style name="Theme.MyApp" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
     </style>
 
     <!-- ActionBar styles -->
-    <style name="MyActionBar"
-        parent="@android:style/Widget.Holo.Light.ActionBar">
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/action_bar_background</item>
-
-    </style>
-
-
-    <style name="MyActionTabs" parent="@style/Widget.AppCompat.ActionBar.TabView">
-        <item name="android:background">@drawable/action_bar_tab_indicator</item>
-        <item name="android:showDividers">none</item>
-    </style>
-
-    <style name="MyActionBarTabs" parent="@style/Widget.AppCompat.ActionBar.TabView">
-        <item name="android:background">@drawable/action_bar_tab_indicator</item>
-        <item name="android:showDividers">none</item>
-    </style>
-
-    <!-- Widget styling -->
-
-    <style name="Widget" />
-
-    <style name="Widget.SampleMessage">
-        <item name="android:textAppearance">?android:textAppearanceMedium</item>
-        <item name="android:lineSpacingMultiplier">1.1</item>
-    </style>
-
-    <style name="Widget.SampleMessageTile">
-        <item name="android:background">#fff</item>
-        <item name="android:shadowColor">#7F000000</item>
-        <item name="android:shadowDy">-3.5</item>
-        <item name="android:shadowRadius">2</item>
     </style>
 
     <!-- Define standard dimensions to comply with Holo-style grids and rhythm. -->

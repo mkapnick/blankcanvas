@@ -28,22 +28,6 @@
             android:label="@string/title_activity_new_account" >
         </activity>
         <activity
-            android:name="tutor.cesh.profile.StudentProfileActivity"
-            android:label="@string/title_activity_profile" >
-        </activity>
-        <activity
-            android:name="tutor.cesh.profile.EditStudentProfileActivity"
-            android:label="@string/title_activity_edit_profile" >
-        </activity>
-        <activity
-            android:name="tutor.cesh.profile.TutorProfileActivity"
-            android:label="@string/title_activity_tutor_profile" >
-        </activity>
-        <activity
-            android:name="tutor.cesh.profile.EditTutorProfileActivity"
-            android:label="@string/title_activity_edit_tutor_profile" >
-        </activity>
-        <activity
             android:name="tutor.cesh.list.TutorListActivity"
             android:label="@string/title_activity_tutor_list" >
         </activity>

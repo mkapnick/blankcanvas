@@ -14,6 +14,8 @@ import android.widget.Toast;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 
+import java.util.ArrayList;
+
 import tutor.cesh.R;
 import tutor.cesh.Student;
 import tutor.cesh.Tutor;
@@ -21,7 +23,7 @@ import tutor.cesh.User;
 import tutor.cesh.profile.util.classes.ClassesUtility;
 import tutor.cesh.profile.util.classes.StudentClassesUtility;
 import tutor.cesh.profile.util.classes.TutorClassesUtility;
-import tutor.cesh.rest.RestClientExecute;
+import tutor.cesh.rest.asynchronous.RestClientExecute;
 import tutor.cesh.rest.http.EnrollHttpObject;
 import tutor.cesh.rest.http.HttpObject;
 import tutor.cesh.rest.http.StudentCourseHttpObject;
@@ -34,7 +36,7 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
     private static String profileImagePath, coverImagePath;
     private Bundle bundle;
     private EditText name, major, minor, year, tutorAbout, studentAbout,
-                     classesTaking, classesTutoring, rate;
+                     studentCurrentClasses, tutorCurrentClasses, rate;
     private android.support.v7.app.ActionBar actionBar;
     private TextView saveButton;
 
@@ -57,12 +59,11 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
         saveButton.setBackgroundResource(R.drawable.oval_save);
         saveButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.oval_save, 0);
 
+        studentAbout    = (EditText) findViewById(R.id.student_about);
+        tutorAbout      = (EditText) findViewById(R.id.tutor_about);
 
-        studentAbout = (EditText) findViewById(R.id.student_about);
-        tutorAbout = (EditText) findViewById(R.id.tutor_about);
-
-        classesTaking = (EditText) findViewById(R.id.classes_taking);
-        classesTutoring= (EditText) findViewById(R.id.classes_tutoring);
+        studentCurrentClasses   = (EditText) findViewById(R.id.classes_taking);
+        tutorCurrentClasses     = (EditText) findViewById(R.id.classes_tutoring);
 
         /*actionBar = getSupportActionBar();
 
@@ -97,8 +98,10 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
     {
         super.onBackPressed();
     }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_student_and_tutor_profile);
 
@@ -109,10 +112,8 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
 
 
     @Override
-    public void onClick(View v) {
-
-        Intent intent;
-
+    public void onClick(View v)
+    {
         switch(v.getId())
         {
             case R.id.saveButton:
@@ -141,8 +142,6 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
         return super.onOptionsItemSelected(item);
     }
 
-
-
     /**
      * Save user data to the server
      * @param view
@@ -151,7 +150,9 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
     {
         HttpPost                post;
         HttpPut                 put;
-        String                  jsonArray;
+        String                  jsonArray, studentCurrentClasses, tutorCurrentClasses;
+        String []               studentCurrentClassesArray, tutorCurrentClassesArray;
+        ArrayList<String>       studentCurrentClassesList, tutorCurrentClassesList;
         HttpObject              enroll, course;
         StudentHttpObject       studentHttp;
         TutorHttpObject         tutorHttp;
@@ -162,10 +163,11 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
         StudentCourseHttpObject studentCourses;
         TutorCourseHttpObject   tutorCourses;
 
-        user            = User.getInstance(this);
-        student         = user.getStudent();
-        tutor           = user.getTutor();
-
+        user                        = User.getInstance(this);
+        student                     = user.getStudent();
+        tutor                       = user.getTutor();
+        studentCurrentClassesList   = new ArrayList<String>();
+        tutorCurrentClassesList     = new ArrayList<String>();
 
         //update student attributes
         student.setName(name.getText().toString());
@@ -173,19 +175,42 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
         student.setYear(year.getText().toString());
         student.setMajor(major.getText().toString());
 
-        //classes taking
-        cUtility        = new StudentClassesUtility(user, this.classesTaking);
-        jsonArray       = cUtility.formatClassesBackend();
-        studentCourses  = new StudentCourseHttpObject(user, jsonArray);
-
         //update tutor attributes
         tutor.setRate(rate.getText().toString());
         tutor.setAbout(tutorAbout.getText().toString());
 
-        //classes tutoring
-        cUtility        = new TutorClassesUtility(user, this.classesTutoring);
+        //update both student and tutor classes
+        studentCurrentClasses   = this.studentCurrentClasses.getText().toString();
+        tutorCurrentClasses     = this.tutorCurrentClasses.getText().toString();
+
+        if(studentCurrentClasses.length() > 0)
+        {
+            studentCurrentClassesArray = studentCurrentClasses.split(" ");
+            for(int i =0; i < studentCurrentClassesArray.length; i++)
+                studentCurrentClassesList.add(studentCurrentClassesArray[i]);
+        }
+
+        if(tutorCurrentClasses.length() > 0)
+        {
+            tutorCurrentClassesArray    = tutorCurrentClasses.split(" ");
+            for(int i =0; i < tutorCurrentClassesArray.length; i++)
+                tutorCurrentClassesList.add(tutorCurrentClassesArray[i]);
+        }
+
+        //set the classes for the student and tutor objects, so changes get reflected on
+        //front end
+        student.setCurrentClasses(studentCurrentClassesList);
+        tutor.setCurrentClasses(tutorCurrentClassesList);
+
+        //classes taking
+        /*cUtility        = new StudentClassesUtility(user, this.studentCurrentClasses);
         jsonArray       = cUtility.formatClassesBackend();
-        tutorCourses    = new TutorCourseHttpObject(user, jsonArray);
+        studentCourses  = new StudentCourseHttpObject(user, jsonArray);
+
+        //classes tutoring
+        cUtility        = new TutorClassesUtility(user, this.tutorCurrentClasses);
+        jsonArray       = cUtility.formatClassesBackend();
+        tutorCourses    = new TutorCourseHttpObject(user, jsonArray);*/
 
         //Send a put request with the user's data up to the server
         try
@@ -195,11 +220,11 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
             enroll          = new EnrollHttpObject(user);
 
             //Make calls to the server and save on the backend
-            post            = studentCourses.post();
-            new RestClientExecute(post).start();
+            //post            = studentCourses.post();
+            //new RestClientExecute(post).start();
 
-            post            = tutorCourses.post();
-            new RestClientExecute(post).start();
+            //post            = tutorCourses.post();
+            //new RestClientExecute(post).start();
 
             put             = studentHttp.put();
             new RestClientExecute(put).start();
@@ -207,8 +232,8 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
             put             = tutorHttp.put();
             new RestClientExecute(put).start();
 
-            put             = enroll.put();
-            new RestClientExecute(put).start();
+            //put             = enroll.put();
+            //new RestClientExecute(put).start();
 
             Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
         }
@@ -223,16 +248,17 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
      */
     private void setUpUserData()
     {
+        //DO WE EVEN NEED THE BUNDLE FOR THIS??
         this.bundle = getIntent().getExtras();
         name.setText(bundle.getString("name"));
         major.setText(bundle.getString("major"));
         year.setText(bundle.getString("year"));
 
-        classesTaking.setText(bundle.getString("classesTaking"));
+        studentCurrentClasses.setText(bundle.getString("studentCurrentClasses"));
         studentAbout.setText(bundle.getString("studentAbout"));
 
         rate.setText(bundle.getString("rate"));
-        classesTutoring.setText(bundle.getString("classesTutoring"));
+        tutorCurrentClasses.setText(bundle.getString("tutorCurrentClasses"));
         tutorAbout.setText(bundle.getString("tutorAbout"));
 
     }

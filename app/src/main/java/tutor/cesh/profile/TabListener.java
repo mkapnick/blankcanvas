@@ -15,7 +15,8 @@ import android.widget.TextView;
 
 import tutor.cesh.R;
 
-class TabListener implements ActionBar.TabListener {
+class TabListener implements ActionBar.TabListener
+{
     public Fragment     fragment;
     public Context      context;
     public String       tabName;
