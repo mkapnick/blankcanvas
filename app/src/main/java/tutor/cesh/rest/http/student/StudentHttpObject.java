@@ -1,6 +1,7 @@
-package tutor.cesh.rest.http;
+package tutor.cesh.rest.http.student;
 
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -17,37 +18,23 @@ import java.net.URI;
 
 import tutor.cesh.Student;
 import tutor.cesh.User;
+import tutor.cesh.rest.http.HttpObject;
 
 /**
  * Created by michaelk18 on 7/7/14.
  */
 public class StudentHttpObject implements HttpObject {
 
-    private String putEndPoint  = "http://blankcanvas.pw/students/";
-    private String getEndPoint  = "http://blankcanvas.pw/students/";
-
-    private String              coverImagePath, profileImagePath;
-    private User user;
+    private String putEndPoint          = "http://blankcanvas.pw/students/";
+    private String getEndPoint          = "http://blankcanvas.pw/students/";
+    private String coverImageEndPoint   = "http://blankcanvas.pw/bcimages/students/";
+    private User   user;
 
     public StudentHttpObject(User user)
     {
         this.user = user;
     }
-    public String getCoverImagePath() {
-        return coverImagePath;
-    }
 
-    public String getProfileImagePath() {
-        return profileImagePath;
-    }
-
-    public void setCoverImagePath(String coverImagePath) {
-        this.coverImagePath = coverImagePath;
-    }
-
-    public void setProfileImagePath(String profileImagePath) {
-        this.profileImagePath = profileImagePath;
-    }
 
     @Override
     public HttpPost post() throws Exception {
@@ -59,7 +46,6 @@ public class StudentHttpObject implements HttpObject {
     public HttpPut put() throws Exception
     {
         HttpPut         put;
-        MultipartEntity entity;
         Student         student;
         JSONObject      params;
         StringEntity    stringEntity;
@@ -72,8 +58,6 @@ public class StudentHttpObject implements HttpObject {
         params.put("studentAbout", student.getAbout());
 
         stringEntity = new StringEntity(params.toString());
-        //entity.addPart("firstName", new StringBody(student.getName()));
-        //entity.addPart("studentAbout", new StringBody(student.getAbout()));
 
         put.setHeader("Accept", "application/json");
         put.setHeader("Content-Type", "application/json");
@@ -86,9 +70,9 @@ public class StudentHttpObject implements HttpObject {
      *
      * @return
      */
-    public HttpPut putStudentCoverImage()
+    public HttpPost postStudentCoverImage(String coverImagePath)
     {
-        HttpPut         put;
+        HttpPost        post;
         MultipartEntity entity;
         File            coverImageFile;
         FileBody        cBody;
@@ -96,8 +80,9 @@ public class StudentHttpObject implements HttpObject {
 
         student = user.getStudent();
 
-        put             = new HttpPut(putEndPoint + student.getId());
-        entity          = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        Log.d("TEST", coverImageEndPoint + student.getId() + "/cover");
+        post    = new HttpPost(coverImageEndPoint + student.getId() + "/cover");
+        entity  = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
         if(coverImagePath != null)
         {
@@ -108,16 +93,16 @@ public class StudentHttpObject implements HttpObject {
             student.setCoverImage(BitmapFactory.decodeFile(coverImagePath));
         }
 
-        put.setEntity(entity);
+        post.setEntity(entity);
 
-        return put;
+        return post;
     }
 
     /**
      *
      * @return
      */
-    public HttpPut putStudentProfileImage()
+    public HttpPut putStudentProfileImage(String profileImagePath)
     {
         HttpPut         put;
         MultipartEntity entity;

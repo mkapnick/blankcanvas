@@ -1,8 +1,8 @@
 package tutor.cesh.profile;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,25 +21,22 @@ import tutor.cesh.Student;
 import tutor.cesh.Tutor;
 import tutor.cesh.User;
 import tutor.cesh.profile.util.classes.ClassesUtility;
-import tutor.cesh.profile.util.classes.StudentClassesUtility;
-import tutor.cesh.profile.util.classes.TutorClassesUtility;
 import tutor.cesh.rest.asynchronous.RestClientExecute;
+import tutor.cesh.rest.http.CourseHttpObject;
 import tutor.cesh.rest.http.EnrollHttpObject;
 import tutor.cesh.rest.http.HttpObject;
-import tutor.cesh.rest.http.StudentCourseHttpObject;
-import tutor.cesh.rest.http.StudentHttpObject;
-import tutor.cesh.rest.http.TutorCourseHttpObject;
-import tutor.cesh.rest.http.TutorHttpObject;
+import tutor.cesh.rest.http.student.StudentCourseHttpObject;
+import tutor.cesh.rest.http.student.StudentHttpObject;
+import tutor.cesh.rest.http.tutor.TutorCourseHttpObject;
+import tutor.cesh.rest.http.tutor.TutorHttpObject;
 
 public class EditStudentAndTutorProfileActivity extends Activity implements View.OnClickListener
 {
-    private static String profileImagePath, coverImagePath;
-    private Bundle bundle;
-    private EditText name, major, minor, year, tutorAbout, studentAbout,
-                     studentCurrentClasses, tutorCurrentClasses, rate;
-    private android.support.v7.app.ActionBar actionBar;
-    private TextView saveButton;
-
+    private Bundle          bundle;
+    private EditText        name, major, minor, year, tutorAbout, studentAbout,
+                            studentCurrentClasses, tutorCurrentClasses, rate;
+    private TextView        saveButton;
+    //private android.support.v7.app.ActionBar actionBar;
 
     /**
      * Initialize main parts of the UI
@@ -76,22 +73,6 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
         saveButton.setOnClickListener(this);
         actionBar.setCustomView(v);*/
     }
-    /**
-     *
-     * @param
-     * @param
-     * @param
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 2)
-        {
-            if (data != null)
-                updateBackgroundImage(data);
-        }
-    }*/
 
     @Override
     public void onBackPressed()
@@ -118,15 +99,14 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
         {
             case R.id.saveButton:
                 saveUserProfile(v);
-                setResult(RESULT_OK);
                 finish();
                 break;
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         //getMenuInflater().inflate(R.menu.edit_profile_student, menu);
         return true;
@@ -148,20 +128,17 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
      */
     private void saveUserProfile(View view)
     {
-        HttpPost                post;
         HttpPut                 put;
-        String                  jsonArray, studentCurrentClasses, tutorCurrentClasses;
+        String                  studentCurrentClasses, tutorCurrentClasses;
         String []               studentCurrentClassesArray, tutorCurrentClassesArray;
         ArrayList<String>       studentCurrentClassesList, tutorCurrentClassesList;
-        HttpObject              enroll, course;
+        HttpObject              enroll;
         StudentHttpObject       studentHttp;
         TutorHttpObject         tutorHttp;
         Student                 student;
         Tutor                   tutor;
-        ClassesUtility          cUtility;
         User                    user;
-        StudentCourseHttpObject studentCourses;
-        TutorCourseHttpObject   tutorCourses;
+        CourseHttpObject        studentCourseHttpObject, tutorCourseHttpObject;
 
         user                        = User.getInstance(this);
         student                     = user.getStudent();
@@ -170,19 +147,20 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
         tutorCurrentClassesList     = new ArrayList<String>();
 
         //update student attributes
-        student.setName(name.getText().toString());
-        student.setAbout(studentAbout.getText().toString());
-        student.setYear(year.getText().toString());
-        student.setMajor(major.getText().toString());
+        student.setName(  name.getText().toString());
+        student.setAbout( studentAbout.getText().toString());
+        student.setYear(  year.getText().toString());
+        student.setMajor( major.getText().toString());
 
         //update tutor attributes
-        tutor.setRate(rate.getText().toString());
-        tutor.setAbout(tutorAbout.getText().toString());
+        tutor.setRate(  rate.getText().toString());
+        tutor.setAbout( tutorAbout.getText().toString());
 
         //update both student and tutor classes
         studentCurrentClasses   = this.studentCurrentClasses.getText().toString();
         tutorCurrentClasses     = this.tutorCurrentClasses.getText().toString();
 
+        //move student classes into an arraylist if they exist
         if(studentCurrentClasses.length() > 0)
         {
             studentCurrentClassesArray = studentCurrentClasses.split(" ");
@@ -190,6 +168,7 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
                 studentCurrentClassesList.add(studentCurrentClassesArray[i]);
         }
 
+        //move tutor classes into an arraylist if they exist
         if(tutorCurrentClasses.length() > 0)
         {
             tutorCurrentClassesArray    = tutorCurrentClasses.split(" ");
@@ -197,34 +176,30 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
                 tutorCurrentClassesList.add(tutorCurrentClassesArray[i]);
         }
 
-        //set the classes for the student and tutor objects, so changes get reflected on
-        //front end
+        //set the classes for the student and tutor objects, so changes get reflected on front end
         student.setCurrentClasses(studentCurrentClassesList);
         tutor.setCurrentClasses(tutorCurrentClassesList);
 
-        //classes taking
-        /*cUtility        = new StudentClassesUtility(user, this.studentCurrentClasses);
-        jsonArray       = cUtility.formatClassesBackend();
-        studentCourses  = new StudentCourseHttpObject(user, jsonArray);
-
-        //classes tutoring
-        cUtility        = new TutorClassesUtility(user, this.tutorCurrentClasses);
-        jsonArray       = cUtility.formatClassesBackend();
-        tutorCourses    = new TutorCourseHttpObject(user, jsonArray);*/
-
-        //Send a put request with the user's data up to the server
+        //Send all the data to the server, so data gets saved in Database
         try
         {
-            studentHttp     = new StudentHttpObject(user);
-            tutorHttp       = new TutorHttpObject(user);
-            enroll          = new EnrollHttpObject(user);
+            //student updates
+            studentCourseHttpObject = new StudentCourseHttpObject(user, studentCurrentClassesList);
+            studentHttp             = new StudentHttpObject(user);
+
+            //tutor updates
+            tutorCourseHttpObject   = new TutorCourseHttpObject(user, tutorCurrentClassesList);
+            tutorHttp               = new TutorHttpObject(user);
+
+            //enroll updates
+            enroll                  = new EnrollHttpObject(user);
 
             //Make calls to the server and save on the backend
-            //post            = studentCourses.post();
-            //new RestClientExecute(post).start();
+            put            = studentCourseHttpObject.put();
+            new RestClientExecute(put).start();
 
-            //post            = tutorCourses.post();
-            //new RestClientExecute(post).start();
+            put            = tutorCourseHttpObject.put();
+            new RestClientExecute(put).start();
 
             put             = studentHttp.put();
             new RestClientExecute(put).start();
@@ -232,14 +207,14 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
             put             = tutorHttp.put();
             new RestClientExecute(put).start();
 
-            //put             = enroll.put();
-            //new RestClientExecute(put).start();
+            put             = enroll.put();
+            new RestClientExecute(put).start();
 
             Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            Log.e("Error", "Caught exception!!");
         }
     }
 
@@ -260,6 +235,5 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
         rate.setText(bundle.getString("rate"));
         tutorCurrentClasses.setText(bundle.getString("tutorCurrentClasses"));
         tutorAbout.setText(bundle.getString("tutorAbout"));
-
     }
 }

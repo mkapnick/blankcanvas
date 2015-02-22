@@ -8,5 +8,11 @@ import android.widget.ImageView;
  */
 public interface FragmentTabBehavior
 {
-
+    public void         initializeUI(View inflatedView);
+    public void         setUpUserInfo();
+    public int          getLayout();
+    public CharSequence getTitle();
+    public String       getTabName();
+    public ImageView    getCoverImageView();
+    public void         downloadCoverImageFromServer();
 }

@@ -1,6 +1,7 @@
-package tutor.cesh.rest.http;
+package tutor.cesh.rest.http.tutor;
 
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -18,16 +19,18 @@ import java.net.URI;
 import tutor.cesh.Student;
 import tutor.cesh.Tutor;
 import tutor.cesh.User;
+import tutor.cesh.rest.http.HttpObject;
 
 /**
  * Created by michaelk18 on 7/7/14.
  */
 public class TutorHttpObject implements HttpObject
 {
-    private String  putEndPoint  = "http://blankcanvas.pw/tutors/";
-    private String  getEndPoint  = "http://blankcanvas.pw/tutors/";
+    private String  putEndPoint         = "http://blankcanvas.pw/tutors/";
+    private String  getEndPoint         = "http://blankcanvas.pw/tutors/";
+    private String  coverImageEndPoint  = "http://blankcanvas.pw/bcimages/tutors/";
+
     private User    user;
-    private String  coverImagePath, profileImagePath;
 
     public TutorHttpObject(User user)
     {
@@ -73,9 +76,9 @@ public class TutorHttpObject implements HttpObject
      *
      * @return
      */
-    public HttpPut putTutorCoverImage()
+    public HttpPost postTutorCoverImage(String coverImagePath)
     {
-        HttpPut         put;
+        HttpPost        post;
         MultipartEntity entity;
         File            coverImageFile;
         FileBody        cBody;
@@ -83,8 +86,10 @@ public class TutorHttpObject implements HttpObject
 
         tutor = user.getTutor();
 
-        put             = new HttpPut(putEndPoint + tutor.getId());
-        entity          = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        Log.d("TEST", coverImageEndPoint + tutor.getId() + "/cover");
+
+        post    = new HttpPost(coverImageEndPoint + tutor.getId() + "/cover");
+        entity  = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
         if(coverImagePath != null)
         {
@@ -94,16 +99,17 @@ public class TutorHttpObject implements HttpObject
             tutor.setCoverImageUrl(coverImagePath);
             tutor.setCoverImage(BitmapFactory.decodeFile(coverImagePath));
         }
-        put.setEntity(entity);
 
-        return put;
+        post.setEntity(entity);
+
+        return post;
     }
 
     /**
      *
      * @return
      */
-    public HttpPut putTutorProfileImage()
+    public HttpPut putTutorProfileImage(String profileImagePath)
     {
         HttpPut         put;
         MultipartEntity entity;
@@ -142,19 +148,4 @@ public class TutorHttpObject implements HttpObject
         return httpGet;
     }
 
-    public String getCoverImagePath() {
-        return coverImagePath;
-    }
-
-    public void setCoverImagePath(String coverImagePath) {
-        this.coverImagePath = coverImagePath;
-    }
-
-    public String getProfileImagePath() {
-        return profileImagePath;
-    }
-
-    public void setProfileImagePath(String profileImagePath) {
-        this.profileImagePath = profileImagePath;
-    }
 }

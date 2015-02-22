@@ -30,7 +30,7 @@
                 android:id="@+id/cameraIcon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_above="@+id/nameRL"
+                android:layout_above="@+id/nameFieldLayout"
                 android:layout_alignParentEnd="true"
                 android:src="@drawable/camera"
                 android:layout_marginRight="20dp" />
@@ -50,13 +50,13 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/profileBackgroundImage"
+                android:layout_height="50dp"
+                android:layout_alignTop="@+id/dummyLayout"
                 android:background="@drawable/border2"
                 android:paddingBottom="15dp"
                 android:paddingTop="5dp"
                 android:alpha=".9"
-                android:id="@+id/nameRL">
+                android:id="@+id/nameFieldLayout">
 
                 <EditText
                     android:layout_width="wrap_content"
@@ -83,7 +83,7 @@
                 android:alpha=".9"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
-                android:layout_alignBottom="@+id/nameRL"
+                android:layout_alignBottom="@+id/nameFieldLayout"
                 >
 
                 <TextView
@@ -142,7 +142,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/dummyLayout"
-                android:layout_marginTop="345dp">
+                android:layout_marginTop="375dp">
             </RelativeLayout>
 
             <RelativeLayout
@@ -154,8 +154,7 @@
                 android:paddingTop="10dp"
                 android:layout_below="@+id/dummyLayout"
                 android:paddingBottom="50dp"
-
-
+                android:layout_marginTop="50dp"
                 >
 
                 <TextView

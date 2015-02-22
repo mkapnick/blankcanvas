@@ -7,44 +7,43 @@ import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
 
 import java.net.URI;
+import java.util.Iterator;
+import java.util.List;
 
 import tutor.cesh.Student;
 import tutor.cesh.User;
+import tutor.cesh.profile.util.classes.ClassesUtility;
 
 /**
  * Created by michaelk18 on 7/7/14.
  */
 public abstract class CourseHttpObject implements HttpObject
 {
-    protected User user;
-    protected String classesFormattedForServer;
+    protected User              user;
+    protected List<String>      courses;
 
-    public CourseHttpObject(User user)
+    public CourseHttpObject(User user, List<String> courses)
     {
-        this.user = user;
-    }
-
-    public CourseHttpObject(User user, String classes)
-    {
-        this.user = user;
-        this.classesFormattedForServer = classes;
+        this.user       = user;
+        this.courses    = courses;
     }
 
     @Override
     public HttpPost post() throws Exception
     {
-        HttpPost                httpPost;
-        JSONObject params;
-        StringEntity entity;
-        Student student;
+        HttpPost        httpPost;
+        JSONObject      params;
+        StringEntity    entity;
+        Student         student;
+        String          jsonArray;
 
-        httpPost    = new HttpPost(getPostEndpoint());
+        httpPost    = new HttpPost(getEndPoint());
         params      = new JSONObject();
         student     = user.getStudent();
+        jsonArray   = ClassesUtility.formatClassesBackend(this.courses.iterator());
 
-        params.put("classes", classesFormattedForServer);
-        params.put("id", student.getId());
-        params.put("school_id", student.getSchoolId());
+        params.put("courses", jsonArray);
+        params.put("schoolId", student.getSchoolId());
 
         entity      = new StringEntity(params.toString());
 
@@ -58,38 +57,40 @@ public abstract class CourseHttpObject implements HttpObject
     @Override
     public HttpPut put() throws Exception
     {
-        return null;
+        HttpPut         httpPut;
+        JSONObject      params;
+        StringEntity    entity;
+        Student         student;
+        String          jsonArray;
+
+        httpPut     = new HttpPut(getEndPoint());
+        params      = new JSONObject();
+        student     = user.getStudent();
+        jsonArray   = ClassesUtility.formatClassesBackend(this.courses.iterator());
+
+        params.put("courses", jsonArray);
+        params.put("schoolId", student.getSchoolId());
+
+        entity      = new StringEntity(params.toString());
+
+        httpPut.setHeader("Accept", "application/json");
+        httpPut.setHeader("Content-Type", "application/json");
+        httpPut.setEntity(entity);
+
+        return httpPut;
     }
 
     @Override
     public HttpGet get() throws Exception
     {
-
         HttpGet httpGet;
 
-        httpGet = new HttpGet(new URI(getGetEndPoint()));
+        httpGet = new HttpGet(new URI(getEndPoint()));
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-Type", "application/json");
 
         return httpGet;
     }
 
-    /**
-     *
-     * @return
-     */
-    public abstract String getGetEndPoint();
-
-    /**
-     *
-     * @return
-     */
-    public abstract String getPostEndpoint();
-
-    /**
-     *
-     * @return
-     */
-    public abstract String getPutEndpoint();
-
+    public abstract String getEndPoint();
 }

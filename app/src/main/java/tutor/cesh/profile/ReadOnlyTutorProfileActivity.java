@@ -13,9 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Arrays;
+
 import tutor.cesh.R;
 import tutor.cesh.list.StaticCurrentBitmapReadOnlyView;
-import tutor.cesh.profile.util.classes.FormatClassesUtility;
+import tutor.cesh.profile.util.classes.ClassesUtility;
 
 public class ReadOnlyTutorProfileActivity extends Activity implements View.OnClickListener {
 
@@ -59,7 +61,8 @@ public class ReadOnlyTutorProfileActivity extends Activity implements View.OnCli
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_only_tutor_profile);
 
@@ -131,12 +134,13 @@ public class ReadOnlyTutorProfileActivity extends Activity implements View.OnCli
         getInTouchButton.setAllCaps(false);
 
         tutorCourses        = bundle.getString(TUTOR_COURSES).split(",");
-        FormatClassesUtility.setClassesRegularMode(tutorCourses, this, this.classesTextView);
+        ClassesUtility.formatClassesFrontEnd(Arrays.asList(tutorCourses).iterator(),
+                                             this, this.classesTextView);
     }
 
     @Override
-    public void onClick(View v) {
-
+    public void onClick(View v)
+    {
         switch(v.getId())
         {
             case R.id.get_in_touch_button:

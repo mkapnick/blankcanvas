@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 
 import java.util.ArrayList;
@@ -36,15 +37,15 @@ import tutor.cesh.profile.EditStudentAndTutorProfileActivity;
 import tutor.cesh.profile.fragment.observer.TabObserver;
 import tutor.cesh.profile.fragment.subject.TabSubject;
 import tutor.cesh.rest.asynchronous.RestClientExecute;
-import tutor.cesh.rest.http.StudentHttpObject;
-import tutor.cesh.rest.http.TutorHttpObject;
+import tutor.cesh.rest.http.student.StudentHttpObject;
+import tutor.cesh.rest.http.tutor.TutorHttpObject;
 
 /**
  * Created by michaelk18 on 12/4/14.
  */
 public class FragmentTabController extends Fragment implements View.OnClickListener, TabSubject
 {
-    private String                  profileImagePath, coverImagePath;
+    private String                  profileImagePath;
     private SlidingTabLayout        slidingTabLayout;
     private ViewPager               viewPager;
     private static final int        COVER_IMAGE_REQUEST_CODE    = 1;
@@ -67,8 +68,9 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
         User                user;
         StudentHttpObject   studentHttp;
         TutorHttpObject     tutorHttp;
-        HttpPut             put;
-        int                 position; //marks the current tab
+        HttpPost            post;
+        int                 position;
+        String              coverImagePath; //marks the current tab
 
         position = this.viewPager.getCurrentItem();
 
@@ -79,43 +81,35 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
             //determine which tab we are in
             if(this.samplePagerAdapter.getTabs().get(position).getTabName().equalsIgnoreCase("Student"))
             {
-                updateBackgroundImage(data, this.samplePagerAdapter.getTabs().
+                //update the background image immediately
+                coverImagePath = updateBackgroundImage(data, this.samplePagerAdapter.getTabs().
                                                                 get(position).getCoverImageView(),
                                                                 user.getStudent());
-                                                                //update the background image immediately
 
                 //make a call to the server and update the image, we need to update the image on
                 //the server because there is no save button, so like the web this is like our ajax call
                 studentHttp = new StudentHttpObject(user);
-                studentHttp.setCoverImagePath(coverImagePath);
-                put         = studentHttp.putStudentCoverImage();
-                new RestClientExecute(put).start();
+                post         = studentHttp.postStudentCoverImage(coverImagePath);
+                new RestClientExecute(post).start();
             }
             else
             {
-                updateBackgroundImage(data, this.samplePagerAdapter.getTabs().
+                //update the background image immediately
+                coverImagePath = updateBackgroundImage(data, this.samplePagerAdapter.getTabs().
                                             get(position).getCoverImageView(),
                                             user.getTutor());
 
                 //make a call to the server and update the image, we need to update the image on
                 //the server because there is no save button, so like the web this is like our ajax call
                 tutorHttp   = new TutorHttpObject(user);
-                tutorHttp.setCoverImagePath(coverImagePath);
-                put         = tutorHttp.putTutorCoverImage();
-                new RestClientExecute(put).start();
+                post        = tutorHttp.postTutorCoverImage(coverImagePath);
+                new RestClientExecute(post).start();
             }
         }
 
         else if(requestCode == EDIT_INFO)
         {
-            //update on the front end (back end save is taken care of)
-            List<TabObserver> tabs;
-            tabs = this.samplePagerAdapter.getTabs();
-
-            for(int i =0; i < tabs.size(); i++)
-            {
-                tabs.get(i).updateFrontEnd();
-            }
+            notifyObservers();
         }
     }
 
@@ -139,7 +133,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
 
             case R.id.edit_action_bar_icon:
                 intent = setIntentOnEdit();
-                startActivityForResult(intent, EDIT_INFO);
+                activity.startActivityForResult(intent, EDIT_INFO);
                 break;
 
             case R.id.left_action_bar_image:
@@ -345,16 +339,19 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
      *
      * @param data
      */
-    private void updateBackgroundImage(Intent data, ImageView coverImageView, Profile profile)
+    private String updateBackgroundImage(Intent data, ImageView coverImageView, Profile profile)
     {
         Bitmap  bitmap;
         int     orientation;
         Matrix  m;
+        Uri     uri;
+        String  coverImagePath;
 
+        coverImagePath = "";
         try
         {
             coverImagePath = data.getData().getPath();
-            System.out.println(coverImagePath);
+
             if (coverImagePath != null)
             {
                 orientation = BitmapHandlerFactory.getOrientation(activity, data.getData());
@@ -366,7 +363,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
                     bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
                             bitmap.getHeight(), m, true);
                 }
-                Uri uri = BitmapHandlerFactory.getImageUri(activity, bitmap);
+                uri = BitmapHandlerFactory.getImageUri(activity, bitmap);
                 coverImagePath = BitmapHandlerFactory.getRealPathFromURI(uri, activity);
 
                 //NEED THIS STEP, DO NOT DELETE!
@@ -380,6 +377,8 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
+
+        return coverImagePath;
     }
 
     @Override

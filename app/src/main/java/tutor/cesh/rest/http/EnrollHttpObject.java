@@ -16,8 +16,8 @@ import tutor.cesh.User;
  */
 public class EnrollHttpObject implements HttpObject
 {
-    private static final String PUT     = "http://blankcanvas.pw/students/";
-    private static final String GET     = "http://blankcanvas.pw/students/";
+    private static final String ENROLL_ENDPOINT = "http://blankcanvas.pw/enrolls/";
+
 
     private User user;
 
@@ -33,26 +33,24 @@ public class EnrollHttpObject implements HttpObject
     @Override
     public HttpPut put() throws Exception
     {
-
         HttpPut         put;
         JSONObject      params;
-        Student student;
+        Student         student;
 
         student = user.getStudent();
 
-        put             = new HttpPut(PUT + student.getId() + "/view/enrolls");
+        put             = new HttpPut(ENROLL_ENDPOINT + student.getEnrollId());
         params          = new JSONObject();
 
         params.put("major", student.getMajor());
         params.put("year", student.getYear());
-        params.put("minor", "STATIC - INSIDE EnrollHttpObj on front");
+        params.put("minor", "MINOR -- STATIC FOR NOW -- OK");
 
         put.setEntity(new StringEntity(params.toString()));
         put.setHeader("Accept", "application/json");
         put.setHeader("Content-Type", "application/json");
 
         return put;
-
     }
 
     @Override
@@ -64,7 +62,7 @@ public class EnrollHttpObject implements HttpObject
         student = user.getStudent();
 
         //get student enroll data
-        httpGet = new HttpGet(new URI(GET + student.getId() + "/view/enrolls"));
+        httpGet = new HttpGet(new URI(ENROLL_ENDPOINT + student.getEnrollId()));
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-Type", "application/json");
 

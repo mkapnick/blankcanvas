@@ -5,20 +5,13 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.widget.ImageView;
 
-import org.apache.http.client.methods.HttpGet;
-
 import tutor.cesh.Student;
 import tutor.cesh.Tutor;
 import tutor.cesh.User;
 import tutor.cesh.rest.asynchronous.AsyncDownloader;
-import tutor.cesh.rest.asynchronous.AsyncGet;
 import tutor.cesh.rest.handler.CoverImageHandler;
 import tutor.cesh.rest.handler.ImageHandler;
 import tutor.cesh.rest.delegate.TaskDelegate;
-import tutor.cesh.rest.http.EnrollHttpObject;
-import tutor.cesh.rest.http.StudentCourseHttpObject;
-import tutor.cesh.rest.http.TutorCourseHttpObject;
-import tutor.cesh.rest.http.TutorHttpObject;
 
 /**
  * Created by michaelk18 on 10/18/14.

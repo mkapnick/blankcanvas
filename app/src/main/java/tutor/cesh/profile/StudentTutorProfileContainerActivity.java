@@ -30,12 +30,13 @@ import tutor.cesh.profile.fragment.FragmentTabBehavior;
 import tutor.cesh.profile.fragment.FragmentTabController;
 import tutor.cesh.profile.fragment.StudentProfileFragment;
 import tutor.cesh.profile.fragment.TutorProfileFragment;
+import tutor.cesh.profile.fragment.observer.TabObserver;
 
 public class StudentTutorProfileContainerActivity extends FragmentActivity
 {
     protected DrawerLayout          drawerLayout;
-    private FragmentTabBehavior     studentProfileFragment;
-    private FragmentTabBehavior     tutorProfileFragment;
+    private   TabObserver           studentProfileFragment;
+    private   TabObserver           tutorProfileFragment;
     private ListView                listView;
     private String []               listViewTitles;
     private FragmentTabController   tabController;
@@ -84,7 +85,6 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
         }
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -95,12 +95,18 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        List<FragmentTabBehavior>   tabs;
+        List<TabObserver>   tabs;
 
+        //instantiate all tab observers, and the tab subject
         this.studentProfileFragment = new StudentProfileFragment();
         this.tutorProfileFragment   = new TutorProfileFragment();
         this.tabController          = new FragmentTabController();
-        tabs                        = new ArrayList<FragmentTabBehavior>();
+
+        //assign observer's to their subject
+        this.studentProfileFragment.setTabSubject(tabController);
+        this.tutorProfileFragment.setTabSubject(tabController);
+
+        tabs                        = new ArrayList<TabObserver>();
 
         //set the list of tabs for the fragment controller
         tabs.add(this.studentProfileFragment);
@@ -124,6 +130,7 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
         }
 
         setUpDrawerLayout();
+
         //set the drawer layout/listview in the fragment tab controller
         this.tabController.setDrawerLayout(this.drawerLayout);
         this.tabController.setDrawerLayoutListView(this.listView);

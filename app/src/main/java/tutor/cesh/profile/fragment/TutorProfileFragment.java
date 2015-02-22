@@ -1,6 +1,5 @@
 package tutor.cesh.profile.fragment;
 
-import android.app.ProgressDialog;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
@@ -10,8 +9,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -23,9 +20,6 @@ import tutor.cesh.database.GlobalDatabaseHelper;
 import tutor.cesh.profile.fragment.observer.TabObserver;
 import tutor.cesh.profile.fragment.subject.TabSubject;
 import tutor.cesh.profile.util.classes.ClassesUtility;
-import tutor.cesh.profile.util.classes.FormatClassesUtility;
-import tutor.cesh.profile.util.classes.TutorClassesUtility;
-import tutor.cesh.rest.delegate.TaskDelegate;
 
 public class TutorProfileFragment extends FragmentTabController implements TabObserver
 {
@@ -72,7 +66,6 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
     @Override
     public CharSequence getTitle()
     {
-
         Drawable image = super.getGeneralResources().getDrawable(R.drawable.tutor_dark);
         image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());
         SpannableString sb = new SpannableString(" ");
@@ -121,7 +114,9 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
         coverImageView.setBackground(new BitmapDrawable(super.getGeneralResources(),
                                                         tutor.getCoverImage()));
 
-        FormatClassesUtility.setClassesRegularMode(currentClasses, super.activity, this.classes);
+        if(currentClasses.size() > 0)
+            ClassesUtility.formatClassesFrontEnd(currentClasses.iterator(),
+                                                 super.activity, this.classes);
     }
 
     public void setSubject(TabSubject subject)
@@ -134,6 +129,12 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
     public void updateFrontEnd()
     {
         setUpUserInfo();
+    }
+
+    @Override
+    public void setTabSubject(TabSubject subject)
+    {
+        subject.addObserver(this);
     }
 }
 

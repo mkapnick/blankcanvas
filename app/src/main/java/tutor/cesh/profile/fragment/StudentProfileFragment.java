@@ -1,6 +1,5 @@
 package tutor.cesh.profile.fragment;
 
-import android.app.ProgressDialog;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
@@ -12,9 +11,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import tutor.cesh.R;
@@ -24,9 +20,6 @@ import tutor.cesh.database.GlobalDatabaseHelper;
 import tutor.cesh.profile.fragment.observer.TabObserver;
 import tutor.cesh.profile.fragment.subject.TabSubject;
 import tutor.cesh.profile.util.classes.ClassesUtility;
-import tutor.cesh.profile.util.classes.FormatClassesUtility;
-import tutor.cesh.profile.util.classes.StudentClassesUtility;
-import tutor.cesh.rest.delegate.TaskDelegate;
 
 
 public class StudentProfileFragment extends FragmentTabController implements TabObserver
@@ -123,7 +116,9 @@ public class StudentProfileFragment extends FragmentTabController implements Tab
         coverImageView.setBackground(new BitmapDrawable(super.getGeneralResources(),
                                                         student.getCoverImage()));
 
-        FormatClassesUtility.setClassesRegularMode(currentClasses, super.activity, this.classes);
+        if(currentClasses.size() > 0)
+            ClassesUtility.formatClassesFrontEnd(currentClasses.iterator(),
+                                                 super.activity, this.classes);
     }
 
     public void setSubject(TabSubject subject)
@@ -136,5 +131,11 @@ public class StudentProfileFragment extends FragmentTabController implements Tab
     public void updateFrontEnd()
     {
         setUpUserInfo();
+    }
+
+    @Override
+    public void setTabSubject(TabSubject subject)
+    {
+        subject.addObserver(this);
     }
 }

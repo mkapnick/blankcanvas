@@ -84,15 +84,6 @@ public class OnLoginTaskDelegate implements TaskDelegate
                     studentCoursesArray     = object.getJSONArray("studentCourses");
                     pastStudentCoursesArray = object.getJSONArray("pastStudentCourses");
 
-                    /**
-                     *    if(response.has("student_courses"))
-                     {
-                     cUtility    = new StudentClassesUtility(user, this.classes, super.activity.getApplicationContext());
-                     cUtility.formatClassesFrontEnd(response.getString("student_courses"));
-                     cUtility.setClassesRegularMode();
-                     }
-                     */
-
                     if(studentCoursesArray.length() > 0)
                     {
                         for(int i =0; i < studentCoursesArray.length(); i++)
@@ -100,6 +91,8 @@ public class OnLoginTaskDelegate implements TaskDelegate
 
                         student.setCurrentClasses(studentCoursesArrayList);
                     }
+                    else
+                        student.setCurrentClasses(new ArrayList<String>());
 
                     //pastStudent courses
 
@@ -121,6 +114,8 @@ public class OnLoginTaskDelegate implements TaskDelegate
 
                         tutor.setCurrentClasses(tutorCoursesArrayList);
                     }
+                    else
+                        tutor.setCurrentClasses(new ArrayList<String>());
 
                     context.startActivity(intent);
                 }
