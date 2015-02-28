@@ -10,6 +10,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
+        android:divider="@null"
+        android:dividerHeight="0dp"
         />
 
 </RelativeLayout>

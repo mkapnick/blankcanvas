@@ -14,14 +14,14 @@ import tutor.cesh.database.LocalDatabaseHelper;
  */
 public class Student implements Profile
 {
-    private String name, major, year, about, profileImageUrl,
-            coverImageUrl, id, enrollId, tutorId, schoolId;
-    private String [] classes;
-    private ArrayList<String> currentClasses, pastClasses;
-    private Bitmap coverImage, profileImage;
-    private ImageView coverImageView;
+    private String              name, major, year, about, profileImageUrl,
+                                coverImageUrl, id, enrollId, tutorId, schoolId, email;
+    private String []           classes;
+    private ArrayList<String>   currentClasses, pastClasses;
+    private Bitmap              coverImage, profileImage;
+    private ImageView           coverImageView;
     private LocalDatabaseHelper localDatabaseHelper;
-    private Context context;
+    private Context             context;
 
     public Student(Context c)
     {
@@ -99,6 +99,14 @@ public class Student implements Profile
 
     public void setAbout(String about) {
         this.about = about;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getYear() {

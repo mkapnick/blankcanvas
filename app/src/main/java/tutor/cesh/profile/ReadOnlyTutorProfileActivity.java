@@ -1,6 +1,7 @@
 package tutor.cesh.profile;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -22,15 +23,13 @@ import tutor.cesh.profile.util.classes.ClassesUtility;
 public class ReadOnlyTutorProfileActivity extends Activity implements View.OnClickListener {
 
     private String      rate, rating, firstName, major,minor,year, about;
-
     private Bitmap      coverImageBitmap;
     private TextView    nameTextView, majorTextView,
                         yearTextView, aboutTextView,
                         classesTextView, rateTextView;
-
     private Button      getInTouchButton;
-
     private ImageView   profileImageView, coverImageView;
+    private String      tutorEmail;
 
     public static final String ID             = "id"; // parent node
     public static final String FIRST_NAME     = "firstName";
@@ -42,6 +41,8 @@ public class ReadOnlyTutorProfileActivity extends Activity implements View.OnCli
     public static final String YEAR           = "year";
     public static final String TUTOR_COURSES  = "tutorCourses";
     public static final String ABOUT          = "about";
+    public static final String EMAIL          = "email";
+
 
     /**
      *
@@ -110,6 +111,7 @@ public class ReadOnlyTutorProfileActivity extends Activity implements View.OnCli
         this.minor              = bundle.getString(MINOR);
         this.year               = bundle.getString(YEAR);
         this.about              = bundle.getString(ABOUT);
+        this.tutorEmail         = bundle.getString(EMAIL);
     }
 
     /**
@@ -121,8 +123,8 @@ public class ReadOnlyTutorProfileActivity extends Activity implements View.OnCli
         Bundle          bundle;
         Drawable        drawable;
 
-        bundle              = getIntent().getExtras();
-        drawable            = new BitmapDrawable(getResources(), this.coverImageBitmap);
+        bundle  = getIntent().getExtras();
+        drawable= new BitmapDrawable(getResources(), this.coverImageBitmap);
 
         nameTextView.setText(this.firstName);
         majorTextView.setText(this.major);
@@ -133,7 +135,7 @@ public class ReadOnlyTutorProfileActivity extends Activity implements View.OnCli
         getInTouchButton.setText("Get in touch with " + this.firstName);
         getInTouchButton.setAllCaps(false);
 
-        tutorCourses        = bundle.getString(TUTOR_COURSES).split(",");
+        tutorCourses = bundle.getString(TUTOR_COURSES).split(",");
         ClassesUtility.formatClassesFrontEnd(Arrays.asList(tutorCourses).iterator(),
                                              this, this.classesTextView);
     }
@@ -144,8 +146,21 @@ public class ReadOnlyTutorProfileActivity extends Activity implements View.OnCli
         switch(v.getId())
         {
             case R.id.get_in_touch_button:
-                Toast.makeText(this, "This is not implemented yet", Toast.LENGTH_SHORT).show();
+                setUpEmail();
                 break;
         }
+    }
+
+    private void setUpEmail()
+    {
+        Intent emailIntent;
+
+        emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {this.tutorEmail});
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+        emailIntent.setType("message/rfc822");
+
+        startActivity(Intent.createChooser(emailIntent, "Please select an email application"));
     }
 }

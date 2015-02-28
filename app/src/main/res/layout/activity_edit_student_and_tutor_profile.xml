@@ -20,7 +20,7 @@
             android:background="#E4E4E4"
             android:paddingBottom="40dp">
 
-            <TextView
+            <!--<TextView
                 android:text="Save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/oval_green"
-                />
+                />!-->
 
             <TextView
                 android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
                 android:textSize="10sp"
                 android:id="@+id/general_label"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="50dp"
                 />
 
                 <RelativeLayout
@@ -181,7 +181,7 @@
                         android:id="@+id/student_label"
                         android:layout_below="@id/general_info"
                         android:layout_marginLeft="20dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="50dp"
                         />
 
                     <RelativeLayout
@@ -264,7 +264,7 @@
                         android:id="@+id/tutor_label"
                         android:layout_below="@+id/student_section"
                         android:layout_marginLeft="20dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="50dp"
                         />
 
                     <RelativeLayout
@@ -370,6 +370,16 @@
 
 
                     </RelativeLayout>
+
+                    <Switch
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Activate Tutor Profile"
+                        android:textColor="#717171"
+                        android:id="@+id/activateTutor"
+                        android:layout_above="@+id/tutor_section"
+                        android:layout_alignEnd="@+id/tutor_section" />
+
                 </RelativeLayout>
     </RelativeLayout>
 </ScrollView>

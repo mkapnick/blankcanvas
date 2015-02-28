@@ -1,8 +1,11 @@
 package tutor.cesh.profile;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,13 +33,13 @@ import tutor.cesh.rest.http.student.StudentHttpObject;
 import tutor.cesh.rest.http.tutor.TutorCourseHttpObject;
 import tutor.cesh.rest.http.tutor.TutorHttpObject;
 
-public class EditStudentAndTutorProfileActivity extends Activity implements View.OnClickListener
+public class EditStudentAndTutorProfileActivity extends ActionBarActivity implements View.OnClickListener
 {
     private Bundle          bundle;
     private EditText        name, major, minor, year, tutorAbout, studentAbout,
                             studentCurrentClasses, tutorCurrentClasses, rate;
     private TextView        saveButton;
-    //private android.support.v7.app.ActionBar actionBar;
+    private android.support.v7.app.ActionBar actionBar;
 
     /**
      * Initialize main parts of the UI
@@ -44,13 +47,14 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
      */
     private void initializeUI()
     {
+        LayoutInflater  inflator;
+        View            v;
+
         name        = (EditText) findViewById(R.id.name);
         major       = (EditText) findViewById(R.id.major);
         year        = (EditText) findViewById(R.id.year);
         minor       = (EditText) findViewById(R.id.minor);
         rate        = (EditText) findViewById(R.id.rate);
-        saveButton  = (TextView) findViewById(R.id.saveButton);
-        saveButton.setOnClickListener(this);
 
         studentAbout    = (EditText) findViewById(R.id.student_about);
         tutorAbout      = (EditText) findViewById(R.id.tutor_about);
@@ -58,16 +62,17 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
         studentCurrentClasses   = (EditText) findViewById(R.id.classes_taking);
         tutorCurrentClasses     = (EditText) findViewById(R.id.classes_tutoring);
 
-        /*actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
 
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_background));
 
-        LayoutInflater inflator = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflator.inflate(R.layout.edit_info_custom_action_bar, null);
-        saveButton = (TextView) v.findViewById(R.id.saveButton);
+        inflator    = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        v           = inflator.inflate(R.layout.edit_info_custom_action_bar, null);
+        saveButton  = (TextView) v.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(this);
-        actionBar.setCustomView(v);*/
+        actionBar.setCustomView(v);
     }
 
     @Override

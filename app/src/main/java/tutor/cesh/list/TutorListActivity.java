@@ -52,6 +52,7 @@ public class TutorListActivity extends ActionBarActivity implements TaskDelegate
     public static final String YEAR           = "year";
     public static final String TUTOR_COURSES  = "tutorCourses";
     public static final String ABOUT          = "about";
+    public static final String EMAIL          = "email";
     public Context context                    = this;
 
     @Override
@@ -171,6 +172,7 @@ public class TutorListActivity extends ActionBarActivity implements TaskDelegate
                 map.put(MINOR, jsonObject.getString("minor"));
                 map.put(YEAR, jsonObject.getString("year"));
                 map.put(ABOUT, jsonObject.getString("about"));
+                map.put(EMAIL, jsonObject.getString("email"));
                 map.put(COVER_IMAGE, jsonObject.getString("tutorCoverImageUrl"));
 
                 //get the courses associated with this tutor
@@ -240,6 +242,7 @@ public class TutorListActivity extends ActionBarActivity implements TaskDelegate
                 bundle.putString(MINOR, map.get(MINOR));
                 bundle.putString(YEAR, map.get(YEAR));
                 bundle.putString(ABOUT, map.get(ABOUT));
+                bundle.putString(EMAIL, map.get(EMAIL));
                 bundle.putString(TUTOR_COURSES, map.get(TUTOR_COURSES));
 
                 intent = new Intent(context, ReadOnlyTutorProfileActivity.class);
