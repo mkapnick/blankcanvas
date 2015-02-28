@@ -63,13 +63,18 @@ public class StudentProfileFragment extends FragmentTabController implements Tab
     @Override
     public CharSequence getTitle()
     {
-        Drawable image = super.getGeneralResources().getDrawable(R.drawable.student_dark);
+        /*Drawable image = super.getGeneralResources().getDrawable(R.drawable.student_dark);
         image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());
         SpannableString sb = new SpannableString(" ");
         ImageSpan imageSpan = new ImageSpan(image, ImageSpan.ALIGN_BOTTOM);
         sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        return sb;
+                return sb;
+        */
+
+        return "Student";
+
+
     }
 
     @Override

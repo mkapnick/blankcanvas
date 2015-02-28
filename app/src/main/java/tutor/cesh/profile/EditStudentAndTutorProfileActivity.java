@@ -52,10 +52,6 @@ public class EditStudentAndTutorProfileActivity extends Activity implements View
         saveButton  = (TextView) findViewById(R.id.saveButton);
         saveButton.setOnClickListener(this);
 
-        //format the save button
-        saveButton.setBackgroundResource(R.drawable.oval_save);
-        saveButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.oval_save, 0);
-
         studentAbout    = (EditText) findViewById(R.id.student_about);
         tutorAbout      = (EditText) findViewById(R.id.tutor_about);
 

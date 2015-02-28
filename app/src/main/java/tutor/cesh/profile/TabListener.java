@@ -40,10 +40,12 @@ class TabListener implements ActionBar.TabListener
 
         if(this.tabName.equals("student")){
             tab.setIcon(tutor.cesh.R.drawable.student_dark);
+            //tab.setText("Student");
             textView.setText("Student Profile");
         }
         else if (this.tabName.equals("tutor")){
             tab.setIcon(tutor.cesh.R.drawable.tutor_dark);
+            //tab.setText("Tutor");
             textView.setText("Tutor Profile");
         }
 

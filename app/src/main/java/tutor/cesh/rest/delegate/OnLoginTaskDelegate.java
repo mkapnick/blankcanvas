@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.NetworkOnMainThreadException;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import org.json.JSONArray;

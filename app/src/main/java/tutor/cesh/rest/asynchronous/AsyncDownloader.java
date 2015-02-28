@@ -27,12 +27,12 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
     private String                  url;
     private Bitmap                  bmp;
     private ProgressDialog          pd;
-    private ImageHandler handler;
+    private ImageHandler            handler;
     private Profile                 profile;
     private BitmapCacheBehavior     cacheBehavior;
-    private int                     width;
-    private int                     height;
-    boolean                         resize;
+    private boolean                 resize;
+    private String                  identifier;
+
 
 
     /**
@@ -50,16 +50,9 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
         resize              = false;
     }
 
-    public AsyncDownloader(String url, ImageHandler handler, int width, int height, ProgressDialog pd)
+    public AsyncDownloader(String identifier, String url, BitmapCacheBehavior cacheBehavior)
     {
-        this(url, handler, null, pd);
-        this.width = width;
-        this.height = height;
-        resize  = true;
-    }
-
-    public AsyncDownloader(String url, BitmapCacheBehavior cacheBehavior)
-    {
+        this.identifier     = identifier;
         this.url            = url;
         this.cacheBehavior  = cacheBehavior;
     }
@@ -81,7 +74,7 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
             handler.handle(result, profile);
 
         if(cacheBehavior != null)
-            cacheBehavior.cache(this.url, result);
+            cacheBehavior.cache(this.identifier, result);
 
         super.onPostExecute(result);
     };
@@ -89,8 +82,10 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
     @Override
     protected void onPreExecute()
     {
-        if(pd != null) {
-            pd.setTitle("Downloading...");
+        if(pd != null)
+        {
+            pd.setTitle("Setting up...");
+            pd.setMessage("Please wait");
             pd.setCancelable(false);
             pd.setIndeterminate(true);
             pd.show();
@@ -108,29 +103,27 @@ public class AsyncDownloader extends AsyncTask<Void, Integer, Bitmap>
     private Bitmap downloadBitmapFromURL(String link)
     {
         InputStream         input;
-
-        HttpGet get;
-        HttpResponse response;
-        HttpClient client;
-        BufferedHttpEntity bufHttpEntity;
+        HttpGet             get;
+        HttpResponse        response;
+        HttpClient          client;
+        BufferedHttpEntity  bufHttpEntity;
 
         try
         {
-            client  = new DefaultHttpClient();
-            get     = new HttpGet(this.url);
-            response= client.execute(get);
-            bufHttpEntity = new BufferedHttpEntity(response.getEntity());
-            input   = bufHttpEntity.getContent();
-
-            bmp = BitmapFactory.decodeStream(input);
+            client          = new DefaultHttpClient();
+            get             = new HttpGet(this.url);
+            response        = client.execute(get);
+            bufHttpEntity   = new BufferedHttpEntity(response.getEntity());
+            input           = bufHttpEntity.getContent();
+            this.bmp        = BitmapFactory.decodeStream(input);
 
             input.close();
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            //nothing yet, TODO fix this
         }
 
-        return bmp;
+        return this.bmp;
     }
 }

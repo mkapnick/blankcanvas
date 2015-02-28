@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -52,7 +53,8 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
     private static final int        EDIT_INFO                   = 2;
     private SamplePagerAdapter      samplePagerAdapter;
     protected static Activity       activity;
-    private ImageButton             editButton, drawerLayoutButton;
+    private ImageButton             drawerLayoutButton;
+    private TextView                editButton;
     private DrawerLayout            drawerLayout;
     private ListView                drawerLayoutListView;
     private ArrayList<TabObserver>  tabObservers = new ArrayList<TabObserver>();
@@ -127,7 +129,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
         switch(v.getId())
         {
             case R.id.cameraIcon:
-                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent = new Intent(Intent.ACTION_GET_CONTENT, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 activity.startActivityForResult(intent, COVER_IMAGE_REQUEST_CODE);
                 break;
 
@@ -156,7 +158,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
         v = inflater.inflate(R.layout.fragment_student_profile, container, false);
 
         //set up the image buttons found in the action bar
-        this.editButton             = (ImageButton)v.findViewById(R.id.edit_action_bar_icon);
+        this.editButton             = (TextView)v.findViewById(R.id.edit_action_bar_icon);
         this.drawerLayoutButton     = (ImageButton)v.findViewById(R.id.left_action_bar_image);
         this.editButton.setOnClickListener(this);
         this.drawerLayoutButton.setOnClickListener(this);

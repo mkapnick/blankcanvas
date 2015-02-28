@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -95,6 +96,8 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        super.onCreate(savedInstanceState);
+
         List<TabObserver>   tabs;
 
         //instantiate all tab observers, and the tab subject
@@ -117,7 +120,6 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
         this.tabController.setSamplePagerAdapter(tabs); //look in pager adapter instantiate item,
         //to see how data gets populated in fragments
 
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_tutor_profile_container);
 
         //NEED THIS CODE FOR ADDING THE TABS
@@ -134,6 +136,7 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
         //set the drawer layout/listview in the fragment tab controller
         this.tabController.setDrawerLayout(this.drawerLayout);
         this.tabController.setDrawerLayoutListView(this.listView);
+
     }
 
     @Override
@@ -163,7 +166,7 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
     private void setUpDrawerLayout()
     {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerLayout.setStatusBarBackgroundColor(Color.BLACK);
+        drawerLayout.setStatusBarBackgroundColor(Color.GREEN);
         listView     = (ListView) findViewById(R.id.left_drawer);
 
         listViewTitles = getResources().getStringArray(R.array.drawable_list_items);

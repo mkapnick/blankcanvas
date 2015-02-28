@@ -1,5 +1,6 @@
 package tutor.cesh.arrival;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -24,7 +25,7 @@ import tutor.cesh.R;
 import tutor.cesh.rest.asynchronous.RestClientExecute;
 import tutor.cesh.rest.factory.RestClientFactory;
 
-public class NewAccountActivity extends ActionBarActivity implements Arrival
+public class NewAccountActivity extends Activity implements Arrival
 {
 
     private String email;
@@ -33,13 +34,7 @@ public class NewAccountActivity extends ActionBarActivity implements Arrival
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_account);
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
+        setContentView(R.layout.fragment_new_account);
     }
 
 

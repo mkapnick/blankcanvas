@@ -9,6 +9,6 @@
     android:paddingLeft="40dp"
     android:layout_marginLeft="30dp"
     android:layout_marginRight="60dp"
-    android:textColor="#000"
+    android:textColor="#717171"
     android:text="hi"
     />

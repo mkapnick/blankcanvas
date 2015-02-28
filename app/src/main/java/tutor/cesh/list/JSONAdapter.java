@@ -54,18 +54,9 @@ public class JSONAdapter extends BaseAdapter implements Filterable
     }
 
     @Override
-    public int getCount() {
-        return data.size();
-    }
-
-    public void updateDBFromListView()
+    public int getCount()
     {
-        View v;
-
-        for(int i =0; i < this.listView.getCount(); i++)
-        {
-            v = this.listView.getChildAt(i);
-        }
+        return data.size();
     }
 
     @Override
@@ -95,7 +86,7 @@ public class JSONAdapter extends BaseAdapter implements Filterable
 
         name            = (TextView)view.findViewById(R.id.name);
         rate            = (TextView)view.findViewById(R.id.rate);
-        rating          = (TextView)view.findViewById(R.id.rating);
+        //rating          = (TextView)view.findViewById(R.id.rating);
         coverImageView  = (ImageView)view.findViewById(R.id.coverImage);
 
         tutorInstance   = data.get(position);
@@ -103,11 +94,11 @@ public class JSONAdapter extends BaseAdapter implements Filterable
         // Setting values for this row in list view
         name.setText(tutorInstance.get(TutorListActivity.FIRST_NAME));
         rate.setText(tutorInstance.get(TutorListActivity.RATE));
-        rating.setText(tutorInstance.get(TutorListActivity.RATING));
+        //rating.setText(tutorInstance.get(TutorListActivity.RATING));
 
         //get the bitmap for this row
         drawable    = new BitmapDrawable(resources,
-                          cachedBitmaps.get(tutorInstance.get(TutorListActivity.COVER_IMAGE)));
+                          cachedBitmaps.get(tutorInstance.get(TutorListActivity.ID)));
 
         //set the bitmap for this row
         coverImageView.setBackground(drawable);

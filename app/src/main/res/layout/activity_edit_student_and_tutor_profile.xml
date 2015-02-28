@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/parent"
-            android:background="#d9d9d9"
+            android:background="#E4E4E4"
             android:paddingBottom="40dp">
 
             <TextView
@@ -30,6 +30,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="15dp"
+                android:background="@drawable/oval_green"
                 />
 
             <TextView
@@ -49,24 +50,15 @@
                     android:layout_below="@id/general_label"
                     >
 
-                    <!--<ImageView
-                        android:id="@+id/profileBackgroundImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitXY"
-                        android:layout_alignBottom="@+id/dummyLayout"
-                        android:layout_alignParentTop="true"/>!-->
-
-
-
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:id="@+id/general_info"
-                        android:background="#FFFFFF"
+                        android:background="@drawable/oval_white"
                         android:paddingTop="20dp"
                         android:layout_marginTop="5dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
                         >
 
                         <TextView
@@ -74,12 +66,12 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/nameTV"
                             android:text="Name"
-                            android:textColor="#4A4A4A"
-                            android:textColorHint="#4A4A4A"
+                            android:textColor="#717171"
+                            android:textColorHint="#717171"
                             android:textSize="14sp"
                             android:maxLines="1"
                             android:layout_alignParentStart="true"
-                            android:layout_marginLeft="30dp"
+                            android:layout_marginLeft="5dp"
                             />
 
                         <EditText
@@ -91,6 +83,7 @@
                             android:ellipsize="end"
                             android:singleLine="true"
                             android:layout_marginLeft="85dp"
+                            android:textColor="#60605C"
                             />
 
                         <TextView
@@ -99,12 +92,12 @@
                             android:id="@+id/majorTV"
                             android:layout_below="@+id/name"
                             android:text="Major"
-                            android:textColor="#4A4A4A"
-                            android:textColorHint="#4A4A4A"
+                            android:textColor="#717171"
+                            android:textColorHint="#717171"
                             android:textSize="14sp"
                             android:maxLines="1"
                             android:layout_alignParentStart="true"
-                            android:layout_marginLeft="30dp"
+                            android:layout_marginLeft="5dp"
                             />
 
                         <EditText
@@ -117,6 +110,9 @@
                             android:ellipsize="end"
                             android:singleLine="true"
                             android:layout_marginLeft="85dp"
+                            android:textColor="#60605C"
+
+
 
                             />
 
@@ -125,12 +121,12 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/minorTV"
                             android:text="Minor"
-                            android:textColor="#4A4A4A"
-                            android:textColorHint="#4A4A4A"
+                            android:textColor="#717171"
+                            android:textColorHint="#717171"
                             android:textSize="14dp"
                             android:layout_below="@+id/major"
                             android:layout_alignParentStart="true"
-                            android:layout_marginLeft="30dp"
+                            android:layout_marginLeft="5dp"
                             />
 
                         <EditText
@@ -143,6 +139,8 @@
                             android:ellipsize="end"
                             android:singleLine="true"
                             android:layout_marginLeft="85dp"
+                            android:textColor="#60605C"
+
                             />
 
                         <TextView
@@ -153,9 +151,9 @@
                             android:textSize="14dp"
                             android:layout_below="@+id/minor"
                             android:layout_alignParentStart="true"
-                            android:layout_marginLeft="30dp"
-                            android:textColor="#4A4A4A"
-                            android:textColorHint="#4A4A4A"
+                            android:layout_marginLeft="5dp"
+                            android:textColor="#717171"
+                            android:textColorHint="#717171"
 
                             />
 
@@ -169,6 +167,8 @@
                             android:ellipsize="end"
                             android:singleLine="true"
                             android:layout_marginLeft="160dp"
+                            android:textColor="#60605C"
+
 
                             />
                     </RelativeLayout>
@@ -191,8 +191,10 @@
                         android:layout_below="@+id/student_label"
                         android:layout_alignParentStart="true"
                         android:paddingTop="20dp"
-                        android:background="#FFFFFF"
+                        android:background="@drawable/oval_white"
                         android:layout_marginTop="5dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
                         >
 
                         <TextView
@@ -201,12 +203,12 @@
                             android:id="@+id/classes_takingTV"
                             android:text="Classes I'm taking"
                             android:textSize="14dp"
-                            android:textColorHint="#4A4A4A"
-                            android:textColor="#4A4A4A"
+                            android:textColorHint="#717171"
+                            android:textColor="#717171"
                             android:singleLine="true"
                             android:scrollbars="vertical"
                             android:layout_alignParentStart="true"
-                            android:layout_marginLeft="30dp"
+                            android:layout_marginLeft="5dp"
                             />
 
                         <EditText
@@ -218,20 +220,23 @@
                             android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 "
                             android:gravity="right"
                             android:layout_marginLeft="160dp"
-                        />
+                            android:textColor="#60605C"
+
+                            />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/student_aboutTV"
-                            android:textColor="#4A4A4A"
-                            android:textColorHint="#4A4A4A"
+                            android:textColor="#717171"
+                            android:textColorHint="#717171"
                             android:textSize="14dp"
                             android:singleLine="true"
                             android:scrollbars="vertical"
                             android:text="About"
                             android:layout_below="@+id/classes_taking"
-                            android:layout_marginLeft="30dp"
+                            android:layout_marginLeft="5dp"
+
                             />
 
 
@@ -244,6 +249,7 @@
                             android:layout_below="@+id/classes_taking"
                             android:gravity="right"
                             android:layout_marginLeft="85dp"
+                            android:textColor="#60605C"
 
                             />
 
@@ -266,8 +272,10 @@
                         android:layout_height="match_parent"
                         android:id="@+id/tutor_section"
                         android:layout_below="@+id/tutor_label"
-                        android:background="#FFFFFF"
+                        android:background="@drawable/oval_white"
                         android:layout_marginTop="5dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
                         android:paddingTop="20dp"
 
                         >
@@ -277,11 +285,11 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/rateTV"
                             android:text="Rate (per hour)"
-                            android:textColor="#4A4A4A"
-                            android:textColorHint="#4A4A4A"
+                            android:textColor="#717171"
+                            android:textColorHint="#717171"
                             android:textSize="14dp"
                             android:maxLines="1"
-                            android:layout_marginLeft="30dp"
+                            android:layout_marginLeft="5dp"
                             />
 
                         <EditText
@@ -295,6 +303,8 @@
                             android:singleLine="true"
                             android:layout_marginLeft="160dp"
                             android:digits="0123456789.,"
+                            android:textColor="#60605C"
+
                             />
 
                         <TextView
@@ -303,13 +313,13 @@
                             android:id="@+id/classes_tutoringTV"
                             android:text="Classes I'm tutoring"
                             android:textSize="14dp"
-                            android:textColorHint="#4A4A4A"
-                            android:textColor="#4A4A4A"
+                            android:textColorHint="#717171"
+                            android:textColor="#717171"
                             android:singleLine="false"
                             android:scrollbars="vertical"
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/rate"
-                            android:layout_marginLeft="30dp"
+                            android:layout_marginLeft="5dp"
                             android:paddingRight="100dp"
 
                             />
@@ -320,28 +330,29 @@
                             android:id="@+id/classes_tutoring"
                             android:textSize="14dp"
                             android:scrollbars="vertical"
-                            android:textColor="#4A4A4A"
-                            android:textColorHint="#4A4A4A"
+                            android:textColorHint="#717171"
                             android:digits="AB
                             CDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 "
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/rate"
                             android:gravity="right"
                             android:layout_marginLeft="160dp"
+                            android:textColor="#60605C"
+
                             />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/tutor_aboutTV"
-                            android:textColor="#4A4A4A"
-                            android:textColorHint="#4A4A4A"
+                            android:textColor="#717171"
+                            android:textColorHint="#717171"
                             android:textSize="14dp"
                             android:singleLine="true"
                             android:scrollbars="vertical"
                             android:text="About"
                             android:layout_below="@+id/classes_tutoring"
-                            android:layout_marginLeft="30dp"
+                            android:layout_marginLeft="5dp"
 
                             />
 
@@ -354,6 +365,7 @@
                             android:layout_below="@+id/classes_tutoring"
                             android:gravity="right"
                             android:layout_marginLeft="85dp"
+                            android:textColor="#60605C"
                             />
 
 

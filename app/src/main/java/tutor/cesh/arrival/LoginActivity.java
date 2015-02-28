@@ -2,6 +2,7 @@ package tutor.cesh.arrival;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.os.NetworkOnMainThreadException;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -114,13 +117,17 @@ public class LoginActivity extends Activity implements Arrival
         ProgressDialog                              pd;
 
         pd = new ProgressDialog(this);
-        pd.setTitle("Processing...");
+        pd.setTitle("Authenticating...");
         pd.setMessage("Please wait");
         pd.setCancelable(false);
         pd.setIndeterminate(true);
 
+        //don't show the keyboard right away (hide the keyboard now)
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
         try
         {
+            hideKeyboard();
             delegate    = new OnLoginTaskDelegate(this);
             post        = RestClientFactory.authenticateViaPost(email, password);
             new AsyncPost(this, delegate, pd).execute(post);
@@ -141,5 +148,17 @@ public class LoginActivity extends Activity implements Arrival
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     *
+     */
+    private void hideKeyboard()
+    {
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

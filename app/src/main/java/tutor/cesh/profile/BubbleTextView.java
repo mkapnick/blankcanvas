@@ -68,11 +68,8 @@ public class BubbleTextView extends MultiAutoCompleteTextView
         tv.setText(text);
         tv.setTextSize(12);
         tv.setTextColor(Color.parseColor("#FFFFFF"));
-        tv.setBackgroundResource(R.drawable.oval);
-        if (edit)
-            tv.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.abc_ic_clear_mtrl_alpha, 0);
-        else
-            tv.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.oval, 0);
+        tv.setBackgroundResource(R.drawable.oval_orange);
+        tv.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.oval_orange, 0);
 
         return tv;
     }

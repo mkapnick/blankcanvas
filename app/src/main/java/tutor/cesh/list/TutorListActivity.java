@@ -32,18 +32,16 @@ import tutor.cesh.rest.delegate.TaskDelegate;
 public class TutorListActivity extends ActionBarActivity implements TaskDelegate,
                                                                     SearchView.OnQueryTextListener,
                                                                     BitmapCacheBehavior
-
 {
-
     private ListView    listView;
     private MenuItem    searchItem;
     private SearchView  searchView;
 
     private JSONAdapter                         adapter;
     private ArrayList<HashMap<String, String>>  data;
-    private HashMap<String, Bitmap>             mapUrlToBitmap;
+    private HashMap<String, Bitmap>             mapIDToBitmap;
 
-    private static final String ALL_TUTORS    = "http://blankcanvas.pw/tutors/view/all";
+    private static final String ALL_TUTORS    = "http://blankcanvas.pw/tutors";
     public static final String ID             = "id"; // parent node
     public static final String FIRST_NAME     = "firstName";
     public static final String COVER_IMAGE    = "coverImage";
@@ -59,7 +57,7 @@ public class TutorListActivity extends ActionBarActivity implements TaskDelegate
     @Override
     public void cache(String identifier, Bitmap bitmap)
     {
-        mapUrlToBitmap.put(identifier, bitmap);
+        mapIDToBitmap.put(identifier, bitmap);
 
         if(adapter != null) //HACK RIGHT HERE IF I EVER SAW ONE!!! NEED THIS LINE OF CODE
                             //TO INITIALLY POPULATE THE LISTVIEW, BECAUSE THE MAPURLTOBITMPA
@@ -78,9 +76,9 @@ public class TutorListActivity extends ActionBarActivity implements TaskDelegate
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutor_list);
 
-        listView            = (ListView)    findViewById(R.id.tutor_list_view);
+        listView            = (ListView) findViewById(R.id.tutor_list_view);
         data                = new ArrayList<HashMap<String, String>>();
-        mapUrlToBitmap      = new HashMap<String, Bitmap>();
+        mapIDToBitmap      = new HashMap<String, Bitmap>();
 
         populateDataFromServer();
         getSupportActionBar().setBackgroundDrawable(getResources().getDrawable( R.drawable.action_bar_background));
@@ -103,7 +101,8 @@ public class TutorListActivity extends ActionBarActivity implements TaskDelegate
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -126,11 +125,19 @@ public class TutorListActivity extends ActionBarActivity implements TaskDelegate
 
     public void populateDataFromServer()
     {
-        AsyncGet                asyncGet;
-        HttpGet                 httpGet;
+        AsyncGet        asyncGet;
+        HttpGet         httpGet;
+        ProgressDialog  pd;
 
-        asyncGet                = new AsyncGet(this, this, new ProgressDialog(this));
-        httpGet                 = new HttpGet(ALL_TUTORS);
+        pd = new ProgressDialog(this);
+        pd.setTitle("Fetching available tutors...");
+        pd.setMessage("Please wait");
+        pd.setCancelable(false);
+        pd.setIndeterminate(true);
+        pd.show();
+
+        asyncGet    = new AsyncGet(this, this, pd);
+        httpGet     = new HttpGet(ALL_TUTORS);
 
         asyncGet.execute(httpGet);
     }
@@ -139,38 +146,35 @@ public class TutorListActivity extends ActionBarActivity implements TaskDelegate
     public void taskCompletionResult(Object response)
     {
         JSONArray               jsonArray, tutorCoursesJSONArray;
-        JSONObject              jsonObjectTmp, jsonObject;
+        JSONObject              jsonObject;
         HashMap<String, String> map;
         String                  courseNames;
         AsyncDownloader         asyncDownloader;
 
-        jsonObjectTmp   = (JSONObject) response;
+        jsonArray           = (JSONArray) response;
 
         //all of the tutor data is right here in one place
         try
         {
-            jsonArray   = new JSONArray(jsonObjectTmp.getString("all_tutors"));
-
             for(int i =0; i < jsonArray.length(); i++)
             {
                 map         = new HashMap<String, String>();
                 jsonObject  = jsonArray.getJSONObject(i);
                 courseNames = "";
 
-
                 /* info from the server api */
-                //map.put(ID, jsonObject.getString("id")); TODO -- GET ID DOWN FROM THE SERVER!!
-                map.put(FIRST_NAME, jsonObject.getString("first_name"));
-                map.put(COVER_IMAGE, jsonObject.getString("tutor_cover_image_url"));
+                map.put(ID, jsonObject.getString("id"));
+                map.put(FIRST_NAME, jsonObject.getString("firstName"));
                 map.put(RATE, jsonObject.getString("rate"));
                 map.put(RATING, jsonObject.getString("rating"));
                 map.put(MAJOR, jsonObject.getString("major"));
                 map.put(MINOR, jsonObject.getString("minor"));
                 map.put(YEAR, jsonObject.getString("year"));
                 map.put(ABOUT, jsonObject.getString("about"));
+                map.put(COVER_IMAGE, jsonObject.getString("tutorCoverImageUrl"));
 
                 //get the courses associated with this tutor
-                tutorCoursesJSONArray   = jsonObject.getJSONArray("tutor_courses");
+                tutorCoursesJSONArray   = jsonObject.getJSONArray("tutorCourses");
                 for(int j =0; j < tutorCoursesJSONArray.length(); j++)
                 {
                     if(j != tutorCoursesJSONArray.length() -1)
@@ -181,11 +185,12 @@ public class TutorListActivity extends ActionBarActivity implements TaskDelegate
 
                 //add the courses to the map
                 map.put(TUTOR_COURSES, courseNames);
+
                 //add the map to the list
                 this.data.add(map);
 
                 // download the bitmap and cache the results
-                asyncDownloader = new AsyncDownloader(map.get(COVER_IMAGE), this);
+                asyncDownloader = new AsyncDownloader(map.get(ID), map.get(COVER_IMAGE), this);
                 asyncDownloader.execute();
             }
         }
@@ -196,6 +201,9 @@ public class TutorListActivity extends ActionBarActivity implements TaskDelegate
 
         adapter =  new JSONAdapter(this, this.getResources(), this.data, this.listView);
         this.listView.setAdapter(adapter);
+
+
+        /*************************** This part is easy to understand *****************************/
 
         // Click event for single list row
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -221,7 +229,7 @@ public class TutorListActivity extends ActionBarActivity implements TaskDelegate
                 data                = adapter.getData();
                 map                 = data.get(position);
                 bundle              = new Bundle();
-                coverImageBitmap    = mapUrlToBitmap.get(data.get(position).get(COVER_IMAGE));
+                coverImageBitmap    = mapIDToBitmap.get(data.get(position).get(ID));
 
                 /** Include info related to specific tutor clicked on */
                 bundle.putString(ID, map.get(ID));
@@ -244,7 +252,7 @@ public class TutorListActivity extends ActionBarActivity implements TaskDelegate
         });
 
         //need to associate the cached map with this adapter!!!
-        adapter.setCachedMap(this.mapUrlToBitmap);
+        adapter.setCachedMap(this.mapIDToBitmap);
     }
 
     @Override

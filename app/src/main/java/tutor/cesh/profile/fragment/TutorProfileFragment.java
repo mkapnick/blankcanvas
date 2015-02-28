@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -25,7 +26,8 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
 {
 
     public  ImageView               profileImageView, coverImageView;
-    private EditText                name, major, year, about, classes, rate;
+    private EditText                name, major, year, about, classes;
+    private TextView                rate;
     private ImageButton             cameraIcon;
     private boolean                 downloadedCoverImageFromServer  = false;
     private TabSubject              tabSubject;
@@ -66,13 +68,15 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
     @Override
     public CharSequence getTitle()
     {
-        Drawable image = super.getGeneralResources().getDrawable(R.drawable.tutor_dark);
+        /*Drawable image = super.getGeneralResources().getDrawable(R.drawable.tutor_dark);
         image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());
         SpannableString sb = new SpannableString(" ");
         ImageSpan imageSpan = new ImageSpan(image, ImageSpan.ALIGN_BOTTOM);
         sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        return sb;
+        return sb;*/
+        return "Tutor";
+
     }
 
     @Override
@@ -83,7 +87,7 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
         year                = (EditText)    inflatedView.findViewById(R.id.year);
         about               = (EditText)    inflatedView.findViewById(R.id.about);
         classes             = (EditText)    inflatedView.findViewById(R.id.classes);
-        rate                = (EditText)    inflatedView.findViewById(R.id.rate);
+        rate                = (TextView)    inflatedView.findViewById(R.id.rate);
         profileImageView    = (ImageView)   inflatedView.findViewById(R.id.profileImage);
         coverImageView      = (ImageView)   inflatedView.findViewById(R.id.profileBackgroundImage);
 
