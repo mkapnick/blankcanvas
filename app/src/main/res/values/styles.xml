@@ -6,6 +6,8 @@
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/black</item>
     </style>
 
     <!-- ActionBar styles -->

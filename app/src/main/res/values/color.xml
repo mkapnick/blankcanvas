@@ -7,6 +7,7 @@
     <color name="theme">#046380</color>
     <color name="black">#000000</color>
     <color name="trans_black">#3b000000</color>
+    <color name="transparent">#00000000</color>
 
 
 </resources>
