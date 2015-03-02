@@ -17,30 +17,33 @@ import tutor.cesh.Student;
 import tutor.cesh.Tutor;
 import tutor.cesh.User;
 import tutor.cesh.profile.StudentTutorProfileContainerActivity;
+import tutor.cesh.session.SessionManager;
 
 /**
  * Created by michaelk18 on 4/7/14.
  */
 public class OnLoginTaskDelegate implements TaskDelegate
 {
+    private Context context;
+    private String email, password;
 
-    private Context         context;
-
-    public OnLoginTaskDelegate(Context context)
+    public OnLoginTaskDelegate(Context context, String email, String password)
     {
         this.context    = context;
+        this.email      = email;
+        this.password   = password;
     }
 
     @Override
     public void taskCompletionResult(Object obj)
     {
-        Intent      intent;
-        User        user;
-        Student     student;
-        Tutor       tutor;
-        JSONObject  object;
-        JSONArray   jsonArray, studentCoursesArray, pastStudentCoursesArray,
-                    tutorCoursesArray, pastTutorCoursesArray;
+        Intent          intent;
+        User            user;
+        Student         student;
+        Tutor           tutor;
+        JSONObject      object;
+        JSONArray       jsonArray, studentCoursesArray, pastStudentCoursesArray,
+                        tutorCoursesArray, pastTutorCoursesArray;
 
         ArrayList<String> studentCoursesArrayList, tutorCoursesArrayList;
 
@@ -104,6 +107,7 @@ public class OnLoginTaskDelegate implements TaskDelegate
                     tutor.setAbout(object.getString("tutorAbout"));
                     tutor.setRate(object.getString("tutorRate"));
                     tutor.setRating(object.getString("tutorRating"));
+                    tutor.setPublic(object.getString("isPublic").equalsIgnoreCase("true") ? true : false);
 
                     //tutor courses
                     tutorCoursesArray       = object.getJSONArray("tutorCourses");

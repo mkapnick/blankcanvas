@@ -27,6 +27,7 @@ import tutor.cesh.rest.delegate.OnLoginTaskDelegate;
 import tutor.cesh.rest.asynchronous.RestClientExecute;
 import tutor.cesh.rest.factory.RestClientFactory;
 import tutor.cesh.rest.delegate.TaskDelegate;
+import tutor.cesh.session.SessionManager;
 
 public class LoginActivity extends Activity implements Arrival
 {
@@ -115,6 +116,7 @@ public class LoginActivity extends Activity implements Arrival
         HttpPost                                    post;
         TaskDelegate                                delegate;
         ProgressDialog                              pd;
+        SessionManager                              sessionManager;
 
         pd = new ProgressDialog(this);
         pd.setTitle("Authenticating...");
@@ -122,13 +124,16 @@ public class LoginActivity extends Activity implements Arrival
         pd.setCancelable(false);
         pd.setIndeterminate(true);
 
-        //don't show the keyboard right away (hide the keyboard now)
+        sessionManager = new SessionManager(this);
+
+        //(hide the keyboard now)
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         try
         {
             hideKeyboard();
-            delegate    = new OnLoginTaskDelegate(this);
+            sessionManager.createLoginSession(this.email, this.password);
+            delegate    = new OnLoginTaskDelegate(this, this.email, this.password);
             post        = RestClientFactory.authenticateViaPost(email, password);
             new AsyncPost(this, delegate, pd).execute(post);
         }

@@ -272,6 +272,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
         Student student;
         String  name, major, minor, year, studentAbout,
                 tutorAbout, studentCurrentClasses, tutorCurrentClasses, rate;
+        boolean isPublic;
 
         ArrayList<String> studentCurrentClassesList, tutorCurrentClassesList;
 
@@ -289,6 +290,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
             name                        = student.getName();
             major                       = student.getMajor();
             rate                        = tutor.getRate();
+            isPublic                    = tutor.isPublic();
             //minor                     = this.studentProfileFragment.getMinor();
             year                        = student.getYear();
             studentAbout                = student.getAbout();
@@ -316,6 +318,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
             bundle.putString("studentCurrentClasses", studentCurrentClasses);
             bundle.putString("tutorCurrentClasses", tutorCurrentClasses);
             bundle.putString("rate", rate);
+            bundle.putBoolean("isPublic", isPublic);
 
             intent.putExtras(bundle);
         }

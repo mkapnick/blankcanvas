@@ -3,6 +3,7 @@ package tutor.cesh.profile;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -57,7 +58,8 @@ public class ReadOnlyTutorProfileActivity extends Activity implements View.OnCli
         rateTextView                = (TextView)    this.findViewById(R.id.rate);
         profileImageView            = (ImageView)   findViewById(R.id.profileImage);
         coverImageView              = (ImageView)   findViewById(R.id.profileBackgroundImage);
-        getInTouchButton            = (Button)      findViewById(R.id.get_in_touch_button);
+        getInTouchButton            = (Button)      findViewById(R.id.getInTouchButton);
+        getInTouchButton.getBackground().setAlpha(200);
         getInTouchButton.setOnClickListener(this);
     }
 
@@ -133,7 +135,6 @@ public class ReadOnlyTutorProfileActivity extends Activity implements View.OnCli
         rateTextView.setText(this.rate);
         coverImageView.setBackground(drawable);
         getInTouchButton.setText("Get in touch with " + this.firstName);
-        getInTouchButton.setAllCaps(false);
 
         tutorCourses = bundle.getString(TUTOR_COURSES).split(",");
         ClassesUtility.formatClassesFrontEnd(Arrays.asList(tutorCourses).iterator(),
@@ -145,7 +146,7 @@ public class ReadOnlyTutorProfileActivity extends Activity implements View.OnCli
     {
         switch(v.getId())
         {
-            case R.id.get_in_touch_button:
+            case R.id.getInTouchButton:
                 setUpEmail();
                 break;
         }

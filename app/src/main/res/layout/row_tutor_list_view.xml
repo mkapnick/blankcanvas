@@ -5,7 +5,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="240dp"
+        android:layout_height="300dp"
         android:id="@+id/coverImage"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
@@ -33,15 +33,18 @@
         android:textSize="15dp"
         android:layout_marginLeft="20dp"
         android:textColorHint="#fff"
-        android:background="@drawable/oval_blue_skinny"
+        android:background="@drawable/oval_black_skinny"
+        android:alpha=".9"
         />
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/name"
-        android:background="@drawable/oval_blue_skinny"
+        android:background="@drawable/oval_black_skinny"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="1dp"
+        android:alpha=".9"
         >
 
         <TextView

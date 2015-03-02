@@ -101,9 +101,6 @@
                         android:textColorHint="#fff"
                         android:layout_toRightOf="@+id/dollarSign"
                         android:textSize="10sp"
-
-
-
                         />
 
                     <TextView

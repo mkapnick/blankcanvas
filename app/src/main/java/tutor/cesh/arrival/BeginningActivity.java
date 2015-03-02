@@ -12,11 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import tutor.cesh.R;
+import tutor.cesh.session.SessionManager;
 
-public class BeginningActivity extends Activity implements Arrival {
+public class BeginningActivity extends Activity implements Arrival
+{
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_beginning);
     }

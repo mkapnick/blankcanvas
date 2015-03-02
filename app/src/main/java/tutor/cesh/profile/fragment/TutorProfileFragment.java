@@ -121,6 +121,9 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
         if(currentClasses.size() > 0)
             ClassesUtility.formatClassesFrontEnd(currentClasses.iterator(),
                                                  super.activity, this.classes);
+        else
+            this.classes.setText("");
+
     }
 
     public void setSubject(TabSubject subject)

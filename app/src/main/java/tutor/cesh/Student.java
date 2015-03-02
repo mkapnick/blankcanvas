@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import tutor.cesh.database.LocalDatabaseHelper;
 

@@ -302,7 +302,7 @@
                             android:ellipsize="end"
                             android:singleLine="true"
                             android:layout_marginLeft="160dp"
-                            android:digits="0123456789.,"
+                            android:digits="0123456789."
                             android:textColor="#60605C"
 
                             />
@@ -376,11 +376,26 @@
                         android:layout_height="wrap_content"
                         android:text="Activate Tutor Profile"
                         android:textColor="#717171"
-                        android:id="@+id/activateTutor"
+                        android:id="@+id/tutorSwitch"
                         android:layout_above="@+id/tutor_section"
                         android:layout_alignEnd="@+id/tutor_section" />
 
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tutor_section"
+                        android:id="@+id/logoutButton"
+                        android:text="Log Out"
+                        android:textColor="#717171"
+                        android:background="@drawable/oval_blue_outline"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
+                        />
+
                 </RelativeLayout>
+
+
     </RelativeLayout>
 </ScrollView>
 

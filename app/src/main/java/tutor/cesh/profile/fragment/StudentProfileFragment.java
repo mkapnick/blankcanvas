@@ -124,6 +124,8 @@ public class StudentProfileFragment extends FragmentTabController implements Tab
         if(currentClasses.size() > 0)
             ClassesUtility.formatClassesFrontEnd(currentClasses.iterator(),
                                                  super.activity, this.classes);
+        else
+            this.classes.setText("");
     }
 
     public void setSubject(TabSubject subject)

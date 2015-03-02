@@ -32,6 +32,7 @@ import tutor.cesh.profile.fragment.FragmentTabController;
 import tutor.cesh.profile.fragment.StudentProfileFragment;
 import tutor.cesh.profile.fragment.TutorProfileFragment;
 import tutor.cesh.profile.fragment.observer.TabObserver;
+import tutor.cesh.session.SessionManager;
 
 public class StudentTutorProfileContainerActivity extends FragmentActivity
 {
@@ -43,6 +44,7 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
     private FragmentTabController   tabController;
     private ActionBarDrawerToggle   mDrawerToggle;
     private LinearLayout            mainLayout;
+    private SessionManager          sessionManager;
 
     /**
      * A private class responsible for handling click events on the
@@ -136,7 +138,6 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
         //set the drawer layout/listview in the fragment tab controller
         this.tabController.setDrawerLayout(this.drawerLayout);
         this.tabController.setDrawerLayoutListView(this.listView);
-
     }
 
     @Override

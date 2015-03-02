@@ -47,21 +47,17 @@ public class TutorHttpObject implements HttpObject
     public HttpPut put() throws Exception
     {
         HttpPut         put;
-        MultipartEntity entity;
         StringEntity    stringEntity;
         JSONObject      params;
-
         Tutor           tutor;
 
         tutor           = user.getTutor();
         put             = new HttpPut(putEndPoint + tutor.getId());
-        //entity          = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         params          = new JSONObject();
 
-        //entity.addPart("tutorAbout", new StringBody(tutor.getAbout()));
-        //entity.addPart("tutorRate", new StringBody(tutor.getRate()));
         params.put("tutorAbout", tutor.getAbout());
         params.put("tutorRate", tutor.getRate());
+        params.put("isPublic", tutor.isPublic() == true ? "yes" : "no");
 
         stringEntity    = new StringEntity(params.toString());
 

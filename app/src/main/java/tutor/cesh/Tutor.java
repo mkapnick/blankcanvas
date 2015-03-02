@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import tutor.cesh.database.LocalDatabaseHelper;
 
@@ -17,13 +18,22 @@ public class Tutor implements Profile
     private ArrayList<String>   currentClasses, pastClasses;
     private Bitmap              profileImage, coverImage;
     private LocalDatabaseHelper localDatabaseHelper;
-
+    private boolean             isPublic;
 
     public Tutor(Context c)
     {
         classes = new String[0];
         this.localDatabaseHelper = new LocalDatabaseHelper(c);
     }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
     public String getAbout() {
         return about;
     }

@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="tutor.cesh.arrival.BeginningActivity"
+            android:name=".arrival.SessionStartActivity"
             android:label="@string/title_activity_beginning" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,28 +20,32 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="tutor.cesh.arrival.LoginActivity"
+            android:name=".arrival.LoginActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="tutor.cesh.arrival.NewAccountActivity"
+            android:name=".arrival.NewAccountActivity"
             android:label="@string/title_activity_new_account" >
         </activity>
         <activity
-            android:name="tutor.cesh.list.TutorListActivity"
+            android:name=".list.TutorListActivity"
             android:label="@string/title_activity_tutor_list" >
         </activity>
         <activity
-            android:name="tutor.cesh.profile.ReadOnlyTutorProfileActivity"
+            android:name=".profile.ReadOnlyTutorProfileActivity"
             android:label="@string/title_activity_read_only_tutor_profile" >
         </activity>
         <activity
-            android:name="tutor.cesh.profile.StudentTutorProfileContainerActivity"
+            android:name=".arrival.BeginningActivity"
             android:label="@string/title_activity_student_tutor_profile_container" >
         </activity>
         <activity
-            android:name="tutor.cesh.profile.EditStudentAndTutorProfileActivity"
+            android:name=".profile.EditStudentAndTutorProfileActivity"
             android:label="@string/title_activity_edit_student_and_tutor_profile" >
+        </activity>
+        <activity
+            android:name=".profile.StudentTutorProfileContainerActivity"
+            android:label="@string/title_activity_session_start" >
         </activity>
     </application>
 

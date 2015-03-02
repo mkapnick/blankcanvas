@@ -78,14 +78,10 @@ public class AsyncGet extends AsyncTask<HttpGet, Integer, Object>
     {
         //super.onPostExecute(result);
         if(pd!=null)
-        {
             this.pd.dismiss();
-            if(taskDelegate != null && this.response != null) {
 
-                taskDelegate.taskCompletionResult(this.response);
-            }
-
-        }
+        if(taskDelegate != null && this.response != null)
+            taskDelegate.taskCompletionResult(this.response);
 
         super.onPostExecute(result);
     };

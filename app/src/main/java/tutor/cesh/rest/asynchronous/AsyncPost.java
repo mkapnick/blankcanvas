@@ -79,14 +79,11 @@ public class AsyncPost extends AsyncTask<HttpPost, Integer, Object>
     {
         //super.onPostExecute(result);
         if(pd!=null)
-        {
             this.pd.dismiss();
-            if(taskDelegate != null && this.response != null) {
 
-                taskDelegate.taskCompletionResult(this.response);
-            }
+        if(taskDelegate != null && this.response != null)
+            taskDelegate.taskCompletionResult(this.response);
 
-        }
 
         super.onPostExecute(result);
     };

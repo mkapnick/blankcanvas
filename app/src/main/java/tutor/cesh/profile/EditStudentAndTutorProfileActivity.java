@@ -10,7 +10,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,14 +35,20 @@ import tutor.cesh.rest.http.student.StudentCourseHttpObject;
 import tutor.cesh.rest.http.student.StudentHttpObject;
 import tutor.cesh.rest.http.tutor.TutorCourseHttpObject;
 import tutor.cesh.rest.http.tutor.TutorHttpObject;
+import tutor.cesh.session.SessionManager;
 
-public class EditStudentAndTutorProfileActivity extends ActionBarActivity implements View.OnClickListener
+public class EditStudentAndTutorProfileActivity extends ActionBarActivity implements
+                                                              View.OnClickListener,
+                                                              CompoundButton.OnCheckedChangeListener
 {
     private Bundle          bundle;
     private EditText        name, major, minor, year, tutorAbout, studentAbout,
                             studentCurrentClasses, tutorCurrentClasses, rate;
     private TextView        saveButton;
+    private Button          logoutButton;
+    private Switch          tutorSwitch;
     private android.support.v7.app.ActionBar actionBar;
+    private SessionManager  sessionManager;
 
     /**
      * Initialize main parts of the UI
@@ -55,6 +64,8 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         year        = (EditText) findViewById(R.id.year);
         minor       = (EditText) findViewById(R.id.minor);
         rate        = (EditText) findViewById(R.id.rate);
+        logoutButton= (Button)   findViewById(R.id.logoutButton);
+        tutorSwitch = (Switch)   findViewById(R.id.tutorSwitch);
 
         studentAbout    = (EditText) findViewById(R.id.student_about);
         tutorAbout      = (EditText) findViewById(R.id.tutor_about);
@@ -71,7 +82,12 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         inflator    = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v           = inflator.inflate(R.layout.edit_info_custom_action_bar, null);
         saveButton  = (TextView) v.findViewById(R.id.saveButton);
+
+        //set on click listeners
         saveButton.setOnClickListener(this);
+        logoutButton.setOnClickListener(this);
+        tutorSwitch.setOnCheckedChangeListener(this);
+
         actionBar.setCustomView(v);
     }
 
@@ -87,7 +103,14 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_student_and_tutor_profile);
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN); //don't show the keyboard right away
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN); //don't
+                                                                                          // show
+                                                                                          // the
+                                                                                          // keyboard
+                                                                                          // right
+                                                                                          // away
+        this.sessionManager = new SessionManager(this); //set the session manager
+
         initializeUI();
         setUpUserData();
     }
@@ -102,7 +125,17 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
                 saveUserProfile(v);
                 finish();
                 break;
+            case R.id.logoutButton:
+                this.sessionManager.logOut();
+                finish();
+                break;
         }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+    {
+       //nothing as of now...
     }
 
     @Override
@@ -148,14 +181,15 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         tutorCurrentClassesList     = new ArrayList<String>();
 
         //update student attributes
-        student.setName(  name.getText().toString());
-        student.setAbout( studentAbout.getText().toString());
-        student.setYear(  year.getText().toString());
-        student.setMajor( major.getText().toString());
+        student.setName(  this.name.getText().toString().trim());
+        student.setAbout( this.studentAbout.getText().toString().trim());
+        student.setYear(  this.year.getText().toString().trim());
+        student.setMajor( this.major.getText().toString().trim());
 
         //update tutor attributes
-        tutor.setRate(  rate.getText().toString());
-        tutor.setAbout( tutorAbout.getText().toString());
+        tutor.setRate(  this.rate.getText().toString().trim());
+        tutor.setAbout( this.tutorAbout.getText().toString().trim());
+        tutor.setPublic(this.tutorSwitch.isChecked());
 
         //update both student and tutor classes
         studentCurrentClasses   = this.studentCurrentClasses.getText().toString();
@@ -224,7 +258,7 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
      */
     private void setUpUserData()
     {
-        //DO WE EVEN NEED THE BUNDLE FOR THIS??
+        //TODO DO WE EVEN NEED THE BUNDLE FOR THIS??
         this.bundle = getIntent().getExtras();
         name.setText(bundle.getString("name"));
         major.setText(bundle.getString("major"));
@@ -236,5 +270,9 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         rate.setText(bundle.getString("rate"));
         tutorCurrentClasses.setText(bundle.getString("tutorCurrentClasses"));
         tutorAbout.setText(bundle.getString("tutorAbout"));
+
+        this.tutorSwitch.setChecked(bundle.getBoolean("isPublic"));
     }
+
+
 }

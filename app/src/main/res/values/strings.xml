@@ -36,5 +36,6 @@
     <string name="title_activity_student_tutor_profile_container"></string>
     <string name="hello_world"></string>
     <string name="title_activity_edit_student_and_tutor_profile">EditStudentAndTutorProfileActivity</string>
+    <string name="title_activity_session_start">SessionStartActivity</string>
 
 </resources>
