@@ -108,6 +108,7 @@ public class OnLoginTaskDelegate implements TaskDelegate
                     tutor.setRate(object.getString("tutorRate"));
                     tutor.setRating(object.getString("tutorRating"));
                     tutor.setPublic(object.getString("isPublic").equalsIgnoreCase("true") ? true : false);
+                    System.out.println(object.getString("isPublic"));
 
                     //tutor courses
                     tutorCoursesArray       = object.getJSONArray("tutorCourses");

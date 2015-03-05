@@ -230,16 +230,17 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
             enroll                  = new EnrollHttpObject(user);
 
             //Make calls to the server and save on the backend
-            put            = studentCourseHttpObject.put();
-            new RestClientExecute(put).start();
-
-            put            = tutorCourseHttpObject.put();
-            new RestClientExecute(put).start();
 
             put             = studentHttp.put();
             new RestClientExecute(put).start();
 
             put             = tutorHttp.put();
+            new RestClientExecute(put).start();
+
+            put            = studentCourseHttpObject.put();
+            new RestClientExecute(put).start();
+
+            put            = tutorCourseHttpObject.put();
             new RestClientExecute(put).start();
 
             put             = enroll.put();

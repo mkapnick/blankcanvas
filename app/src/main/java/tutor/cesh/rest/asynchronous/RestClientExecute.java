@@ -37,7 +37,6 @@ public class RestClientExecute implements Runnable
     {
         try
         {
-
             if (this.httpPost != null)
                 httpClient.execute(httpPost);
 
