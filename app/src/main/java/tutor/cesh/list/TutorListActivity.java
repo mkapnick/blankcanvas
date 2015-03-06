@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
@@ -38,6 +39,7 @@ public class TutorListActivity extends ActionBarActivity implements TaskDelegate
     private SearchView  searchView;
 
     private JSONAdapter                         adapter;
+    private TextView                            emptyTextView;
     private ArrayList<HashMap<String, String>>  data;
     private HashMap<String, Bitmap>             mapIDToBitmap;
 
@@ -71,18 +73,26 @@ public class TutorListActivity extends ActionBarActivity implements TaskDelegate
         }
     }
 
+    /**
+     *
+     */
+    private void initializeUI()
+    {
+        this.listView           = (ListView) findViewById(R.id.tutor_list_view);
+        this.emptyTextView      = (TextView) findViewById(R.id.emptyTextView);
+        data                    = new ArrayList<HashMap<String, String>>();
+        mapIDToBitmap           = new HashMap<String, Bitmap>();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutor_list);
 
-        listView            = (ListView) findViewById(R.id.tutor_list_view);
-        data                = new ArrayList<HashMap<String, String>>();
-        mapIDToBitmap      = new HashMap<String, Bitmap>();
-
+        initializeUI();
         populateDataFromServer();
-        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable( R.drawable.action_bar_background));
+        setUpActionBar();
     }
 
 
@@ -143,6 +153,21 @@ public class TutorListActivity extends ActionBarActivity implements TaskDelegate
         asyncGet.execute(httpGet);
     }
 
+    /**
+     *
+     */
+    private void setUpActionBar()
+    {
+        getSupportActionBar().
+                setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_background));
+
+    }
+
+    /**
+     * All of the tutor data is right here in one place
+     *
+     * @param response
+     */
     @Override
     public void taskCompletionResult(Object response)
     {
@@ -152,114 +177,127 @@ public class TutorListActivity extends ActionBarActivity implements TaskDelegate
         String                  courseNames;
         AsyncDownloader         asyncDownloader;
 
-        jsonArray           = (JSONArray) response;
+        jsonArray  = (JSONArray) response;
 
-        //all of the tutor data is right here in one place
-        try
+        if(jsonArray.length() == 0)
         {
-            for(int i =0; i < jsonArray.length(); i++)
+            this.emptyTextView.setVisibility(View.VISIBLE); //set the textview to visible
+            getSupportActionBar().hide(); //hide the action bar
+        }
+        else
+        {
+            try
             {
-                map         = new HashMap<String, String>();
-                jsonObject  = jsonArray.getJSONObject(i);
-                courseNames = "";
-
-                /* info from the server api */
-                map.put(ID, jsonObject.getString("id"));
-                map.put(FIRST_NAME, jsonObject.getString("firstName"));
-                map.put(RATE, jsonObject.getString("rate"));
-                map.put(RATING, jsonObject.getString("rating"));
-                map.put(MAJOR, jsonObject.getString("major"));
-                map.put(MINOR, jsonObject.getString("minor"));
-                map.put(YEAR, jsonObject.getString("year"));
-                map.put(ABOUT, jsonObject.getString("about"));
-                map.put(EMAIL, jsonObject.getString("email"));
-                map.put(COVER_IMAGE, jsonObject.getString("tutorCoverImageUrl"));
-
-                //get the courses associated with this tutor
-                tutorCoursesJSONArray   = jsonObject.getJSONArray("tutorCourses");
-                for(int j =0; j < tutorCoursesJSONArray.length(); j++)
+                for(int i =0; i < jsonArray.length(); i++)
                 {
-                    if(j != tutorCoursesJSONArray.length() -1)
-                        courseNames += tutorCoursesJSONArray.getString(j) + ", ";
-                    else
-                        courseNames += tutorCoursesJSONArray.getString(j);
+                    map         = new HashMap<String, String>();
+                    jsonObject  = jsonArray.getJSONObject(i);
+                    courseNames = "";
+
+                    /* info from the server api */
+                    map.put(ID, jsonObject.getString("id"));
+                    map.put(FIRST_NAME, jsonObject.getString("firstName"));
+                    map.put(RATE, jsonObject.getString("rate"));
+                    map.put(RATING, jsonObject.getString("rating"));
+                    map.put(MAJOR, jsonObject.getString("major"));
+                    map.put(MINOR, jsonObject.getString("minor"));
+                    map.put(YEAR, jsonObject.getString("year"));
+                    map.put(ABOUT, jsonObject.getString("about"));
+                    map.put(EMAIL, jsonObject.getString("email"));
+                    map.put(COVER_IMAGE, jsonObject.getString("tutorCoverImageUrl"));
+
+                    //get the courses associated with this tutor
+                    tutorCoursesJSONArray   = jsonObject.getJSONArray("tutorCourses");
+                    for(int j =0; j < tutorCoursesJSONArray.length(); j++)
+                    {
+                        if(j != tutorCoursesJSONArray.length() -1)
+                            courseNames += tutorCoursesJSONArray.getString(j) + ", ";
+                        else
+                            courseNames += tutorCoursesJSONArray.getString(j);
+                    }
+
+                    //add the courses to the map
+                    map.put(TUTOR_COURSES, courseNames);
+
+                    //add the map to the list
+                    this.data.add(map);
+
+                    // download the bitmap and cache the results
+                    asyncDownloader = new AsyncDownloader(map.get(ID), map.get(COVER_IMAGE), this);
+                    asyncDownloader.execute();
                 }
-
-                //add the courses to the map
-                map.put(TUTOR_COURSES, courseNames);
-
-                //add the map to the list
-                this.data.add(map);
-
-                // download the bitmap and cache the results
-                asyncDownloader = new AsyncDownloader(map.get(ID), map.get(COVER_IMAGE), this);
-                asyncDownloader.execute();
             }
-        }
-        catch(JSONException e)
-        {
-            e.printStackTrace();
-        }
-
-        adapter =  new JSONAdapter(this, this.getResources(), this.data, this.listView);
-        this.listView.setAdapter(adapter);
-
-
-        /*************************** This part is easy to understand *****************************/
-
-        // Click event for single list row
-        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            catch(JSONException e)
             {
-                // Get the adapter, get the data, get the hashmap associated with the position the user clicked,
-                //start a new read only tutor list activity
-                // @version by Michael Kapnick
-
-                JSONAdapter                         adapter;
-                ArrayList<HashMap<String, String>>  data;
-                HashMap<String, String>             map;
-                Intent                              intent;
-                Bundle                              bundle;
-                int                                 bytes;
-                ByteBuffer                          byteBuffer;
-                Bitmap                              coverImageBitmap;
-                byte []                             byteArray;
-
-                adapter             = (JSONAdapter) parent.getAdapter();
-                data                = adapter.getData();
-                map                 = data.get(position);
-                bundle              = new Bundle();
-                coverImageBitmap    = mapIDToBitmap.get(data.get(position).get(ID));
-
-                /** Include info related to specific tutor clicked on */
-                bundle.putString(ID, map.get(ID));
-                bundle.putString(FIRST_NAME, map.get(FIRST_NAME));
-                bundle.putString(RATE, map.get(RATE));
-                bundle.putString(RATING, map.get(RATING));
-                bundle.putString(MAJOR, map.get(MAJOR));
-                bundle.putString(MINOR, map.get(MINOR));
-                bundle.putString(YEAR, map.get(YEAR));
-                bundle.putString(ABOUT, map.get(ABOUT));
-                bundle.putString(EMAIL, map.get(EMAIL));
-                bundle.putString(TUTOR_COURSES, map.get(TUTOR_COURSES));
-
-                intent = new Intent(context, ReadOnlyTutorProfileActivity.class);
-                intent.putExtras(bundle);
-
-                StaticCurrentBitmapReadOnlyView.currentCoverImageBitmap = coverImageBitmap;
-
-                startActivity(intent);
+                e.printStackTrace();
             }
-        });
 
-        //need to associate the cached map with this adapter!!!
-        adapter.setCachedMap(this.mapIDToBitmap);
+            adapter = new JSONAdapter(this, this.getResources(), this.data, this.listView);
+            adapter.setCachedMap(this.mapIDToBitmap); //need to associate the cached map
+                                                      // with this adapter!!!
+            this.listView.setAdapter(adapter);
+            this.listView.setOnItemClickListener(new ListViewOnClickListener()); //Click event for
+                                                                                 //single list row
+        }
     }
 
     @Override
-    public void setProgressDialog(ProgressDialog pd) {
+    public void setProgressDialog(ProgressDialog pd)
+    {
+        //do nothing
+    }
 
+    /**
+     *
+     *
+     *
+     *
+     *
+     */
+    private class ListViewOnClickListener implements AdapterView.OnItemClickListener
+    {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+        {
+            // Get the adapter, get the data, get the hashmap associated with the position the user clicked,
+            //start a new read only tutor list activity
+            // @version by Michael Kapnick
+
+            JSONAdapter                         adapter;
+            ArrayList<HashMap<String, String>>  data;
+            HashMap<String, String>             map;
+            Intent                              intent;
+            Bundle                              bundle;
+            int                                 bytes;
+            ByteBuffer                          byteBuffer;
+            Bitmap                              coverImageBitmap;
+            byte []                             byteArray;
+
+            adapter             = (JSONAdapter) parent.getAdapter();
+            data                = adapter.getData();
+            map                 = data.get(position);
+            bundle              = new Bundle();
+            coverImageBitmap    = mapIDToBitmap.get(data.get(position).get(ID));
+
+            /** Include info related to specific tutor clicked on */
+            bundle.putString(ID, map.get(ID));
+            bundle.putString(FIRST_NAME, map.get(FIRST_NAME));
+            bundle.putString(RATE, map.get(RATE));
+            bundle.putString(RATING, map.get(RATING));
+            bundle.putString(MAJOR, map.get(MAJOR));
+            bundle.putString(MINOR, map.get(MINOR));
+            bundle.putString(YEAR, map.get(YEAR));
+            bundle.putString(ABOUT, map.get(ABOUT));
+            bundle.putString(EMAIL, map.get(EMAIL));
+            bundle.putString(TUTOR_COURSES, map.get(TUTOR_COURSES));
+
+            intent = new Intent(context, ReadOnlyTutorProfileActivity.class);
+            intent.putExtras(bundle);
+
+            StaticCurrentBitmapReadOnlyView.currentCoverImageBitmap = coverImageBitmap;
+
+            startActivity(intent);
+        }
     }
 }

@@ -4,7 +4,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">sans-serif</item>
+        <!--<item name="android:fontFamily"></item> THIS WAS MAKING APP CRASH ON LONG PRESS ON EDIT TEXT!-->
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <!-- colorPrimaryDark is used for the status bar -->
         <item name="colorPrimaryDark">@color/black</item>
