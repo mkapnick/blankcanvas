@@ -16,7 +16,7 @@ import tutor.cesh.database.LocalDatabaseHelper;
 public class Student implements Profile
 {
     private String              name, major, year, about, profileImageUrl,
-                                coverImageUrl, id, enrollId, tutorId, schoolId, email;
+                                coverImageUrl, id, enrollId, schoolId, email;
     private String []           classes;
     private ArrayList<String>   currentClasses, pastClasses;
     private Bitmap              coverImage, profileImage;
@@ -52,14 +52,6 @@ public class Student implements Profile
 
     public void setSchoolId(String schoolId) {
         this.schoolId = schoolId;
-    }
-
-    public String getTutorId() {
-        return tutorId;
-    }
-
-    public void setTutorId(String tutorId) {
-        this.tutorId = tutorId;
     }
 
     public String getEnrollId() {

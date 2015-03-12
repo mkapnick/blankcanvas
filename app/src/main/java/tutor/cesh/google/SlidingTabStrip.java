@@ -26,7 +26,8 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
 
-class SlidingTabStrip extends LinearLayout {
+class SlidingTabStrip extends LinearLayout
+{
 
     private static final int DEFAULT_BOTTOM_BORDER_THICKNESS_DIPS = 1;
     private static final byte DEFAULT_BOTTOM_BORDER_COLOR_ALPHA = 0; //this made the grey go away
@@ -114,7 +115,8 @@ class SlidingTabStrip extends LinearLayout {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(Canvas canvas)
+    {
         final int height = getHeight();
         final int childCount = getChildCount();
         final int dividerHeightPx = (int) (Math.min(Math.max(0f, mDividerHeight), 1f) * height);
@@ -123,7 +125,9 @@ class SlidingTabStrip extends LinearLayout {
                 : mDefaultTabColorizer;
 
         // Thick colored underline below the current selection
-        if (childCount > 0) {
+        if (childCount > 0)
+        {
+            System.out.println(mSelectedPosition);
             View selectedTitle = getChildAt(mSelectedPosition);
             int left = selectedTitle.getLeft();
             int right = selectedTitle.getRight();

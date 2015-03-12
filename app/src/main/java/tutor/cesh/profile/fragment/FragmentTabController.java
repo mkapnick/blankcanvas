@@ -34,6 +34,7 @@ import tutor.cesh.Tutor;
 import tutor.cesh.User;
 import tutor.cesh.google.SlidingTabLayout;
 import tutor.cesh.image.BitmapHandlerFactory;
+import tutor.cesh.list.TutorListActivity;
 import tutor.cesh.profile.EditStudentAndTutorProfileActivity;
 import tutor.cesh.profile.fragment.observer.TabObserver;
 import tutor.cesh.profile.fragment.subject.TabSubject;
@@ -53,7 +54,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
     private static final int        EDIT_INFO                   = 2;
     private SamplePagerAdapter      samplePagerAdapter;
     protected static Activity       activity;
-    private ImageButton             drawerLayoutButton;
+    private TextView                arrowBackTextView;
     private TextView                editButton;
     private DrawerLayout            drawerLayout;
     private ListView                drawerLayoutListView;
@@ -138,11 +139,9 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
                 activity.startActivityForResult(intent, EDIT_INFO);
                 break;
 
-            case R.id.left_action_bar_image:
-                if(this.drawerLayout.isDrawerOpen(this.drawerLayoutListView))
-                    this.drawerLayout.closeDrawer(this.drawerLayoutListView);
-                else
-                    this.drawerLayout.openDrawer(this.drawerLayoutListView);
+            case R.id.arrow_back_image:
+                intent = new Intent(activity, TutorListActivity.class);
+                activity.startActivity(intent);
                 break;
         }
     }
@@ -159,9 +158,9 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
 
         //set up the image buttons found in the action bar
         this.editButton             = (TextView)v.findViewById(R.id.edit_action_bar_icon);
-        this.drawerLayoutButton     = (ImageButton)v.findViewById(R.id.left_action_bar_image);
+        this.arrowBackTextView      = (TextView)v.findViewById(R.id.arrow_back_image);
         this.editButton.setOnClickListener(this);
-        this.drawerLayoutButton.setOnClickListener(this);
+        this.arrowBackTextView.setOnClickListener(this);
 
         //set up view pager and sliding tab layout
         // Get the ViewPager and set it's PagerAdapter so that it can display items
@@ -244,22 +243,6 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
         super.onResume();
     }
 
-    /**
-     *
-     * @param drawerLayout
-     */
-    public void setDrawerLayout(DrawerLayout drawerLayout)
-    {
-        this.drawerLayout= drawerLayout;
-    }
-
-    /**
-     *
-     */
-    public void setDrawerLayoutListView(ListView listView)
-    {
-        this.drawerLayoutListView = listView;
-    }
     /**
      * Main entry point is when user clicks the edit button field
      */

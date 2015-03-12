@@ -27,21 +27,23 @@ public class StudentProfileFragment extends FragmentTabController implements Tab
     public ImageView                profileImageView, coverImageView;
     public EditText                 name, major, year, about, classes;
     private ImageButton             cameraIcon;
-    private boolean                 downloadedCoverImageFromServer  = false;
-    private TabSubject              tabSubject;
 
 
     @Override
     public void downloadCoverImageFromServer()
     {
-        GlobalDatabaseHelper globalDatabaseHelper;
-        globalDatabaseHelper        = new GlobalDatabaseHelper(super.activity);
+        GlobalDatabaseHelper    globalDatabaseHelper;
+        User                    user;
+        Student                 student;
 
-        if(!downloadedCoverImageFromServer)
+        user                    = User.getInstance(super.activity);
+        student                 = user.getStudent();
+
+        if(null == student.getCoverImage())
         {
+            globalDatabaseHelper= new GlobalDatabaseHelper(super.activity);
             globalDatabaseHelper.downloadStudentCoverImageFromServer(super.getGeneralResources(),
-                    this.coverImageView);
-            downloadedCoverImageFromServer = true;
+                                                                     this.coverImageView);
         }
     }
 
@@ -73,8 +75,6 @@ public class StudentProfileFragment extends FragmentTabController implements Tab
         */
 
         return "Student";
-
-
     }
 
     @Override
@@ -126,12 +126,6 @@ public class StudentProfileFragment extends FragmentTabController implements Tab
                                                  super.activity, this.classes);
         else
             this.classes.setText("");
-    }
-
-    public void setSubject(TabSubject subject)
-    {
-        this.tabSubject = subject;
-        this.tabSubject.addObserver(this);
     }
 
     @Override

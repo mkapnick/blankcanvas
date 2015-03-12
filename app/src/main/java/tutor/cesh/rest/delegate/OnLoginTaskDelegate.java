@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import tutor.cesh.Student;
 import tutor.cesh.Tutor;
 import tutor.cesh.User;
+import tutor.cesh.list.TutorListActivity;
 import tutor.cesh.profile.StudentTutorProfileContainerActivity;
 import tutor.cesh.session.SessionManager;
 
@@ -62,7 +63,7 @@ public class OnLoginTaskDelegate implements TaskDelegate
             {
                 if (object.getString("confirmed").equalsIgnoreCase("true"))
                 {
-                    intent = new Intent(context, StudentTutorProfileContainerActivity.class);
+                    intent = new Intent(context, TutorListActivity.class);
 
                     intent.putExtra("id", object.getString("id"));
                     intent.putExtra("enrollId", object.getString("enrollId"));
@@ -108,7 +109,6 @@ public class OnLoginTaskDelegate implements TaskDelegate
                     tutor.setRate(object.getString("tutorRate"));
                     tutor.setRating(object.getString("tutorRating"));
                     tutor.setPublic(object.getString("isPublic").equalsIgnoreCase("true") ? true : false);
-                    System.out.println(object.getString("isPublic"));
 
                     //tutor courses
                     tutorCoursesArray       = object.getJSONArray("tutorCourses");

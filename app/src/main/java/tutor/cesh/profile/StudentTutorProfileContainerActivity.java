@@ -42,7 +42,7 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
     private ListView                listView;
     private String []               listViewTitles;
     private FragmentTabController   tabController;
-    private ActionBarDrawerToggle   mDrawerToggle;
+    private ActionBarDrawerToggle   actionBarDrawerToggle;
     private LinearLayout            mainLayout;
     private SessionManager          sessionManager;
 
@@ -60,11 +60,13 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
         {
             Intent intent;
             listView.setItemChecked(position, true);
+
             switch(position)
             {
                 case 0:
                     //update drawer layout
-                    if(drawerLayout.isDrawerOpen(listView)){
+                    if(drawerLayout.isDrawerOpen(listView))
+                    {
                         drawerLayout.closeDrawer(listView);
 
                         //call the correct class
@@ -100,6 +102,75 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
     {
         super.onCreate(savedInstanceState);
 
+        setUpTabs(savedInstanceState);
+        //setUpDrawerLayout();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.student_tutor_profile_container, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void setUpDrawerLayout()
+    {
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout.setStatusBarBackgroundColor(Color.GREEN);
+        listView     = (ListView) findViewById(R.id.left_drawer);
+
+        listViewTitles = getResources().getStringArray(R.array.drawable_list_items);
+        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listViewTitles));
+        listView.setOnItemClickListener(new DrawerItemClickListener());
+
+        //Set up animation for on slide of the drawer layout
+        mainLayout = (LinearLayout) findViewById(R.id.main_layout);
+
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, null, R.string.app_name, R.string.app_name) {
+            public void onDrawerClosed(View view) {
+                supportInvalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                supportInvalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                mainLayout.setTranslationX((slideOffset * drawerView.getWidth()));
+                drawerLayout.bringChildToFront(drawerView);
+                drawerLayout.requestLayout();
+            }
+        };
+
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+
+        //set the drawer layout/listview in the fragment tab controller
+        //this.tabController.setDrawerLayout(this.drawerLayout);
+        //this.tabController.setDrawerLayoutListView(this.listView);
+    }
+
+    private void setUpTabs(Bundle savedInstanceState)
+    {
         List<TabObserver>   tabs;
 
         //instantiate all tab observers, and the tab subject
@@ -132,69 +203,5 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
             transaction.replace(R.id.sample_content_fragment, this.tabController);
             transaction.commit();
         }
-
-        setUpDrawerLayout();
-
-        //set the drawer layout/listview in the fragment tab controller
-        this.tabController.setDrawerLayout(this.drawerLayout);
-        this.tabController.setDrawerLayoutListView(this.listView);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.student_tutor_profile_container, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    private void setUpDrawerLayout()
-    {
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerLayout.setStatusBarBackgroundColor(Color.GREEN);
-        listView     = (ListView) findViewById(R.id.left_drawer);
-
-        listViewTitles = getResources().getStringArray(R.array.drawable_list_items);
-        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listViewTitles));
-        listView.setOnItemClickListener(new DrawerItemClickListener());
-
-        //Set up animation for on slide of the drawer layout
-        mainLayout = (LinearLayout) findViewById(R.id.main_layout);
-
-        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, null, R.string.app_name, R.string.app_name) {
-            public void onDrawerClosed(View view) {
-                supportInvalidateOptionsMenu();
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                supportInvalidateOptionsMenu();
-            }
-
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, slideOffset);
-                mainLayout.setTranslationX((slideOffset * drawerView.getWidth()));
-                drawerLayout.bringChildToFront(drawerView);
-                drawerLayout.requestLayout();
-            }
-        };
-
-        drawerLayout.setDrawerListener(mDrawerToggle);
     }
 }

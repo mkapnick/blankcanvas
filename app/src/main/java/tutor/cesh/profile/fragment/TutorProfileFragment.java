@@ -29,21 +29,22 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
     private EditText                name, major, year, about, classes;
     private TextView                rate;
     private ImageButton             cameraIcon;
-    private boolean                 downloadedCoverImageFromServer  = false;
-    private TabSubject              tabSubject;
-
 
     @Override
     public void downloadCoverImageFromServer()
     {
-        GlobalDatabaseHelper globalDatabaseHelper;
-        globalDatabaseHelper        = new GlobalDatabaseHelper(super.activity);
+        GlobalDatabaseHelper    globalDatabaseHelper;
+        User                    user;
+        Tutor                   tutor;
 
-        if(!downloadedCoverImageFromServer)
+        user                    = User.getInstance(super.activity);
+        tutor                   = user.getTutor();
+
+        if(null == tutor.getCoverImage())
         {
+            globalDatabaseHelper= new GlobalDatabaseHelper(super.activity);
             globalDatabaseHelper.downloadTutorCoverImageFromServer(super.getGeneralResources(),
                     this.coverImageView);
-            downloadedCoverImageFromServer = true;
         }
     }
 
@@ -75,8 +76,8 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
         sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         return sb;*/
-        return "Tutor";
 
+        return "Tutor";
     }
 
     @Override
@@ -99,7 +100,6 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
     @Override
     public void setUpUserInfo()
     {
-        ClassesUtility                              cUtility;
         User                                        user;
         Student                                     student;
         Tutor                                       tutor;
@@ -124,12 +124,6 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
         else
             this.classes.setText("");
 
-    }
-
-    public void setSubject(TabSubject subject)
-    {
-        this.tabSubject = subject;
-        this.tabSubject.addObserver(this);
     }
 
     @Override

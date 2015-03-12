@@ -31,6 +31,10 @@
         <item>CREATE GROUP SESSION</item>!-->
     </string-array>
 
+    <string-array name="drawable_tutor_list_items">
+        <item>My Profile</item>
+    </string-array>
+
     <string name="title_activity_tutor_list"></string>
     <string name="title_activity_read_only_tutor_profile"></string>
     <string name="title_activity_student_tutor_profile_container"></string>
