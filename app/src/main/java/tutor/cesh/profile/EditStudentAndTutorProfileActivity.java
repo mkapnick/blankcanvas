@@ -44,7 +44,7 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
     private Bundle          bundle;
     private EditText        name, major, minor, year, tutorAbout, studentAbout,
                             studentCurrentClasses, tutorCurrentClasses, rate;
-    private TextView        saveButton;
+    private TextView        saveButton, arrowBackImage;
     private Button          logoutButton;
     private Switch          tutorSwitch;
     private android.support.v7.app.ActionBar actionBar;
@@ -82,11 +82,14 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         inflator    = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v           = inflator.inflate(R.layout.edit_info_custom_action_bar, null);
         saveButton  = (TextView) v.findViewById(R.id.saveButton);
+        arrowBackImage = (TextView) v.findViewById(R.id.arrow_back_image);
+
 
         //set on click listeners
         saveButton.setOnClickListener(this);
         logoutButton.setOnClickListener(this);
         tutorSwitch.setOnCheckedChangeListener(this);
+        arrowBackImage.setOnClickListener(this);
 
         actionBar.setCustomView(v);
     }
@@ -127,6 +130,9 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
                 break;
             case R.id.logoutButton:
                 this.sessionManager.logOut();
+                finish();
+                break;
+            case R.id.arrow_back_image:
                 finish();
                 break;
         }

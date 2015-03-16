@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import tutor.cesh.R;
+import tutor.cesh.profile.AccountActivity;
 import tutor.cesh.profile.ReadOnlyTutorProfileActivity;
 import tutor.cesh.profile.StudentTutorProfileContainerActivity;
 import tutor.cesh.rest.asynchronous.AsyncDownloader;
@@ -141,8 +143,11 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
      */
     private void initializeUI()
     {
-        this.listView           = (ListView) findViewById(R.id.tutor_list_view);
+        this.listView           = (ListView) findViewById(R.id.tutor_list_activity_main_list_view);
         this.emptyTextView      = (TextView) findViewById(R.id.emptyTextView);
+        this.searchView         = (SearchView) findViewById(R.id.action_search_icon);
+        this.searchView.setOnQueryTextListener(this);
+
         this.actionBarProfileButton = (TextView) findViewById(R.id.action_bar_profile_button);
         this.actionBarProfileButton.setOnClickListener(this);
         data                    = new ArrayList<HashMap<String, String>>();
@@ -156,6 +161,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
         switch(v.getId())
         {
+
             case R.id.action_bar_profile_button:
 
                 if(drawerLayout.isDrawerOpen(drawerLayoutListView))
@@ -173,6 +179,13 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                     drawerLayout.openDrawer(drawerLayoutListView);
                 }
                 break;
+
+                //call the correct class
+                //intent = new Intent(getApplicationContext(),
+                //        AccountActivity.class);
+
+                //startActivity(intent);
+                //break;
         }
 
     }
@@ -185,6 +198,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
         initializeUI();
         populateDataFromServer();
+
         //setUpActionBar();
         setUpDrawerLayout();
     }
@@ -193,14 +207,14 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        MenuInflater inflater;
+        /*MenuInflater inflater;
 
         inflater = getMenuInflater();
         inflater.inflate(R.menu.tutor_list_view_menu, menu);
 
         this.searchItem = menu.findItem(R.id.action_search);
         this.searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        this.searchView.setOnQueryTextListener(this);
+        this.searchView.setOnQueryTextListener(this);*/
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -246,16 +260,6 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
         asyncGet.execute(httpGet);
     }
-
-    /**
-     *
-     */
-    /*private void setUpActionBar()
-    {
-        getSupportActionBar().
-                setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_background));
-
-    }*/
 
     /**
      * All of the tutor data is right here in one place
@@ -344,16 +348,13 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     private void setUpDrawerLayout()
     {
         drawerLayout            = (DrawerLayout) findViewById(R.id.tutor_list_drawer_layout);
-        drawerLayout.setStatusBarBackgroundColor(Color.GREEN);
-        drawerLayoutListView     = (ListView) findViewById(R.id.right_drawer_list_view);
+        drawerLayoutListView    = (ListView) findViewById(R.id.tutor_list_activity_right_drawer_list_view);
 
-        listViewTitles = getResources().getStringArray(R.array.drawable_tutor_list_items);
-        drawerLayoutListView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listViewTitles));
+        drawerLayoutListView.setAdapter(new TutorListDrawerLayoutAdapter(this));
         drawerLayoutListView.setOnItemClickListener(new DrawerItemClickListener());
 
         //Set up animation for on slide of the drawer layout
         relativeLayout          = (RelativeLayout) findViewById(R.id.tutor_list_main_layout);
-
         actionBarDrawerToggle   = new ActionBarDrawerToggle
                                     (this, drawerLayout, null, R.string.app_name, R.string.app_name)
         {

@@ -5,23 +5,31 @@
     android:background="#fff">
 
     <TextView
+        android:layout_width="22dp"
+        android:layout_height="20dp"
+        android:background="@drawable/ic_action_back"
+        android:layout_centerVertical="true"
+        android:id="@+id/arrow_back_image"
+        />
+
+    <TextView
         android:text="Save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/saveButton"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="30dp"
         android:textColor="#449d44"
+        android:layout_marginRight="25dp"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Edit Profile"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="5dp"
         android:textColor="#717171"
-        />
+        android:layout_marginStart="17dp"
+        android:layout_alignTop="@+id/saveButton"
+        android:layout_toEndOf="@+id/arrow_back_image" />
 
 </RelativeLayout>

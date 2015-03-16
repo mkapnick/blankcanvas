@@ -72,6 +72,7 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
                         //call the correct class
                         intent = new Intent(getApplicationContext(), TutorListActivity.class);
                         startActivity(intent);
+                        //finish();
                     }
                     else
                     {
