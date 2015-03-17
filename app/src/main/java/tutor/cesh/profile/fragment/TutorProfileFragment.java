@@ -1,14 +1,19 @@
 package tutor.cesh.profile.fragment;
 
+import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
+import android.view.Display;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -29,6 +34,10 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
     private EditText                name, major, year, about, classes;
     private TextView                rate;
     private ImageButton             cameraIcon;
+    private Switch                  tutorSwitch;
+    private TextView                switchText;
+
+
 
     @Override
     public void downloadCoverImageFromServer()
@@ -91,10 +100,36 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
         rate                = (TextView)    inflatedView.findViewById(R.id.rate);
         profileImageView    = (ImageView)   inflatedView.findViewById(R.id.profileImage);
         coverImageView      = (ImageView)   inflatedView.findViewById(R.id.profileBackgroundImage);
+        tutorSwitch         = (Switch)      inflatedView.findViewById(R.id.tutorSwitch);
+        //switchText         = (ScrollView)  inflatedView.findViewById(R.id.tutorFragmentScrollView);
 
         cameraIcon          = (ImageButton) inflatedView.findViewById(R.id.cameraIcon);
         cameraIcon.setOnClickListener(this);
 
+        setScrollViewBackground();
+    }
+
+    /**
+     * Sets the tutor switch background heigh
+     */
+    private void setScrollViewBackground()
+    {
+        User user;
+        Tutor tutor;
+
+        user    = User.getInstance(activity);
+        tutor   = user.getTutor();
+
+        if(tutor.isPublic())
+        {
+            this.tutorSwitch.setChecked(true);
+            //this.tutorSwitch.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            //this.scrollView.setBackgroundColor(Color.parseColor("#000000"));
+            //this.scrollView.setAlpha(.8f);
+        }
     }
 
     @Override
