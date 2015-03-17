@@ -1,6 +1,8 @@
 package tutor.cesh.profile.fragment;
 
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -9,6 +11,7 @@ import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.view.Display;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -27,7 +30,9 @@ import tutor.cesh.profile.fragment.observer.TabObserver;
 import tutor.cesh.profile.fragment.subject.TabSubject;
 import tutor.cesh.profile.util.classes.ClassesUtility;
 
-public class TutorProfileFragment extends FragmentTabController implements TabObserver
+public class TutorProfileFragment extends FragmentTabController implements TabObserver,
+                                                                           CompoundButton.OnCheckedChangeListener
+
 {
 
     public  ImageView               profileImageView, coverImageView;
@@ -101,18 +106,19 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
         profileImageView    = (ImageView)   inflatedView.findViewById(R.id.profileImage);
         coverImageView      = (ImageView)   inflatedView.findViewById(R.id.profileBackgroundImage);
         tutorSwitch         = (Switch)      inflatedView.findViewById(R.id.tutorSwitch);
-        //switchText         = (ScrollView)  inflatedView.findViewById(R.id.tutorFragmentScrollView);
+        tutorSwitch.setOnCheckedChangeListener(this);
+        switchText          = (TextView)  inflatedView.findViewById(R.id.switchVisibilityTextView);
 
         cameraIcon          = (ImageButton) inflatedView.findViewById(R.id.cameraIcon);
         cameraIcon.setOnClickListener(this);
 
-        setScrollViewBackground();
+        setTutorProfileVisibility();
     }
 
     /**
      * Sets the tutor switch background heigh
      */
-    private void setScrollViewBackground()
+    private void setTutorProfileVisibility()
     {
         User user;
         Tutor tutor;
@@ -123,12 +129,8 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
         if(tutor.isPublic())
         {
             this.tutorSwitch.setChecked(true);
-            //this.tutorSwitch.setVisibility(View.INVISIBLE);
-        }
-        else
-        {
-            //this.scrollView.setBackgroundColor(Color.parseColor("#000000"));
-            //this.scrollView.setAlpha(.8f);
+            this.switchText.setText("Activated");
+            this.switchText.setBackgroundResource(R.drawable.oval_green_skinny);
         }
     }
 
@@ -171,6 +173,23 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
     public void setTabSubject(TabSubject subject)
     {
         subject.addObserver(this);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+    {
+        if(isChecked)
+        {
+            this.tutorSwitch.setChecked(true);
+            this.switchText.setText("Activated");
+            this.switchText.setBackgroundResource(R.drawable.oval_green_skinny);
+        }
+        else
+        {
+            this.tutorSwitch.setChecked(false);
+            this.switchText.setText("Deactivated");
+            this.switchText.setBackgroundResource(R.drawable.oval_red_skinny);
+        }
     }
 }
 

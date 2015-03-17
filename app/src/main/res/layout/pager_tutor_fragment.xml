@@ -314,21 +314,19 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/switchText"
                     android:layout_marginLeft="10dp"
-                    android:fontFamily="sans-serif-condensed"
-                    android:textAllCaps="false"
-                    android:textSize="8dp"
                     android:layout_gravity="center"
                     />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="#F1F1F1"
+                    android:background="@drawable/oval_red_skinny"
                     android:text="Deactivated"
-                    android:id="@+id/switchVisibility"
+                    android:id="@+id/switchVisibilityTextView"
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginRight="10dp"
+                    android:textColor="#fff"
                     />
 
             </RelativeLayout>
