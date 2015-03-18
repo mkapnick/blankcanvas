@@ -12,11 +12,14 @@ android:layout_height="match_parent">
     android:layout_alignParentTop="true"
     android:background="#F1F1F1">
 
+
+
     <RelativeLayout
         android:id="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
+
         <ImageView
             android:id="@+id/profileBackgroundImage"
             android:layout_width="match_parent"

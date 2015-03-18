@@ -59,6 +59,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
     private DrawerLayout            drawerLayout;
     private ListView                drawerLayoutListView;
     private ArrayList<TabObserver>  tabObservers = new ArrayList<TabObserver>();
+    private static TextView         tutorStatusCircle;
 
     public Resources getGeneralResources()
     {
@@ -77,8 +78,8 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
 
         position = this.viewPager.getCurrentItem();
 
-        if(resultCode != 0)
-        {
+        //if(resultCode != 0)
+        //{
             if(requestCode == COVER_IMAGE_REQUEST_CODE)
             {
                 user        = User.getInstance(activity);
@@ -116,7 +117,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
             {
                 notifyObservers();
             }
-        }
+        //}
     }
 
     @Override
@@ -163,6 +164,8 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
         //set up the image buttons found in the action bar
         this.editButton             = (TextView)v.findViewById(R.id.edit_action_bar_icon);
         this.arrowBackTextView      = (TextView)v.findViewById(R.id.arrow_back_image);
+        this.tutorStatusCircle      = (TextView)v.findViewById(R.id.tutorStatusCircle);
+
         this.editButton.setOnClickListener(this);
         this.arrowBackTextView.setOnClickListener(this);
 
@@ -391,5 +394,21 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
     {
         if(this.tabObservers.contains(observer))
             this.tabObservers.remove(observer);
+    }
+
+    /**
+     *
+     * @param activate
+     */
+    public static void setTutorActivated(boolean activate)
+    {
+        if(activate)
+        {
+            tutorStatusCircle.setBackgroundResource(R.drawable.circle_green);
+        }
+        else
+        {
+            tutorStatusCircle.setBackgroundResource(R.drawable.circle_red);
+        }
     }
 }

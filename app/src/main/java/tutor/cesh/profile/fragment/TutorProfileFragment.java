@@ -30,8 +30,8 @@ import tutor.cesh.profile.fragment.observer.TabObserver;
 import tutor.cesh.profile.fragment.subject.TabSubject;
 import tutor.cesh.profile.util.classes.ClassesUtility;
 
-public class TutorProfileFragment extends FragmentTabController implements TabObserver,
-                                                                           CompoundButton.OnCheckedChangeListener
+public class TutorProfileFragment extends FragmentTabController implements TabObserver
+
 
 {
 
@@ -39,7 +39,6 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
     private EditText                name, major, year, about, classes;
     private TextView                rate;
     private ImageButton             cameraIcon;
-    private Switch                  tutorSwitch;
     private TextView                switchText;
 
 
@@ -105,14 +104,10 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
         rate                = (TextView)    inflatedView.findViewById(R.id.rate);
         profileImageView    = (ImageView)   inflatedView.findViewById(R.id.profileImage);
         coverImageView      = (ImageView)   inflatedView.findViewById(R.id.profileBackgroundImage);
-        tutorSwitch         = (Switch)      inflatedView.findViewById(R.id.tutorSwitch);
-        tutorSwitch.setOnCheckedChangeListener(this);
-        switchText          = (TextView)  inflatedView.findViewById(R.id.switchVisibilityTextView);
+        switchText          = (TextView)    inflatedView.findViewById(R.id.switchVisibilityTextView);
 
         cameraIcon          = (ImageButton) inflatedView.findViewById(R.id.cameraIcon);
         cameraIcon.setOnClickListener(this);
-
-        setTutorProfileVisibility();
     }
 
     /**
@@ -128,9 +123,15 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
 
         if(tutor.isPublic())
         {
-            this.tutorSwitch.setChecked(true);
             this.switchText.setText("Activated");
-            this.switchText.setBackgroundResource(R.drawable.oval_green_skinny);
+            this.switchText.setBackgroundResource(R.drawable.oval_green);
+            super.setTutorActivated(true);
+        }
+        else
+        {
+            this.switchText.setText("Deactivated");
+            this.switchText.setBackgroundResource(R.drawable.oval_red);
+            super.setTutorActivated(false);
         }
     }
 
@@ -161,6 +162,7 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
         else
             this.classes.setText("");
 
+        setTutorProfileVisibility();
     }
 
     @Override
@@ -173,23 +175,6 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
     public void setTabSubject(TabSubject subject)
     {
         subject.addObserver(this);
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-    {
-        if(isChecked)
-        {
-            this.tutorSwitch.setChecked(true);
-            this.switchText.setText("Activated");
-            this.switchText.setBackgroundResource(R.drawable.oval_green_skinny);
-        }
-        else
-        {
-            this.tutorSwitch.setChecked(false);
-            this.switchText.setText("Deactivated");
-            this.switchText.setBackgroundResource(R.drawable.oval_red_skinny);
-        }
     }
 }
 

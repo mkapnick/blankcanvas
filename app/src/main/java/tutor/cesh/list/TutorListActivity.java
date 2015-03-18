@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import tutor.cesh.R;
+import tutor.cesh.format.TextFormatter;
 import tutor.cesh.profile.AccountActivity;
 import tutor.cesh.profile.ReadOnlyTutorProfileActivity;
 import tutor.cesh.profile.StudentTutorProfileContainerActivity;
@@ -294,7 +295,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
                     /* info from the server api */
                     map.put(ID, jsonObject.getString("id"));
-                    map.put(FIRST_NAME, jsonObject.getString("firstName"));
+                    map.put(FIRST_NAME, TextFormatter.capitalizeAllFirstLetters(jsonObject.getString("firstName")));
                     map.put(RATE, jsonObject.getString("rate"));
                     map.put(RATING, jsonObject.getString("rating"));
                     map.put(MAJOR, jsonObject.getString("major"));
@@ -380,8 +381,6 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
     }
-
-
 
 
 

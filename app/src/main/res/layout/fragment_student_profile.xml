@@ -8,6 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+
         >
 
         <TextView
@@ -28,6 +29,14 @@
             />
 
         <TextView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@drawable/circle_green"
+            android:layout_alignTop="@+id/edit_action_bar_icon"
+            android:layout_alignEnd="@+id/sliding_tabs"
+            android:id="@+id/tutorStatusCircle"/>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:id="@+id/edit_action_bar_icon"
@@ -40,22 +49,35 @@
 
     </RelativeLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="wrap_content"
-            android:layout_height="0px"
-            android:layout_weight="1"
-            android:background="#000"
-            android:layout_gravity="center"
-            />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
 
-    </LinearLayout>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager"
+                android:layout_width="wrap_content"
+                android:layout_height="0px"
+                android:layout_weight="1"
+                android:background="#000"
+                android:layout_gravity="center"
+                />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/drop_shadow"
+            />
+    </FrameLayout>
+
+
 
 
 </LinearLayout>

@@ -82,6 +82,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="25dp"
+                    android:id="@+id/priceInfo"
                     >
 
                     <TextView
@@ -136,6 +137,18 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="15dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/oval_red"
+                android:text="Deactivated"
+                android:id="@+id/switchVisibilityTextView"
+                android:textColor="#fff"
+                android:layout_centerHorizontal="true"
+                android:layout_alignBottom="@+id/dummyLayout"
+                android:layout_marginTop="5dp"
                 />
 
             <RelativeLayout
@@ -289,47 +302,6 @@
             </RelativeLayout>
 
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                android:background="@drawable/border_top"
-                android:alpha=".8"
-                >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#F1F1F1"
-                    android:text="Tutor profile visibility"
-                    android:id="@+id/switchText"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-
-                    />
-                <Switch
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#717171"
-                    android:id="@+id/tutorSwitch"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/switchText"
-                    android:layout_marginLeft="10dp"
-                    android:layout_gravity="center"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/oval_red_skinny"
-                    android:text="Deactivated"
-                    android:id="@+id/switchVisibilityTextView"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginRight="10dp"
-                    android:textColor="#fff"
-                    />
-
-            </RelativeLayout>
 
         </RelativeLayout>
     </ScrollView>

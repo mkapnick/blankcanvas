@@ -1,12 +1,16 @@
 package tutor.cesh.profile;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,16 +25,18 @@ import tutor.cesh.R;
 import tutor.cesh.list.StaticCurrentBitmapReadOnlyView;
 import tutor.cesh.profile.util.classes.ClassesUtility;
 
-public class ReadOnlyTutorProfileActivity extends Activity implements View.OnClickListener {
+public class ReadOnlyTutorProfileActivity extends ActionBarActivity implements View.OnClickListener {
 
     private String      rate, rating, firstName, major,minor,year, about;
     private Bitmap      coverImageBitmap;
     private TextView    nameTextView, majorTextView,
                         yearTextView, aboutTextView,
-                        classesTextView, rateTextView;
+                        classesTextView, rateTextView, actionBarProfileName, arrowBackImage;
     private Button      getInTouchButton;
     private ImageView   profileImageView, coverImageView;
     private String      tutorEmail;
+    private android.support.v7.app.ActionBar actionBar;
+
 
     public static final String ID             = "id"; // parent node
     public static final String FIRST_NAME     = "firstName";
@@ -50,6 +56,9 @@ public class ReadOnlyTutorProfileActivity extends Activity implements View.OnCli
      */
     private void initializeUI()
     {
+        LayoutInflater  inflator;
+        View            v;
+
         nameTextView                = (TextView)    this.findViewById(R.id.name);
         majorTextView               = (TextView)    this.findViewById(R.id.major);
         yearTextView                = (TextView)    this.findViewById(R.id.year);
@@ -58,9 +67,27 @@ public class ReadOnlyTutorProfileActivity extends Activity implements View.OnCli
         rateTextView                = (TextView)    this.findViewById(R.id.rate);
         profileImageView            = (ImageView)   findViewById(R.id.profileImage);
         coverImageView              = (ImageView)   findViewById(R.id.profileBackgroundImage);
+
+
         getInTouchButton            = (Button)      findViewById(R.id.getInTouchButton);
         getInTouchButton.getBackground().setAlpha(200);
         getInTouchButton.setOnClickListener(this);
+
+        /* Action Bar */
+
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_background));
+
+        inflator    = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        v           = inflator.inflate(R.layout.action_bar_custom_read_only_tutor_profile, null);
+
+        actionBarProfileName        = (TextView)    v.findViewById(R.id.actionBarProfileName);
+        arrowBackImage              = (TextView)    v.findViewById(R.id.arrow_back_image);
+        arrowBackImage.setOnClickListener(this);
+
+        actionBar.setCustomView(v);
     }
 
     @Override
@@ -78,7 +105,7 @@ public class ReadOnlyTutorProfileActivity extends Activity implements View.OnCli
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.read_only_tutor_profile, menu);
+        //getMenuInflater().inflate(R.menu.read_only_tutor_profile, menu);
         return true;
     }
 
@@ -133,6 +160,8 @@ public class ReadOnlyTutorProfileActivity extends Activity implements View.OnCli
         yearTextView.setText(this.year);
         aboutTextView.setText(this.about);
         rateTextView.setText(this.rate);
+        actionBarProfileName.setText(this.firstName + "'s" + " Profile");
+
         coverImageView.setBackground(drawable);
         getInTouchButton.setText("Get in touch with " + this.firstName);
 
@@ -148,6 +177,10 @@ public class ReadOnlyTutorProfileActivity extends Activity implements View.OnCli
         {
             case R.id.getInTouchButton:
                 setUpEmail();
+                break;
+
+            case R.id.arrow_back_image:
+                finish();
                 break;
         }
     }
