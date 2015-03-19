@@ -38,9 +38,11 @@
                 android:layout_height="wrap_content"
                 android:text="GENERAL INFO"
                 android:textSize="10sp"
+                android:textColor="#fff"
                 android:id="@+id/general_label"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/oval_gray_skinny"
                 />
 
                 <RelativeLayout
@@ -171,6 +173,7 @@
 
 
                             />
+
                     </RelativeLayout>
 
                     <TextView
@@ -180,8 +183,10 @@
                         android:textSize="10sp"
                         android:id="@+id/student_label"
                         android:layout_below="@id/general_info"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginTop="30dp"
+                        android:background="@drawable/oval_gray_skinny"
+                        android:textColor="#fff"
                         />
 
                     <RelativeLayout
@@ -263,8 +268,10 @@
                         android:textSize="10sp"
                         android:id="@+id/tutor_label"
                         android:layout_below="@+id/student_section"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginTop="30dp"
+                        android:background="@drawable/oval_gray_skinny"
+                        android:textColor="#fff"
                         />
 
                     <RelativeLayout
@@ -368,17 +375,31 @@
                             android:textColor="#60605C"
                             />
 
+                        <Switch
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tutor Profile Visibility"
+                            android:textColor="#717171"
+                            android:id="@+id/tutorSwitch"
+                            android:layout_below="@+id/tutor_about"
+                            android:layout_marginTop="15dp"
+                             />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#fff"
+                            android:id="@+id/switchText"
+                            android:layout_alignBottom="@+id/tutorSwitch"
+                            android:layout_toEndOf="@+id/tutorSwitch"
+                            android:layout_marginLeft="40dp"
+                            android:gravity="center"
+                             />
+
 
                     </RelativeLayout>
 
-                    <Switch
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Activate Tutor Profile"
-                        android:textColor="#717171"
-                        android:id="@+id/tutorSwitch"
-                        android:layout_above="@+id/tutor_section"
-                        android:layout_alignEnd="@+id/tutor_section" />
+
 
                     <Button
                         android:layout_width="match_parent"
@@ -391,6 +412,16 @@
                         android:layout_marginTop="20dp"
                         android:layout_marginLeft="12dp"
                         android:layout_marginRight="12dp"
+                        />
+
+                    <TextView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:background="@drawable/circle_green"
+                        android:id="@+id/tutorStatusCircle"
+                        android:layout_alignTop="@+id/tutor_label"
+                        android:layout_toRightOf="@+id/tutor_label"
+                        android:layout_marginLeft="5dp"
                         />
 
                 </RelativeLayout>

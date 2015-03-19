@@ -44,7 +44,7 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
     private Bundle          bundle;
     private EditText        name, major, minor, year, tutorAbout, studentAbout,
                             studentCurrentClasses, tutorCurrentClasses, rate;
-    private TextView        saveButton, arrowBackImage;
+    private TextView        saveButton, arrowBackImage, switchText, tutorStatusCircle;
     private Button          logoutButton;
     private Switch          tutorSwitch;
     private android.support.v7.app.ActionBar actionBar;
@@ -59,13 +59,15 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         LayoutInflater  inflator;
         View            v;
 
-        name        = (EditText) findViewById(R.id.name);
-        major       = (EditText) findViewById(R.id.major);
-        year        = (EditText) findViewById(R.id.year);
-        minor       = (EditText) findViewById(R.id.minor);
-        rate        = (EditText) findViewById(R.id.rate);
-        logoutButton= (Button)   findViewById(R.id.logoutButton);
-        tutorSwitch = (Switch)   findViewById(R.id.tutorSwitch);
+        name                = (EditText) findViewById(R.id.name);
+        major               = (EditText) findViewById(R.id.major);
+        year                = (EditText) findViewById(R.id.year);
+        minor               = (EditText) findViewById(R.id.minor);
+        rate                = (EditText) findViewById(R.id.rate);
+        switchText          = (TextView) findViewById(R.id.switchText);
+        tutorStatusCircle   = (TextView) findViewById(R.id.tutorStatusCircle);
+        logoutButton        = (Button)   findViewById(R.id.logoutButton);
+        tutorSwitch         = (Switch)   findViewById(R.id.tutorSwitch);
 
         studentAbout    = (EditText) findViewById(R.id.student_about);
         tutorAbout      = (EditText) findViewById(R.id.tutor_about);
@@ -141,7 +143,7 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
     {
-       //nothing as of now...
+        setTutorSwitchAndVisibility(isChecked);
     }
 
     @Override
@@ -278,8 +280,27 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         tutorCurrentClasses.setText(bundle.getString("tutorCurrentClasses"));
         tutorAbout.setText(bundle.getString("tutorAbout"));
 
-        this.tutorSwitch.setChecked(bundle.getBoolean("isPublic"));
+        /*** Tutor Switch **/
+        setTutorSwitchAndVisibility(bundle.getBoolean("isPublic"));
     }
 
+    private void setTutorSwitchAndVisibility(boolean isActviated)
+    {
+        /*** Tutor Switch **/
+        if(isActviated)
+        {
+            this.tutorSwitch.setChecked(true);
+            this.switchText.setText("Activated");
+            this.switchText.setBackgroundResource(R.drawable.oval_green_skinny);
+            this.tutorStatusCircle.setBackgroundResource(R.drawable.circle_green);
+        }
+        else
+        {
+            this.tutorSwitch.setChecked(false);
+            this.switchText.setText("Deactivated");
+            this.switchText.setBackgroundResource(R.drawable.oval_red_skinny);
+            this.tutorStatusCircle.setBackgroundResource(R.drawable.circle_red);
+        }
 
+    }
 }

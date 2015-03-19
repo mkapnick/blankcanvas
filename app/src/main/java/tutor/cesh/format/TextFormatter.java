@@ -5,7 +5,11 @@ package tutor.cesh.format;
  */
 public class TextFormatter
 {
-
+    /**
+     *
+     * @param s
+     * @return
+     */
     public static String capitalizeAllFirstLetters(String s)
     {
         char    firstLetter;
