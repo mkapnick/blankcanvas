@@ -5,25 +5,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import tutor.cesh.R;
+import tutor.cesh.list.listview.TutorListViewItem;
 
 /**
  * Created by michaelkapnick on 3/14/15.
  */
 public class TutorListDrawerLayoutAdapter extends BaseAdapter
 {
-    private LayoutInflater mInflater;
+    private LayoutInflater                  mInflater;
+    private ArrayList<TutorListViewItem>    tutorListViewItems;
 
-    public TutorListDrawerLayoutAdapter(Context context)
+    public TutorListDrawerLayoutAdapter(Context context, ArrayList<TutorListViewItem> items)
     {
-        mInflater = LayoutInflater.from(context);
+        mInflater               = LayoutInflater.from(context);
+        this.tutorListViewItems = items;
     }
 
     @Override
     public int getCount()
     {
-        return 1;
+        return this.tutorListViewItems.size();
     }
 
     @Override
@@ -41,16 +48,25 @@ public class TutorListDrawerLayoutAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        View view;
+        View                view;
+        ImageView           imageView;
+        TextView            textView;
+        TutorListViewItem   item;
 
+        view = convertView;
         if (convertView == null)
         {
-            view = mInflater.inflate(R.layout.drawerlayout_tutor_list_activity, parent, false);
+            view = mInflater.inflate(R.layout.drawerlayout_tutor_list_view, parent, false);
         }
-        else
-        {
-            view = convertView;
-        }
+
+        imageView   = (ImageView) view.findViewById(R.id.icon);
+        textView    = (TextView)  view.findViewById(R.id.text);
+        item        = this.tutorListViewItems.get(position);
+
+        textView.setText(item.getText());
+
+        if(item.getDrawable() != null)
+            imageView.setBackground(item.getDrawable());
 
         return view;
     }

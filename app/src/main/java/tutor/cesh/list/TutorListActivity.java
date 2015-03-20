@@ -5,20 +5,17 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,7 +31,8 @@ import java.util.HashMap;
 
 import tutor.cesh.R;
 import tutor.cesh.format.TextFormatter;
-import tutor.cesh.profile.AccountActivity;
+import tutor.cesh.list.listview.JSONAdapter;
+import tutor.cesh.list.listview.TutorListViewItem;
 import tutor.cesh.profile.ReadOnlyTutorProfileActivity;
 import tutor.cesh.profile.StudentTutorProfileContainerActivity;
 import tutor.cesh.rest.asynchronous.AsyncDownloader;
@@ -46,18 +44,29 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                                                             BitmapCacheBehavior,
                                                             View.OnClickListener
 {
-    private ListView                listView, drawerLayoutListView;
-    private MenuItem                searchItem;
-    private SearchView              searchView;
-    protected DrawerLayout          drawerLayout;
-    private RelativeLayout          relativeLayout;
-    private ActionBarDrawerToggle   actionBarDrawerToggle;
-    private TextView                actionBarProfileButton;
+    private ListView                        listView, drawerLayoutListView;
+    private MenuItem                        searchItem;
+    private SearchView                      searchView;
+    protected DrawerLayout                  drawerLayout;
+    private ActionBarDrawerToggle           actionBarDrawerToggle;
+    private TextView                        actionBarProfileButton;
+    private RelativeLayout                  relativeLayout;
+    private ArrayList<TutorListViewItem>    tutorListViewItems;
+
+    /**
+     *
+     *
+     *
+     */
+
+    ListView mDrawerList;
+    RelativeLayout mDrawerPane;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private DrawerLayout mDrawerLayout;
 
 
 
-
-    private JSONAdapter                         adapter;
+    private JSONAdapter adapter;
     private TextView                            emptyTextView;
     private ArrayList<HashMap<String, String>>  data;
     private HashMap<String, Bitmap>             mapIDToBitmap;
@@ -144,15 +153,17 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
      */
     private void initializeUI()
     {
-        this.listView           = (ListView) findViewById(R.id.tutor_list_activity_main_list_view);
-        this.emptyTextView      = (TextView) findViewById(R.id.emptyTextView);
-        this.searchView         = (SearchView) findViewById(R.id.action_search_icon);
+        this.listView                   = (ListView) findViewById(R.id.tutor_list_activity_main_list_view);
+        this.emptyTextView              = (TextView) findViewById(R.id.emptyTextView);
+        this.searchView                 = (SearchView) findViewById(R.id.action_search_icon);
         this.searchView.setOnQueryTextListener(this);
 
-        this.actionBarProfileButton = (TextView) findViewById(R.id.action_bar_profile_button);
+        this.actionBarProfileButton     = (TextView) findViewById(R.id.action_bar_profile_button);
         this.actionBarProfileButton.setOnClickListener(this);
-        data                    = new ArrayList<HashMap<String, String>>();
-        mapIDToBitmap           = new HashMap<String, Bitmap>();
+
+        this.tutorListViewItems         = new ArrayList<TutorListViewItem>();
+        this.data                       = new ArrayList<HashMap<String, String>>();
+        this.mapIDToBitmap              = new HashMap<String, Bitmap>();
     }
 
     @Override
@@ -201,6 +212,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         populateDataFromServer();
 
         //setUpActionBar();
+        setUpListViewItems();
         setUpDrawerLayout();
     }
 
@@ -260,6 +272,36 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         httpGet     = new HttpGet(ALL_TUTORS);
 
         asyncGet.execute(httpGet);
+    }
+
+    private void setUpListViewItems()
+    {
+        TutorListViewItem   item;
+        String              text;
+        Drawable            drawable;
+
+        text        = "Settings";
+        drawable    = getResources().getDrawable(android.R.drawable.ic_menu_preferences);
+        item        = new TutorListViewItem(text, drawable);
+        this.tutorListViewItems.add(item);
+
+        text        = "Contact Us";
+        drawable    = getResources().getDrawable(R.drawable.ic_action_send_now);
+        item        = new TutorListViewItem(text, drawable);
+        this.tutorListViewItems.add(item);
+
+        text        = "Careers";
+        item        = new TutorListViewItem(text, null);
+        this.tutorListViewItems.add(item);
+
+        text        = "Help";
+        drawable    = getResources().getDrawable(R.drawable.ic_action_help);
+        item        = new TutorListViewItem(text, drawable);
+        this.tutorListViewItems.add(item);
+
+
+
+
     }
 
     /**
@@ -348,10 +390,24 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
     private void setUpDrawerLayout()
     {
-        drawerLayout            = (DrawerLayout) findViewById(R.id.tutor_list_drawer_layout);
-        drawerLayoutListView    = (ListView) findViewById(R.id.tutor_list_activity_right_drawer_list_view);
+        ViewGroup header, footer;
 
-        drawerLayoutListView.setAdapter(new TutorListDrawerLayoutAdapter(this));
+        this.drawerLayout           = (DrawerLayout) findViewById(R.id.tutor_list_drawer_layout);
+        drawerLayoutListView        = (ListView) findViewById(R.id.tutor_list_activity_right_drawer_list_view);
+        header                      = (ViewGroup) getLayoutInflater().
+                                        inflate(R.layout.header_drawerlayout_tutor_list_activity,
+                                                this.drawerLayoutListView,
+                                                false);
+        footer                      = (ViewGroup) getLayoutInflater().
+                                        inflate(R.layout.footer_drawerlayout_tutor_list_activity,
+                                                this.drawerLayoutListView,
+                                                false);
+
+        //v                           = View.inflate(this, R.layout.header_drawerlayout_tutor_list_activity, null);
+
+        drawerLayoutListView.addHeaderView(header, null, false);
+        //drawerLayoutListView.addFooterView(footer, null, false);
+        drawerLayoutListView.setAdapter(new TutorListDrawerLayoutAdapter(this, this.tutorListViewItems));
         drawerLayoutListView.setOnItemClickListener(new DrawerItemClickListener());
 
         //Set up animation for on slide of the drawer layout
@@ -436,5 +492,14 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
             startActivity(intent);
         }
+    }
+
+    private LayoutInflater getPrivateLayoutInflater()
+    {
+        LayoutInflater inflater;
+
+        inflater =  (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        return inflater;
     }
 }
