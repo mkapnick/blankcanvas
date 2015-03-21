@@ -1,0 +1,8 @@
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Major"
+    android:textColor="#717171"
+    android:gravity="center"
+    android:padding="10dp"
+    android:id="@+id/edit_student_tutor_major"/>

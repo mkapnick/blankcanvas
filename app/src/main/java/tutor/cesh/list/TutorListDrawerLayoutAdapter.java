@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import tutor.cesh.R;
-import tutor.cesh.list.listview.TutorListViewItem;
+import tutor.cesh.list.view.adapter.TutorListViewItem;
 
 /**
  * Created by michaelkapnick on 3/14/15.

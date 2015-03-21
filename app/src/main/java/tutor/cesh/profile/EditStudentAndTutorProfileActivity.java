@@ -1,5 +1,6 @@
 package tutor.cesh.profile;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -24,6 +25,10 @@ import tutor.cesh.R;
 import tutor.cesh.Student;
 import tutor.cesh.Tutor;
 import tutor.cesh.User;
+import tutor.cesh.list.view.adapter.MajorAdapter;
+import tutor.cesh.dialog.CheckBoxDialogButtonListener;
+import tutor.cesh.dialog.CheckBoxDialogMultiChoiceClickListener;
+import tutor.cesh.dialog.DialogMultiChoiceFactory;
 import tutor.cesh.rest.asynchronous.RestClientExecute;
 import tutor.cesh.rest.http.CourseHttpObject;
 import tutor.cesh.rest.http.EnrollHttpObject;
@@ -58,6 +63,7 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
 
         name                = (EditText) findViewById(R.id.name);
         major               = (EditText) findViewById(R.id.major);
+        major.setOnClickListener(this);
         year                = (EditText) findViewById(R.id.year);
         minor               = (EditText) findViewById(R.id.minor);
         rate                = (EditText) findViewById(R.id.rate);
@@ -133,6 +139,9 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
                 break;
             case R.id.arrow_back_image:
                 finish();
+                break;
+            case R.id.major:
+                setMajorDialog();
                 break;
         }
     }
@@ -262,23 +271,61 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
     /**
      *
      */
-    private void setUpUserData()
+    private void setMajorDialog()
     {
-        //TODO DO WE EVEN NEED THE BUNDLE FOR THIS??
-        this.bundle = getIntent().getExtras();
-        name.setText(bundle.getString("name"));
-        major.setText(bundle.getString("major"));
-        year.setText(bundle.getString("year"));
+        boolean                                 isCancelable;
+        AlertDialog                             alertDialog;
+        CheckBoxDialogButtonListener            buttonListener;
+        String                                  title, message, positiveButton, negativeButton;
+        MajorAdapter                            majorAdapter;
+        ArrayList<String>                       majors;
 
-        studentCurrentClasses.setText(bundle.getString("studentCurrentClasses"));
-        studentAbout.setText(bundle.getString("studentAbout"));
+        majors                  = new ArrayList<String>();
+        majors.add("History");
+        majors.add("Computer Science");
+        majors.add("Engineering");
+        majors.add("Engineering");
+        majors.add("Engineering");
+        majors.add("Engineering");
+        majors.add("Engineering");
+        majors.add("Engineering");
+        majors.add("Engineering");
+        majors.add("Engineering");
+        majors.add("Engineering");
+        majors.add("Engineering");
+        majors.add("Engineering");
+        majors.add("Engineering");
+        majors.add("Engineering");
+        majors.add("Engineering");
+        majors.add("Engineering");
+        majors.add("Engineering");
+        majors.add("Engineering");
+        majors.add("Engineering");
 
-        rate.setText(bundle.getString("rate"));
-        tutorCurrentClasses.setText(bundle.getString("tutorCurrentClasses"));
-        tutorAbout.setText(bundle.getString("tutorAbout"));
+        majorAdapter            = new MajorAdapter(this, majors);
 
-        /*** Tutor Switch **/
-        setTutorSwitchAndVisibility(bundle.getBoolean("isPublic"));
+        buttonListener          = new CheckBoxDialogButtonListener(this);
+
+        title                   = "Please select your major(s)";
+        positiveButton          = "Ok";
+        negativeButton          = "Cancel";
+        isCancelable            = true;
+
+        /*DialogMultiChoiceFactory.createAndShowDialog(this, title, isCancelable,
+                                                            positiveButton, negativeButton,
+                                                            buttonListener, majorAdapter, majorAdapter);*/
+
+        DialogMultiChoiceFactory.createAndShowDialog(this, title, positiveButton, negativeButton,
+                new CharSequence[]{"one", "two", "three"}, buttonListener,
+                new CheckBoxDialogMultiChoiceClickListener(this));
+    }
+
+    /**
+     *
+     */
+    private void setRateDialog()
+    {
+
     }
 
     private void setTutorSwitchAndVisibility(boolean isActviated)
@@ -298,6 +345,37 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
             this.switchText.setBackgroundResource(R.drawable.oval_red_custom_edit);
             this.tutorStatusCircle.setBackgroundResource(R.drawable.circle_red);
         }
+    }
+
+    /**
+     *
+     */
+    private void setUpUserData()
+    {
+        //TODO DO WE EVEN NEED THE BUNDLE FOR THIS??
+        this.bundle = getIntent().getExtras();
+        name.setText(bundle.getString("name"));
+        major.setText(bundle.getString("major"));
+        year.setText(bundle.getString("year"));
+
+        studentCurrentClasses.setText(bundle.getString("studentCurrentClasses"));
+        studentAbout.setText(bundle.getString("studentAbout"));
+
+        rate.setText(bundle.getString("rate"));
+        tutorCurrentClasses.setText(bundle.getString("tutorCurrentClasses"));
+        tutorAbout.setText(bundle.getString("tutorAbout"));
+
+        /*** Tutor Switch **/
+        setTutorSwitchAndVisibility(bundle.getBoolean("isPublic"));
+    }
+
+    /**
+     *
+     */
+    private void setYearDialog()
+    {
 
     }
+
+
 }

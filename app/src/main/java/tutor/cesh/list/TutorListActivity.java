@@ -31,8 +31,8 @@ import java.util.HashMap;
 
 import tutor.cesh.R;
 import tutor.cesh.format.TextFormatter;
-import tutor.cesh.list.listview.JSONAdapter;
-import tutor.cesh.list.listview.TutorListViewItem;
+import tutor.cesh.list.view.adapter.TutorListAdapter;
+import tutor.cesh.list.view.adapter.TutorListViewItem;
 import tutor.cesh.profile.ReadOnlyTutorProfileActivity;
 import tutor.cesh.profile.StudentTutorProfileContainerActivity;
 import tutor.cesh.rest.asynchronous.AsyncDownloader;
@@ -54,7 +54,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     private ArrayList<TutorListViewItem>    tutorListViewItems;
 
 
-    private JSONAdapter                         jsonAdapter;
+    private TutorListAdapter tutorListAdapter;
     private TextView                            emptyTextView;
     private ArrayList<HashMap<String, String>>  data;
     private HashMap<String, Bitmap>             mapIDToBitmap;
@@ -80,14 +80,14 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     {
         mapIDToBitmap.put(identifier, bitmap);
 
-        if(jsonAdapter != null) //HACK RIGHT HERE IF I EVER SAW ONE!!! NEED THIS LINE OF CODE
+        if(tutorListAdapter != null) //HACK RIGHT HERE IF I EVER SAW ONE!!! NEED THIS LINE OF CODE
                             //TO INITIALLY POPULATE THE LISTVIEW, BECAUSE THE MAPURLTOBITMPA
                             //DATA STRUCTURE WILL NOT BE FULLY SET IN TIME WHEN POPULATING
                             //THE LIST VIEW THE FIRST TIME, THIS GET FILTER TELLS THE LISTVIEW TO
                             //REPOPULATE ITSELF AFTER EVERY NEW ADDITION TO THE MAPURLTOBITMAP
                             //DATA STRUCTURE
         {
-            jsonAdapter.getFilter().filter("");
+            tutorListAdapter.getFilter().filter("");
         }
     }
 
@@ -239,7 +239,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     @Override
     public boolean onQueryTextChange(String s)
     {
-        jsonAdapter.getFilter().filter(s);
+        tutorListAdapter.getFilter().filter(s);
         return true;
     }
 
@@ -363,10 +363,10 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                 e.printStackTrace();
             }
 
-            jsonAdapter = new JSONAdapter(this, this.getResources(), this.data, this.listView);
-            jsonAdapter.setCachedMap(this.mapIDToBitmap); //need to associate the cached map
-                                                      // with this jsonAdapter!!!
-            this.listView.setAdapter(jsonAdapter);
+            tutorListAdapter = new TutorListAdapter(this, this.getResources(), this.data, this.listView);
+            tutorListAdapter.setCachedMap(this.mapIDToBitmap); //need to associate the cached map
+                                                      // with this tutorListAdapter!!!
+            this.listView.setAdapter(tutorListAdapter);
             this.listView.setOnItemClickListener(new ListViewOnClickListener()); //Click event for
                                                                                  //single list row
         }
@@ -443,11 +443,11 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-            // Get the jsonAdapter, get the data, get the hashmap associated with the position the user clicked,
+            // Get the tutorListAdapter, get the data, get the hashmap associated with the position the user clicked,
             //start a new read only tutor list activity
             // @version by Michael Kapnick
 
-            JSONAdapter                         jsonAdapter;
+            TutorListAdapter tutorListAdapter;
             ArrayList<HashMap<String, String>>  data;
             HashMap<String, String>             map;
             Intent                              intent;
@@ -457,8 +457,8 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
             Bitmap                              coverImageBitmap;
             byte []                             byteArray;
 
-            jsonAdapter             = (JSONAdapter) parent.getAdapter();
-            data                = jsonAdapter.getData();
+            tutorListAdapter = (TutorListAdapter) parent.getAdapter();
+            data                = tutorListAdapter.getData();
             map                 = data.get(position);
             bundle              = new Bundle();
             coverImageBitmap    = mapIDToBitmap.get(data.get(position).get(ID));
