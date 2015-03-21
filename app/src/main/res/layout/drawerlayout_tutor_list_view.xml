@@ -8,14 +8,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="35dp">
-
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        >
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:background="@drawable/ic_action_search"
             android:id="@+id/icon"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -24,8 +26,6 @@
             android:text="Create group session"
             android:layout_toRightOf="@+id/icon"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="40dp"/>
     </RelativeLayout>
-
-
 </RelativeLayout>

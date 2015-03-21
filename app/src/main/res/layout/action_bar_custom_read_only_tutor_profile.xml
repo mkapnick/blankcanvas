@@ -10,7 +10,6 @@
         android:layout_height="20dp"
         android:background="@drawable/ic_action_back"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="15dp"
         android:id="@+id/arrow_back_image"/>
 
     <TextView

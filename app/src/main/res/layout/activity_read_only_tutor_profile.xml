@@ -3,296 +3,288 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 android:id="@+id/drawer_layout_tutor"
 android:layout_width="match_parent"
 android:layout_height="match_parent">
-
-<ScrollView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:fillViewport="true"
-    android:scrollbars="vertical"
-    android:layout_alignParentTop="true"
-    android:background="#F1F1F1">
-
-
-
-    <RelativeLayout
-        android:id="@+id/top"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-        <ImageView
-            android:id="@+id/profileBackgroundImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            android:layout_alignBottom="@+id/dummyLayout"
-            android:layout_alignParentTop="true"/>
-
-        <ImageView
-            android:id="@+id/profileImage"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:adjustViewBounds="true"
-            android:layout_marginLeft="15dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="200dp"
-            android:visibility="invisible"
-            />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:id="@+id/getInTouchButton"
-            android:background="#2C3E57"
-            android:textSize="12dp"
-            android:layout_marginTop="10dp"
-            android:textStyle="bold"
-            android:layout_alignBottom="@+id/profileBackgroundImage"
-            />
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:scrollbars="vertical"
+        android:layout_alignParentTop="true"
+        android:background="#F1F1F1">
 
         <RelativeLayout
+            android:id="@+id/top"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignTop="@+id/dummyLayout"
-            android:id="@+id/nameFieldLayout">
+            android:layout_height="match_parent"
+            >
 
-            <EditText
-                android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/profileBackgroundImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:layout_alignBottom="@+id/dummyLayout"
+                android:layout_alignParentTop="true"/>
+
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:adjustViewBounds="true"
+                android:layout_marginLeft="15dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="200dp"
+                android:visibility="invisible"
+                />
+
+            <Button
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/name"
-                android:hint="N/A"
-                android:textColor="#4A4A4A"
-                android:textColorHint="#4A4A4A"
-                android:gravity="left"
-                android:clickable="false"
-                android:editable="false"
-                android:textSize="16sp"
-                android:maxLines="2"
-                android:textCursorDrawable="@null"
-                android:background="#00000000"
-                android:paddingLeft="10dp"
-                android:layout_marginTop="25dp"
-
+                android:textColor="#ffffff"
+                android:id="@+id/getInTouchButton"
+                android:background="#000"
+                android:textSize="12dp"
+                android:layout_marginTop="10dp"
+                android:layout_alignBottom="@+id/profileBackgroundImage"
                 />
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/oval_gray_skinny"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="25dp"
-                >
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignTop="@+id/dummyLayout"
+                android:id="@+id/nameFieldLayout">
 
-                <TextView
+                <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/dollarSign"
-                    android:text="$"
-                    android:textColor="#fff"
-                    android:textColorHint="#fff"
-                    android:textSize="10sp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/rate"
+                    android:id="@+id/name"
                     android:hint="N/A"
-                    android:textColor="#fff"
-                    android:textColorHint="#fff"
-                    android:layout_toRightOf="@+id/dollarSign"
-                    android:textSize="10sp"
+                    android:textColor="#4A4A4A"
+                    android:textColorHint="#4A4A4A"
+                    android:gravity="left"
+                    android:clickable="false"
+                    android:editable="false"
+                    android:textSize="16sp"
+                    android:maxLines="2"
+                    android:textCursorDrawable="@null"
+                    android:background="#00000000"
+                    android:paddingLeft="10dp"
+                    android:layout_marginTop="25dp"
+
                     />
 
-                <TextView
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/perHour"
-                    android:text="/hour"
-                    android:textColor="#fff"
-                    android:textColorHint="#fff"
-                    android:layout_toRightOf="@+id/rate"
-                    android:textSize="10sp"
+                    android:background="@drawable/oval_gray_skinny"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="25dp"
+                    >
 
-                    />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/dollarSign"
+                        android:text="$"
+                        android:textColor="#fff"
+                        android:textColorHint="#fff"
+                        android:textSize="10sp"
+                        />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/rate"
+                        android:hint="N/A"
+                        android:textColor="#fff"
+                        android:textColorHint="#fff"
+                        android:layout_toRightOf="@+id/dollarSign"
+                        android:textSize="10sp"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/perHour"
+                        android:text="/hour"
+                        android:textColor="#fff"
+                        android:textColorHint="#fff"
+                        android:layout_toRightOf="@+id/rate"
+                        android:textSize="10sp"
+
+                        />
+
+                </RelativeLayout>
             </RelativeLayout>
-        </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/dummyLayout"
-            android:layout_marginTop="345dp"
-            >
-        </RelativeLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/border_top"
-            android:layout_below="@+id/nameFieldLayout"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="15dp"
-            />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/userInfoSection"
-            android:paddingTop="10dp"
-            android:layout_below="@+id/dummyLayout"
-            android:layout_marginTop="70dp"
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/majorTitle"
-                android:hint="Major"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
-                android:textSize="14dp"
-                android:paddingLeft="10dp"
-                android:clickable="false"
-                android:editable="false"
-                android:background="#00000000"
-                android:textStyle="bold"
-                />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/major"
-                android:hint="N/A"
-                android:textColor="#4A4A4A"
-                android:textColorHint="#4A4A4A"
-                android:textSize="14dp"
-                android:paddingLeft="10dp"
-                android:clickable="false"
-                android:editable="false"
-                android:background="#00000000"
-                android:layout_below="@+id/majorTitle"
-                android:layout_marginTop="10dp"
-
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/yearTitle"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
-                android:textSize="14dp"
-                android:text="Year"
-                android:paddingLeft="10dp"
-                android:clickable="false"
-                android:editable="false"
-                android:background="#00000000"
-                android:textStyle="bold"
-                android:layout_below="@+id/major"
-                android:layout_marginTop="15dp"
-                />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/year"
-                android:hint="N/A"
-                android:textColor="#4A4A4A"
-                android:textColorHint="#4A4A4A"
-                android:textSize="14dp"
-                android:paddingLeft="10dp"
-                android:clickable="false"
-                android:editable="false"
-                android:background="#00000000"
-                android:layout_below="@+id/yearTitle"
-                android:layout_marginTop="10dp"
-
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:text="Classes"
-                android:paddingLeft="10dp"
-                android:id="@+id/classesTitle"
-                android:textColor="@color/black"
-                android:layout_below="@id/year"
-                android:layout_marginTop="15dp"
-                />
-
-            <EditText
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/classes"
-                android:hint="N/A"
-                android:textColor="#4A4A4A"
-                android:textSize="14dp"
-                android:textColorHint="#4A4A4A"
-                android:editable="false"
-                android:singleLine="false"
-                android:paddingLeft="10dp"
-                android:scrollbars="vertical"
-                android:background="#00000000"
-                android:layout_below="@+id/classesTitle"
-                android:layout_marginTop="10dp"
-
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fillViewport="true"
-                android:layout_below="@id/classes"
-                android:text="About"
-                android:textStyle="bold"
-                android:id="@+id/aboutTitle"
-                android:layout_marginTop="15dp"
-                android:textColor="@color/black"
-                android:paddingLeft="10dp"
-                />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/about"
-                android:textColor="#4A4A4A"
-                android:textColorHint="#4A4A4A"
-                android:textSize="14dp"
-                android:editable="false"
-                android:singleLine="false"
-                android:paddingLeft="10dp"
-                android:scrollbars="vertical"
-                android:hint="N/A"
-                android:text="testing 123"
-                android:background="#00000000"
-                android:layout_below="@id/aboutTitle"
-                android:layout_marginTop="10dp"
-
-                />
+                android:id="@+id/dummyLayout"
+                android:layout_marginTop="345dp"
+                >
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_top"
+                android:layout_below="@+id/nameFieldLayout"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_below="@id/about"
                 android:layout_marginTop="15dp"
-                android:id="@+id/lastLine"
                 />
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/userInfoSection"
+                android:paddingTop="10dp"
+                android:layout_below="@+id/dummyLayout"
+                android:layout_marginTop="70dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/majorTitle"
+                    android:hint="Major"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="14dp"
+                    android:paddingLeft="10dp"
+                    android:clickable="false"
+                    android:editable="false"
+                    android:background="#00000000"
+                    android:textStyle="bold"
+                    />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/major"
+                    android:hint="N/A"
+                    android:textColor="#4A4A4A"
+                    android:textColorHint="#4A4A4A"
+                    android:textSize="14dp"
+                    android:paddingLeft="10dp"
+                    android:clickable="false"
+                    android:editable="false"
+                    android:background="#00000000"
+                    android:layout_below="@+id/majorTitle"
+                    android:layout_marginTop="10dp"
+
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/yearTitle"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="14dp"
+                    android:text="Graduation Year"
+                    android:paddingLeft="10dp"
+                    android:clickable="false"
+                    android:editable="false"
+                    android:background="#00000000"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/major"
+                    android:layout_marginTop="15dp"
+                    />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/year"
+                    android:hint="N/A"
+                    android:textColor="#4A4A4A"
+                    android:textColorHint="#4A4A4A"
+                    android:textSize="14dp"
+                    android:paddingLeft="10dp"
+                    android:clickable="false"
+                    android:editable="false"
+                    android:background="#00000000"
+                    android:layout_below="@+id/yearTitle"
+                    android:layout_marginTop="10dp"
+
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="Classes I'm tutoring"
+                    android:paddingLeft="10dp"
+                    android:id="@+id/classesTitle"
+                    android:textColor="@color/black"
+                    android:layout_below="@id/year"
+                    android:layout_marginTop="15dp"
+                    />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/classes"
+                    android:hint="N/A"
+                    android:textColor="#4A4A4A"
+                    android:textSize="14dp"
+                    android:textColorHint="#4A4A4A"
+                    android:editable="false"
+                    android:singleLine="false"
+                    android:paddingLeft="10dp"
+                    android:scrollbars="vertical"
+                    android:background="#00000000"
+                    android:layout_below="@+id/classesTitle"
+                    android:layout_marginTop="10dp"
+
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true"
+                    android:layout_below="@id/classes"
+                    android:text="About"
+                    android:textStyle="bold"
+                    android:id="@+id/aboutTitle"
+                    android:layout_marginTop="15dp"
+                    android:textColor="@color/black"
+                    android:paddingLeft="10dp"
+                    />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/about"
+                    android:textColor="#4A4A4A"
+                    android:textColorHint="#4A4A4A"
+                    android:textSize="14dp"
+                    android:editable="false"
+                    android:singleLine="false"
+                    android:paddingLeft="10dp"
+                    android:scrollbars="vertical"
+                    android:hint="N/A"
+                    android:text="testing 123"
+                    android:background="#00000000"
+                    android:layout_below="@id/aboutTitle"
+                    android:layout_marginTop="10dp"
+
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_top"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_below="@id/about"
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/lastLine"
+                    />
+
+            </RelativeLayout>
         </RelativeLayout>
-
-    </RelativeLayout>
-
-
-</ScrollView>
-
+    </ScrollView>
 </RelativeLayout>

@@ -50,7 +50,6 @@ public class ReadOnlyTutorProfileActivity extends ActionBarActivity implements V
     public static final String ABOUT          = "about";
     public static final String EMAIL          = "email";
 
-
     /**
      *
      */

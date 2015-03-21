@@ -382,7 +382,7 @@
                             android:textColor="#717171"
                             android:id="@+id/tutorSwitch"
                             android:layout_below="@+id/tutor_about"
-                            android:layout_marginTop="15dp"
+                            android:layout_marginTop="30dp"
                              />
 
                         <TextView
@@ -394,11 +394,11 @@
                             android:layout_toEndOf="@+id/tutorSwitch"
                             android:layout_marginLeft="40dp"
                             android:gravity="center"
+                            android:background="@drawable/oval_green_custom_edit"
                              />
 
 
                     </RelativeLayout>
-
 
 
                     <Button

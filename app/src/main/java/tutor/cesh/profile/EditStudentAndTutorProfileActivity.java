@@ -1,6 +1,5 @@
 package tutor.cesh.profile;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -17,7 +16,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 
 import java.util.ArrayList;
@@ -26,7 +24,6 @@ import tutor.cesh.R;
 import tutor.cesh.Student;
 import tutor.cesh.Tutor;
 import tutor.cesh.User;
-import tutor.cesh.profile.util.classes.ClassesUtility;
 import tutor.cesh.rest.asynchronous.RestClientExecute;
 import tutor.cesh.rest.http.CourseHttpObject;
 import tutor.cesh.rest.http.EnrollHttpObject;
@@ -82,7 +79,7 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_background));
 
         inflator    = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        v           = inflator.inflate(R.layout.edit_info_custom_action_bar, null);
+        v           = inflator.inflate(R.layout.action_bar_edit_student_tutor_profile, null);
         saveButton  = (TextView) v.findViewById(R.id.saveButton);
         arrowBackImage = (TextView) v.findViewById(R.id.arrow_back_image);
 
@@ -291,14 +288,14 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         {
             this.tutorSwitch.setChecked(true);
             this.switchText.setText("Activated");
-            this.switchText.setBackgroundResource(R.drawable.oval_green_skinny);
+            this.switchText.setBackgroundResource(R.drawable.oval_green_custom_edit);
             this.tutorStatusCircle.setBackgroundResource(R.drawable.circle_green);
         }
         else
         {
             this.tutorSwitch.setChecked(false);
             this.switchText.setText("Deactivated");
-            this.switchText.setBackgroundResource(R.drawable.oval_red_skinny);
+            this.switchText.setBackgroundResource(R.drawable.oval_red_custom_edit);
             this.tutorStatusCircle.setBackgroundResource(R.drawable.circle_red);
         }
 

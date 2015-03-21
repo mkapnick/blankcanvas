@@ -16,13 +16,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,7 +157,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
         //view containing the fragments UI
         View v;
 
-        v = inflater.inflate(R.layout.fragment_student_profile, container, false);
+        v = inflater.inflate(R.layout.fragment_student_tutor_profile_container, container, false);
 
         //set up the image buttons found in the action bar
         this.editButton             = (TextView)v.findViewById(R.id.edit_action_bar_icon);
@@ -177,7 +175,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
         slidingTabLayout = (SlidingTabLayout) v.findViewById(R.id.sliding_tabs);
-        slidingTabLayout.setCustomTabView(R.layout.custom_tab, 0);
+        slidingTabLayout.setCustomTabView(R.layout.tab_custom_layout, 0);
         slidingTabLayout.setViewPager(viewPager);
 
         return v;

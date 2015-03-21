@@ -37,12 +37,37 @@
 
         </RelativeLayout>
 
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/filterSpace"
+            android:background="#f1f1f1">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Filters"
+                android:id="@+id/filterButton"
+                android:textColor="@color/white"
+                android:background="@drawable/oval_blue"
+                android:gravity="center"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
+                android:padding="12dp"
+                android:alpha=".9"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"/>
+
+        </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/tutor_list_main_layout"
-            >
+            android:layout_below="@+id/filterSpace"
 
+            >
             <ListView android:id="@+id/tutor_list_activity_main_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -63,18 +88,20 @@
                 android:textSize="20sp"
                 android:visibility="gone"
                 />
-
         </RelativeLayout>
     </LinearLayout>
 
     <ListView
         android:id="@+id/tutor_list_activity_right_drawer_list_view"
-        android:layout_width="280dp"
+        android:layout_width="310dp"
         android:layout_height="fill_parent"
         android:layout_gravity="end"
         android:choiceMode="singleChoice"
         android:dividerHeight="0dp"
         android:background="#F1F1F1"
+        android:layout_weight="1"
         />
+
+
 
 </android.support.v4.widget.DrawerLayout>

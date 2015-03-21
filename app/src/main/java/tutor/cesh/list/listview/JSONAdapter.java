@@ -129,7 +129,7 @@ public class JSONAdapter extends BaseAdapter implements Filterable
                 ArrayList<HashMap<String, String>> tmp;
 
                 data = new ArrayList<HashMap<String, String>>();
-                tmp = (ArrayList<HashMap<String, String>>)results.values;
+                tmp  = (ArrayList<HashMap<String, String>>)results.values;
 
                 for(int i =0; i < tmp.size(); i++)
                     data.add(tmp.get(i));
@@ -142,8 +142,9 @@ public class JSONAdapter extends BaseAdapter implements Filterable
             {
                 FilterResults                       results;
                 ArrayList<HashMap<String, String>>  filteredData;
-                String                              filterString;
-                String                              currentName;
+                String                              filterString, currentName, currentAbout,
+                                                    currentTutorCourses, currentMajor, currentPrice,
+                                                    currentYear;
                 View                                view;
 
 
@@ -162,10 +163,24 @@ public class JSONAdapter extends BaseAdapter implements Filterable
 
                     for(int i = 0; i < originalDataReference.size(); i++)
                     {
-                        currentName = originalDataReference.get(i).get("firstName");
-                        if(currentName.toLowerCase().contains(filterString))
+                        currentName         = originalDataReference.get(i).get("firstName");
+                        currentMajor        = originalDataReference.get(i).get("major");
+                        currentTutorCourses = originalDataReference.get(i).get("tutorCourses");
+                        currentAbout        = originalDataReference.get(i).get("about");
+                        currentPrice        = originalDataReference.get(i).get("rate");
+                        currentYear         = originalDataReference.get(i).get("year");
+
+                        if(currentName.toLowerCase().contains(filterString)         ||
+                           currentMajor.toLowerCase().contains(filterString)        ||
+                           currentTutorCourses.toLowerCase().contains(filterString) ||
+                           currentAbout.toLowerCase().contains(filterString)        ||
+                           currentPrice.toLowerCase().contains(filterString)        ||
+                           currentYear.toLowerCase().contains(filterString))
+                        {
                             filteredData.add(originalDataReference.get(i));
+                        }
                     }
+
                     results.values =    filteredData;
                     results.count =     filteredData.size();
                 }

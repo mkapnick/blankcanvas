@@ -8,14 +8,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -23,11 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tutor.cesh.R;
-import tutor.cesh.Student;
-import tutor.cesh.Tutor;
-import tutor.cesh.User;
 import tutor.cesh.list.TutorListActivity;
-import tutor.cesh.profile.fragment.FragmentTabBehavior;
 import tutor.cesh.profile.fragment.FragmentTabController;
 import tutor.cesh.profile.fragment.StudentProfileFragment;
 import tutor.cesh.profile.fragment.TutorProfileFragment;
@@ -139,7 +132,7 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
         listView     = (ListView) findViewById(R.id.left_drawer);
 
         listViewTitles = getResources().getStringArray(R.array.drawable_list_items);
-        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listViewTitles));
+        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.z_not_used_drawer_list_item, listViewTitles));
         listView.setOnItemClickListener(new DrawerItemClickListener());
 
         //Set up animation for on slide of the drawer layout

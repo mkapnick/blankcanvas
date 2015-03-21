@@ -47,10 +47,6 @@
             android:name=".profile.StudentTutorProfileContainerActivity"
             android:label="@string/title_activity_session_start" >
         </activity>
-        <activity
-            android:name=".profile.AccountActivity"
-            android:label="@string/title_activity_account" >
-        </activity>
     </application>
 
 </manifest>

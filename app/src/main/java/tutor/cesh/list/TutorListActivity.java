@@ -50,23 +50,11 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     protected DrawerLayout                  drawerLayout;
     private ActionBarDrawerToggle           actionBarDrawerToggle;
     private TextView                        actionBarProfileButton;
-    private RelativeLayout                  relativeLayout;
+    private RelativeLayout                  relativeLayout, userProfileRelativeLayout;
     private ArrayList<TutorListViewItem>    tutorListViewItems;
 
-    /**
-     *
-     *
-     *
-     */
 
-    ListView mDrawerList;
-    RelativeLayout mDrawerPane;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private DrawerLayout mDrawerLayout;
-
-
-
-    private JSONAdapter adapter;
+    private JSONAdapter                         jsonAdapter;
     private TextView                            emptyTextView;
     private ArrayList<HashMap<String, String>>  data;
     private HashMap<String, Bitmap>             mapIDToBitmap;
@@ -92,14 +80,14 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     {
         mapIDToBitmap.put(identifier, bitmap);
 
-        if(adapter != null) //HACK RIGHT HERE IF I EVER SAW ONE!!! NEED THIS LINE OF CODE
+        if(jsonAdapter != null) //HACK RIGHT HERE IF I EVER SAW ONE!!! NEED THIS LINE OF CODE
                             //TO INITIALLY POPULATE THE LISTVIEW, BECAUSE THE MAPURLTOBITMPA
                             //DATA STRUCTURE WILL NOT BE FULLY SET IN TIME WHEN POPULATING
                             //THE LIST VIEW THE FIRST TIME, THIS GET FILTER TELLS THE LISTVIEW TO
                             //REPOPULATE ITSELF AFTER EVERY NEW ADDITION TO THE MAPURLTOBITMAP
                             //DATA STRUCTURE
         {
-            adapter.getFilter().filter("");
+            jsonAdapter.getFilter().filter("");
         }
     }
 
@@ -121,7 +109,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
             switch(position)
             {
                 case 0:
-                    //update drawer layout
+                    /*
                     if(drawerLayout.isDrawerOpen(drawerLayoutListView))
                     {
                         drawerLayout.closeDrawer(drawerLayoutListView);
@@ -134,7 +122,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                     else
                     {
                         drawerLayout.openDrawer(drawerLayoutListView);
-                    }
+                    }*/
 
                     break;
                 case 1:
@@ -192,6 +180,12 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                 }
                 break;
 
+            case R.id.tutor_list_activity_relative_layout:
+                intent = new Intent(getApplicationContext(), StudentTutorProfileContainerActivity.class);
+                startActivity(intent);
+                break;
+
+
                 //call the correct class
                 //intent = new Intent(getApplicationContext(),
                 //        AccountActivity.class);
@@ -245,7 +239,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     @Override
     public boolean onQueryTextChange(String s)
     {
-        adapter.getFilter().filter(s);
+        jsonAdapter.getFilter().filter(s);
         return true;
     }
 
@@ -298,10 +292,6 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         drawable    = getResources().getDrawable(R.drawable.ic_action_help);
         item        = new TutorListViewItem(text, drawable);
         this.tutorListViewItems.add(item);
-
-
-
-
     }
 
     /**
@@ -373,10 +363,10 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                 e.printStackTrace();
             }
 
-            adapter = new JSONAdapter(this, this.getResources(), this.data, this.listView);
-            adapter.setCachedMap(this.mapIDToBitmap); //need to associate the cached map
-                                                      // with this adapter!!!
-            this.listView.setAdapter(adapter);
+            jsonAdapter = new JSONAdapter(this, this.getResources(), this.data, this.listView);
+            jsonAdapter.setCachedMap(this.mapIDToBitmap); //need to associate the cached map
+                                                      // with this jsonAdapter!!!
+            this.listView.setAdapter(jsonAdapter);
             this.listView.setOnItemClickListener(new ListViewOnClickListener()); //Click event for
                                                                                  //single list row
         }
@@ -399,12 +389,13 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                                                 this.drawerLayoutListView,
                                                 false);
         footer                      = (ViewGroup) getLayoutInflater().
-                                        inflate(R.layout.footer_drawerlayout_tutor_list_activity,
+                                        inflate(R.layout.z_not_used_footer_drawerlayout_tutor_list_activity,
                                                 this.drawerLayoutListView,
                                                 false);
 
         //v                           = View.inflate(this, R.layout.header_drawerlayout_tutor_list_activity, null);
-
+        userProfileRelativeLayout   = (RelativeLayout) header.findViewById(R.id.tutor_list_activity_relative_layout);
+        userProfileRelativeLayout.setOnClickListener(this);
         drawerLayoutListView.addHeaderView(header, null, false);
         //drawerLayoutListView.addFooterView(footer, null, false);
         drawerLayoutListView.setAdapter(new TutorListDrawerLayoutAdapter(this, this.tutorListViewItems));
@@ -439,7 +430,6 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     }
 
 
-
     /**
      *
      *
@@ -453,11 +443,11 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-            // Get the adapter, get the data, get the hashmap associated with the position the user clicked,
+            // Get the jsonAdapter, get the data, get the hashmap associated with the position the user clicked,
             //start a new read only tutor list activity
             // @version by Michael Kapnick
 
-            JSONAdapter                         adapter;
+            JSONAdapter                         jsonAdapter;
             ArrayList<HashMap<String, String>>  data;
             HashMap<String, String>             map;
             Intent                              intent;
@@ -467,8 +457,8 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
             Bitmap                              coverImageBitmap;
             byte []                             byteArray;
 
-            adapter             = (JSONAdapter) parent.getAdapter();
-            data                = adapter.getData();
+            jsonAdapter             = (JSONAdapter) parent.getAdapter();
+            data                = jsonAdapter.getData();
             map                 = data.get(position);
             bundle              = new Bundle();
             coverImageBitmap    = mapIDToBitmap.get(data.get(position).get(ID));
