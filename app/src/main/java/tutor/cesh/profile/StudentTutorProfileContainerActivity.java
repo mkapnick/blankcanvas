@@ -127,9 +127,9 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
 
     private void setUpDrawerLayout()
     {
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.setStatusBarBackgroundColor(Color.GREEN);
-        listView     = (ListView) findViewById(R.id.left_drawer);
+        //listView     = (ListView) findViewById(R.id.left_drawer);
 
         listViewTitles = getResources().getStringArray(R.array.drawable_list_items);
         listView.setAdapter(new ArrayAdapter<String>(this, R.layout.z_not_used_drawer_list_item, listViewTitles));

@@ -15,38 +15,40 @@
         android:background="@color/black"
 
         />
-    <ImageView
+
+    <!--<ImageView
         android:id="@+id/arrow"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginRight="20dp"
         android:src="@drawable/ic_action_next_item"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        />
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:textColor="#fff"
-        android:hint="Name"
-        android:textSize="15dp"
-        android:layout_marginLeft="20dp"
-        android:textColorHint="#fff"
-        android:background="@drawable/oval_black_skinny"
-        android:alpha=".9"
-        />
+        />!-->
+
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/name"
         android:background="@drawable/oval_black_skinny"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="1dp"
         android:alpha=".9"
-        >
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:hint="Name"
+            android:textSize="15dp"
+            android:textColorHint="#fff"
+            android:background="@drawable/oval_black_skinny"
+            android:alpha=".9"
+            />
 
         <TextView
             android:id="@+id/dollarSign"
@@ -56,6 +58,7 @@
             android:textSize="10dp"
             android:textColor="#fff"
             android:textColorHint="#fff"
+            android:layout_below="@+id/name"
             />
 
         <TextView
@@ -66,7 +69,9 @@
             android:textSize="10dp"
             android:textColor="#fff"
             android:textColorHint="#fff"
-            android:layout_toEndOf="@+id/dollarSign" />
+            android:layout_toEndOf="@+id/dollarSign"
+            android:layout_below="@+id/name"
+            />
 
         <TextView
             android:id="@+id/perHour"
@@ -76,7 +81,9 @@
             android:textSize="10dp"
             android:textColor="#fff"
             android:textColorHint="#fff"
-            android:layout_toEndOf="@+id/rate"/>
+            android:layout_toEndOf="@+id/rate"
+            android:layout_below="@+id/name"
+            />
 
         <!--<TextView
             android:id="@+id/rating"

@@ -36,7 +36,8 @@ class TabListener implements ActionBar.TabListener
         TextView textView;
         ft.replace(android.R.id.content, fragment); //not sure what this does
 
-        textView = (TextView) this.actionBarCustomView.findViewById(R.id.actionBarTitle);
+        textView = null;
+        //textView = (TextView) this.actionBarCustomView.findViewById(R.id.actionBarTitle);
 
         if(this.tabName.equals("student")){
             tab.setIcon(tutor.cesh.R.drawable.student_dark);
