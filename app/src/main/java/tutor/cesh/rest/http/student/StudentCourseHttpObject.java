@@ -10,7 +10,7 @@ import tutor.cesh.rest.http.CourseHttpObject;
  */
 public class StudentCourseHttpObject extends CourseHttpObject
 {
-    private final String STUDENT_CURRENT_COURSES_ENDPOINT = "http://blankcanvas.pw/courses/students/";
+    private final String STUDENT_CURRENT_COURSES_ENDPOINT = "http://blankcanvas.pw/bc/courses/students/";
 
     public StudentCourseHttpObject(User user, List<String> courses)
     {

@@ -50,7 +50,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
     private ViewPager               viewPager;
     private static final int        COVER_IMAGE_REQUEST_CODE    = 1;
     private static final int        EDIT_INFO                   = 2;
-    private SamplePagerAdapter      samplePagerAdapter;
+    private TabAdapter              tabAdapter;
     protected static Activity       activity;
     private TextView                arrowBackTextView;
     private TextView                editButton;
@@ -83,10 +83,10 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
                 user        = User.getInstance(activity);
 
                 //determine which tab we are in
-                if(this.samplePagerAdapter.getTabs().get(position).getTabName().equalsIgnoreCase("Student"))
+                if(this.tabAdapter.getTabs().get(position).getTabName().equalsIgnoreCase("Student"))
                 {
                     //update the background image immediately
-                    coverImagePath = updateBackgroundImage(data, this.samplePagerAdapter.getTabs().
+                    coverImagePath = updateBackgroundImage(data, this.tabAdapter.getTabs().
                                     get(position).getCoverImageView(),
                             user.getStudent());
 
@@ -99,7 +99,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
                 else
                 {
                     //update the background image immediately
-                    coverImagePath = updateBackgroundImage(data, this.samplePagerAdapter.getTabs().
+                    coverImagePath = updateBackgroundImage(data, this.tabAdapter.getTabs().
                                     get(position).getCoverImageView(),
                             user.getTutor());
 
@@ -157,7 +157,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
         //view containing the fragments UI
         View v;
 
-        v = inflater.inflate(R.layout.fragment_student_tutor_profile_container, container, false);
+        v = inflater.inflate(R.layout.fragment_tab_controller, container, false);
 
         //set up the image buttons found in the action bar
         this.editButton             = (TextView)v.findViewById(R.id.edit_action_bar_icon);
@@ -170,7 +170,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
         //set up view pager and sliding tab layout
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
-        viewPager.setAdapter(this.samplePagerAdapter);
+        viewPager.setAdapter(this.tabAdapter);
 
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
@@ -319,7 +319,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
 
     public void setSamplePagerAdapter(List<TabObserver> list)
     {
-        this.samplePagerAdapter = new SamplePagerAdapter(activity, activity, list);
+        this.tabAdapter = new TabAdapter(activity, activity, list);
     }
 
 

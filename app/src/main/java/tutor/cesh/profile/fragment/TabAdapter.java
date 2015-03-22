@@ -13,7 +13,7 @@ import tutor.cesh.profile.fragment.observer.TabObserver;
 /**
  *
  */
-public class SamplePagerAdapter extends PagerAdapter
+public class TabAdapter extends PagerAdapter
 {
     private Activity activity;
     private Context context;
@@ -26,7 +26,7 @@ public class SamplePagerAdapter extends PagerAdapter
      * @param context
      * @param tabs
      */
-    public SamplePagerAdapter(Activity activity, Context context, List<TabObserver> tabs)
+    public TabAdapter(Activity activity, Context context, List<TabObserver> tabs)
     {
         this.activity       = activity;
         this.context        = context;

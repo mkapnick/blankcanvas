@@ -25,9 +25,9 @@ import tutor.cesh.rest.http.HttpObject;
  */
 public class StudentHttpObject implements HttpObject {
 
-    private String putEndPoint          = "http://blankcanvas.pw/students/";
-    private String getEndPoint          = "http://blankcanvas.pw/students/";
-    private String coverImageEndPoint   = "http://blankcanvas.pw/bcimages/students/";
+    private String putEndPoint          = "http://blankcanvas.pw/bc/students/";
+    private String getEndPoint          = "http://blankcanvas.pw/bc/students/";
+    private String coverImageEndPoint   = "http://blankcanvas.pw/bc/images/students/";
     private User   user;
 
     public StudentHttpObject(User user)

@@ -16,7 +16,7 @@ import tutor.cesh.User;
  */
 public class EnrollHttpObject implements HttpObject
 {
-    private static final String ENROLL_ENDPOINT = "http://blankcanvas.pw/enrolls/";
+    private static final String ENROLL_ENDPOINT = "http://blankcanvas.pw/bc/enrolls/";
 
 
     private User user;

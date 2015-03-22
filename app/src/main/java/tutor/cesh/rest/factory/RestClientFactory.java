@@ -23,7 +23,7 @@ import tutor.cesh.auth.User;
  */
 public class RestClientFactory
 {
-    private static final String     POST_NEW_STUDENT       = "http://blankcanvas.pw/students/";
+    private static final String     POST_NEW_STUDENT       = "http://blankcanvas.pw/bc/students/";
     private static final String     DOMAIN              = "http://blankcanvas.pw";
     /**
      * Authorize that a user's email and password is
@@ -85,7 +85,7 @@ public class RestClientFactory
         StringEntity            entity;
         //byte []                 encryptedEmail, encryptedPassword;
         String                  encryptedEmail, encryptedPassword;
-        httpPost            = new HttpPost(DOMAIN + "/users/new");
+        httpPost            = new HttpPost(DOMAIN + "/bc/users/new");
         params              = new JSONObject();
         encryptedEmail      = email;//User.encrypt(email);
         encryptedPassword   = password;//User.encrypt(password);
@@ -93,8 +93,8 @@ public class RestClientFactory
         params.put("email", email);//Base64.encode(encryptedEmail, 0));
         params.put("password", password);
 
-        Log.d("encrypted email base 64 toString is: ", encryptedEmail);
-        Log.d("encrypted pswd base 64 toString is: ", encryptedPassword);
+        //Log.d("encrypted email base 64 toString is: ", encryptedEmail);
+        //Log.d("encrypted pswd base 64 toString is: ", encryptedPassword);
 
         entity          = new StringEntity(params.toString());
 
@@ -136,7 +136,7 @@ public class RestClientFactory
             e.printStackTrace();
         }
 
-        httpPost    = new HttpPost(DOMAIN + "/auth");
+        httpPost    = new HttpPost(DOMAIN + "/bc/auth");
         params      = new JSONObject();
 
         params.put("email", encryptedEmail);
