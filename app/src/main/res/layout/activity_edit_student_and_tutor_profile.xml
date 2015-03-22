@@ -114,6 +114,7 @@
                             android:layout_marginLeft="85dp"
                             android:textColor="#60605C"
                             android:editable="false"
+                            android:focusableInTouchMode="false"
                             />
 
                         <TextView
@@ -168,8 +169,8 @@
                             android:singleLine="true"
                             android:layout_marginLeft="160dp"
                             android:textColor="#60605C"
-
-
+                            android:editable="false"
+                            android:focusableInTouchMode="false"
                             />
 
                     </RelativeLayout>
@@ -295,6 +296,7 @@
                             android:textSize="14dp"
                             android:maxLines="1"
                             android:layout_marginLeft="5dp"
+                            android:editable="false"
                             />
 
                         <EditText
@@ -309,6 +311,8 @@
                             android:layout_marginLeft="160dp"
                             android:digits="0123456789."
                             android:textColor="#60605C"
+                            android:editable="false"
+                            android:focusableInTouchMode="false"
 
                             />
 

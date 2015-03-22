@@ -1,6 +1,5 @@
 package tutor.cesh.profile;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -25,12 +24,14 @@ import tutor.cesh.R;
 import tutor.cesh.Student;
 import tutor.cesh.Tutor;
 import tutor.cesh.User;
-import tutor.cesh.list.view.adapter.MajorAdapter;
-import tutor.cesh.dialog.CheckBoxDialogButtonListener;
-import tutor.cesh.dialog.CheckBoxDialogMultiChoiceClickListener;
+import tutor.cesh.dialog.DialogSingleChoiceFactory;
+import tutor.cesh.dialog.listener.CheckBoxDialogButtonListener;
 import tutor.cesh.dialog.DialogMultiChoiceFactory;
+import tutor.cesh.dialog.listener.DialogSingleChoiceButtonListener;
 import tutor.cesh.metadata.Major;
 import tutor.cesh.metadata.MetaDataBank;
+import tutor.cesh.metadata.Rate;
+import tutor.cesh.metadata.Year;
 import tutor.cesh.rest.asynchronous.RestClientExecute;
 import tutor.cesh.rest.http.CourseHttpObject;
 import tutor.cesh.rest.http.EnrollHttpObject;
@@ -66,9 +67,14 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         name                = (EditText) findViewById(R.id.name);
         major               = (EditText) findViewById(R.id.major);
         major.setOnClickListener(this);
+        major.setKeyListener(null);
         year                = (EditText) findViewById(R.id.year);
+        year.setOnClickListener(this);
+        year.setKeyListener(null);
         minor               = (EditText) findViewById(R.id.minor);
         rate                = (EditText) findViewById(R.id.rate);
+        rate.setOnClickListener(this);
+        rate.setKeyListener(null);
         switchText          = (TextView) findViewById(R.id.switchText);
         tutorStatusCircle   = (TextView) findViewById(R.id.tutorStatusCircle);
         logoutButton        = (Button)   findViewById(R.id.logoutButton);
@@ -145,6 +151,11 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
             case R.id.major:
                 setMajorDialog();
                 break;
+            case R.id.rate:
+                setRateDialog();
+                break;
+            case R.id.year:
+                setYearDialog();
         }
     }
 
@@ -284,7 +295,6 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         title                   = "Please select your major(s)";
         positiveButton          = "Ok";
         negativeButton          = "Cancel";
-        buttonListener          = new CheckBoxDialogButtonListener(this);
         metaDataBank            = MetaDataBank.getInstance(this, null, null, null);
         majors                  = metaDataBank.getMajors();
         array                   = new CharSequence[majors.size()];
@@ -292,8 +302,10 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         for(int i =0; i < majors.size(); i ++)
             array[i] = majors.get(i).getMajorName();
 
+        buttonListener          = new CheckBoxDialogButtonListener(this, array, this.major);
+
         DialogMultiChoiceFactory.createAndShowDialog(this, title, positiveButton, negativeButton,
-                array, buttonListener, new CheckBoxDialogMultiChoiceClickListener(this));
+                array, buttonListener, buttonListener);
     }
 
     /**
@@ -301,6 +313,26 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
      */
     private void setRateDialog()
     {
+        DialogSingleChoiceButtonListener        buttonListener;
+        String                                  title, positiveButton, negativeButton;
+        MetaDataBank                            metaDataBank;
+        ArrayList<Rate>                         rates;
+        CharSequence []                         array;
+
+        title                   = "Please select your rate";
+        positiveButton          = "Ok";
+        negativeButton          = "Cancel";
+        metaDataBank            = MetaDataBank.getInstance(this, null, null, null);
+        rates                   = metaDataBank.getRates();
+        array                   = new CharSequence[rates.size()];
+
+        for(int i =0; i < rates.size(); i ++)
+            array[i] = rates.get(i).getRateName();
+
+        buttonListener          = new DialogSingleChoiceButtonListener(array, this.rate);
+
+        DialogSingleChoiceFactory.createAndShowDialog(this, title, positiveButton, negativeButton,
+                                                      array, buttonListener);
 
     }
 
@@ -350,7 +382,27 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
      */
     private void setYearDialog()
     {
+        DialogSingleChoiceButtonListener        buttonListener;
+        String                                  title, positiveButton, negativeButton;
+        MetaDataBank                            metaDataBank;
+        ArrayList<Year>                         years;
+        CharSequence []                         array;
 
+        title                   = "Please select your graduation year ";
+        positiveButton          = "Ok";
+        negativeButton          = "Cancel";
+        metaDataBank            = MetaDataBank.getInstance(this, null, null, null);
+        years                   = metaDataBank.getYears();
+
+        array                   = new CharSequence[years.size()];
+
+        for(int i =0; i < years.size(); i ++)
+            array[i] = years.get(i).getYearName();
+
+        buttonListener          = new DialogSingleChoiceButtonListener(array, this.year);
+
+        DialogSingleChoiceFactory.createAndShowDialog(this, title, positiveButton, negativeButton,
+                array, buttonListener);
     }
 
 
