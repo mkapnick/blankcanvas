@@ -29,6 +29,8 @@ import tutor.cesh.list.view.adapter.MajorAdapter;
 import tutor.cesh.dialog.CheckBoxDialogButtonListener;
 import tutor.cesh.dialog.CheckBoxDialogMultiChoiceClickListener;
 import tutor.cesh.dialog.DialogMultiChoiceFactory;
+import tutor.cesh.metadata.Major;
+import tutor.cesh.metadata.MetaDataBank;
 import tutor.cesh.rest.asynchronous.RestClientExecute;
 import tutor.cesh.rest.http.CourseHttpObject;
 import tutor.cesh.rest.http.EnrollHttpObject;
@@ -273,51 +275,25 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
      */
     private void setMajorDialog()
     {
-        boolean                                 isCancelable;
-        AlertDialog                             alertDialog;
         CheckBoxDialogButtonListener            buttonListener;
-        String                                  title, message, positiveButton, negativeButton;
-        MajorAdapter                            majorAdapter;
-        ArrayList<String>                       majors;
-
-        majors                  = new ArrayList<String>();
-        majors.add("History");
-        majors.add("Computer Science");
-        majors.add("Engineering");
-        majors.add("Engineering");
-        majors.add("Engineering");
-        majors.add("Engineering");
-        majors.add("Engineering");
-        majors.add("Engineering");
-        majors.add("Engineering");
-        majors.add("Engineering");
-        majors.add("Engineering");
-        majors.add("Engineering");
-        majors.add("Engineering");
-        majors.add("Engineering");
-        majors.add("Engineering");
-        majors.add("Engineering");
-        majors.add("Engineering");
-        majors.add("Engineering");
-        majors.add("Engineering");
-        majors.add("Engineering");
-
-        majorAdapter            = new MajorAdapter(this, majors);
-
-        buttonListener          = new CheckBoxDialogButtonListener(this);
+        String                                  title, positiveButton, negativeButton;
+        MetaDataBank                            metaDataBank;
+        ArrayList<Major>                        majors;
+        CharSequence []                         array;
 
         title                   = "Please select your major(s)";
         positiveButton          = "Ok";
         negativeButton          = "Cancel";
-        isCancelable            = true;
+        buttonListener          = new CheckBoxDialogButtonListener(this);
+        metaDataBank            = MetaDataBank.getInstance(this, null, null, null);
+        majors                  = metaDataBank.getMajors();
+        array                   = new CharSequence[majors.size()];
 
-        /*DialogMultiChoiceFactory.createAndShowDialog(this, title, isCancelable,
-                                                            positiveButton, negativeButton,
-                                                            buttonListener, majorAdapter, majorAdapter);*/
+        for(int i =0; i < majors.size(); i ++)
+            array[i] = majors.get(i).getMajorName();
 
         DialogMultiChoiceFactory.createAndShowDialog(this, title, positiveButton, negativeButton,
-                new CharSequence[]{"one", "two", "three"}, buttonListener,
-                new CheckBoxDialogMultiChoiceClickListener(this));
+                array, buttonListener, new CheckBoxDialogMultiChoiceClickListener(this));
     }
 
     /**

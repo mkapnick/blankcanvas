@@ -38,59 +38,48 @@ public class OnLoginTaskDelegate implements TaskDelegate
         this.password   = password;
     }
 
-    @Override
-    public void taskCompletionResult(Object response)
+    private void populateCoverImages()
     {
-        Intent          intent;
-        User            user;
-        Student         student;
-        Tutor           tutor;
-        JSONObject      object;
-        JSONArray       jsonArray;
 
-        user    = User.getInstance(this.context);
-        student = user.getStudent();
-        tutor   = user.getTutor();
+    }
 
-        try
-        {
-            jsonArray   = (JSONArray) response;
-            object      = jsonArray.getJSONObject(0);
+    /**
+     *
+     */
+    private void populateMetaData()
+    {
+        HttpGet                 httpGet;
+        MetaDataTaskDelegate    metaDataTaskDelegate;
 
-            if (object.has("confirmed"))
-            {
-                if (object.getString("confirmed").equalsIgnoreCase("true"))
-                {
-                    //intent
-                    intent = setIntent(object);
+        httpGet                 = new HttpGet(DOMAIN + "/bc/metadata/profile");
+        metaDataTaskDelegate    = new MetaDataTaskDelegate(this.context);
 
-                    //student
-                    setStudentData(student, object);
+        new AsyncGet(this.context, metaDataTaskDelegate, null).execute(httpGet);
+    }
 
-                    //tutor
-                    setTutorData(tutor, object);
+    /**
+     *
+     * @param object
+     * @return
+     * @throws JSONException
+     */
+    private Intent setIntent(JSONObject object) throws JSONException
+    {
+        Intent intent;
 
-                    //get metadata from server
-                    populateMetaData();
+        intent = new Intent(context, TutorListActivity.class);
 
-                    //get cover images from server
+        intent.putExtra("id", object.getString("id"));
+        intent.putExtra("enrollId", object.getString("enrollId"));
+        intent.putExtra("schoolId", object.getString("schoolId"));
+        intent.putExtra("email", object.getString("email"));
+        intent.putExtra("firstName", object.getString("firstName"));
+        intent.putExtra("lastName", object.getString("lastName"));
+        intent.putExtra("about", object.getString("studentAbout"));
+        intent.putExtra("profileImage", object.getString("studentProfileImageUrl"));
+        intent.putExtra("coverImage", object.getString("studentCoverImageUrl"));
 
-                    context.startActivity(intent);
-                }
-                else
-                    Toast.makeText(context, "Please confirm your email", Toast.LENGTH_SHORT).show();
-            }
-            else
-                Toast.makeText(context, "Email or password incorrect", Toast.LENGTH_SHORT).show();
-        }
-        catch(NetworkOnMainThreadException e)
-        {
-            Toast.makeText(context, "Check network connection", Toast.LENGTH_SHORT).show();
-        }
-        catch (JSONException e)
-        {
-            Toast.makeText(context, "Email or password incorrect", Toast.LENGTH_SHORT).show();
-        }
+        return intent;
     }
 
     @Override
@@ -173,47 +162,62 @@ public class OnLoginTaskDelegate implements TaskDelegate
             tutor.setCurrentClasses(new ArrayList<String>());
     }
 
-    /**
-     *
-     * @param object
-     * @return
-     * @throws JSONException
-     */
-    private Intent setIntent(JSONObject object) throws JSONException
+
+
+
+
+    @Override
+    public void taskCompletionResult(Object response)
     {
-        Intent intent;
+        Intent          intent;
+        User            user;
+        Student         student;
+        Tutor           tutor;
+        JSONObject      object;
+        JSONArray       jsonArray;
 
-        intent = new Intent(context, TutorListActivity.class);
+        user    = User.getInstance(this.context);
+        student = user.getStudent();
+        tutor   = user.getTutor();
 
-        intent.putExtra("id", object.getString("id"));
-        intent.putExtra("enrollId", object.getString("enrollId"));
-        intent.putExtra("schoolId", object.getString("schoolId"));
-        intent.putExtra("email", object.getString("email"));
-        intent.putExtra("firstName", object.getString("firstName"));
-        intent.putExtra("lastName", object.getString("lastName"));
-        intent.putExtra("about", object.getString("studentAbout"));
-        intent.putExtra("profileImage", object.getString("studentProfileImageUrl"));
-        intent.putExtra("coverImage", object.getString("studentCoverImageUrl"));
+        try
+        {
+            jsonArray   = (JSONArray) response;
+            object      = jsonArray.getJSONObject(0);
 
-        return intent;
-    }
+            if (object.has("confirmed"))
+            {
+                if (object.getString("confirmed").equalsIgnoreCase("true"))
+                {
+                    //intent
+                    intent = setIntent(object);
 
-    /**
-     *
-     */
-    private void populateMetaData()
-    {
-        HttpGet                 httpGet;
-        MetaDataTaskDelegate    metaDataTaskDelegate;
+                    //student
+                    setStudentData(student, object);
 
-        httpGet                 = new HttpGet(DOMAIN + "/bc/metadata/profile");
-        metaDataTaskDelegate    = new MetaDataTaskDelegate(this.context);
+                    //tutor
+                    setTutorData(tutor, object);
 
-        new AsyncGet(this.context, metaDataTaskDelegate, null).execute(httpGet);
-    }
+                    //get metadata from server
+                    populateMetaData();
 
-    private void populateCoverImages()
-    {
+                    //get cover images from server
 
+                    context.startActivity(intent);
+                }
+                else
+                    Toast.makeText(context, "Please confirm your email", Toast.LENGTH_SHORT).show();
+            }
+            else
+                Toast.makeText(context, "Email or password incorrect", Toast.LENGTH_SHORT).show();
+        }
+        catch(NetworkOnMainThreadException e)
+        {
+            Toast.makeText(context, "Check network connection", Toast.LENGTH_SHORT).show();
+        }
+        catch (JSONException e)
+        {
+            Toast.makeText(context, "Email or password incorrect", Toast.LENGTH_SHORT).show();
+        }
     }
 }

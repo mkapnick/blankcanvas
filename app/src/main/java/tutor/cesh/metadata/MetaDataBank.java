@@ -31,4 +31,16 @@ public class MetaDataBank
 
         return metaDataBank;
     }
+
+    public ArrayList<Major> getMajors() {
+        return majors;
+    }
+
+    public ArrayList<Rate> getRates() {
+        return rates;
+    }
+
+    public ArrayList<Year> getYears() {
+        return years;
+    }
 }
