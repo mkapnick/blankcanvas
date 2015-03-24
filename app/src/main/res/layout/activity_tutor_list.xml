@@ -100,6 +100,7 @@
         android:dividerHeight="0dp"
         android:background="#F1F1F1"
         android:layout_weight="1"
+        android:divider="@android:color/transparent"
         />
 
 
