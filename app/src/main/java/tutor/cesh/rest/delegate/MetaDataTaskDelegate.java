@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import tutor.cesh.metadata.Major;
 import tutor.cesh.metadata.MetaDataBank;
+import tutor.cesh.metadata.Minor;
 import tutor.cesh.metadata.Rate;
 import tutor.cesh.metadata.Year;
 
@@ -30,10 +31,11 @@ public class MetaDataTaskDelegate implements TaskDelegate
     @Override
     public void taskCompletionResult(Object response)
     {
-        JSONObject          majorsObject, ratesObject, yearsObject;
-        JSONArray           jsonArray, majorsArray, ratesArray, yearsArray;
-        MetaDataBank        metaDataBank;
+        JSONObject          majorsObject, minorsObject, ratesObject, yearsObject;
+        JSONArray           jsonArray, majorsArray, minorsArray, ratesArray, yearsArray;
+
         ArrayList<Major>    majors;
+        ArrayList<Minor>    minors;
         ArrayList<Rate>     rates;
         ArrayList<Year>     years;
 
@@ -41,10 +43,12 @@ public class MetaDataTaskDelegate implements TaskDelegate
         {
             jsonArray       = (JSONArray) response;
             majorsObject    = jsonArray.getJSONObject(0);
-            ratesObject     = jsonArray.getJSONObject(1);
-            yearsObject     = jsonArray.getJSONObject(2);
+            minorsObject    = jsonArray.getJSONObject(1);
+            ratesObject     = jsonArray.getJSONObject(2);
+            yearsObject     = jsonArray.getJSONObject(3);
 
             majorsArray     = majorsObject.getJSONArray("majors");
+            minorsArray     = minorsObject.getJSONArray("minors");
             ratesArray      = ratesObject.getJSONArray("rates");
             yearsArray      = yearsObject.getJSONArray("years");
 
@@ -52,7 +56,7 @@ public class MetaDataTaskDelegate implements TaskDelegate
             rates           = setRates(ratesArray);
             years           = setYears(yearsArray);
 
-            metaDataBank = MetaDataBank.getInstance(this.context, majors, rates, years);
+            MetaDataBank.getInstance(this.context, majors, rates, years);
         }
         catch(JSONException jsone)
         {

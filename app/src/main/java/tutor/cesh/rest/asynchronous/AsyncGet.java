@@ -60,7 +60,6 @@ public class AsyncGet extends AsyncTask<HttpGet, Integer, Object>
                 }
                 catch(Exception e)
                 {
-                    System.out.println(json);
                     this.response   = new JSONArray(json);
                 }
             }

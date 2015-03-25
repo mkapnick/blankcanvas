@@ -10,6 +10,8 @@ import android.widget.CheckedTextView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 import tutor.cesh.list.view.adapter.listener.MultipleOnItemClickListener;
 
 /**
@@ -52,7 +54,7 @@ public class DialogMultiChoiceFactory
                                            String negativeButton, CharSequence [] listItems,
                                            DialogInterface.OnClickListener buttonListener,
                                            DialogInterface.OnMultiChoiceClickListener
-                                           multiChoiceClickListener)
+                                           multiChoiceClickListener, boolean [] checkedItems)
     {
         AlertDialog         dialog;
         AlertDialog.Builder builder;
@@ -63,9 +65,9 @@ public class DialogMultiChoiceFactory
         builder.setPositiveButton(positiveButton, buttonListener);
         builder.setNegativeButton(negativeButton, buttonListener);
 
-        builder.setMultiChoiceItems(listItems, null, multiChoiceClickListener);
+        builder.setMultiChoiceItems(listItems, checkedItems, multiChoiceClickListener);
 
-        dialog = builder.create();
+        dialog      = builder.create();
 
         dialog.show();
     }
