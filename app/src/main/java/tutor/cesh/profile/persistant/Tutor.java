@@ -1,10 +1,9 @@
-package tutor.cesh;
+package tutor.cesh.profile.persistant;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import tutor.cesh.database.LocalDatabaseHelper;
 

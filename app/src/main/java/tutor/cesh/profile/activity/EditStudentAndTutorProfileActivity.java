@@ -1,4 +1,4 @@
-package tutor.cesh.profile;
+package tutor.cesh.profile.activity;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -21,10 +21,13 @@ import org.apache.http.client.methods.HttpPut;
 import java.util.ArrayList;
 
 import tutor.cesh.R;
-import tutor.cesh.Student;
-import tutor.cesh.Tutor;
-import tutor.cesh.User;
+import tutor.cesh.profile.persistant.Student;
+import tutor.cesh.profile.persistant.Tutor;
+import tutor.cesh.profile.persistant.User;
 import tutor.cesh.dialog.DialogSetterAndPopulator;
+import tutor.cesh.profile.transiant.StudentEditMode;
+import tutor.cesh.profile.transiant.TutorEditMode;
+import tutor.cesh.profile.transiant.UserEditMode;
 import tutor.cesh.rest.asynchronous.RestClientExecute;
 import tutor.cesh.rest.http.CourseHttpObject;
 import tutor.cesh.rest.http.EnrollHttpObject;
@@ -122,6 +125,7 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
 
         initializeUI();
         setUpUserData();
+        setUpEditModes();
     }
 
 
@@ -293,6 +297,30 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         }
     }
 
+    /**
+     *
+     */
+    private void setUpEditModes()
+    {
+        User            user;
+        Student         student;
+        Tutor           tutor;
+        UserEditMode    userEditMode;
+        StudentEditMode studentEditMode;
+        TutorEditMode   tutorEditMode;
+
+        user            = User.getInstance(this);
+        student         = user.getStudent();
+        tutor           = user.getTutor();
+
+        userEditMode    = UserEditMode.getInstance(this);
+        studentEditMode = userEditMode.getStudentEditMode();
+        tutorEditMode   = userEditMode.getTutorEditMode();
+
+        studentEditMode.setMajor(student.getMajor());
+        studentEditMode.setYear(student.getYear());
+        tutorEditMode.setRate(tutor.getRate());
+    }
     /**
      *
      */

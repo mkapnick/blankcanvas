@@ -1,4 +1,4 @@
-package tutor.cesh;
+package tutor.cesh.profile.persistant;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,7 +6,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import tutor.cesh.database.LocalDatabaseHelper;
 

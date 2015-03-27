@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.NetworkOnMainThreadException;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import org.apache.http.client.methods.HttpGet;
@@ -14,13 +13,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import tutor.cesh.Student;
-import tutor.cesh.Tutor;
-import tutor.cesh.User;
+import tutor.cesh.profile.persistant.Student;
+import tutor.cesh.profile.persistant.Tutor;
+import tutor.cesh.profile.persistant.User;
 import tutor.cesh.list.TutorListActivity;
-import tutor.cesh.profile.StudentTutorProfileContainerActivity;
 import tutor.cesh.rest.asynchronous.AsyncGet;
-import tutor.cesh.session.SessionManager;
 
 /**
  * Created by michaelk18 on 4/7/14.

@@ -2,16 +2,9 @@ package tutor.cesh.profile.util.classes;
 
 import android.content.Context;
 import android.text.SpannableStringBuilder;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.Iterator;
-
-import tutor.cesh.User;
-import tutor.cesh.profile.BubbleTextView;
 
 /**
  * Created by michaelk18 on 7/8/14.

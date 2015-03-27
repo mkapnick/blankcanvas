@@ -5,13 +5,12 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.widget.ImageView;
 
-import tutor.cesh.Student;
-import tutor.cesh.Tutor;
-import tutor.cesh.User;
+import tutor.cesh.profile.persistant.Student;
+import tutor.cesh.profile.persistant.Tutor;
+import tutor.cesh.profile.persistant.User;
 import tutor.cesh.rest.asynchronous.AsyncDownloader;
 import tutor.cesh.rest.handler.CoverImageHandler;
 import tutor.cesh.rest.handler.ImageHandler;
-import tutor.cesh.rest.delegate.TaskDelegate;
 
 /**
  * Created by michaelk18 on 10/18/14.

@@ -7,11 +7,10 @@ import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
 
 import java.net.URI;
-import java.util.Iterator;
 import java.util.List;
 
-import tutor.cesh.Student;
-import tutor.cesh.User;
+import tutor.cesh.profile.persistant.Student;
+import tutor.cesh.profile.persistant.User;
 import tutor.cesh.profile.util.classes.ClassesUtility;
 
 /**

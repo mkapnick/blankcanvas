@@ -14,7 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.IOException;
 import java.io.InputStream;
 
-import tutor.cesh.Profile;
+import tutor.cesh.profile.persistant.Profile;
 import tutor.cesh.list.BitmapCacheBehavior;
 import tutor.cesh.rest.handler.ImageHandler;
 

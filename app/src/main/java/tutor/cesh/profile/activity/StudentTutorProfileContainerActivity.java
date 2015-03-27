@@ -1,4 +1,4 @@
-package tutor.cesh.profile;
+package tutor.cesh.profile.activity;
 
 
 import android.content.Intent;

@@ -2,7 +2,7 @@ package tutor.cesh.rest.http.student;
 
 import java.util.List;
 
-import tutor.cesh.User;
+import tutor.cesh.profile.persistant.User;
 import tutor.cesh.rest.http.CourseHttpObject;
 
 /**

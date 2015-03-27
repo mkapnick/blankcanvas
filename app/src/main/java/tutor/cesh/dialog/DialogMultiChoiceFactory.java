@@ -52,7 +52,8 @@ public class DialogMultiChoiceFactory
 
     public static void createAndShowDialog(Context context, String title, String positiveButton,
                                            String negativeButton, CharSequence [] listItems,
-                                           DialogInterface.OnClickListener buttonListener,
+                                           DialogInterface.OnClickListener positiveButtonListener,
+                                           DialogInterface.OnClickListener negativeButtonListener,
                                            DialogInterface.OnMultiChoiceClickListener
                                            multiChoiceClickListener, boolean [] checkedItems)
     {
@@ -62,8 +63,8 @@ public class DialogMultiChoiceFactory
         builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
 
-        builder.setPositiveButton(positiveButton, buttonListener);
-        builder.setNegativeButton(negativeButton, buttonListener);
+        builder.setPositiveButton(positiveButton, positiveButtonListener);
+        builder.setNegativeButton(negativeButton, negativeButtonListener);
 
         builder.setMultiChoiceItems(listItems, checkedItems, multiChoiceClickListener);
 

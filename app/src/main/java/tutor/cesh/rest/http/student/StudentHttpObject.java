@@ -10,14 +10,13 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.net.URI;
 
-import tutor.cesh.Student;
-import tutor.cesh.User;
+import tutor.cesh.profile.persistant.Student;
+import tutor.cesh.profile.persistant.User;
 import tutor.cesh.rest.http.HttpObject;
 
 /**

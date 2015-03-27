@@ -1,4 +1,4 @@
-package tutor.cesh.profile;
+package tutor.cesh.profile.util.classes;
 
 import android.content.Context;
 import android.graphics.Bitmap;
