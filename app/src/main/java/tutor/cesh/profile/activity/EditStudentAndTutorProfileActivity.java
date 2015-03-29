@@ -21,13 +21,16 @@ import org.apache.http.client.methods.HttpPut;
 import java.util.ArrayList;
 
 import tutor.cesh.R;
+import tutor.cesh.dialog.ProfileInfo;
+import tutor.cesh.dialog.ProfileInfoBehavior;
+import tutor.cesh.metadata.Major;
+import tutor.cesh.metadata.MetaDataBank;
+import tutor.cesh.metadata.Rate;
+import tutor.cesh.metadata.Year;
 import tutor.cesh.profile.persistant.Student;
 import tutor.cesh.profile.persistant.Tutor;
 import tutor.cesh.profile.persistant.User;
 import tutor.cesh.dialog.DialogSetterAndPopulator;
-import tutor.cesh.profile.transiant.StudentEditMode;
-import tutor.cesh.profile.transiant.TutorEditMode;
-import tutor.cesh.profile.transiant.UserEditMode;
 import tutor.cesh.rest.asynchronous.RestClientExecute;
 import tutor.cesh.rest.http.CourseHttpObject;
 import tutor.cesh.rest.http.EnrollHttpObject;
@@ -125,13 +128,33 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
 
         initializeUI();
         setUpUserData();
-        setUpEditModes();
+        setUpEditables();
     }
 
 
     @Override
     public void onClick(View v)
     {
+        String              majorTitle, rateTitle, yearTitle;
+        MetaDataBank        metaDataBank;
+        ArrayList<String>   allData;
+        ArrayList<Major>    allMajors;
+        ArrayList<Rate>     allRates;
+        ArrayList<Year>     allYears;
+        String              thisData;
+
+        majorTitle  = "Please select your major(s)";
+        rateTitle   = "Please select your rate";
+        yearTitle   = "Please select your graduation year";
+
+        metaDataBank= MetaDataBank.getInstance(this, null, null, null);
+        allMajors   = metaDataBank.getMajors();
+        allRates    = metaDataBank.getRates();
+        allYears    = metaDataBank.getYears();
+
+        allData     = new ArrayList<String>();
+        thisData    = "";
+
         switch(v.getId())
         {
             case R.id.saveButton:
@@ -146,13 +169,41 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
                 finish();
                 break;
             case R.id.major:
-                DialogSetterAndPopulator.setMajorDialogAndShow(this, this.major);
+
+                for(int i =0; i < allMajors.size(); i++)
+                    allData.add(allMajors.get(i).getMajorName());
+
+                thisData = ProfileInfoBehavior.getEditableMajor();
+
+                DialogSetterAndPopulator.setMultiChoiceDialogAndShow(this, this.major, majorTitle,
+                                                                     ProfileInfo.MAJOR,
+                                                                     ProfileInfoBehavior.EDITABLE,
+                                                                     allData,
+                                                                     thisData);
                 break;
             case R.id.rate:
-                DialogSetterAndPopulator.setRateDialogAndShow(this, this.rate);
+
+                for(int i =0; i < allRates.size(); i++)
+                    allData.add(allRates.get(i).getRateName());
+
+                thisData = ProfileInfoBehavior.getEditableRate();
+                DialogSetterAndPopulator.setSingleChoiceDialogAndShow(this, this.rate, rateTitle,
+                                                                     ProfileInfo.RATE,
+                                                                     ProfileInfoBehavior.EDITABLE,
+                                                                     allData,
+                                                                     thisData);
                 break;
             case R.id.year:
-                DialogSetterAndPopulator.setYearDialogAndShow(this, this.year);
+
+                for(int i =0; i < allYears.size(); i++)
+                    allData.add(allYears.get(i).getYearName());
+
+                thisData = ProfileInfoBehavior.getEditableYear();
+                DialogSetterAndPopulator.setSingleChoiceDialogAndShow(this, this.year, yearTitle,
+                                                                      ProfileInfo.YEAR,
+                                                                      ProfileInfoBehavior.EDITABLE,
+                                                                      allData,
+                                                                      thisData);
         }
     }
 
@@ -300,26 +351,19 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
     /**
      *
      */
-    private void setUpEditModes()
+    private void setUpEditables()
     {
-        User            user;
-        Student         student;
-        Tutor           tutor;
-        UserEditMode    userEditMode;
-        StudentEditMode studentEditMode;
-        TutorEditMode   tutorEditMode;
+        User    user;
+        Student student;
+        Tutor   tutor;
 
-        user            = User.getInstance(this);
-        student         = user.getStudent();
-        tutor           = user.getTutor();
+        user    = User.getInstance(this);
+        student = user.getStudent();
+        tutor   = user.getTutor();
 
-        userEditMode    = UserEditMode.getInstance(this);
-        studentEditMode = userEditMode.getStudentEditMode();
-        tutorEditMode   = userEditMode.getTutorEditMode();
-
-        studentEditMode.setMajor(student.getMajor());
-        studentEditMode.setYear(student.getYear());
-        tutorEditMode.setRate(tutor.getRate());
+        ProfileInfoBehavior.EDITABLE.setMajor(student.getMajor());
+        ProfileInfoBehavior.EDITABLE.setRate(tutor.getRate());
+        ProfileInfoBehavior.EDITABLE.setYear(student.getYear());
     }
     /**
      *

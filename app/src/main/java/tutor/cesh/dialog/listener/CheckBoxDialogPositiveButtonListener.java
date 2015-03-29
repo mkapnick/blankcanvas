@@ -6,8 +6,8 @@ import android.widget.EditText;
 
 import java.util.ArrayList;
 
-import tutor.cesh.profile.transiant.StudentEditMode;
-import tutor.cesh.profile.transiant.UserEditMode;
+import tutor.cesh.dialog.ProfileInfo;
+import tutor.cesh.dialog.ProfileInfoBehavior;
 
 /**
  * Created by michaelkapnick on 3/26/15.
@@ -15,18 +15,24 @@ import tutor.cesh.profile.transiant.UserEditMode;
 public class CheckBoxDialogPositiveButtonListener implements DialogInterface.OnMultiChoiceClickListener,
                                                              DialogInterface.OnClickListener
 {
-    private Context context;
+    private Context             context;
     private CharSequence []     data;
-    private EditText editText;
-    private ArrayList<Integer> checkedPositions;
+    private EditText            editText;
+    private ArrayList<Integer>  checkedPositions;
+    private ProfileInfo         profileInfo;
+    private ProfileInfoBehavior behavior;
+
 
     public CheckBoxDialogPositiveButtonListener(Context context, CharSequence [] data, EditText editText,
-                                        boolean [] checkedItems)
+                                                boolean [] checkedItems, ProfileInfo profileInfo,
+                                                ProfileInfoBehavior behavior)
     {
         this.context            = context;
         this.data               = data;
         this.editText           = editText;
         this.checkedPositions   = new ArrayList<Integer>();
+        this.profileInfo        = profileInfo;
+        this.behavior           = behavior;
 
         for(int i =0; i < checkedItems.length; i++)
         {
@@ -56,13 +62,7 @@ public class CheckBoxDialogPositiveButtonListener implements DialogInterface.OnM
     public void onClick(DialogInterface dialog, int which)
     {
         String          selectedItem, result;
-        UserEditMode userEditMode;
-        StudentEditMode studentEditMode;
-
-        userEditMode    = UserEditMode.getInstance(this.context);
-        studentEditMode = userEditMode.getStudentEditMode();
         result          = "";
-
 
         if(this.checkedPositions.size() > 0)
         {
@@ -73,9 +73,35 @@ public class CheckBoxDialogPositiveButtonListener implements DialogInterface.OnM
             }
 
             result = result.substring(0, result.lastIndexOf(","));
-            studentEditMode.setMajor(result);
         }
 
-        this.editText.setText(result);
+        setResult(result);
+    }
+
+    /**
+     *
+     * @param selectedItem
+     */
+    private void setResult(String selectedItem)
+    {
+        switch (this.profileInfo)
+        {
+            case MAJOR:
+                ProfileInfo.MAJOR.setResult(selectedItem, this.editText);
+                this.behavior.setMajor(selectedItem);
+                break;
+            case MINOR:
+                ProfileInfo.MINOR.setResult(selectedItem, this.editText);
+                break;
+            case YEAR:
+                ProfileInfo.YEAR.setResult(selectedItem, this.editText);
+                this.behavior.setYear(selectedItem);
+
+                break;
+            case RATE:
+                ProfileInfo.RATE.setResult(selectedItem, this.editText);
+                this.behavior.setRate(selectedItem);
+                break;
+        }
     }
 }

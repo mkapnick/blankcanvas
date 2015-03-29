@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import tutor.cesh.R;
+import tutor.cesh.filter.TutorFilterActivity;
 import tutor.cesh.format.TextFormatter;
 import tutor.cesh.list.view.adapter.TutorListAdapter;
 import tutor.cesh.list.view.adapter.TutorListViewItem;
@@ -52,6 +54,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     private TextView                        actionBarProfileButton;
     private RelativeLayout                  relativeLayout, userProfileRelativeLayout;
     private ArrayList<TutorListViewItem>    tutorListViewItems;
+    private Button                          filterButton;
 
 
     private TutorListAdapter tutorListAdapter;
@@ -143,6 +146,8 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     {
         this.listView                   = (ListView) findViewById(R.id.tutor_list_activity_main_list_view);
         this.emptyTextView              = (TextView) findViewById(R.id.emptyTextView);
+        this.filterButton               = (Button)   findViewById(R.id.filterButton);
+        this.filterButton.setOnClickListener(this);
         this.searchView                 = (SearchView) findViewById(R.id.action_search_icon);
         this.searchView.setOnQueryTextListener(this);
 
@@ -185,6 +190,10 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                 startActivity(intent);
                 break;
 
+            case R.id.filterButton:
+                intent = new Intent(getApplicationContext(), TutorFilterActivity.class);
+                startActivity(intent);
+                break;
 
                 //call the correct class
                 //intent = new Intent(getApplicationContext(),

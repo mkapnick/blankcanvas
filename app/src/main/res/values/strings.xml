@@ -42,5 +42,6 @@
     <string name="title_activity_edit_student_and_tutor_profile">EditStudentAndTutorProfileActivity</string>
     <string name="title_activity_session_start">SessionStartActivity</string>
     <string name="title_activity_account">AccountActivity</string>
+    <string name="title_activity_tutor_filter">TutorFilterActivity</string>
 
 </resources>

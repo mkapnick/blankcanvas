@@ -1,4 +1,4 @@
-package tutor.cesh.dialog;
+package tutor.cesh.dialog.factory;
 
 import android.app.AlertDialog;
 import android.content.Context;
