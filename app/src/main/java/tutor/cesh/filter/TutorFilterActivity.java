@@ -1,5 +1,6 @@
 package tutor.cesh.filter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -7,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -21,16 +24,18 @@ import tutor.cesh.metadata.MetaDataBank;
 import tutor.cesh.metadata.Rate;
 import tutor.cesh.metadata.Year;
 
-public class TutorFilterActivity extends ActionBarActivity implements View.OnClickListener {
+public class TutorFilterActivity extends Activity implements View.OnClickListener {
 
     private TextView                            arrowBackTextView, resetTextView;
     private android.support.v7.app.ActionBar    actionBar;
     private EditText                            majorEditText, rateEditText, yearEditText;
+    private Button                              applyFilterButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_tutor_filter);
 
         initializeUI();
@@ -38,34 +43,20 @@ public class TutorFilterActivity extends ActionBarActivity implements View.OnCli
 
     private void initializeUI()
     {
-        LayoutInflater  inflator;
-        View            v;
-
-
-        this.majorEditText  = (EditText) findViewById(R.id.editTextFilterMajor);
-        this.rateEditText   = (EditText) findViewById(R.id.editTextFilterRate);
-        this.yearEditText   = (EditText) findViewById(R.id.editTextFilterYear);
+        this.majorEditText      = (EditText) findViewById(R.id.editTextFilterMajor);
+        this.rateEditText       = (EditText) findViewById(R.id.editTextFilterRate);
+        this.yearEditText       = (EditText) findViewById(R.id.editTextFilterYear);
+        this.arrowBackTextView  = (TextView) findViewById(R.id.arrow_back_image);
+        this.resetTextView      = (TextView) findViewById(R.id.resetTextView);
+        this.applyFilterButton  = (Button) findViewById(R.id.applyFilterButton);
+        this.applyFilterButton.setAllCaps(false);
 
         this.majorEditText.setOnClickListener(this);
         this.rateEditText.setOnClickListener(this);
         this.yearEditText.setOnClickListener(this);
-
-        inflator            = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        v                   = inflator.inflate(R.layout.action_bar_tutor_filter, null);
-
-        this.arrowBackTextView  = (TextView) v.findViewById(R.id.arrow_back_image);
-        this.resetTextView      = (TextView) v.findViewById(R.id.resetTextView);
-
+        this.applyFilterButton.setOnClickListener(this);
         this.arrowBackTextView.setOnClickListener(this);
         this.resetTextView.setOnClickListener(this);
-
-        this.actionBar          = getSupportActionBar();
-        this.actionBar.setDisplayShowCustomEnabled(true);
-        this.actionBar.setDisplayShowHomeEnabled(false);
-        this.actionBar.setTitle("");
-        this.actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_background));
-
-        this.actionBar.setCustomView(v);
     }
 
     @Override
@@ -94,6 +85,10 @@ public class TutorFilterActivity extends ActionBarActivity implements View.OnCli
         switch(v.getId())
         {
             case R.id.arrow_back_image:
+                finish();
+                break;
+
+            case R.id.applyFilterButton:
                 finish();
                 break;
 
@@ -128,11 +123,11 @@ public class TutorFilterActivity extends ActionBarActivity implements View.OnCli
 
                 thisData = ProfileInfoBehavior.getFilterableRate();
                 DialogSetterAndPopulator.setMultiChoiceDialogAndShow(this, this.rateEditText,
-                                                                     rateTitle,
-                                                                     ProfileInfo.RATE,
-                                                                     ProfileInfoBehavior.FILTERABLE,
-                                                                     allData,
-                                                                     thisData);
+                        rateTitle,
+                        ProfileInfo.RATE,
+                        ProfileInfoBehavior.FILTERABLE,
+                        allData,
+                        thisData);
                 break;
 
             case R.id.editTextFilterYear:
@@ -142,11 +137,11 @@ public class TutorFilterActivity extends ActionBarActivity implements View.OnCli
 
                 thisData = ProfileInfoBehavior.getFilterableYear();
                 DialogSetterAndPopulator.setMultiChoiceDialogAndShow(this, this.yearEditText,
-                                                                     yearTitle,
-                                                                     ProfileInfo.YEAR,
-                                                                     ProfileInfoBehavior.FILTERABLE,
-                                                                     allData,
-                                                                     thisData);
+                        yearTitle,
+                        ProfileInfo.YEAR,
+                        ProfileInfoBehavior.FILTERABLE,
+                        allData,
+                        thisData);
                 break;
         }
 

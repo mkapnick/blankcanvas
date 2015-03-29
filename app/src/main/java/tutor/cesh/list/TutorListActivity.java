@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
@@ -57,7 +58,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     private Button                          filterButton;
 
 
-    private TutorListAdapter tutorListAdapter;
+    private TutorListAdapter                    tutorListAdapter;
     private TextView                            emptyTextView;
     private ArrayList<HashMap<String, String>>  data;
     private HashMap<String, Bitmap>             mapIDToBitmap;
@@ -76,6 +77,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     public static final String TUTOR_COURSES  = "tutorCourses";
     public static final String ABOUT          = "about";
     public static final String EMAIL          = "email";
+    private static final int   REQUEST_CODE   = 1;
     public Context context                    = this;
 
     @Override
@@ -112,21 +114,6 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
             switch(position)
             {
                 case 0:
-                    /*
-                    if(drawerLayout.isDrawerOpen(drawerLayoutListView))
-                    {
-                        drawerLayout.closeDrawer(drawerLayoutListView);
-
-                        //call the correct class
-                        intent = new Intent(getApplicationContext(),
-                                            StudentTutorProfileContainerActivity.class);
-                        startActivity(intent);
-                    }
-                    else
-                    {
-                        drawerLayout.openDrawer(drawerLayoutListView);
-                    }*/
-
                     break;
                 case 1:
                     break;
@@ -135,7 +122,6 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                 case 3:
                     break;
             }
-            //onOptionsItemSelected(position);
         }
     }
 
@@ -160,6 +146,15 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == REQUEST_CODE)
+        {
+            Toast.makeText(this, "inside", Toast.LENGTH_SHORT);
+        }
+    }
+
+    @Override
     public void onClick(View v)
     {
         Intent intent;
@@ -175,7 +170,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
                     //call the correct class
                     intent = new Intent(getApplicationContext(),
-                            StudentTutorProfileContainerActivity.class);
+                                        StudentTutorProfileContainerActivity.class);
 
                     startActivity(intent);
                 }
@@ -192,15 +187,8 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
             case R.id.filterButton:
                 intent = new Intent(getApplicationContext(), TutorFilterActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,REQUEST_CODE);
                 break;
-
-                //call the correct class
-                //intent = new Intent(getApplicationContext(),
-                //        AccountActivity.class);
-
-                //startActivity(intent);
-                //break;
         }
 
     }
@@ -214,7 +202,6 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         initializeUI();
         populateDataFromServer();
 
-        //setUpActionBar();
         setUpListViewItems();
         setUpDrawerLayout();
     }
@@ -248,7 +235,9 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     @Override
     public boolean onQueryTextChange(String s)
     {
-        tutorListAdapter.getFilter().filter(s);
+        if(null != this.tutorListAdapter && this.tutorListAdapter.getData().size() > 0)
+            tutorListAdapter.getFilter().filter(s);
+
         return true;
     }
 
@@ -491,14 +480,5 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
             startActivity(intent);
         }
-    }
-
-    private LayoutInflater getPrivateLayoutInflater()
-    {
-        LayoutInflater inflater;
-
-        inflater =  (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        return inflater;
     }
 }

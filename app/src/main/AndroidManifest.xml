@@ -41,15 +41,16 @@
         </activity>
         <activity
             android:name=".profile.activity.EditStudentAndTutorProfileActivity"
-            android:label="@string/title_activity_edit_student_and_tutor_profile" >
+            android:label="" >
         </activity>
         <activity
             android:name=".profile.activity.StudentTutorProfileContainerActivity"
-            android:label="@string/title_activity_session_start" >
+            android:label="" >
         </activity>
         <activity
             android:name=".filter.TutorFilterActivity"
-            android:label="@string/title_activity_tutor_filter" >
+            android:label=""
+            android:theme="@android:style/Theme.Material.Light.Dialog" >
         </activity>
     </application>
 
