@@ -23,7 +23,7 @@ import tutor.cesh.metadata.Year;
 
 public class TutorFilterActivity extends ActionBarActivity implements View.OnClickListener {
 
-    private TextView                            arrowBackTextView;
+    private TextView                            arrowBackTextView, resetTextView;
     private android.support.v7.app.ActionBar    actionBar;
     private EditText                            majorEditText, rateEditText, yearEditText;
 
@@ -54,10 +54,15 @@ public class TutorFilterActivity extends ActionBarActivity implements View.OnCli
         v                   = inflator.inflate(R.layout.action_bar_tutor_filter, null);
 
         this.arrowBackTextView  = (TextView) v.findViewById(R.id.arrow_back_image);
+        this.resetTextView      = (TextView) v.findViewById(R.id.resetTextView);
+
         this.arrowBackTextView.setOnClickListener(this);
+        this.resetTextView.setOnClickListener(this);
+
         this.actionBar          = getSupportActionBar();
         this.actionBar.setDisplayShowCustomEnabled(true);
         this.actionBar.setDisplayShowHomeEnabled(false);
+        this.actionBar.setTitle("");
         this.actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_background));
 
         this.actionBar.setCustomView(v);
@@ -66,7 +71,7 @@ public class TutorFilterActivity extends ActionBarActivity implements View.OnCli
     @Override
     public void onClick(View v)
     {
-        String majorTitle, rateTitle, yearTitle;
+        String              majorTitle, rateTitle, yearTitle;
         ArrayList<String>   allData;
         ArrayList<Major>    allMajors;
         ArrayList<Rate>     allRates;
@@ -74,8 +79,8 @@ public class TutorFilterActivity extends ActionBarActivity implements View.OnCli
         String              thisData;
         MetaDataBank        metaDataBank;
 
-        majorTitle = "Filter by major(s)";
-        rateTitle  =  "Filter by rate(s)";
+        majorTitle  = "Filter by major(s)";
+        rateTitle   = "Filter by rate(s)";
         yearTitle   = "Filter by year(s)";
 
         metaDataBank= MetaDataBank.getInstance(this, null, null, null);
@@ -84,13 +89,22 @@ public class TutorFilterActivity extends ActionBarActivity implements View.OnCli
         allYears    = metaDataBank.getYears();
 
         allData     = new ArrayList<String>();
-        thisData    = "";
 
 
         switch(v.getId())
         {
             case R.id.arrow_back_image:
                 finish();
+                break;
+
+            case R.id.resetTextView:
+                ProfileInfoBehavior.FILTERABLE.setMajor("");
+                ProfileInfoBehavior.FILTERABLE.setRate("");
+                ProfileInfoBehavior.FILTERABLE.setYear("");
+
+                this.majorEditText.setText("");
+                this.rateEditText.setText("");
+                this.yearEditText.setText("");
                 break;
 
             case R.id.editTextFilterMajor:
@@ -114,11 +128,11 @@ public class TutorFilterActivity extends ActionBarActivity implements View.OnCli
 
                 thisData = ProfileInfoBehavior.getFilterableRate();
                 DialogSetterAndPopulator.setMultiChoiceDialogAndShow(this, this.rateEditText,
-                                                                      rateTitle,
-                                                                      ProfileInfo.RATE,
-                                                                      ProfileInfoBehavior.FILTERABLE,
-                                                                      allData,
-                                                                      thisData);
+                                                                     rateTitle,
+                                                                     ProfileInfo.RATE,
+                                                                     ProfileInfoBehavior.FILTERABLE,
+                                                                     allData,
+                                                                     thisData);
                 break;
 
             case R.id.editTextFilterYear:
@@ -126,13 +140,13 @@ public class TutorFilterActivity extends ActionBarActivity implements View.OnCli
                 for(int i =0; i < allYears.size(); i++)
                     allData.add(allYears.get(i).getYearName());
 
-                thisData = ProfileInfoBehavior.getEditableYear();
+                thisData = ProfileInfoBehavior.getFilterableYear();
                 DialogSetterAndPopulator.setMultiChoiceDialogAndShow(this, this.yearEditText,
-                                                                      yearTitle,
-                                                                      ProfileInfo.YEAR,
-                                                                      ProfileInfoBehavior.FILTERABLE,
-                                                                      allData,
-                                                                      thisData);
+                                                                     yearTitle,
+                                                                     ProfileInfo.YEAR,
+                                                                     ProfileInfoBehavior.FILTERABLE,
+                                                                     allData,
+                                                                     thisData);
                 break;
         }
 

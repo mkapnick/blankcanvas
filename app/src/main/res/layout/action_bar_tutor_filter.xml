@@ -11,8 +11,6 @@
         android:layout_centerVertical="true"
         android:id="@+id/arrow_back_image"
         />
-
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,5 +19,15 @@
         android:layout_marginStart="17dp"
         android:layout_toEndOf="@+id/arrow_back_image"
         android:layout_centerVertical="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:text="Reset"
+        android:layout_marginRight="25dp"
+        android:textColor="#2C3E57"
+        android:id="@+id/resetTextView"/>
 
 </RelativeLayout>

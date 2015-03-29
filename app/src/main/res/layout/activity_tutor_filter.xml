@@ -28,12 +28,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editTextFilterMajor"
-        android:hint="test"
+        android:hint="Filter..."
         android:gravity="right"
         android:layout_below="@+id/majorFilterTextView"
         android:editable="false"
         android:focusableInTouchMode="false"
-        android:layout_toEndOf="@+id/majorFilterTextView" />
+        android:layout_toEndOf="@+id/majorFilterTextView"
+        android:textColor="#717171"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -50,12 +52,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editTextFilterRate"
-        android:hint="test"
+        android:hint="Filter..."
         android:gravity="right"
         android:layout_below="@+id/rateFilterTextView"
         android:editable="false"
         android:focusableInTouchMode="false"
-        android:layout_alignStart="@+id/editTextFilterMajor" />
+        android:layout_alignStart="@+id/editTextFilterMajor"
+        android:textColor="#717171"
+
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -72,11 +77,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editTextFilterYear"
-        android:hint="test"
+        android:hint="Filter..."
         android:gravity="right"
         android:layout_below="@+id/yearFilterTextView"
         android:editable="false"
         android:focusableInTouchMode="false"
-        android:layout_alignStart="@+id/editTextFilterRate" />
+        android:layout_alignStart="@+id/editTextFilterRate"
+        android:textColor="#717171"
+        />
 
 </RelativeLayout>
