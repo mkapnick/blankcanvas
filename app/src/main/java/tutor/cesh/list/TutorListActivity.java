@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import tutor.cesh.R;
+import tutor.cesh.dialog.ProfileInfo;
+import tutor.cesh.dialog.ProfileInfoBehavior;
 import tutor.cesh.filter.TutorFilterActivity;
 import tutor.cesh.format.TextFormatter;
 import tutor.cesh.list.view.adapter.TutorListAdapter;
@@ -52,7 +54,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     private SearchView                      searchView;
     protected DrawerLayout                  drawerLayout;
     private ActionBarDrawerToggle           actionBarDrawerToggle;
-    private TextView                        actionBarProfileButton;
+    private TextView                        actionBarProfileButton, resetTextView;
     private RelativeLayout                  relativeLayout, userProfileRelativeLayout;
     private ArrayList<TutorListViewItem>    tutorListViewItems;
     private Button                          filterButton;
@@ -65,7 +67,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     private String []                           listViewTitles;
 
 
-    private static final String ALL_TUTORS    = "http://blankcanvas.pw/tutors";
+    private static final String ALL_TUTORS    = "http://blankcanvas.pw/bc/tutors";
     public static final String ID             = "id"; // parent node
     public static final String FIRST_NAME     = "firstName";
     public static final String COVER_IMAGE    = "coverImage";
@@ -77,7 +79,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     public static final String TUTOR_COURSES  = "tutorCourses";
     public static final String ABOUT          = "about";
     public static final String EMAIL          = "email";
-    private static final int   REQUEST_CODE   = 1;
+    private static final int   REQUEST_CODE_FILTER   = 1;
     public Context context                    = this;
 
     @Override
@@ -132,6 +134,8 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     {
         this.listView                   = (ListView) findViewById(R.id.tutor_list_activity_main_list_view);
         this.emptyTextView              = (TextView) findViewById(R.id.emptyTextView);
+        this.resetTextView              = (TextView) findViewById(R.id.resetTextView);
+        this.resetTextView.setOnClickListener(this);
         this.filterButton               = (Button)   findViewById(R.id.filterButton);
         this.filterButton.setOnClickListener(this);
         this.searchView                 = (SearchView) findViewById(R.id.action_search_icon);
@@ -148,9 +152,14 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (requestCode == REQUEST_CODE)
+        if (requestCode == REQUEST_CODE_FILTER && resultCode == RESULT_OK)
         {
-            Toast.makeText(this, "inside", Toast.LENGTH_SHORT);
+            this.tutorListAdapter.applySpecificFilters(ProfileInfoBehavior.getFilterableMajor(),
+                                                       ProfileInfoBehavior.getFilterableRate(),
+                                                       ProfileInfoBehavior.getFilterableYear());
+
+            Toast.makeText(this, "Filters applied", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -187,7 +196,12 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
             case R.id.filterButton:
                 intent = new Intent(getApplicationContext(), TutorFilterActivity.class);
-                startActivityForResult(intent,REQUEST_CODE);
+                startActivityForResult(intent,REQUEST_CODE_FILTER);
+                break;
+
+            case R.id.resetTextView:
+                this.tutorListAdapter.resetFilters();
+                Toast.makeText(this, "Filters reset", Toast.LENGTH_SHORT).show();
                 break;
         }
 
@@ -204,32 +218,6 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
         setUpListViewItems();
         setUpDrawerLayout();
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        /*MenuInflater inflater;
-
-        inflater = getMenuInflater();
-        inflater.inflate(R.menu.tutor_list_view_menu, menu);
-
-        this.searchItem = menu.findItem(R.id.action_search);
-        this.searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        this.searchView.setOnQueryTextListener(this);*/
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        //int id = item.getItemId();
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

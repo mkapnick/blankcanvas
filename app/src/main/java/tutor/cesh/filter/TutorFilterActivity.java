@@ -85,10 +85,12 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
         switch(v.getId())
         {
             case R.id.arrow_back_image:
+                setResult(RESULT_CANCELED);
                 finish();
                 break;
 
             case R.id.applyFilterButton:
+                setResult(RESULT_OK);
                 finish();
                 break;
 

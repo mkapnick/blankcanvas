@@ -54,6 +54,75 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
         this.inflater               = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    /**
+     *
+     * @param majors
+     * @param rates
+     * @param years
+     */
+    public void applySpecificFilters(String majors, String rates, String years)
+    {
+        ArrayList<HashMap<String, String>>  filteredData;
+        String                              currentMajor, currentPrice,
+                currentYear;
+        String []                           majorsArray, ratesArray, yearsArray;
+
+        filteredData = new ArrayList<HashMap<String, String>>();
+        majorsArray  = null;
+        ratesArray   = null;
+        yearsArray   = null;
+
+        if(null != majors)
+            majorsArray  = majors.split(",");
+
+        if(null != rates)
+            ratesArray   = rates.split(",");
+
+        if(null != years)
+            yearsArray   = years.split(",");
+
+        for(int i = 0; i < originalDataReference.size(); i++)
+        {
+            currentMajor        = originalDataReference.get(i).get("major");
+            currentPrice        = originalDataReference.get(i).get("rate");
+            currentYear         = originalDataReference.get(i).get("year");
+
+            if(null != majorsArray)
+            {
+                for(String m: majorsArray)
+                {
+                    if(currentMajor.trim().equalsIgnoreCase(m))
+                        filteredData.add(originalDataReference.get(i));
+                }
+            }
+
+            if(null != ratesArray)
+            {
+                for(String r: ratesArray)
+                {
+                    if(currentPrice.trim().equalsIgnoreCase(r))
+                        filteredData.add(originalDataReference.get(i));
+                }
+            }
+
+            if(null != yearsArray)
+            {
+                for(String y: yearsArray)
+                {
+                    if(currentYear.trim().equalsIgnoreCase(y))
+                        filteredData.add(originalDataReference.get(i));
+                }
+            }
+
+        }
+
+        this.data = new ArrayList<HashMap<String, String>>(); //update the data!
+        for(int i =0; i < filteredData.size(); i++)
+            data.add(filteredData.get(i));
+
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount()
     {
@@ -189,6 +258,17 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
         };
     }
 
+    /**
+     *
+     */
+    public void resetFilters()
+    {
+        this.data = new ArrayList<HashMap<String, String>>(); //update the data!
+        for(int i =0; i < this.originalDataReference.size(); i++)
+            data.add(originalDataReference.get(i));
+
+        notifyDataSetChanged();
+    }
     /**
      *
      * @param cachedBitmaps
