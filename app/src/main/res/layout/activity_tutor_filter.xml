@@ -26,7 +26,7 @@
             android:text="Reset"
             android:layout_marginRight="10dp"
             android:textColor="#2C3E57"
-            android:id="@+id/resetTextView"
+            android:id="@+id/resetTextViewFilter"
             android:textSize="14dp"
             android:layout_alignTop="@+id/arrow_back_image"/>
     </RelativeLayout>

@@ -54,7 +54,8 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     private SearchView                      searchView;
     protected DrawerLayout                  drawerLayout;
     private ActionBarDrawerToggle           actionBarDrawerToggle;
-    private TextView                        actionBarProfileButton, resetTextView;
+    private TextView                        actionBarProfileButton, resetTextViewFilter,
+                                            resetTextViewList;
     private RelativeLayout                  relativeLayout, userProfileRelativeLayout;
     private ArrayList<TutorListViewItem>    tutorListViewItems;
     private Button                          filterButton;
@@ -64,7 +65,6 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     private TextView                            emptyTextView;
     private ArrayList<HashMap<String, String>>  data;
     private HashMap<String, Bitmap>             mapIDToBitmap;
-    private String []                           listViewTitles;
 
 
     private static final String ALL_TUTORS    = "http://blankcanvas.pw/bc/tutors";
@@ -134,8 +134,10 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     {
         this.listView                   = (ListView) findViewById(R.id.tutor_list_activity_main_list_view);
         this.emptyTextView              = (TextView) findViewById(R.id.emptyTextView);
-        this.resetTextView              = (TextView) findViewById(R.id.resetTextView);
-        this.resetTextView.setOnClickListener(this);
+        this.resetTextViewList          = (TextView) findViewById(R.id.resetTextViewList);
+        this.resetTextViewList.setOnClickListener(this);
+        this.resetTextViewFilter        = (TextView) findViewById(R.id.resetTextView);
+        this.resetTextViewFilter.setOnClickListener(this);
         this.filterButton               = (Button)   findViewById(R.id.filterButton);
         this.filterButton.setOnClickListener(this);
         this.searchView                 = (SearchView) findViewById(R.id.action_search_icon);
@@ -199,8 +201,21 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                 startActivityForResult(intent,REQUEST_CODE_FILTER);
                 break;
 
-            case R.id.resetTextView:
+            case R.id.resetTextViewFilter:
                 this.tutorListAdapter.resetFilters();
+                ProfileInfoBehavior.FILTERABLE.setMajor("");
+                ProfileInfoBehavior.FILTERABLE.setRate("");
+                ProfileInfoBehavior.FILTERABLE.setYear("");
+
+                Toast.makeText(this, "Filters reset", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.resetTextViewList:
+                this.tutorListAdapter.resetFilters();
+                ProfileInfoBehavior.FILTERABLE.setMajor("");
+                ProfileInfoBehavior.FILTERABLE.setRate("");
+                ProfileInfoBehavior.FILTERABLE.setYear("");
+
                 Toast.makeText(this, "Filters reset", Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -366,7 +381,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
     private void setUpDrawerLayout()
     {
-        ViewGroup header, footer;
+        ViewGroup header;
 
         this.drawerLayout           = (DrawerLayout) findViewById(R.id.tutor_list_drawer_layout);
         drawerLayoutListView        = (ListView) findViewById(R.id.tutor_list_activity_right_drawer_list_view);
@@ -374,16 +389,11 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                                         inflate(R.layout.header_drawerlayout_tutor_list_activity,
                                                 this.drawerLayoutListView,
                                                 false);
-        footer                      = (ViewGroup) getLayoutInflater().
-                                        inflate(R.layout.z_not_used_footer_drawerlayout_tutor_list_activity,
-                                                this.drawerLayoutListView,
-                                                false);
 
-        //v                           = View.inflate(this, R.layout.header_drawerlayout_tutor_list_activity, null);
+
         userProfileRelativeLayout   = (RelativeLayout) header.findViewById(R.id.tutor_list_activity_relative_layout);
         userProfileRelativeLayout.setOnClickListener(this);
         drawerLayoutListView.addHeaderView(header, null, false);
-        //drawerLayoutListView.addFooterView(footer, null, false);
         drawerLayoutListView.setAdapter(new TutorListDrawerLayoutAdapter(this, this.tutorListViewItems));
         drawerLayoutListView.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -438,10 +448,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
             HashMap<String, String>             map;
             Intent                              intent;
             Bundle                              bundle;
-            int                                 bytes;
-            ByteBuffer                          byteBuffer;
             Bitmap                              coverImageBitmap;
-            byte []                             byteArray;
 
             tutorListAdapter = (TutorListAdapter) parent.getAdapter();
             data                = tutorListAdapter.getData();

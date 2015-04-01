@@ -39,8 +39,12 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
         setContentView(R.layout.activity_tutor_filter);
 
         initializeUI();
+        setData();
     }
 
+    /**
+     *
+     */
     private void initializeUI()
     {
         this.majorEditText      = (EditText) findViewById(R.id.editTextFilterMajor);
@@ -81,7 +85,6 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
 
         allData     = new ArrayList<String>();
 
-
         switch(v.getId())
         {
             case R.id.arrow_back_image:
@@ -91,6 +94,9 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
 
             case R.id.applyFilterButton:
                 setResult(RESULT_OK);
+                ProfileInfoBehavior.FILTERABLE.setMajor(this.majorEditText.getText().toString());
+                ProfileInfoBehavior.FILTERABLE.setRate(this.rateEditText.getText().toString());
+                ProfileInfoBehavior.FILTERABLE.setYear(this.yearEditText.getText().toString());
                 finish();
                 break;
 
@@ -125,11 +131,11 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
 
                 thisData = ProfileInfoBehavior.getFilterableRate();
                 DialogSetterAndPopulator.setMultiChoiceDialogAndShow(this, this.rateEditText,
-                        rateTitle,
-                        ProfileInfo.RATE,
-                        ProfileInfoBehavior.FILTERABLE,
-                        allData,
-                        thisData);
+                                                                     rateTitle,
+                                                                     ProfileInfo.RATE,
+                                                                     ProfileInfoBehavior.FILTERABLE,
+                                                                     allData,
+                                                                     thisData);
                 break;
 
             case R.id.editTextFilterYear:
@@ -139,13 +145,72 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
 
                 thisData = ProfileInfoBehavior.getFilterableYear();
                 DialogSetterAndPopulator.setMultiChoiceDialogAndShow(this, this.yearEditText,
-                        yearTitle,
-                        ProfileInfo.YEAR,
-                        ProfileInfoBehavior.FILTERABLE,
-                        allData,
-                        thisData);
+                                                                     yearTitle,
+                                                                     ProfileInfo.YEAR,
+                                                                     ProfileInfoBehavior.FILTERABLE,
+                                                                     allData,
+                                                                     thisData);
                 break;
         }
 
+    }
+
+    /**
+     *
+     */
+    private void setData()
+    {
+        String majors, rates, years, result;
+        String [] majorsArray, ratesArray, yearsArray;
+
+        majors  = ProfileInfoBehavior.getFilterableMajor();
+        rates   = ProfileInfoBehavior.getFilterableRate();
+        years   = ProfileInfoBehavior.getFilterableYear();
+
+        if(null != majors && majors.length() > 0)
+        {
+            majorsArray = majors.split(",");
+            result      = formatData(majorsArray);
+
+            this.majorEditText.setText(result);
+        }
+
+        if(null != rates && rates.length() > 0)
+        {
+            ratesArray  = rates.split(",");
+            result      = formatData(ratesArray);
+
+            this.rateEditText.setText(result);
+        }
+
+        if(null != years && years.length() > 0)
+        {
+            yearsArray = years.split(",");
+            result      = formatData(yearsArray);
+
+            this.yearEditText.setText(result);
+        }
+    }
+
+    /**
+     * 
+     * @param data
+     * @return
+     */
+    private String formatData(String [] data)
+    {
+        String result, tmp;
+
+        result = "";
+
+        for (int i =0; i < data.length; i++)
+        {
+            tmp = data[i];
+            result += tmp + ", ";
+        }
+
+        result = result.substring(0, result.lastIndexOf(","));
+
+        return result;
     }
 }
