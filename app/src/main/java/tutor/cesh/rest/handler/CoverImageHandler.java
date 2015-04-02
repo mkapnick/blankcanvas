@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 
-import tutor.cesh.profile.persistant.Profile;
+import tutor.cesh.profile.Profile;
 
 /**
  * Created by michaelk18 on 7/12/14.

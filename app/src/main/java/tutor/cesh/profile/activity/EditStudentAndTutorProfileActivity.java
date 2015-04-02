@@ -27,9 +27,9 @@ import tutor.cesh.metadata.Major;
 import tutor.cesh.metadata.MetaDataBank;
 import tutor.cesh.metadata.Rate;
 import tutor.cesh.metadata.Year;
-import tutor.cesh.profile.persistant.Student;
-import tutor.cesh.profile.persistant.Tutor;
-import tutor.cesh.profile.persistant.User;
+import tutor.cesh.profile.Student;
+import tutor.cesh.profile.Tutor;
+import tutor.cesh.profile.User;
 import tutor.cesh.dialog.DialogSetterAndPopulator;
 import tutor.cesh.rest.asynchronous.RestClientExecute;
 import tutor.cesh.rest.http.CourseHttpObject;
@@ -162,8 +162,8 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
                 finish();
                 break;
             case R.id.logoutButton:
-                this.sessionManager.logOut();
                 finish();
+                this.sessionManager.logOut();
                 break;
             case R.id.arrow_back_image:
                 finish();

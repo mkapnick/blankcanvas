@@ -2,7 +2,7 @@ package tutor.cesh.rest.handler;
 
 import android.graphics.Bitmap;
 
-import tutor.cesh.profile.persistant.Profile;
+import tutor.cesh.profile.Profile;
 
 /**
  * Created by michaelk18 on 4/7/14.

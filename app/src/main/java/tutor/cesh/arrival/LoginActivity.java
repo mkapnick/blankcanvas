@@ -108,15 +108,6 @@ public class LoginActivity extends Activity implements Arrival
 
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ( keyCode == KeyEvent.KEYCODE_MENU ) {
-            // do nothing
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
     /**
      * Validates the user email and password
      * by querying the tutor.app.database as necessary

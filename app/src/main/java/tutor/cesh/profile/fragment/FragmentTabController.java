@@ -25,11 +25,11 @@ import org.apache.http.client.methods.HttpPost;
 import java.util.ArrayList;
 import java.util.List;
 
-import tutor.cesh.profile.persistant.Profile;
+import tutor.cesh.profile.Profile;
 import tutor.cesh.R;
-import tutor.cesh.profile.persistant.Student;
-import tutor.cesh.profile.persistant.Tutor;
-import tutor.cesh.profile.persistant.User;
+import tutor.cesh.profile.Student;
+import tutor.cesh.profile.Tutor;
+import tutor.cesh.profile.User;
 import tutor.cesh.google.SlidingTabLayout;
 import tutor.cesh.image.BitmapHandlerFactory;
 import tutor.cesh.list.TutorListActivity;
@@ -78,7 +78,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
 
         //if(resultCode != 0)
         //{
-            if(requestCode == COVER_IMAGE_REQUEST_CODE)
+            if(requestCode == COVER_IMAGE_REQUEST_CODE && resultCode != Activity.RESULT_CANCELED)
             {
                 user        = User.getInstance(activity);
 
@@ -87,8 +87,8 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
                 {
                     //update the background image immediately
                     coverImagePath = updateBackgroundImage(data, this.tabAdapter.getTabs().
-                                    get(position).getCoverImageView(),
-                            user.getStudent());
+                                                                 get(position).getCoverImageView(),
+                                                           user.getStudent());
 
                     //make a call to the server and update the image, we need to update the image on
                     //the server because there is no save button, so like the web this is like our ajax call
@@ -100,8 +100,8 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
                 {
                     //update the background image immediately
                     coverImagePath = updateBackgroundImage(data, this.tabAdapter.getTabs().
-                                    get(position).getCoverImageView(),
-                            user.getTutor());
+                                                                 get(position).getCoverImageView(),
+                                                           user.getTutor());
 
                     //make a call to the server and update the image, we need to update the image on
                     //the server because there is no save button, so like the web this is like our ajax call
@@ -111,7 +111,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
                 }
             }
 
-            else if(requestCode == EDIT_INFO)
+            else if(requestCode == EDIT_INFO && resultCode != Activity.RESULT_CANCELED)
             {
                 notifyObservers();
             }

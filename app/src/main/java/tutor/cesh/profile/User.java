@@ -1,4 +1,4 @@
-package tutor.cesh.profile.persistant;
+package tutor.cesh.profile;
 
 import android.content.Context;
 

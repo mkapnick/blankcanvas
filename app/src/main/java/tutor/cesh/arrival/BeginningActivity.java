@@ -18,6 +18,12 @@ public class BeginningActivity extends Activity implements Arrival
 {
 
     @Override
+    public void onBackPressed()
+    {
+        //do nothing
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);

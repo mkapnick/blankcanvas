@@ -9,8 +9,8 @@ import org.json.JSONObject;
 import java.net.URI;
 import java.util.List;
 
-import tutor.cesh.profile.persistant.Student;
-import tutor.cesh.profile.persistant.User;
+import tutor.cesh.profile.Student;
+import tutor.cesh.profile.User;
 import tutor.cesh.profile.util.classes.ClassesUtility;
 
 /**

@@ -15,8 +15,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.net.URI;
 
-import tutor.cesh.profile.persistant.Student;
-import tutor.cesh.profile.persistant.User;
+import tutor.cesh.profile.Student;
+import tutor.cesh.profile.User;
 import tutor.cesh.rest.http.HttpObject;
 
 /**

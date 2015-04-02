@@ -8,8 +8,8 @@ import org.json.JSONObject;
 
 import java.net.URI;
 
-import tutor.cesh.profile.persistant.Student;
-import tutor.cesh.profile.persistant.User;
+import tutor.cesh.profile.Student;
+import tutor.cesh.profile.User;
 
 /**
  * Created by michaelk18 on 7/7/14.

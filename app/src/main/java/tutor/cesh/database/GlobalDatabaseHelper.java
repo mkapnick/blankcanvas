@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.widget.ImageView;
 
-import tutor.cesh.profile.persistant.Student;
-import tutor.cesh.profile.persistant.Tutor;
-import tutor.cesh.profile.persistant.User;
+import tutor.cesh.profile.Student;
+import tutor.cesh.profile.Tutor;
+import tutor.cesh.profile.User;
 import tutor.cesh.rest.asynchronous.AsyncDownloader;
 import tutor.cesh.rest.handler.CoverImageHandler;
 import tutor.cesh.rest.handler.ImageHandler;
