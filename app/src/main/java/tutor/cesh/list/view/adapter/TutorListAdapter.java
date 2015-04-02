@@ -116,11 +116,19 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
 
         }
 
-        this.data = new ArrayList<HashMap<String, String>>(); //update the data!
-        for(int i =0; i < filteredData.size(); i++)
-            data.add(filteredData.get(i));
+        if(filteredData.size() > 0)
+        {
+            this.data = new ArrayList<HashMap<String, String>>(); //update the data!
+            for (int i = 0; i < filteredData.size(); i++)
+                data.add(filteredData.get(i));
 
-        notifyDataSetChanged();
+            notifyDataSetChanged();
+        }
+        else
+        {
+            resetFilters();
+        }
+
     }
 
     @Override

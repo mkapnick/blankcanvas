@@ -12,7 +12,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".arrival.SessionStartActivity"
-            android:label="@string/title_activity_beginning" >
+            android:label="@string/title_activity_beginning"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,6 +52,10 @@
             android:name=".filter.TutorFilterActivity"
             android:label=""
             android:theme="@android:style/Theme.Material.Light.Dialog" >
+        </activity>
+        <activity
+            android:name=".administrative.SettingsActivity"
+            android:label="" >
         </activity>
     </application>
 

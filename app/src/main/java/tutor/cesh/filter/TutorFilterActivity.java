@@ -12,6 +12,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -30,6 +31,28 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
     private android.support.v7.app.ActionBar    actionBar;
     private EditText                            majorEditText, rateEditText, yearEditText;
     private Button                              applyFilterButton;
+
+    /**
+     *
+     * @param data
+     * @return
+     */
+    private String formatData(String [] data)
+    {
+        String result, tmp;
+
+        result = "";
+
+        for (int i =0; i < data.length; i++)
+        {
+            tmp = data[i];
+            result += tmp + ", ";
+        }
+
+        result = result.substring(0, result.lastIndexOf(","));
+
+        return result;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -51,7 +74,7 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
         this.rateEditText       = (EditText) findViewById(R.id.editTextFilterRate);
         this.yearEditText       = (EditText) findViewById(R.id.editTextFilterYear);
         this.arrowBackTextView  = (TextView) findViewById(R.id.arrow_back_image);
-        this.resetTextView      = (TextView) findViewById(R.id.resetTextView);
+        this.resetTextView      = (TextView) findViewById(R.id.resetTextViewFilter);
         this.applyFilterButton  = (Button) findViewById(R.id.applyFilterButton);
         this.applyFilterButton.setAllCaps(false);
 
@@ -89,6 +112,8 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
         {
             case R.id.arrow_back_image:
                 setResult(RESULT_CANCELED);
+                //resetFilters();
+                Toast.makeText(this, "No filters applied", Toast.LENGTH_SHORT).show();
                 finish();
                 break;
 
@@ -97,17 +122,13 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
                 ProfileInfoBehavior.FILTERABLE.setMajor(this.majorEditText.getText().toString());
                 ProfileInfoBehavior.FILTERABLE.setRate(this.rateEditText.getText().toString());
                 ProfileInfoBehavior.FILTERABLE.setYear(this.yearEditText.getText().toString());
+
                 finish();
                 break;
 
-            case R.id.resetTextView:
-                ProfileInfoBehavior.FILTERABLE.setMajor("");
-                ProfileInfoBehavior.FILTERABLE.setRate("");
-                ProfileInfoBehavior.FILTERABLE.setYear("");
-
-                this.majorEditText.setText("");
-                this.rateEditText.setText("");
-                this.yearEditText.setText("");
+            case R.id.resetTextViewFilter:
+                resetFilters();
+                Toast.makeText(this, "Filters reset", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.editTextFilterMajor:
@@ -155,6 +176,21 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
 
     }
 
+
+    /**
+     *
+     */
+    private void resetFilters()
+    {
+        ProfileInfoBehavior.FILTERABLE.setMajor("");
+        ProfileInfoBehavior.FILTERABLE.setRate("");
+        ProfileInfoBehavior.FILTERABLE.setYear("");
+
+        this.majorEditText.setText("");
+        this.rateEditText.setText("");
+        this.yearEditText.setText("");
+    }
+
     /**
      *
      */
@@ -190,27 +226,5 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
 
             this.yearEditText.setText(result);
         }
-    }
-
-    /**
-     * 
-     * @param data
-     * @return
-     */
-    private String formatData(String [] data)
-    {
-        String result, tmp;
-
-        result = "";
-
-        for (int i =0; i < data.length; i++)
-        {
-            tmp = data[i];
-            result += tmp + ", ";
-        }
-
-        result = result.substring(0, result.lastIndexOf(","));
-
-        return result;
     }
 }

@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import tutor.cesh.R;
+import tutor.cesh.administrative.SettingsActivity;
 import tutor.cesh.dialog.ProfileInfo;
 import tutor.cesh.dialog.ProfileInfoBehavior;
 import tutor.cesh.filter.TutorFilterActivity;
@@ -54,7 +55,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     private SearchView                      searchView;
     protected DrawerLayout                  drawerLayout;
     private ActionBarDrawerToggle           actionBarDrawerToggle;
-    private TextView                        actionBarProfileButton, resetTextViewFilter,
+    private TextView                        actionBarProfileButton,
                                             resetTextViewList;
     private RelativeLayout                  relativeLayout, userProfileRelativeLayout;
     private ArrayList<TutorListViewItem>    tutorListViewItems;
@@ -118,8 +119,11 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                 case 0:
                     break;
                 case 1:
+                    intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                    startActivity(intent);
                     break;
                 case 2:
+                    setUpEmail();
                     break;
                 case 3:
                     break;
@@ -136,12 +140,11 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         this.emptyTextView              = (TextView) findViewById(R.id.emptyTextView);
         this.resetTextViewList          = (TextView) findViewById(R.id.resetTextViewList);
         this.resetTextViewList.setOnClickListener(this);
-        this.resetTextViewFilter        = (TextView) findViewById(R.id.resetTextView);
-        this.resetTextViewFilter.setOnClickListener(this);
         this.filterButton               = (Button)   findViewById(R.id.filterButton);
         this.filterButton.setOnClickListener(this);
         this.searchView                 = (SearchView) findViewById(R.id.action_search_icon);
         this.searchView.setOnQueryTextListener(this);
+        this.searchView.setQueryHint("Search anything...");
 
         this.actionBarProfileButton     = (TextView) findViewById(R.id.action_bar_profile_button);
         this.actionBarProfileButton.setOnClickListener(this);
@@ -238,8 +241,13 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     @Override
     public boolean onQueryTextChange(String s)
     {
-        if(null != this.tutorListAdapter && this.tutorListAdapter.getData().size() > 0)
-            tutorListAdapter.getFilter().filter(s);
+        if(null != this.tutorListAdapter)
+        {
+            if(s.length() > 0)
+                tutorListAdapter.getFilter().filter(s);
+            else
+                tutorListAdapter.resetFilters();
+        }
 
         return true;
     }
@@ -285,14 +293,14 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         item        = new TutorListViewItem(text, drawable);
         this.tutorListViewItems.add(item);
 
-        text        = "Careers";
+        /*text        = "Careers";
         item        = new TutorListViewItem(text, null);
         this.tutorListViewItems.add(item);
 
         text        = "Help";
         drawable    = getResources().getDrawable(R.drawable.ic_action_help);
         item        = new TutorListViewItem(text, drawable);
-        this.tutorListViewItems.add(item);
+        this.tutorListViewItems.add(item);*/
     }
 
     /**
@@ -423,6 +431,22 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         };
 
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
+    }
+
+    /**
+     *
+     */
+    private void setUpEmail()
+    {
+        Intent emailIntent;
+
+        emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"blankcanvasteam@gmail.com"});
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+        emailIntent.setType("message/rfc822");
+
+        startActivity(Intent.createChooser(emailIntent, "Please select an email application"));
     }
 
 
