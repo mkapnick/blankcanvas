@@ -5,24 +5,12 @@ package tutor.cesh.auth;
  * */
 public class User
 {
-    public static byte [] encrypt(String plainText) throws Exception
+    public static String encrypt(String plainText) throws Exception
     {
         UserSecurity userSecurity;
         userSecurity = new UserSecurity();
 
         return userSecurity.encrypt(plainText);
     }
-    /**
-     *
-     * @param
-     * @return
-     * @throws Exception
-     */
-    public static String decrypt(byte [] encryptedBytes) throws Exception
-    {
-        UserSecurity userSecurity;
-        userSecurity = new UserSecurity();
 
-        return userSecurity.decrypt(encryptedBytes);
-    }
 }

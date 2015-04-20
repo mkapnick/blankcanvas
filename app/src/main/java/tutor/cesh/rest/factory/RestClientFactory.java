@@ -16,6 +16,7 @@ import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 
 import tutor.cesh.auth.User;
+import tutor.cesh.rest.apisecurity.APIEndpoints;
 
 
 /**
@@ -23,49 +24,6 @@ import tutor.cesh.auth.User;
  */
 public class RestClientFactory
 {
-    private static final String     POST_NEW_STUDENT       = "http://blankcanvas.pw/bc/students/";
-    private static final String     DOMAIN              = "http://blankcanvas.pw";
-    /**
-     * Authorize that a user's email and password is
-     * stored on the server
-     *
-     * @param email User's email
-     * @param password User's password
-     *
-     * @return an HttpGet ready to authenticate a user's email and password
-     * @throws JSONException
-     * @throws IOException
-     * @throws NoSuchAlgorithmException
-     */
-
-    /*public static HttpGet authenticate(String email, String password) throws JSONException,
-                                                                    IOException,
-                                                                    NoSuchAlgorithmException
-    {
-        HttpGet      httpGet;
-        httpGet     = null;
-        try
-        {
-            email = email.replaceAll("\\.", "_");
-            httpGet = new HttpGet(new URI(DOMAIN +"/auth"));
-            httpGet.setHeader("Authorization",  getB6Auth(email, password));
-            httpGet.setHeader("Accept", "application/json");
-            httpGet.setHeader("Content-Type", "application/json");
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return httpGet;
-
-        private static String getB6Auth(String email, String password)
-        {
-            String source=email+":"+password;
-            String ret="Basic "+ Base64.encodeToString(source.getBytes(),Base64.URL_SAFE | Base64.NO_WRAP);
-            return ret;
-        }
-    }*/
-
     /**
      * Create a new user with the given email and password
      *
@@ -83,18 +41,15 @@ public class RestClientFactory
         JSONObject              params;
         HttpPost                httpPost;
         StringEntity            entity;
-        //byte []                 encryptedEmail, encryptedPassword;
         String                  encryptedEmail, encryptedPassword;
-        httpPost            = new HttpPost(DOMAIN + "/bc/users/new");
+
+        httpPost            = new HttpPost(APIEndpoints.getUSER_NEW_POST_ENDPOINT());
         params              = new JSONObject();
-        encryptedEmail      = email;//User.encrypt(email);
-        encryptedPassword   = password;//User.encrypt(password);
+        encryptedEmail      = User.encrypt(email);
+        encryptedPassword   = User.encrypt(password);
 
-        params.put("email", email);//Base64.encode(encryptedEmail, 0));
-        params.put("password", password);
-
-        //Log.d("encrypted email base 64 toString is: ", encryptedEmail);
-        //Log.d("encrypted pswd base 64 toString is: ", encryptedPassword);
+        params.put("email", encryptedEmail);//Base64.encode(encryptedEmail, 0));
+        params.put("password", encryptedPassword);
 
         entity          = new StringEntity(params.toString());
 
@@ -118,7 +73,6 @@ public class RestClientFactory
                                                                             IOException,
                                                                             NoSuchAlgorithmException
     {
-        //byte []                 encryptedEmail, encryptedPassword;
         String                  encryptedEmail, encryptedPassword;
         JSONObject              params;
         HttpPost                httpPost;
@@ -127,16 +81,17 @@ public class RestClientFactory
         encryptedEmail      = null;
         encryptedPassword   = null;
 
-        try{
-            encryptedEmail      = email; //User.encrypt(email);
-            encryptedPassword   = password; //User.encrypt(password);
+        try
+        {
+            encryptedEmail      = User.encrypt(email);
+            encryptedPassword   = User.encrypt(password);
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
 
-        httpPost    = new HttpPost(DOMAIN + "/bc/auth");
+        httpPost    = new HttpPost(APIEndpoints.getAUTH_POST_ENDPOINT());
         params      = new JSONObject();
 
         params.put("email", encryptedEmail);
@@ -149,6 +104,5 @@ public class RestClientFactory
         httpPost.setEntity(entity);
 
         return httpPost;
-
     }
 }

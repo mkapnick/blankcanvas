@@ -3,9 +3,7 @@ package tutor.cesh.dialog.listener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.EditText;
-
 import java.util.ArrayList;
-
 import tutor.cesh.dialog.ProfileInfo;
 import tutor.cesh.dialog.ProfileInfoBehavior;
 
@@ -96,7 +94,6 @@ public class CheckBoxDialogPositiveButtonListener implements DialogInterface.OnM
             case YEAR:
                 ProfileInfo.YEAR.setResult(selectedItem, this.editText);
                 this.behavior.setYear(selectedItem);
-
                 break;
             case RATE:
                 ProfileInfo.RATE.setResult(selectedItem, this.editText);

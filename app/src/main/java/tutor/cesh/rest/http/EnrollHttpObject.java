@@ -10,15 +10,13 @@ import java.net.URI;
 
 import tutor.cesh.profile.Student;
 import tutor.cesh.profile.User;
+import tutor.cesh.rest.apisecurity.APIEndpoints;
 
 /**
  * Created by michaelk18 on 7/7/14.
  */
 public class EnrollHttpObject implements HttpObject
 {
-    private static final String ENROLL_ENDPOINT = "http://blankcanvas.pw/bc/enrolls/";
-
-
     private User user;
 
     public EnrollHttpObject(User user)
@@ -39,7 +37,7 @@ public class EnrollHttpObject implements HttpObject
 
         student = user.getStudent();
 
-        put             = new HttpPut(ENROLL_ENDPOINT + student.getEnrollId());
+        put             = new HttpPut(APIEndpoints.getENROLLS_ENDPOINT() + "/" + student.getEnrollId());
         params          = new JSONObject();
 
         params.put("major", student.getMajor());
@@ -62,7 +60,7 @@ public class EnrollHttpObject implements HttpObject
         student = user.getStudent();
 
         //get student enroll data
-        httpGet = new HttpGet(new URI(ENROLL_ENDPOINT + student.getEnrollId()));
+        httpGet = new HttpGet(new URI(APIEndpoints.getENROLLS_ENDPOINT() + "/" + student.getEnrollId()));
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-Type", "application/json");
 

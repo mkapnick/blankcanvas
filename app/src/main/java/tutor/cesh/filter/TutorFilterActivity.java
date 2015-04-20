@@ -1,21 +1,14 @@
 package tutor.cesh.filter;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-
 import tutor.cesh.R;
 import tutor.cesh.dialog.DialogSetterAndPopulator;
 import tutor.cesh.dialog.ProfileInfo;
@@ -28,7 +21,6 @@ import tutor.cesh.metadata.Year;
 public class TutorFilterActivity extends Activity implements View.OnClickListener {
 
     private TextView                            arrowBackTextView, resetTextView;
-    private android.support.v7.app.ActionBar    actionBar;
     private EditText                            majorEditText, rateEditText, yearEditText;
     private Button                              applyFilterButton;
 
@@ -112,7 +104,6 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
         {
             case R.id.arrow_back_image:
                 setResult(RESULT_CANCELED);
-                //resetFilters();
                 Toast.makeText(this, "No filters applied", Toast.LENGTH_SHORT).show();
                 finish();
                 break;
@@ -122,7 +113,6 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
                 ProfileInfoBehavior.FILTERABLE.setMajor(this.majorEditText.getText().toString());
                 ProfileInfoBehavior.FILTERABLE.setRate(this.rateEditText.getText().toString());
                 ProfileInfoBehavior.FILTERABLE.setYear(this.yearEditText.getText().toString());
-
                 finish();
                 break;
 

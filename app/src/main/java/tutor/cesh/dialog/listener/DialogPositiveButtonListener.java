@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.EditText;
-
 import tutor.cesh.dialog.ProfileInfo;
 import tutor.cesh.dialog.ProfileInfoBehavior;
 
@@ -16,7 +15,6 @@ public class DialogPositiveButtonListener implements DialogInterface.OnClickList
     protected CharSequence[]        data;
     protected Context               context;
     protected EditText              editText;
-    protected boolean               shouldUpdateEditMode;
     protected ProfileInfo           profileInfo;
     protected ProfileInfoBehavior   behavior;
 
@@ -24,7 +22,9 @@ public class DialogPositiveButtonListener implements DialogInterface.OnClickList
      *
      * @param c
      * @param data
+     * @param editText
      * @param profileInfo
+     * @param behavior
      */
     public DialogPositiveButtonListener(Context c, CharSequence[] data, EditText editText,
                                         ProfileInfo profileInfo,
@@ -74,7 +74,6 @@ public class DialogPositiveButtonListener implements DialogInterface.OnClickList
             case YEAR:
                 ProfileInfo.YEAR.setResult(selectedItem, this.editText);
                 this.behavior.setYear(selectedItem);
-
                 break;
             case RATE:
                 ProfileInfo.RATE.setResult(selectedItem, this.editText);

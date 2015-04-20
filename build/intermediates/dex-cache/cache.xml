@@ -2,18 +2,11 @@
 <items version="2" >
 
     <item
-        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/libs/httpmime-4.1.2.jar"
+        jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.6/562424e36df3d2327e8e9301a76027fca17d54ea/slf4j-api-1.7.6.jar"
         jumboMode="false"
         revision="21.0.0"
-        sha1="ed8b5ee0167cb27dea55851259eb34b609f31df0">
-        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/httpmime-4.1.2-d4ea571b71888849467b120897ffbfaa84dd76d9.jar" />
-    </item>
-    <item
-        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar"
-        jumboMode="false"
-        revision="21.0.0"
-        sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0">
-        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-1a81b56ac79507d1bb4829d4f89c3d242c9549bc.jar" />
+        sha1="562424e36df3d2327e8e9301a76027fca17d54ea">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/slf4j-api-1.7.6-91805324f31a57ffd6f0ed0b7e6d268df4dcddb5.jar" />
     </item>
     <item
         jar="/Users/michaelkapnick/android-sdk-macosx/extras/android/m2repository/com/android/support/support-annotations/21.0.0/support-annotations-21.0.0.jar"
@@ -23,6 +16,13 @@
         <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.0-a40ccb0d15cafaf3c925869b50d5afb4394b188e.jar" />
     </item>
     <item
+        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="686344a780033e4ba22b926cd225f8d4941247e6">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/classes-d679192406fdf0b8e1ad732a76ade81099e5fbb1.jar" />
+    </item>
+    <item
         jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.0/classes.jar"
         jumboMode="false"
         revision="21.0.0"
@@ -30,11 +30,46 @@
         <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/classes-90b4ae6ff84746e40212028b31551c250e4aa81e.jar" />
     </item>
     <item
-        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
+        jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.4.2/ceb72830d95c512b4b300a38f29febc85bdf6e4b/jackson-core-2.4.2.jar"
         jumboMode="false"
         revision="21.0.0"
-        sha1="686344a780033e4ba22b926cd225f8d4941247e6">
-        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/classes-d679192406fdf0b8e1ad732a76ade81099e5fbb1.jar" />
+        sha1="ceb72830d95c512b4b300a38f29febc85bdf6e4b">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/jackson-core-2.4.2-21492c08ef7f4ff2aec000a57f3d51875aa3a7cb.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/libs/httpmime-4.1.2.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="ed8b5ee0167cb27dea55851259eb34b609f31df0">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/httpmime-4.1.2-d4ea571b71888849467b120897ffbfaa84dd76d9.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.4.0/d6a66c7a5f01cf500377bd669507a08cfeba882a/jackson-annotations-2.4.0.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="d6a66c7a5f01cf500377bd669507a08cfeba882a">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/jackson-annotations-2.4.0-42dce6a96bf96ebc3e92df1d918461900811cbbf.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-1a81b56ac79507d1bb4829d4f89c3d242c9549bc.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/io.jsonwebtoken/jjwt/0.4/61ce246d937a0fd3acf06d3bef5fc9e3933ae812/jjwt-0.4.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="61ce246d937a0fd3acf06d3bef5fc9e3933ae812">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/jjwt-0.4-247265d9453aeed43ffa7bc6a303fa5df65f5a88.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.4.2/8e31266a272ad25ac4c089734d93e8d811652c1f/jackson-databind-2.4.2.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="8e31266a272ad25ac4c089734d93e8d811652c1f">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/jackson-databind-2.4.2-377b0ad2b1c2e7cb986389e24f31e492edfe241a.jar" />
     </item>
 
 </items>

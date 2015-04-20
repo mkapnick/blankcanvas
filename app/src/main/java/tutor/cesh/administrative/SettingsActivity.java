@@ -4,8 +4,6 @@ import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
@@ -22,11 +20,15 @@ public class SettingsActivity extends ActionBarActivity implements View.OnClickL
     private Switch                              switchWidget;
 
 
+    /**
+     *
+     */
     private void initializeUI()
     {
         this.switchWidget = (Switch) findViewById(R.id.switchSettings);
         this.switchWidget.setOnCheckedChangeListener(this);
     }
+
     @Override
     public void onClick(View v) {
 
@@ -48,6 +50,24 @@ public class SettingsActivity extends ActionBarActivity implements View.OnClickL
         setUpActionBar();
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+    {
+        if(isChecked)
+        {
+            Toast.makeText(this, "You are now registered to receive email updates from" +
+                    " the blankcanvas team.", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(this, "You are no longer registered to receive email updates from" +
+                    " the blankcanvas team.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     *
+     */
     private void setUpActionBar()
     {
         LayoutInflater inflator;
@@ -65,21 +85,5 @@ public class SettingsActivity extends ActionBarActivity implements View.OnClickL
         this.arrowBackImage.setOnClickListener(this);
 
         this.actionBar.setCustomView(v);
-    }
-
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-    {
-        if(isChecked)
-        {
-            Toast.makeText(this, "You are now registered to receive email updates from" +
-                    " the blankcanvas team.", Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            Toast.makeText(this, "You are no longer registered to receive email updates from" +
-                    " the blankcanvas team.", Toast.LENGTH_SHORT).show();
-        }
     }
 }

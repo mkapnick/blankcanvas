@@ -17,6 +17,7 @@ import tutor.cesh.profile.Student;
 import tutor.cesh.profile.Tutor;
 import tutor.cesh.profile.User;
 import tutor.cesh.list.TutorListActivity;
+import tutor.cesh.rest.apisecurity.APIEndpoints;
 import tutor.cesh.rest.asynchronous.AsyncGet;
 
 /**
@@ -26,7 +27,6 @@ public class OnLoginTaskDelegate implements TaskDelegate
 {
     private Context context;
     private String  email, password;
-    private static final String DOMAIN = "http://blankcanvas.pw";
 
     public OnLoginTaskDelegate(Context context, String email, String password)
     {
@@ -48,7 +48,7 @@ public class OnLoginTaskDelegate implements TaskDelegate
         HttpGet                 httpGet;
         MetaDataTaskDelegate    metaDataTaskDelegate;
 
-        httpGet                 = new HttpGet(DOMAIN + "/bc/metadata/profile");
+        httpGet                 = new HttpGet(APIEndpoints.getMETADATA_GET_ENDPOINT());
         metaDataTaskDelegate    = new MetaDataTaskDelegate(this.context);
 
         new AsyncGet(this.context, metaDataTaskDelegate, null).execute(httpGet);
@@ -69,7 +69,7 @@ public class OnLoginTaskDelegate implements TaskDelegate
         intent.putExtra("id", object.getString("id"));
         intent.putExtra("enrollId", object.getString("enrollId"));
         intent.putExtra("schoolId", object.getString("schoolId"));
-        intent.putExtra("email", object.getString("email"));
+        intent.putExtra("email", this.email);
         intent.putExtra("firstName", object.getString("firstName"));
         intent.putExtra("lastName", object.getString("lastName"));
         intent.putExtra("about", object.getString("studentAbout"));
@@ -105,7 +105,7 @@ public class OnLoginTaskDelegate implements TaskDelegate
         student.setCoverImageUrl(object.getString("studentCoverImageUrl"));
         student.setMajor(object.getString("major"));
         student.setYear(object.getString("graduationYear"));
-        student.setEmail(object.getString("email"));
+        student.setEmail(this.email);
 
         //student courses
         studentCoursesArray     = object.getJSONArray("studentCourses");

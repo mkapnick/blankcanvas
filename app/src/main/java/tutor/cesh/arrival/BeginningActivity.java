@@ -2,26 +2,14 @@ package tutor.cesh.arrival;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-
 import tutor.cesh.R;
-import tutor.cesh.session.SessionManager;
 
 public class BeginningActivity extends Activity implements Arrival
 {
-
-    @Override
-    public void onBackPressed()
-    {
-        //do nothing
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -29,7 +17,6 @@ public class BeginningActivity extends Activity implements Arrival
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_beginning);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,6 +60,5 @@ public class BeginningActivity extends Activity implements Arrival
                 startActivity(intent);
                 break;
         }
-
     }
 }

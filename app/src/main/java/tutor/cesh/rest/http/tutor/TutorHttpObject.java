@@ -17,6 +17,7 @@ import java.net.URI;
 
 import tutor.cesh.profile.Tutor;
 import tutor.cesh.profile.User;
+import tutor.cesh.rest.apisecurity.APIEndpoints;
 import tutor.cesh.rest.http.HttpObject;
 
 /**
@@ -24,10 +25,6 @@ import tutor.cesh.rest.http.HttpObject;
  */
 public class TutorHttpObject implements HttpObject
 {
-    private String  putEndPoint         = "http://blankcanvas.pw/bc/tutors/";
-    private String  getEndPoint         = "http://blankcanvas.pw/bc/tutors/";
-    private String  coverImageEndPoint  = "http://blankcanvas.pw/bc/images/tutors/";
-
     private User    user;
 
     public TutorHttpObject(User user)
@@ -50,7 +47,7 @@ public class TutorHttpObject implements HttpObject
         Tutor           tutor;
 
         tutor           = user.getTutor();
-        put             = new HttpPut(putEndPoint + tutor.getId());
+        put             = new HttpPut(APIEndpoints.getTUTORS_ENDPOINT() + "/" + tutor.getId());
         params          = new JSONObject();
 
         params.put("tutorAbout", tutor.getAbout());
@@ -80,9 +77,9 @@ public class TutorHttpObject implements HttpObject
 
         tutor = user.getTutor();
 
-        Log.d("TEST", coverImageEndPoint + tutor.getId() + "/cover");
+        Log.d("TEST", APIEndpoints.getTUTORS_IMAGE_ENDPOINT() + "/" + tutor.getId() + "/" + "cover");
 
-        post    = new HttpPost(coverImageEndPoint + tutor.getId() + "/cover");
+        post    = new HttpPost(APIEndpoints.getTUTORS_IMAGE_ENDPOINT() + "/" + tutor.getId() + "/" + "cover");
         entity  = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
         if(coverImagePath != null)
@@ -113,7 +110,7 @@ public class TutorHttpObject implements HttpObject
 
         tutor = user.getTutor();
 
-        put             = new HttpPut(putEndPoint + tutor.getId());
+        put             = new HttpPut(APIEndpoints.getTUTORS_ENDPOINT() + "/" + tutor.getId());
         entity          = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
         if(profileImagePath != null)
@@ -135,7 +132,7 @@ public class TutorHttpObject implements HttpObject
     {
         HttpGet httpGet;
 
-        httpGet = new HttpGet(new URI(getEndPoint + user.getTutor().getId()));
+        httpGet = new HttpGet(new URI(APIEndpoints.getTUTORS_ENDPOINT() + "/" + user.getTutor().getId()));
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-Type", "application/json");
 

@@ -3,6 +3,7 @@ package tutor.cesh.rest.http.tutor;
 import java.util.List;
 
 import tutor.cesh.profile.User;
+import tutor.cesh.rest.apisecurity.APIEndpoints;
 import tutor.cesh.rest.http.CourseHttpObject;
 
 /**
@@ -10,8 +11,6 @@ import tutor.cesh.rest.http.CourseHttpObject;
  */
 public class TutorCourseHttpObject extends CourseHttpObject
 {
-    private final String TUTOR_CURRENT_COURSES_ENDPOINT = "http://blankcanvas.pw/bc/courses/tutors/";
-
     public TutorCourseHttpObject(User user, List<String> courses)
     {
         super(user, courses);
@@ -20,7 +19,7 @@ public class TutorCourseHttpObject extends CourseHttpObject
     @Override
     public String getEndPoint()
     {
-        return TUTOR_CURRENT_COURSES_ENDPOINT + super.user.getTutor().getId() + "/current";
+        return APIEndpoints.getTUTORS_COURSES_ENDPOINT() + "/" + super.user.getTutor().getId() + "/" + "current";
     }
 
 

@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,17 +13,13 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import org.apache.http.client.methods.HttpPost;
 import org.json.JSONException;
-
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-
 import tutor.cesh.R;
 import tutor.cesh.rest.asynchronous.AsyncPost;
 import tutor.cesh.rest.delegate.OnLoginTaskDelegate;
-import tutor.cesh.rest.asynchronous.RestClientExecute;
 import tutor.cesh.rest.factory.RestClientFactory;
 import tutor.cesh.rest.delegate.TaskDelegate;
 import tutor.cesh.session.SessionManager;
@@ -35,7 +29,18 @@ public class LoginActivity extends Activity implements Arrival
 
     private String              email;
     private String              password;
-    private SQLiteDatabase      database;
+
+    /**
+     *
+     */
+    private void hideKeyboard()
+    {
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +88,6 @@ public class LoginActivity extends Activity implements Arrival
     @Override
     public void validateArrival(View view)
     {
-        //Validate with tutor.app.database query
-
         String extension;
 
         this.email      = ((EditText) findViewById(R.id.emailTextView)).getText().toString();
@@ -105,7 +108,6 @@ public class LoginActivity extends Activity implements Arrival
         }
         else
             Toast.makeText(this, "Enter your .edu email", Toast.LENGTH_LONG).show();
-
     }
 
     /**
@@ -154,17 +156,5 @@ public class LoginActivity extends Activity implements Arrival
         {
             e.printStackTrace();
         }
-    }
-
-    /**
-     *
-     */
-    private void hideKeyboard()
-    {
-        InputMethodManager inputManager = (InputMethodManager)
-                getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
-                InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

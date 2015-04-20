@@ -1,114 +1,117 @@
 package tutor.cesh.auth;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.security.spec.KeySpec;
 
 import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.CipherOutputStream;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class UserSecurity
 {
-    private SecretKey aesKey;
-    private byte []             iv;
+    private static final int    key = 1156185;
 
-    private static final String KEY     = "a8875d3e484c1f82";
-    private static final String SALT    = "wibble";
-    private static final int    BIT_SIZE= 128;
-
+    /**
+     *
+     */
     public UserSecurity()
     {
-        SecretKey           tmp;
-        SecretKeyFactory factory;
-        KeySpec spec;
-        Cipher encryptCipher;
-
-        try
-        {
-            factory     = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            spec        = new PBEKeySpec(KEY.toCharArray(), SALT.getBytes(), 65536, BIT_SIZE);
-            tmp         = factory.generateSecret(spec);
-
-            //set the aes secret key
-            this.aesKey = new SecretKeySpec(tmp.getEncoded(), "AES");
-
-            //set the iv key
-            encryptCipher   = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            encryptCipher.init(Cipher.ENCRYPT_MODE, this.aesKey);
-            this.iv         = encryptCipher.getIV();
-        }
-        catch(Exception e)
-        {
-
-        }
+        //do nothing
     }
 
     /**
      *
-     * @param plainText
+     * @param str
      * @return
-     * @throws Exception
      */
-    public byte [] encrypt(String plainText) throws Exception
+    public String decrypt(String str)
     {
-        // Generate key
-        Cipher                  encryptCipher;
-        byte[]                  encryptedBytes;
-        ByteArrayOutputStream outputStream;
-        CipherOutputStream cipherOutputStream;
+        String  decrypted;
+        int     character;
 
-        // Encrypt cipher
-        encryptCipher   = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        encryptCipher.init(Cipher.ENCRYPT_MODE, this.aesKey);
+        decrypted = "";
 
-        // Encrypt
-        outputStream        = new ByteArrayOutputStream();
-        cipherOutputStream  = new CipherOutputStream(outputStream, encryptCipher);
-        cipherOutputStream.write(plainText.getBytes());
-        cipherOutputStream.flush();
-        cipherOutputStream.close();
-        encryptedBytes      = outputStream.toByteArray();
+        for(int i = 0; i < str.length(); i++)
+        {
+            character = str.charAt(i);
+            if (Character.isUpperCase(character))
+            {
+                character = character - ((key + fancyMath(i)) % 26);
+                if (character < 'A')
+                    character = character + 26;
+            }
+            else if (Character.isLowerCase(character))
+            {
+                character = character - ((key + fancyMath(i)) % 26);
+                if (character < 'a')
+                    character = character + 26;
+            }
+            else if (character == '!')
+            {
+                character = '@';
+            }
 
-        return encryptedBytes;
+            else if (character == ';')
+            {
+                character = '.';
+            }
+            decrypted += (char) character;
+        }
+        return decrypted;
     }
 
     /**
      *
-     * @param encryptedBytes
+     * @param str
      * @return
-     * @throws Exception
      */
-    public String decrypt(byte [] encryptedBytes) throws Exception
+    public String encrypt(String str)
     {
-        // Generate key
-        byte[]                  buf;
-        ByteArrayOutputStream   outputStream;
-        Cipher                  decryptCipher;
-        IvParameterSpec ivParameterSpec;
-        ByteArrayInputStream inStream;
-        CipherInputStream cipherInputStream;
-        int                     bytesRead;
+        String  encrypted;
+        int     character;
 
-        // Decrypt cipher
-        decryptCipher   = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        ivParameterSpec = new IvParameterSpec(this.iv);
-        decryptCipher.init(Cipher.DECRYPT_MODE, this.aesKey, ivParameterSpec);
+        encrypted = "";
 
-        // Decrypt
-        outputStream        = new ByteArrayOutputStream();
-        inStream            = new ByteArrayInputStream(encryptedBytes);
-        cipherInputStream   = new CipherInputStream(inStream, decryptCipher);
-        buf                 = new byte[1024];
+        for(int i = 0; i < str.length(); i++)
+        {
+            character = str.charAt(i);
 
-        while ((bytesRead = cipherInputStream.read(buf)) >= 0)
-            outputStream.write(buf, 0, bytesRead);
+            if (Character.isUpperCase(character))
+            {
+                //26 letters of the alphabet so mod by 26
+                character = character + ((key + fancyMath(i)) % 26);
+                if (character > 'Z')
+                    character = character - 26;
+            }
+            else if (Character.isLowerCase(character))
+            {
+                character = character + ((key + fancyMath(i)) % 26);
+                if (character > 'z')
+                    character = character - 26;
+            }
+            else if (character == '@')
+            {
+                character = '!';
+            }
 
-        return new String(outputStream.toByteArray());
+            else if (character == '.')
+            {
+                character = ';';
+            }
+            encrypted += (char) character;
+        }
+        return encrypted;
+    }
+
+    /**
+     *
+     * @param i
+     * @return
+     */
+    public int fancyMath(int i)
+    {
+        return (int) (Math.PI + ((i * Math.E) + (78360)));
     }
 }
+

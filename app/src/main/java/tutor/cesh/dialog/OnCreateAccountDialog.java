@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
 import tutor.cesh.R;
 
 public class OnCreateAccountDialog extends DialogFragment

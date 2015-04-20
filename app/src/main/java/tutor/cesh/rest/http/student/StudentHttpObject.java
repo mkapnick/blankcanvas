@@ -17,6 +17,7 @@ import java.net.URI;
 
 import tutor.cesh.profile.Student;
 import tutor.cesh.profile.User;
+import tutor.cesh.rest.apisecurity.APIEndpoints;
 import tutor.cesh.rest.http.HttpObject;
 
 /**
@@ -24,9 +25,6 @@ import tutor.cesh.rest.http.HttpObject;
  */
 public class StudentHttpObject implements HttpObject {
 
-    private String putEndPoint          = "http://blankcanvas.pw/bc/students/";
-    private String getEndPoint          = "http://blankcanvas.pw/bc/students/";
-    private String coverImageEndPoint   = "http://blankcanvas.pw/bc/images/students/";
     private User   user;
 
     public StudentHttpObject(User user)
@@ -51,7 +49,7 @@ public class StudentHttpObject implements HttpObject {
 
         student = user.getStudent();
         params  = new JSONObject();
-        put     = new HttpPut(putEndPoint + student.getId());
+        put     = new HttpPut(APIEndpoints.getSTUDENTS_ENDPOINT() + "/" + student.getId());
 
         params.put("firstName", student.getName());
         params.put("studentAbout", student.getAbout());
@@ -79,8 +77,8 @@ public class StudentHttpObject implements HttpObject {
 
         student = user.getStudent();
 
-        Log.d("TEST", coverImageEndPoint + student.getId() + "/cover");
-        post    = new HttpPost(coverImageEndPoint + student.getId() + "/cover");
+        Log.d("TEST", APIEndpoints.getSTUDENTS_IMAGE_ENDPOINT() + "/" + student.getId() + "/" + "cover");
+        post    = new HttpPost(APIEndpoints.getSTUDENTS_IMAGE_ENDPOINT() + "/" + student.getId() + "/" + "cover");
         entity  = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
         if(coverImagePath != null)
@@ -111,7 +109,7 @@ public class StudentHttpObject implements HttpObject {
 
         student = user.getStudent();
 
-        put             = new HttpPut(putEndPoint + student.getId());
+        put             = new HttpPut(APIEndpoints.getSTUDENTS_ENDPOINT() + "/" + student.getId());
         entity          = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
         if(profileImagePath != null)
@@ -137,7 +135,7 @@ public class StudentHttpObject implements HttpObject {
 
         student = user.getStudent();
 
-        httpGet = new HttpGet(new URI(getEndPoint + student.getId()));
+        httpGet = new HttpGet(new URI(APIEndpoints.getSTUDENTS_ENDPOINT() + "/" + student.getId()));
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-Type", "application/json");
 

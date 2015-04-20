@@ -3,16 +3,9 @@ package tutor.cesh.dialog.factory;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.CheckedTextView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-
-import java.util.ArrayList;
-
-import tutor.cesh.list.view.adapter.listener.MultipleOnItemClickListener;
 
 /**
  * Created by michaelkapnick on 3/21/15.

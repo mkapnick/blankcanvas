@@ -1,7 +1,5 @@
 package tutor.cesh.dialog;
 
-import android.widget.EditText;
-
 /**
  * Created by michaelkapnick on 3/29/15.
  */

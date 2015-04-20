@@ -17,8 +17,8 @@ import tutor.cesh.rest.handler.ImageHandler;
  */
 public class GlobalDatabaseHelper {
 
-    private static Context context;
-    private static ProgressDialog pd;
+    private static Context          context;
+    private static ProgressDialog   pd;
 
     /**
      *
@@ -43,7 +43,7 @@ public class GlobalDatabaseHelper {
     {
         User            user;
         Student         student;
-        ImageHandler handler;
+        ImageHandler    handler;
         AsyncDownloader asyncDownloader;
 
         user    = User.getInstance(context);
@@ -74,7 +74,7 @@ public class GlobalDatabaseHelper {
         // Download cover image from server, belongs to tutor
         handler             = new CoverImageHandler(resources,  imageView, context);
         asyncDownloader     = new AsyncDownloader(tutor.getCoverImageUrl(), handler,
-                tutor, new ProgressDialog(context));
+                                                  tutor, new ProgressDialog(context));
         asyncDownloader.execute();
     }
 }

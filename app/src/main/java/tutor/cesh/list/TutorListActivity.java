@@ -41,6 +41,7 @@ import tutor.cesh.list.view.adapter.TutorListAdapter;
 import tutor.cesh.list.view.adapter.TutorListViewItem;
 import tutor.cesh.profile.activity.ReadOnlyTutorProfileActivity;
 import tutor.cesh.profile.activity.StudentTutorProfileContainerActivity;
+import tutor.cesh.rest.apisecurity.APIEndpoints;
 import tutor.cesh.rest.asynchronous.AsyncDownloader;
 import tutor.cesh.rest.asynchronous.AsyncGet;
 import tutor.cesh.rest.delegate.TaskDelegate;
@@ -68,7 +69,6 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     private HashMap<String, Bitmap>             mapIDToBitmap;
 
 
-    private static final String ALL_TUTORS    = "http://blankcanvas.pw/bc/tutors";
     public static final String ID             = "id"; // parent node
     public static final String FIRST_NAME     = "firstName";
     public static final String COVER_IMAGE    = "coverImage";
@@ -272,7 +272,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         pd.show();
 
         asyncGet    = new AsyncGet(this, this, pd);
-        httpGet     = new HttpGet(ALL_TUTORS);
+        httpGet     = new HttpGet(APIEndpoints.getTUTORS_ENDPOINT());
 
         asyncGet.execute(httpGet);
     }

@@ -5,29 +5,21 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import org.apache.http.client.methods.HttpPost;
 import org.json.JSONException;
-
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-
 import tutor.cesh.R;
 import tutor.cesh.rest.asynchronous.RestClientExecute;
 import tutor.cesh.rest.factory.RestClientFactory;
 
 public class NewAccountActivity extends Activity implements Arrival
 {
-
     private String email;
     private String password;
 
@@ -36,7 +28,6 @@ public class NewAccountActivity extends Activity implements Arrival
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_new_account);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -56,6 +47,22 @@ public class NewAccountActivity extends Activity implements Arrival
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     *
+     */
+    private void showUserDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.on_create_new_account)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                });
+
+        builder.create().show();
     }
 
     /**
@@ -132,39 +139,5 @@ public class NewAccountActivity extends Activity implements Arrival
         {
             e.printStackTrace();
         }
-
     }
-
-    /**
-
-     */
-    private void showUserDialog()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.on_create_new_account)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        finish();
-                    }
-                });
-
-        builder.create().show();
-    }
-
-    /**
-    * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_new_account, container, false);
-            return rootView;
-        }
-    }
-
 }

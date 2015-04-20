@@ -3,9 +3,7 @@ package tutor.cesh.dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.EditText;
-
 import java.util.ArrayList;
-
 import tutor.cesh.dialog.factory.DialogMultiChoiceFactory;
 import tutor.cesh.dialog.factory.DialogSingleChoiceFactory;
 import tutor.cesh.dialog.listener.CheckBoxDialogPositiveButtonListener;
@@ -112,8 +110,7 @@ public class DialogSetterAndPopulator
         CharSequence []                             items;
         int                                         position;
 
-        position        = -1;
-
+        position                = -1;
         positiveButton          = "Ok";
         negativeButton          = "Cancel";
         items                   = new CharSequence[allData.size()];
