@@ -159,6 +159,7 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         {
             case R.id.saveButton:
                 saveUserProfile(v);
+                setResult(RESULT_OK);
                 finish();
                 break;
             case R.id.logoutButton:

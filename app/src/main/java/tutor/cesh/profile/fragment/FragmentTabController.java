@@ -76,46 +76,44 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
 
         position = this.viewPager.getCurrentItem();
 
-        //if(resultCode != 0)
-        //{
-            if(requestCode == COVER_IMAGE_REQUEST_CODE && resultCode != Activity.RESULT_CANCELED)
+
+        if(requestCode == COVER_IMAGE_REQUEST_CODE && resultCode != Activity.RESULT_CANCELED)
+        {
+            user        = User.getInstance(activity);
+
+            //determine which tab we are in
+            if(this.tabAdapter.getTabs().get(position).getTabName().equalsIgnoreCase("Student"))
             {
-                user        = User.getInstance(activity);
+                //update the background image immediately
+                coverImagePath = updateBackgroundImage(data, this.tabAdapter.getTabs().
+                                                             get(position).getCoverImageView(),
+                                                       user.getStudent());
 
-                //determine which tab we are in
-                if(this.tabAdapter.getTabs().get(position).getTabName().equalsIgnoreCase("Student"))
-                {
-                    //update the background image immediately
-                    coverImagePath = updateBackgroundImage(data, this.tabAdapter.getTabs().
-                                                                 get(position).getCoverImageView(),
-                                                           user.getStudent());
-
-                    //make a call to the server and update the image, we need to update the image on
-                    //the server because there is no save button, so like the web this is like our ajax call
-                    studentHttp = new StudentHttpObject(user);
-                    post         = studentHttp.postStudentCoverImage(coverImagePath);
-                    new RestClientExecute(post).start();
-                }
-                else
-                {
-                    //update the background image immediately
-                    coverImagePath = updateBackgroundImage(data, this.tabAdapter.getTabs().
-                                                                 get(position).getCoverImageView(),
-                                                           user.getTutor());
-
-                    //make a call to the server and update the image, we need to update the image on
-                    //the server because there is no save button, so like the web this is like our ajax call
-                    tutorHttp   = new TutorHttpObject(user);
-                    post        = tutorHttp.postTutorCoverImage(coverImagePath);
-                    new RestClientExecute(post).start();
-                }
+                //make a call to the server and update the image, we need to update the image on
+                //the server because there is no save button, so like the web this is like our ajax call
+                studentHttp = new StudentHttpObject(user);
+                post         = studentHttp.postStudentCoverImage(coverImagePath);
+                new RestClientExecute(post).start();
             }
-
-            else if(requestCode == EDIT_INFO && resultCode != Activity.RESULT_CANCELED)
+            else
             {
-                notifyObservers();
+                //update the background image immediately
+                coverImagePath = updateBackgroundImage(data, this.tabAdapter.getTabs().
+                                                             get(position).getCoverImageView(),
+                                                       user.getTutor());
+
+                //make a call to the server and update the image, we need to update the image on
+                //the server because there is no save button, so like the web this is like our ajax call
+                tutorHttp   = new TutorHttpObject(user);
+                post        = tutorHttp.postTutorCoverImage(coverImagePath);
+                new RestClientExecute(post).start();
             }
-        //}
+        }
+
+        else if(requestCode == EDIT_INFO && resultCode != Activity.RESULT_CANCELED)
+        {
+            notifyObservers();
+        }
     }
 
     @Override
