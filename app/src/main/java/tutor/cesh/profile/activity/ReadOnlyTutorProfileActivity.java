@@ -22,6 +22,7 @@ import android.widget.Toast;
 import java.util.Arrays;
 
 import tutor.cesh.R;
+import tutor.cesh.auth.UserSecurity;
 import tutor.cesh.list.StaticCurrentBitmapReadOnlyView;
 import tutor.cesh.profile.util.classes.ClassesUtility;
 
@@ -186,11 +187,16 @@ public class ReadOnlyTutorProfileActivity extends ActionBarActivity implements V
 
     private void setUpEmail()
     {
-        Intent emailIntent;
+        Intent          emailIntent;
+        UserSecurity    userSecurity;
+        String          decryptedEmail;
+
+        userSecurity    = new UserSecurity();
+        decryptedEmail  = userSecurity.decrypt(this.tutorEmail);
 
         emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {this.tutorEmail});
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {decryptedEmail});
         emailIntent.putExtra(Intent.EXTRA_TEXT, "");
         emailIntent.setType("message/rfc822");
 

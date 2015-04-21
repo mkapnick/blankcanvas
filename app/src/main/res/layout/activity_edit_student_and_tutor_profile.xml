@@ -381,23 +381,26 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Tutor Profile Visibility"
+                            android:maxWidth="100dp"
                             android:textColor="#717171"
                             android:id="@+id/tutorSwitch"
                             android:layout_below="@+id/tutor_about"
-                            android:layout_marginTop="30dp"
-                             />
+                            android:layout_marginLeft="5dp"
+
+                            />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="#fff"
                             android:id="@+id/switchText"
-                            android:layout_alignBottom="@+id/tutorSwitch"
+                            android:layout_alignTop="@+id/tutorSwitch"
                             android:layout_toEndOf="@+id/tutorSwitch"
                             android:layout_marginLeft="40dp"
                             android:gravity="center"
                             android:background="@drawable/oval_green_custom_edit"
-                             />
+                            android:layout_alignStart="@+id/tutor_about"
+                            />
 
 
                     </RelativeLayout>

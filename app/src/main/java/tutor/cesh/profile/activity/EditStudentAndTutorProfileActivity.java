@@ -343,7 +343,7 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         else
         {
             this.tutorSwitch.setChecked(false);
-            this.switchText.setText("Deactivated");
+            this.switchText.setText("Not activated");
             this.switchText.setBackgroundResource(R.drawable.oval_red_custom_edit);
             this.tutorStatusCircle.setBackgroundResource(R.drawable.circle_red);
         }

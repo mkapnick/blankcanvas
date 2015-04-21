@@ -117,7 +117,7 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
         }
         else
         {
-            this.switchText.setText("Deactivated");
+            this.switchText.setText("Not activated");
             this.switchText.setBackgroundResource(R.drawable.oval_red);
             super.setTutorActivated(false);
         }

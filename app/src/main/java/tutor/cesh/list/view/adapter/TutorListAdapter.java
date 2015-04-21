@@ -151,7 +151,7 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
     public View getView(int position, View convertView, ViewGroup parent)
     {
         View                view;
-        TextView            name, rate, rating;
+        TextView            name, rate, rating, tutorCourses;
         ImageView           coverImageView;
         Map<String, String> tutorInstance;
         BitmapDrawable      drawable;
@@ -164,6 +164,7 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
 
         name            = (TextView)view.findViewById(R.id.name);
         rate            = (TextView)view.findViewById(R.id.rate);
+        tutorCourses    = (TextView)view.findViewById(R.id.tutorCoursesId);
         //rating          = (TextView)view.findViewById(R.id.rating);
         coverImageView  = (ImageView)view.findViewById(R.id.coverImage);
 
@@ -172,6 +173,7 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
         // Setting values for this row in list view
         name.setText(tutorInstance.get(TutorListActivity.FIRST_NAME));
         rate.setText(tutorInstance.get(TutorListActivity.RATE));
+        tutorCourses.setText(tutorInstance.get(TutorListActivity.TUTOR_COURSES));
         //rating.setText(tutorInstance.get(TutorListActivity.RATING));
 
         //get the bitmap for this row

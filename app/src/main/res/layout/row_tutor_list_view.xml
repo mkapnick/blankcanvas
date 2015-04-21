@@ -33,7 +33,7 @@
         android:alpha=".9"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:gravity="center"
+        android:gravity="left"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:padding="15dp">
@@ -84,6 +84,19 @@
             android:layout_toEndOf="@+id/rate"
             android:layout_below="@+id/name"
             />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tutorCoursesId"
+            android:gravity="right"
+            android:textColor="#fff"
+            android:layout_alignBottom="@+id/perHour"
+            android:layout_alignParentEnd="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:maxWidth="100dp"
+            android:textSize="10dp"/>
 
         <!--<TextView
             android:id="@+id/rating"

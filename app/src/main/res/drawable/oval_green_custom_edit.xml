@@ -5,7 +5,7 @@
         android:bottomLeftRadius="2dip"
         android:topRightRadius="2dip"
         android:topLeftRadius="2dip"/>
-    <padding android:left="10dp" android:top="15dp"
-        android:right="10dp" android:bottom="10dp"
+    <padding android:left="35dp" android:top="40dp"
+        android:right="35dp" android:bottom="20dp"
         />
 </shape>
