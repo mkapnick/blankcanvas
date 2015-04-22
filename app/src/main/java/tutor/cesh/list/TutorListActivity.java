@@ -60,7 +60,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                                             resetTextViewList;
     private RelativeLayout                  relativeLayout, userProfileRelativeLayout;
     private ArrayList<TutorListViewItem>    tutorListViewItems;
-    private Button                          filterButton;
+    private TextView                        filterButton;
 
 
     private TutorListAdapter                    tutorListAdapter;
@@ -138,9 +138,9 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     {
         this.listView                   = (ListView) findViewById(R.id.tutor_list_activity_main_list_view);
         this.emptyTextView              = (TextView) findViewById(R.id.emptyTextView);
-        this.resetTextViewList          = (TextView) findViewById(R.id.resetTextViewList);
-        this.resetTextViewList.setOnClickListener(this);
-        this.filterButton               = (Button)   findViewById(R.id.filterButton);
+        //this.resetTextViewList          = (TextView) findViewById(R.id.resetTextViewList);
+        //this.resetTextViewList.setOnClickListener(this);
+        this.filterButton               = (TextView)   findViewById(R.id.filterButton);
         this.filterButton.setOnClickListener(this);
         this.searchView                 = (SearchView) findViewById(R.id.action_search_icon);
         this.searchView.setOnQueryTextListener(this);
@@ -159,11 +159,12 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     {
         if (requestCode == REQUEST_CODE_FILTER && resultCode == RESULT_OK)
         {
-            this.tutorListAdapter.applySpecificFilters(ProfileInfoBehavior.getFilterableMajor(),
-                                                       ProfileInfoBehavior.getFilterableRate(),
-                                                       ProfileInfoBehavior.getFilterableYear());
-
-            Toast.makeText(this, "Filters applied", Toast.LENGTH_SHORT).show();
+            if(this.data.size() > 0)
+            {
+                this.tutorListAdapter.applySpecificFilters(ProfileInfoBehavior.getFilterableMajor(),
+                                                           ProfileInfoBehavior.getFilterableRate(),
+                                                           ProfileInfoBehavior.getFilterableYear());
+            }
 
         }
     }
@@ -213,14 +214,14 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                 Toast.makeText(this, "Filters reset", Toast.LENGTH_SHORT).show();
                 break;
 
-            case R.id.resetTextViewList:
+            /*case R.id.resetTextViewList:
                 this.tutorListAdapter.resetFilters();
                 ProfileInfoBehavior.FILTERABLE.setMajor("");
                 ProfileInfoBehavior.FILTERABLE.setRate("");
                 ProfileInfoBehavior.FILTERABLE.setYear("");
 
                 Toast.makeText(this, "Filters reset", Toast.LENGTH_SHORT).show();
-                break;
+                break;*/
         }
 
     }

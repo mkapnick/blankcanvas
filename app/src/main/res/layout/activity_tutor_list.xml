@@ -28,50 +28,22 @@
             <android.support.v7.widget.SearchView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="280dp"
                 android:searchIcon="@drawable/ic_search_custom"
                 android:layout_centerVertical="true"
                 android:iconifiedByDefault="false"
                 android:queryHint="Search anything..."
                 android:id="@+id/action_search_icon"/>
 
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/filterSpace"
-            android:background="#f1f1f1"
-            android:padding="5dp">
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Filters"
-                android:id="@+id/filterButton"
-                android:textColor="@color/white"
-                android:background="@drawable/oval_blue"
-                android:gravity="center"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:padding="12dp"
-                android:alpha=".9"
-                android:layout_marginLeft="80dp"
-                android:layout_marginRight="80dp"
-
-                />
-
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Reset"
-                android:textColor="#2C3E57"
-                android:id="@+id/resetTextViewList"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/filterButton"
+                android:background="@drawable/ic_action_filter"
+                android:alpha=".9"
                 android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="5dp"
-                android:visibility="gone"
-                 />
+                android:layout_toStartOf="@+id/action_bar_profile_button"
+                android:layout_marginRight="25dp"/>
 
         </RelativeLayout>
 
