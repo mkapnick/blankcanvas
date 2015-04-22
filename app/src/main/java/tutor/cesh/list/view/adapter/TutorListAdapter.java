@@ -199,7 +199,6 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
     @Override
     public Filter getFilter()
     {
-        // TODO Auto-generated method stub
         return new Filter()
         {
             @Override

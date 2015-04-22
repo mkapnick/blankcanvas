@@ -124,45 +124,6 @@ public class StudentTutorProfileContainerActivity extends FragmentActivity
         return super.onOptionsItemSelected(item);
     }
 
-
-    private void setUpDrawerLayout()
-    {
-        //drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerLayout.setStatusBarBackgroundColor(Color.GREEN);
-        //listView     = (ListView) findViewById(R.id.left_drawer);
-
-        listViewTitles = getResources().getStringArray(R.array.drawable_list_items);
-        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.z_not_used_drawer_list_item, listViewTitles));
-        listView.setOnItemClickListener(new DrawerItemClickListener());
-
-        //Set up animation for on slide of the drawer layout
-        mainLayout = (LinearLayout) findViewById(R.id.main_layout);
-
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, null, R.string.app_name, R.string.app_name) {
-            public void onDrawerClosed(View view) {
-                supportInvalidateOptionsMenu();
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                supportInvalidateOptionsMenu();
-            }
-
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, slideOffset);
-                mainLayout.setTranslationX((slideOffset * drawerView.getWidth()));
-                drawerLayout.bringChildToFront(drawerView);
-                drawerLayout.requestLayout();
-            }
-        };
-
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
-
-        //set the drawer layout/listview in the fragment tab controller
-        //this.tabController.setDrawerLayout(this.drawerLayout);
-        //this.tabController.setDrawerLayoutListView(this.listView);
-    }
-
     private void setUpTabs(Bundle savedInstanceState)
     {
         List<TabObserver>   tabs;

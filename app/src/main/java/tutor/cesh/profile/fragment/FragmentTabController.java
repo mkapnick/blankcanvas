@@ -140,8 +140,8 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
                 break;
 
             case R.id.arrow_back_image:
-                intent = new Intent(activity, TutorListActivity.class);
-                activity.startActivity(intent);
+                //intent = new Intent(activity, TutorListActivity.class);
+                //activity.startActivity(intent);
                 activity.finish();
                 break;
         }
@@ -183,57 +183,6 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
     public void onCreate(Bundle savedInstanceState){
 
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        int position, id;
-
-        id          = item.getItemId();
-        position    = -1;
-
-        if (id == R.id.action_settings)
-            position = 2;
-        else if(id == R.id.action_edit_profile)
-            position = -100;
-        else if(id == R.id.action_switch_profile)
-            position = 1;
-
-        onOptionsItemSelected(position);
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Responding to clicks from the Action Bar and from
-     * the drawer layout
-     *
-     * @param position The position in the listViewTitles array
-     */
-    private void onOptionsItemSelected(int position)
-    {
-        Intent  intent;
-
-        intent = null;
-        if(position == -100)
-        {
-            //intent = new Intent(this, EditStudentProfileActivity.class);
-            //intent.putExtras(info);
-            startActivityForResult(intent, 1);
-        }
-
-        else if(position == 1)
-        {
-            //drawerLayout.closeDrawer(listView);
-            //intent = new Intent(this, TutorProfileActivity.class);
-            //intent.putExtras(info);
-            startActivity(intent);
-            //finish(); //TODO don't finish on switch
-        }
-        else if (position == 2)
-        {
-
-        }
     }
 
     @Override

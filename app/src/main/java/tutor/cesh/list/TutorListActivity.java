@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
@@ -49,18 +51,18 @@ import tutor.cesh.rest.delegate.TaskDelegate;
 public class TutorListActivity extends Activity implements  TaskDelegate,
                                                             SearchView.OnQueryTextListener,
                                                             BitmapCacheBehavior,
-                                                            View.OnClickListener
+                                                            View.OnClickListener,
+                                                            SwipeRefreshLayout.OnRefreshListener
 {
     private ListView                        listView, drawerLayoutListView;
-    private MenuItem                        searchItem;
     private SearchView                      searchView;
     protected DrawerLayout                  drawerLayout;
     private ActionBarDrawerToggle           actionBarDrawerToggle;
-    private TextView                        actionBarProfileButton,
-                                            resetTextViewList;
+    private TextView                        actionBarProfileButton;
     private RelativeLayout                  relativeLayout, userProfileRelativeLayout;
     private ArrayList<TutorListViewItem>    tutorListViewItems;
     private TextView                        filterButton;
+    private SwipeRefreshLayout              swipeRefreshLayout;
 
 
     private TutorListAdapter                    tutorListAdapter;
@@ -138,10 +140,14 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     {
         this.listView                   = (ListView) findViewById(R.id.tutor_list_activity_main_list_view);
         this.emptyTextView              = (TextView) findViewById(R.id.emptyTextView);
-        //this.resetTextViewList          = (TextView) findViewById(R.id.resetTextViewList);
-        //this.resetTextViewList.setOnClickListener(this);
         this.filterButton               = (TextView)   findViewById(R.id.filterButton);
         this.filterButton.setOnClickListener(this);
+        this.swipeRefreshLayout         = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        this.swipeRefreshLayout.setOnRefreshListener(this);
+        this.swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,
+                                               android.R.color.holo_green_light,
+                                               android.R.color.holo_orange_light,
+                                               android.R.color.holo_red_light);
         this.searchView                 = (SearchView) findViewById(R.id.action_search_icon);
         this.searchView.setOnQueryTextListener(this);
         this.searchView.setQueryHint("Search anything...");
@@ -196,34 +202,16 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                 break;
 
             case R.id.tutor_list_activity_relative_layout:
+                drawerLayout.closeDrawer(drawerLayoutListView);
                 intent = new Intent(getApplicationContext(), StudentTutorProfileContainerActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.filterButton:
                 intent = new Intent(getApplicationContext(), TutorFilterActivity.class);
-                startActivityForResult(intent,REQUEST_CODE_FILTER);
+                startActivityForResult(intent, REQUEST_CODE_FILTER);
                 break;
-
-            case R.id.resetTextViewFilter:
-                this.tutorListAdapter.resetFilters();
-                ProfileInfoBehavior.FILTERABLE.setMajor("");
-                ProfileInfoBehavior.FILTERABLE.setRate("");
-                ProfileInfoBehavior.FILTERABLE.setYear("");
-
-                Toast.makeText(this, "Filters reset", Toast.LENGTH_SHORT).show();
-                break;
-
-            /*case R.id.resetTextViewList:
-                this.tutorListAdapter.resetFilters();
-                ProfileInfoBehavior.FILTERABLE.setMajor("");
-                ProfileInfoBehavior.FILTERABLE.setRate("");
-                ProfileInfoBehavior.FILTERABLE.setYear("");
-
-                Toast.makeText(this, "Filters reset", Toast.LENGTH_SHORT).show();
-                break;*/
         }
-
     }
 
     @Override
@@ -233,7 +221,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         setContentView(R.layout.activity_tutor_list);
 
         initializeUI();
-        populateDataFromServer();
+        populateDataFromServer(true);
 
         setUpListViewItems();
         setUpDrawerLayout();
@@ -259,18 +247,34 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         return true;
     }
 
-    public void populateDataFromServer()
+    @Override
+    public void onRefresh()
+    {
+        new Handler().postDelayed(new Runnable() {
+            @Override public void run() {
+                populateDataFromServer(false);
+                //swipeRefreshLayout.setRefreshing(false);
+            }
+        }, 3000);
+    }
+
+    public void populateDataFromServer(boolean showProgressDialog)
     {
         AsyncGet        asyncGet;
         HttpGet         httpGet;
         ProgressDialog  pd;
 
-        pd = new ProgressDialog(this);
-        pd.setTitle("Fetching available tutors...");
-        pd.setMessage("Please wait");
-        pd.setCancelable(false);
-        pd.setIndeterminate(true);
-        pd.show();
+        pd = null;
+
+        if(showProgressDialog)
+        {
+            pd = new ProgressDialog(this);
+            pd.setTitle("Fetching available tutors...");
+            pd.setMessage("Please wait");
+            pd.setCancelable(false);
+            pd.setIndeterminate(true);
+            pd.show();
+        }
 
         asyncGet    = new AsyncGet(this, this, pd);
         httpGet     = new HttpGet(APIEndpoints.getTUTORS_ENDPOINT());
@@ -323,7 +327,6 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         if(jsonArray.length() == 0)
         {
             this.emptyTextView.setVisibility(View.VISIBLE); //set the textview to visible
-            //getSupportActionBar().hide(); //hide the action bar
         }
         else
         {
@@ -379,6 +382,11 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
             this.listView.setAdapter(tutorListAdapter);
             this.listView.setOnItemClickListener(new ListViewOnClickListener()); //Click event for
                                                                                  //single list row
+
+           if(swipeRefreshLayout.isRefreshing())
+           {
+               swipeRefreshLayout.setRefreshing(false);
+           }
         }
     }
 
