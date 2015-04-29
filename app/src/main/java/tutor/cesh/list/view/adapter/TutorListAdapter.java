@@ -47,11 +47,10 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
         this.originalDataReference  = new ArrayList<HashMap<String, String>>(data);
         this.listView               = listView;
         this.data                   = new ArrayList<HashMap<String, String>>();
-
         this.cachedCoverImages      = new ArrayList<Drawable>();
         this.context                = context;
         this.resources              = resources;
-        this.inflater               = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater                    = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     /**
@@ -60,11 +59,11 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
      * @param rates
      * @param years
      */
-    public void applySpecificFilters(String majors, String rates, String years)
+    public void applyAdvancedFilters(String majors, String rates, String years)
     {
         ArrayList<HashMap<String, String>>  filteredData;
         String                              currentMajor, currentPrice,
-                currentYear;
+                                            currentYear;
         String []                           majorsArray, ratesArray, yearsArray;
 
         filteredData = new ArrayList<HashMap<String, String>>();
@@ -113,7 +112,6 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
                         filteredData.add(originalDataReference.get(i));
                 }
             }
-
         }
 
         if(filteredData.size() > 0)
@@ -128,7 +126,6 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
         {
             resetFilters();
         }
-
     }
 
     @Override
@@ -185,6 +182,7 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
 
         return view;
     }
+
     /**
      *
      * @return
@@ -223,8 +221,6 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
                 String                              filterString, currentName, currentAbout,
                                                     currentTutorCourses, currentMajor, currentPrice,
                                                     currentYear;
-                View                                view;
-
 
                 results             = new FilterResults();
 

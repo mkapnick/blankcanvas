@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -145,9 +146,9 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         this.swipeRefreshLayout         = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         this.swipeRefreshLayout.setOnRefreshListener(this);
         this.swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,
-                                               android.R.color.holo_green_light,
-                                               android.R.color.holo_orange_light,
-                                               android.R.color.holo_red_light);
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
         this.searchView                 = (SearchView) findViewById(R.id.action_search_icon);
         this.searchView.setOnQueryTextListener(this);
         this.searchView.setQueryHint("Search anything...");
@@ -156,8 +157,41 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         this.actionBarProfileButton.setOnClickListener(this);
 
         this.tutorListViewItems         = new ArrayList<TutorListViewItem>();
-        this.data                       = new ArrayList<HashMap<String, String>>();
         this.mapIDToBitmap              = new HashMap<String, Bitmap>();
+
+
+        //Set on scroll listener for listview, to determine when to invoke the refresh of the
+        //list
+        this.listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+
+                boolean enable, firstItemVisible, topOfFirstItemVisible;
+
+                enable = false;
+
+                /**
+                 * This enables us to force the layout to refresh only when the first item
+                 * of the list is visible.
+                 **/
+                if(listView != null && listView.getChildCount() > 0)
+                {
+                    // check if the first item of the list is visible
+                    firstItemVisible = listView.getFirstVisiblePosition() == 0;
+                    // check if the top of the first item is visible
+                    topOfFirstItemVisible = listView.getChildAt(0).getTop() == 0;
+                    // enabling or disabling the refresh layout
+                    enable = firstItemVisible && topOfFirstItemVisible;
+                }
+                swipeRefreshLayout.setEnabled(enable);
+            }
+        });
     }
 
     @Override
@@ -167,7 +201,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         {
             if(this.data.size() > 0)
             {
-                this.tutorListAdapter.applySpecificFilters(ProfileInfoBehavior.getFilterableMajor(),
+                this.tutorListAdapter.applyAdvancedFilters(ProfileInfoBehavior.getFilterableMajor(),
                                                            ProfileInfoBehavior.getFilterableRate(),
                                                            ProfileInfoBehavior.getFilterableYear());
             }
@@ -250,10 +284,11 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     @Override
     public void onRefresh()
     {
-        new Handler().postDelayed(new Runnable() {
-            @Override public void run() {
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run() {
                 populateDataFromServer(false);
-                //swipeRefreshLayout.setRefreshing(false);
             }
         }, 3000);
     }
@@ -323,6 +358,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         AsyncDownloader         asyncDownloader;
 
         jsonArray  = (JSONArray) response;
+        this.data  = new ArrayList<HashMap<String, String>>(); //need to re initialize the data here
 
         if(jsonArray.length() == 0)
         {
@@ -330,6 +366,8 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         }
         else
         {
+            this.emptyTextView.setVisibility(View.GONE); //set the textview to visible
+
             try
             {
                 for(int i =0; i < jsonArray.length(); i++)
@@ -376,17 +414,20 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                 e.printStackTrace();
             }
 
-            tutorListAdapter = new TutorListAdapter(this, this.getResources(), this.data, this.listView);
-            tutorListAdapter.setCachedMap(this.mapIDToBitmap); //need to associate the cached map
+            this.tutorListAdapter = new TutorListAdapter(this, this.getResources(),
+                                                         this.data, this.listView);
+
+
+            this.tutorListAdapter.setCachedMap(this.mapIDToBitmap); //need to associate the cached map
                                                       // with this tutorListAdapter!!!
             this.listView.setAdapter(tutorListAdapter);
             this.listView.setOnItemClickListener(new ListViewOnClickListener()); //Click event for
                                                                                  //single list row
+        }
 
-           if(swipeRefreshLayout.isRefreshing())
-           {
-               swipeRefreshLayout.setRefreshing(false);
-           }
+        if(swipeRefreshLayout.isRefreshing())
+        {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
