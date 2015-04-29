@@ -19,6 +19,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="?android:attr/actionBarSize"
                 android:id="@+id/actionBarTutorList"
+
                 >
                 <TextView
                     android:layout_width="25dp"
@@ -78,8 +79,13 @@
                     android:textSize="20sp"
                     android:visibility="gone"
                     />
-            </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:background="@drawable/drop_shadow"
+                    />
 
+            </RelativeLayout>
 
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
