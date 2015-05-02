@@ -22,8 +22,8 @@
 
                 >
                 <TextView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:id="@+id/action_bar_profile_button"
                     android:layout_alignParentRight="true"
                     android:background="@drawable/user_profile_circled_gray"
@@ -37,18 +37,19 @@
                     android:searchIcon="@drawable/ic_search_custom"
                     android:layout_centerVertical="true"
                     android:iconifiedByDefault="false"
-                    android:queryHint="Search anything..."
+                    android:queryHint="Search by keywords..."
                     android:id="@+id/action_search_icon"/>
 
                 <TextView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
                     android:id="@+id/filterButton"
-                    android:background="@drawable/ic_action_filter"
+                    android:background="@drawable/ic_action_filter_2"
                     android:alpha=".9"
                     android:layout_centerVertical="true"
-                    android:layout_toStartOf="@+id/action_bar_profile_button"
-                    android:layout_marginRight="25dp"/>
+                    android:layout_toEndOf="@+id/action_search_icon"
+                    android:layout_marginLeft="5dp"
+                    />
 
             </RelativeLayout>
 

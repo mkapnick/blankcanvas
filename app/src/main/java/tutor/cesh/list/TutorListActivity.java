@@ -42,6 +42,8 @@ import tutor.cesh.filter.TutorFilterActivity;
 import tutor.cesh.format.TextFormatter;
 import tutor.cesh.list.view.adapter.TutorListAdapter;
 import tutor.cesh.list.view.adapter.TutorListViewItem;
+import tutor.cesh.profile.Student;
+import tutor.cesh.profile.User;
 import tutor.cesh.profile.activity.ReadOnlyTutorProfileActivity;
 import tutor.cesh.profile.activity.StudentTutorProfileContainerActivity;
 import tutor.cesh.rest.apisecurity.APIEndpoints;
@@ -151,7 +153,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                 android.R.color.holo_red_light);
         this.searchView                 = (SearchView) findViewById(R.id.action_search_icon);
         this.searchView.setOnQueryTextListener(this);
-        this.searchView.setQueryHint("Search anything...");
+        this.searchView.setQueryHint("Search by keywords...");
 
         this.actionBarProfileButton     = (TextView) findViewById(R.id.action_bar_profile_button);
         this.actionBarProfileButton.setOnClickListener(this);
@@ -298,8 +300,14 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         AsyncGet        asyncGet;
         HttpGet         httpGet;
         ProgressDialog  pd;
+        User            user;
+        Student         student;
+        String          mySchoolId;
 
-        pd = null;
+        pd          = null;
+        user        = User.getInstance(this);
+        student     = user.getStudent();
+        mySchoolId  = student.getSchoolId();
 
         if(showProgressDialog)
         {
@@ -312,7 +320,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         }
 
         asyncGet    = new AsyncGet(this, this, pd);
-        httpGet     = new HttpGet(APIEndpoints.getTUTORS_ENDPOINT());
+        httpGet     = new HttpGet(APIEndpoints.getTUTORS_SCHOOL_ENDPOINT() + "/" + mySchoolId + "/tutors");
 
         asyncGet.execute(httpGet);
     }
@@ -366,7 +374,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         }
         else
         {
-            this.emptyTextView.setVisibility(View.GONE); //set the textview to visible
+            this.emptyTextView.setVisibility(View.GONE); //set the textview to gone
 
             try
             {
@@ -419,7 +427,15 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
 
             this.tutorListAdapter.setCachedMap(this.mapIDToBitmap); //need to associate the cached map
-                                                      // with this tutorListAdapter!!!
+                                                                    // with this tutorListAdapter!!!
+
+            //reset filters at this point (in case of refresh and filters are on, we
+            //want to reset the filters
+            ProfileInfoBehavior.FILTERABLE.setMajor("");
+            ProfileInfoBehavior.FILTERABLE.setRate("");
+            ProfileInfoBehavior.FILTERABLE.setYear("");
+
+
             this.listView.setAdapter(tutorListAdapter);
             this.listView.setOnItemClickListener(new ListViewOnClickListener()); //Click event for
                                                                                  //single list row

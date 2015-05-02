@@ -118,7 +118,7 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
 
             case R.id.resetTextViewFilter:
                 resetFilters();
-                Toast.makeText(this, "Filters reset", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Filters reset", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.editTextFilterMajor:

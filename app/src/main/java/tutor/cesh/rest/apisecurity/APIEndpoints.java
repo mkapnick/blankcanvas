@@ -9,22 +9,26 @@ public class APIEndpoints
     private static final String tokenOne                            = "6wy9d32nqtsy2c74h96q390ahjnl2646d74488709114g8n39y19507m3163aee7";
     private static final String tokenTwo                            = "tw87c04k7tw5ae26986s874cdkk2160y8b4l6pp0x08417685x73d95nn8u158fj";
 
-    private static final String METADATA_GET_ENDPOINT               = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/metadata/profile";
-    private static final String AUTH_POST_ENDPOINT                  = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/auth";
-    private static final String USER_NEW_POST_ENDPOINT              = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/users/new";
-    private static final String ENROLLS_ENDPOINT                    = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/enrolls";
+    private static final String METADATA_GET_ENDPOINT               = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/bc/metadata/profile";
+    private static final String AUTH_POST_ENDPOINT                  = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/bc/auth";
+    private static final String USER_NEW_POST_ENDPOINT              = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/bc/users/new";
+    private static final String ENROLLS_ENDPOINT                    = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/bc/enrolls";
+    private static final String TUTORS_SCHOOL_ENDPOINT              = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/bc/schools"; //TODO
 
     /* STUDENTS */
-    private static final String STUDENTS_ENDPOINT                   = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/students";
-    private static final String STUDENTS_COURSES_ENDPOINT           = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/courses/students";
-    private static final String STUDENTS_IMAGE_ENDPOINT             = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/images/students";
+    private static final String STUDENTS_ENDPOINT                   = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/bc/students";
+    private static final String STUDENTS_COURSES_ENDPOINT           = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/bc/courses/students";
+    private static final String STUDENTS_IMAGE_ENDPOINT             = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/bc/images/students";
 
     /* TUTORS */
-    private static final String TUTORS_ENDPOINT                     = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/tutors";
-    private static final String TUTORS_COURSES_ENDPOINT             = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/courses/tutors";
-    private static final String TUTORS_IMAGE_ENDPOINT               = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/images/tutors";
+    private static final String TUTORS_ENDPOINT                     = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/bc/tutors";
+    private static final String TUTORS_COURSES_ENDPOINT             = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/bc/courses/tutors";
+    private static final String TUTORS_IMAGE_ENDPOINT               = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/bc/images/tutors";
 
-    
+    /*EMAIL SUBSCRIBERS */
+    private static final String EMAIL_SUBSCRIBERS_ENDPOINT          = DOMAIN + "/api/v1/" + tokenOne + "/bc/" + tokenTwo + "/bc/notifications";
+
+
     public static String getAUTH_POST_ENDPOINT() {
         return AUTH_POST_ENDPOINT;
     }
@@ -65,5 +69,12 @@ public class APIEndpoints
         return ENROLLS_ENDPOINT;
     }
 
+    public static String getTUTORS_SCHOOL_ENDPOINT() {
+        return TUTORS_SCHOOL_ENDPOINT;
+    }
+
+    public static String getEMAIL_SUBSCRIBERS_ENDPOINT() {
+        return EMAIL_SUBSCRIBERS_ENDPOINT;
+    }
 
 }

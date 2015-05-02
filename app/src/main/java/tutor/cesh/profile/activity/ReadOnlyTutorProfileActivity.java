@@ -192,7 +192,7 @@ public class ReadOnlyTutorProfileActivity extends ActionBarActivity implements V
         String          decryptedEmail;
 
         userSecurity    = new UserSecurity();
-        decryptedEmail  = userSecurity.decrypt(this.tutorEmail);
+        decryptedEmail  = this.tutorEmail;
 
         emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");

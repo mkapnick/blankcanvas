@@ -41,15 +41,15 @@ public class RestClientFactory
         JSONObject              params;
         HttpPost                httpPost;
         StringEntity            entity;
-        String                  encryptedEmail, encryptedPassword;
+        String                  encryptedEmailString, encryptedPasswordString;
 
-        httpPost            = new HttpPost(APIEndpoints.getUSER_NEW_POST_ENDPOINT());
-        params              = new JSONObject();
-        encryptedEmail      = User.encrypt(email);
-        encryptedPassword   = User.encrypt(password);
+        httpPost                = new HttpPost(APIEndpoints.getUSER_NEW_POST_ENDPOINT());
+        params                  = new JSONObject();
+        encryptedEmailString    = User.encrypt(email);
+        encryptedPasswordString = User.encrypt(password);
 
-        params.put("email", encryptedEmail);//Base64.encode(encryptedEmail, 0));
-        params.put("password", encryptedPassword);
+        params.put("email", encryptedEmailString);//Base64.encode(encryptedEmail, 0));
+        params.put("password", encryptedPasswordString);
 
         entity          = new StringEntity(params.toString());
 
@@ -73,18 +73,18 @@ public class RestClientFactory
                                                                             IOException,
                                                                             NoSuchAlgorithmException
     {
-        String                  encryptedEmail, encryptedPassword;
+        String                  encryptedEmailString, encryptedPasswordString;
         JSONObject              params;
         HttpPost                httpPost;
         StringEntity            entity;
 
-        encryptedEmail      = null;
-        encryptedPassword   = null;
+        encryptedEmailString    = null;
+        encryptedPasswordString = null;
 
         try
         {
-            encryptedEmail      = User.encrypt(email);
-            encryptedPassword   = User.encrypt(password);
+            encryptedEmailString      = User.encrypt(email);
+            encryptedPasswordString   = User.encrypt(password);
         }
         catch(Exception e)
         {
@@ -94,8 +94,10 @@ public class RestClientFactory
         httpPost    = new HttpPost(APIEndpoints.getAUTH_POST_ENDPOINT());
         params      = new JSONObject();
 
-        params.put("email", encryptedEmail);
-        params.put("password", encryptedPassword);
+        System.out.println(encryptedEmailString);
+
+        params.put("email", encryptedEmailString);
+        params.put("password", encryptedPasswordString);
 
         entity      = new StringEntity(params.toString());
 

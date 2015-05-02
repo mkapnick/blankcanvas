@@ -1,16 +1,15 @@
 package tutor.cesh.auth;
 
-import java.security.spec.KeySpec;
+import android.util.Base64;
 
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class UserSecurity
 {
-    private static final int    key = 1156185;
+    private static final String IV              = "3272b77db250a6df";
+    private static final String encryptionKey   = "45c6b0753e83b48f";
 
     /**
      *
@@ -22,96 +21,79 @@ public class UserSecurity
 
     /**
      *
-     * @param str
+     * @param plainText
      * @return
+     * @throws Exception
      */
-    public String decrypt(String str)
+    public String encrypt(String plainText) throws Exception
     {
-        String  decrypted;
-        int     character;
+        Cipher          cipher;
+        SecretKeySpec   key;
+        byte []         encryptedText;
 
-        decrypted = "";
+        plainText = formatPlainText(plainText);
+        cipher  = Cipher.getInstance("AES/CBC/NoPadding");
+        key     = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");
+        cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
 
-        for(int i = 0; i < str.length(); i++)
-        {
-            character = str.charAt(i);
-            if (Character.isUpperCase(character))
-            {
-                character = character - ((key + fancyMath(i)) % 26);
-                if (character < 'A')
-                    character = character + 26;
-            }
-            else if (Character.isLowerCase(character))
-            {
-                character = character - ((key + fancyMath(i)) % 26);
-                if (character < 'a')
-                    character = character + 26;
-            }
-            else if (character == '!')
-            {
-                character = '@';
-            }
+        encryptedText = cipher.doFinal(plainText.getBytes("UTF-8"));
 
-            else if (character == ';')
-            {
-                character = '.';
-            }
-            decrypted += (char) character;
-        }
-        return decrypted;
+        return Base64.encodeToString(encryptedText, 0);
     }
 
-    /**
-     *
-     * @param str
-     * @return
-     */
-    public String encrypt(String str)
+    public String decrypt(String cipherText) throws Exception
     {
-        String  encrypted;
-        int     character;
+        Cipher          cipher;
+        SecretKeySpec   key;
+        String          decryptedText;
 
-        encrypted = "";
+        cipher  = Cipher.getInstance("AES/CBC/NoPadding");
+        key     = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");
 
-        for(int i = 0; i < str.length(); i++)
-        {
-            character = str.charAt(i);
+        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
 
-            if (Character.isUpperCase(character))
-            {
-                //26 letters of the alphabet so mod by 26
-                character = character + ((key + fancyMath(i)) % 26);
-                if (character > 'Z')
-                    character = character - 26;
-            }
-            else if (Character.isLowerCase(character))
-            {
-                character = character + ((key + fancyMath(i)) % 26);
-                if (character > 'z')
-                    character = character - 26;
-            }
-            else if (character == '@')
-            {
-                character = '!';
-            }
+        decryptedText = new String(cipher.doFinal(Base64.decode(cipherText, 0)),"UTF-8");
 
-            else if (character == '.')
-            {
-                character = ';';
-            }
-            encrypted += (char) character;
-        }
-        return encrypted;
+        return decryptedText;
     }
-
     /**
      *
-     * @param i
+     * @param plainText
      * @return
      */
-    public int fancyMath(int i)
+    private String formatPlainText(String plainText)
     {
-        return (int) (Math.PI + ((i * Math.E) + (78360)));
+        int             length, maxNum;
+
+        length = plainText.length();
+
+        if(length < 16)
+        {
+            maxNum = 16 - length;
+            for(int i =0; i < maxNum; i++)
+            {
+                plainText += "\0";
+            }
+
+        }
+        else if(length > 16 && length < 32)
+        {
+            maxNum = 32 - length;
+            for(int i =0; i < maxNum; i++)
+            {
+                plainText += "\0";
+            }
+        }
+        else if (length > 32)
+        {
+            maxNum = 48 - length;
+            for(int i =0; i < maxNum; i++)
+            {
+                plainText += "\0";
+            }
+        }
+
+        return plainText;
     }
 }
 
