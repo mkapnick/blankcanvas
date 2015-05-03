@@ -40,6 +40,7 @@ import tutor.cesh.dialog.ProfileInfo;
 import tutor.cesh.dialog.ProfileInfoBehavior;
 import tutor.cesh.filter.TutorFilterActivity;
 import tutor.cesh.format.TextFormatter;
+import tutor.cesh.list.view.adapter.EmptyTextViewAdapter;
 import tutor.cesh.list.view.adapter.TutorListAdapter;
 import tutor.cesh.list.view.adapter.TutorListViewItem;
 import tutor.cesh.profile.Student;
@@ -69,7 +70,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
 
     private TutorListAdapter                    tutorListAdapter;
-    private TextView                            emptyTextView;
+    //private TextView                            emptyTextView;
     private ArrayList<HashMap<String, String>>  data;
     private HashMap<String, Bitmap>             mapIDToBitmap;
 
@@ -142,7 +143,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     private void initializeUI()
     {
         this.listView                   = (ListView) findViewById(R.id.tutor_list_activity_main_list_view);
-        this.emptyTextView              = (TextView) findViewById(R.id.emptyTextView);
+        //this.emptyTextView              = (TextView) findViewById(R.id.emptyTextView);
         this.filterButton               = (TextView)   findViewById(R.id.filterButton);
         this.filterButton.setOnClickListener(this);
         this.swipeRefreshLayout         = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
@@ -160,7 +161,6 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
         this.tutorListViewItems         = new ArrayList<TutorListViewItem>();
         this.mapIDToBitmap              = new HashMap<String, Bitmap>();
-
 
         //Set on scroll listener for listview, to determine when to invoke the refresh of the
         //list
@@ -370,11 +370,12 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
         if(jsonArray.length() == 0)
         {
-            this.emptyTextView.setVisibility(View.VISIBLE); //set the textview to visible
+            //this.emptyTextView.setVisibility(View.VISIBLE); //set the textview to visible
+            this.listView.setAdapter(new EmptyTextViewAdapter(this));
         }
         else
         {
-            this.emptyTextView.setVisibility(View.GONE); //set the textview to gone
+            //this.emptyTextView.setVisibility(View.GONE); //set the textview to gone
 
             try
             {

@@ -22,6 +22,7 @@ public class Student implements Profile
     private ImageView           coverImageView;
     private LocalDatabaseHelper localDatabaseHelper;
     private Context             context;
+    private boolean             subscribed;
 
     public Student(Context c)
     {
@@ -143,6 +144,14 @@ public class Student implements Profile
     public ArrayList<String> getPastClasses()
     {
         return this.pastClasses;
+    }
+
+    public boolean isSubscribed() {
+        return subscribed;
+    }
+
+    public void setSubscribed(boolean subscribed) {
+        this.subscribed = subscribed;
     }
 
     public Bitmap getCoverImage() {

@@ -127,7 +127,7 @@ class SlidingTabStrip extends LinearLayout
         // Thick colored underline below the current selection
         if (childCount > 0)
         {
-            System.out.println(mSelectedPosition);
+            //System.out.println(mSelectedPosition);
             View selectedTitle = getChildAt(mSelectedPosition);
             int left = selectedTitle.getLeft();
             int right = selectedTitle.getRight();

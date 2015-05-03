@@ -69,17 +69,6 @@
                     android:dividerHeight="0dp"
                     />
 
-                <TextView android:id="@+id/emptyTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:layout_centerInParent="true"
-                    android:text="No tutors were found"
-                    android:gravity="center"
-                    android:textSize="20sp"
-                    android:visibility="gone"
-                    />
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="5dp"

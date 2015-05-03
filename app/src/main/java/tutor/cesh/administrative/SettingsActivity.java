@@ -34,8 +34,15 @@ public class SettingsActivity extends ActionBarActivity implements View.OnClickL
      */
     private void initializeUI()
     {
+        User    user;
+        Student student;
+
+        user    = User.getInstance(this);
+        student = user.getStudent();
+
         this.switchWidget = (Switch) findViewById(R.id.switchSettings);
         this.switchWidget.setOnCheckedChangeListener(this);
+        this.switchWidget.setChecked(student.isSubscribed());
     }
 
     @Override
@@ -75,23 +82,19 @@ public class SettingsActivity extends ActionBarActivity implements View.OnClickL
         if(isChecked)
         {
 
+            student.setSubscribed(true);
             endPoint    += "/" + studentId + "/subscribe";
             post        = new HttpPost(endPoint);
 
             new AsyncPost(this, this, null).execute(post);
-
-            Toast.makeText(this, "You are now registered to receive email updates from" +
-                    " the blankcanvas team.", Toast.LENGTH_SHORT).show();
         }
         else
         {
+            student.setSubscribed(false);
             endPoint    += "/" + studentId + "/unsubscribe";
             post        = new HttpPost(endPoint);
 
             new AsyncPost(this, this, null).execute(post);
-
-            Toast.makeText(this, "You are no longer registered to receive email updates from" +
-                    " the blankcanvas team.", Toast.LENGTH_SHORT).show();
         }
     }
 

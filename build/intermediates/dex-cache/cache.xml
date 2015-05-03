@@ -58,13 +58,6 @@
         <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-1a81b56ac79507d1bb4829d4f89c3d242c9549bc.jar" />
     </item>
     <item
-        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/libs/commons-codec-1.10.jar"
-        jumboMode="false"
-        revision="21.0.0"
-        sha1="4b95f4897fa13f2cd904aee711aeafc0c5295cd8">
-        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/commons-codec-1.10-940884ccb179f3717632bafcd09fee0092bc25a7.jar" />
-    </item>
-    <item
         jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/io.jsonwebtoken/jjwt/0.4/61ce246d937a0fd3acf06d3bef5fc9e3933ae812/jjwt-0.4.jar"
         jumboMode="false"
         revision="21.0.0"

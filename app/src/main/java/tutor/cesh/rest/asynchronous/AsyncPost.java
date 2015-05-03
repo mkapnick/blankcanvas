@@ -61,7 +61,7 @@ public class AsyncPost extends AsyncTask<HttpPost, Integer, Object>
                 }
                 catch(Exception e)
                 {
-                    System.out.println(json);
+                    //System.out.println(json);
                     this.response   = new JSONArray(json);
                 }
             }

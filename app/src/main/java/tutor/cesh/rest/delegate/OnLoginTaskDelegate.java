@@ -95,6 +95,7 @@ public class OnLoginTaskDelegate implements TaskDelegate
         JSONArray           studentCoursesArray, pastStudentCoursesArray;
         ArrayList<String>   studentCoursesArrayList;
 
+        //System.out.println(object);
         studentCoursesArrayList = new ArrayList<String>();
 
         student.setId(object.getString("id"));
@@ -105,7 +106,9 @@ public class OnLoginTaskDelegate implements TaskDelegate
         student.setCoverImageUrl(object.getString("studentCoverImageUrl"));
         student.setMajor(object.getString("major"));
         student.setYear(object.getString("graduationYear"));
+        student.setSubscribed(object.getBoolean("subscribed"));
         student.setEmail(this.email);
+
 
         //student courses
         studentCoursesArray     = object.getJSONArray("studentCourses");

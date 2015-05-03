@@ -313,8 +313,8 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
         }
         catch (Exception e)
         {
-            System.out.println("IN EXCEPTION IN STUDENT PROF FRAGMENT");
-            System.out.println(e.getMessage());
+            //System.out.println("IN EXCEPTION IN STUDENT PROF FRAGMENT");
+            //System.out.println(e.getMessage());
             e.printStackTrace();
         }
 

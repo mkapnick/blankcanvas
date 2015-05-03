@@ -15,7 +15,7 @@ public class MajorAdapterItemListener implements MultipleOnItemClickListener,
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
         // Manage selected items here
-        System.out.println("clicked" + position);
+        //System.out.println("clicked" + position);
         CheckedTextView textView = (CheckedTextView) view;
         if(textView.isChecked()) {
 

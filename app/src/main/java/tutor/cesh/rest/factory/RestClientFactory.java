@@ -94,7 +94,7 @@ public class RestClientFactory
         httpPost    = new HttpPost(APIEndpoints.getAUTH_POST_ENDPOINT());
         params      = new JSONObject();
 
-        System.out.println(encryptedEmailString);
+        //System.out.println(encryptedEmailString);
 
         params.put("email", encryptedEmailString);
         params.put("password", encryptedPasswordString);

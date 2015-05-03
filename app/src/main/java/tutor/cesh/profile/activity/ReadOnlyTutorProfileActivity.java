@@ -35,7 +35,7 @@ public class ReadOnlyTutorProfileActivity extends ActionBarActivity implements V
                         classesTextView, rateTextView, actionBarProfileName, arrowBackImage;
     private Button      getInTouchButton;
     private ImageView   profileImageView, coverImageView;
-    private String      tutorEmail;
+    private String      tutorEncryptedEmail;
     private android.support.v7.app.ActionBar actionBar;
 
 
@@ -140,7 +140,7 @@ public class ReadOnlyTutorProfileActivity extends ActionBarActivity implements V
         this.minor              = bundle.getString(MINOR);
         this.year               = bundle.getString(YEAR);
         this.about              = bundle.getString(ABOUT);
-        this.tutorEmail         = bundle.getString(EMAIL);
+        this.tutorEncryptedEmail= bundle.getString(EMAIL);
     }
 
     /**
@@ -192,7 +192,15 @@ public class ReadOnlyTutorProfileActivity extends ActionBarActivity implements V
         String          decryptedEmail;
 
         userSecurity    = new UserSecurity();
-        decryptedEmail  = this.tutorEmail;
+        decryptedEmail  = "";
+        try
+        {
+            decryptedEmail  = userSecurity.decrypt(this.tutorEncryptedEmail);
+        }
+        catch(Exception e)
+        {
+            //
+        }
 
         emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");

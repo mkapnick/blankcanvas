@@ -112,7 +112,7 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
                 ProfileInfoBehavior.FILTERABLE.setMajor(this.majorEditText.getText().toString());
                 ProfileInfoBehavior.FILTERABLE.setRate(this.rateEditText.getText().toString());
                 ProfileInfoBehavior.FILTERABLE.setYear(this.yearEditText.getText().toString());
-                Toast.makeText(this, "Filters applied", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Filters applied", Toast.LENGTH_SHORT).show();
                 finish();
                 break;
 
