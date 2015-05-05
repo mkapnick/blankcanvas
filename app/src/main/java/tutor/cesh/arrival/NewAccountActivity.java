@@ -109,7 +109,7 @@ public class NewAccountActivity extends Activity implements Arrival
                Toast.makeText(this, "Enter a password!", Toast.LENGTH_LONG).show();
         }
         else
-            Toast.makeText(this, "Enter your .edu email!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Enter your .edu email", Toast.LENGTH_LONG).show();
 
     }
 
