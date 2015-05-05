@@ -148,10 +148,10 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         this.filterButton.setOnClickListener(this);
         this.swipeRefreshLayout         = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         this.swipeRefreshLayout.setOnRefreshListener(this);
-        this.swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+        this.swipeRefreshLayout.setColorScheme(R.color.app_blue,
+                R.color.app_blue,
+                R.color.app_blue,
+                R.color.app_blue);
         this.searchView                 = (SearchView) findViewById(R.id.action_search_icon);
         this.searchView.setOnQueryTextListener(this);
         this.searchView.setQueryHint("Search by keywords...");

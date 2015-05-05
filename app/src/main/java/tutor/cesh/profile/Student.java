@@ -166,7 +166,12 @@ public class Student implements Profile
     public void setCoverImage(Bitmap coverImage)
     {
         this.coverImage = coverImage;
-        coverImageView.setBackground(new BitmapDrawable(this.context.getResources(), coverImage));
-        localDatabaseHelper.saveStudentCoverImageRecord(coverImage);
+
+        if(coverImage != null)
+        {
+            coverImageView.setBackground(new BitmapDrawable(this.context.getResources(), coverImage));
+            localDatabaseHelper.saveStudentCoverImageRecord(coverImage);
+        }
+
     }
 }

@@ -3,12 +3,14 @@ package tutor.cesh.arrival;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import org.apache.http.client.methods.HttpPost;
 import org.json.JSONException;
@@ -22,11 +24,23 @@ public class NewAccountActivity extends Activity implements Arrival
 {
     private String email;
     private String password;
+    private EditText  passwordTextView;
+
+    private void initializeUI()
+    {
+        this.passwordTextView = (EditText) findViewById(R.id.passwordTextView);
+        this.passwordTextView.setHint("Password");
+
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_new_account);
+
+        initializeUI();
+
     }
 
     @Override

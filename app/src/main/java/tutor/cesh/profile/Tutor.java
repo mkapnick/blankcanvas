@@ -104,7 +104,12 @@ public class Tutor implements Profile
     public void setCoverImage(Bitmap coverImage)
     {
         this.coverImage = coverImage;
-        localDatabaseHelper.saveTutorCoverImageRecord(coverImage);
+
+        if(coverImage != null)
+        {
+            localDatabaseHelper.saveTutorCoverImageRecord(coverImage);
+
+        }
     }
 
     public void setCurrentClasses(ArrayList<String> classes)

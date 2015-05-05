@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import org.apache.http.client.methods.HttpPost;
 import org.json.JSONException;
@@ -29,6 +31,14 @@ public class LoginActivity extends Activity implements Arrival
 
     private String              email;
     private String              password;
+    private EditText           passwordTextView;
+
+    private void initializeUI()
+    {
+        this.passwordTextView = (EditText) findViewById(R.id.passwordTextView);
+        this.passwordTextView.setHint("Password");
+
+    }
 
     /**
      *
@@ -46,6 +56,8 @@ public class LoginActivity extends Activity implements Arrival
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_login);
+
+        initializeUI();
     }
 
     @Override

@@ -5,10 +5,11 @@
     <color name="blue">#0000ff</color>
     <color name="white">#ffffff</color>
     <color name="theme">#046380</color>
-    <color name="black">#000000</color>
+    <color name="black">#1A1A1A</color>
     <color name="trans_black">#3b000000</color>
     <color name="transparent">#00000000</color>
     <color name="bootstrap_primary">#0088cc</color>
+    <color name="app_blue">#2C3E57</color>
 
 
 </resources>

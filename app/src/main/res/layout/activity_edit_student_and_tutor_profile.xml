@@ -68,8 +68,8 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/nameTV"
                             android:text="Name"
-                            android:textColor="#717171"
-                            android:textColorHint="#717171"
+                            android:textColor="#6A6A6A"
+                            android:textColorHint="#6A6A6A"
                             android:textSize="14sp"
                             android:maxLines="1"
                             android:layout_alignParentStart="true"
@@ -85,7 +85,7 @@
                             android:ellipsize="end"
                             android:singleLine="true"
                             android:layout_marginLeft="85dp"
-                            android:textColor="#60605C"
+                            android:textColor="@color/black"
                             />
 
                         <TextView
@@ -94,8 +94,8 @@
                             android:id="@+id/majorTV"
                             android:layout_below="@+id/name"
                             android:text="Major"
-                            android:textColor="#717171"
-                            android:textColorHint="#717171"
+                            android:textColor="#6A6A6A"
+                            android:textColorHint="#6A6A6A"
                             android:textSize="14sp"
                             android:maxLines="1"
                             android:layout_alignParentStart="true"
@@ -112,7 +112,7 @@
                             android:ellipsize="end"
                             android:singleLine="true"
                             android:layout_marginLeft="85dp"
-                            android:textColor="#60605C"
+                            android:textColor="@color/black"
                             android:editable="false"
                             android:focusableInTouchMode="false"
                             />
@@ -122,8 +122,8 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/minorTV"
                             android:text="Minor"
-                            android:textColor="#717171"
-                            android:textColorHint="#717171"
+                            android:textColor="#6A6A6A"
+                            android:textColorHint="#6A6A6A"
                             android:textSize="14dp"
                             android:layout_below="@+id/major"
                             android:layout_alignParentStart="true"
@@ -140,7 +140,7 @@
                             android:ellipsize="end"
                             android:singleLine="true"
                             android:layout_marginLeft="85dp"
-                            android:textColor="#60605C"
+                            android:textColor="@color/black"
 
                             />
 
@@ -153,8 +153,8 @@
                             android:layout_below="@+id/minor"
                             android:layout_alignParentStart="true"
                             android:layout_marginLeft="5dp"
-                            android:textColor="#717171"
-                            android:textColorHint="#717171"
+                            android:textColor="#6A6A6A"
+                            android:textColorHint="#6A6A6A"
 
                             />
 
@@ -168,7 +168,7 @@
                             android:ellipsize="end"
                             android:singleLine="true"
                             android:layout_marginLeft="160dp"
-                            android:textColor="#60605C"
+                            android:textColor="@color/black"
                             android:editable="false"
                             android:focusableInTouchMode="false"
                             />
@@ -207,8 +207,8 @@
                             android:id="@+id/classes_takingTV"
                             android:text="Classes I'm taking"
                             android:textSize="14dp"
-                            android:textColorHint="#717171"
-                            android:textColor="#717171"
+                            android:textColorHint="#6A6A6A"
+                            android:textColor="#6A6A6A"
                             android:singleLine="true"
                             android:scrollbars="vertical"
                             android:layout_alignParentStart="true"
@@ -224,7 +224,7 @@
                             android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 "
                             android:gravity="right"
                             android:layout_marginLeft="160dp"
-                            android:textColor="#60605C"
+                            android:textColor="@color/black"
 
                             />
 
@@ -232,8 +232,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/student_aboutTV"
-                            android:textColor="#717171"
-                            android:textColorHint="#717171"
+                            android:textColor="#6A6A6A"
+                            android:textColorHint="#6A6A6A"
                             android:textSize="14dp"
                             android:singleLine="true"
                             android:scrollbars="vertical"
@@ -253,7 +253,7 @@
                             android:layout_below="@+id/classes_taking"
                             android:gravity="right"
                             android:layout_marginLeft="85dp"
-                            android:textColor="#60605C"
+                            android:textColor="@color/black"
 
                             />
 
@@ -291,8 +291,8 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/rateTV"
                             android:text="Rate (per hour)"
-                            android:textColor="#717171"
-                            android:textColorHint="#717171"
+                            android:textColor="#6A6A6A"
+                            android:textColorHint="#6A6A6A"
                             android:textSize="14dp"
                             android:maxLines="1"
                             android:layout_marginLeft="5dp"
@@ -310,7 +310,7 @@
                             android:singleLine="true"
                             android:layout_marginLeft="160dp"
                             android:digits="0123456789."
-                            android:textColor="#60605C"
+                            android:textColor="@color/black"
                             android:editable="false"
                             android:focusableInTouchMode="false"
 
@@ -322,8 +322,8 @@
                             android:id="@+id/classes_tutoringTV"
                             android:text="Classes I'm tutoring"
                             android:textSize="14dp"
-                            android:textColorHint="#717171"
-                            android:textColor="#717171"
+                            android:textColorHint="#6A6A6A"
+                            android:textColor="#6A6A6A"
                             android:singleLine="false"
                             android:scrollbars="vertical"
                             android:layout_alignParentStart="true"
@@ -339,14 +339,14 @@
                             android:id="@+id/classes_tutoring"
                             android:textSize="14dp"
                             android:scrollbars="vertical"
-                            android:textColorHint="#717171"
+                            android:textColorHint="#6A6A6A"
                             android:digits="AB
                             CDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 "
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/rate"
                             android:gravity="right"
                             android:layout_marginLeft="160dp"
-                            android:textColor="#60605C"
+                            android:textColor="@color/black"
 
                             />
 
@@ -354,8 +354,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/tutor_aboutTV"
-                            android:textColor="#717171"
-                            android:textColorHint="#717171"
+                            android:textColor="#6A6A6A"
+                            android:textColorHint="#6A6A6A"
                             android:textSize="14dp"
                             android:singleLine="true"
                             android:scrollbars="vertical"
@@ -374,7 +374,7 @@
                             android:layout_below="@+id/classes_tutoring"
                             android:gravity="right"
                             android:layout_marginLeft="85dp"
-                            android:textColor="#60605C"
+                            android:textColor="@color/black"
                             />
 
                         <Switch
@@ -382,7 +382,7 @@
                             android:layout_height="wrap_content"
                             android:text="Tutor Profile Visibility"
                             android:maxWidth="100dp"
-                            android:textColor="#717171"
+                            android:textColor="#6A6A6A"
                             android:id="@+id/tutorSwitch"
                             android:layout_below="@+id/tutor_about"
                             android:layout_marginLeft="5dp"
@@ -412,7 +412,7 @@
                         android:layout_below="@+id/tutor_section"
                         android:id="@+id/logoutButton"
                         android:text="Log Out"
-                        android:textColor="#717171"
+                        android:textColor="#6A6A6A"
                         android:background="@drawable/oval_blue_outline"
                         android:layout_marginTop="20dp"
                         android:layout_marginLeft="12dp"

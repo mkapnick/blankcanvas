@@ -7,6 +7,9 @@ import android.content.SharedPreferences;
 import java.util.HashMap;
 
 import tutor.cesh.arrival.BeginningActivity;
+import tutor.cesh.profile.Student;
+import tutor.cesh.profile.Tutor;
+import tutor.cesh.profile.User;
 
 /**
  * Created by michaelkapnick on 2/28/15.
@@ -47,6 +50,18 @@ public class SessionManager
 
     public void logOut()
     {
+        User    user;
+        Student student;
+        Tutor   tutor;
+
+        //set cover images to null on logout! Important step!
+        user    = User.getInstance(this.context);
+        student = user.getStudent();
+        tutor   = user.getTutor();
+
+        student.setCoverImage(null);
+        tutor.setCoverImage(null);
+
         this.pref    = this.context.getSharedPreferences(SESSION_KEY, 0); // 0 - for private mode
         this.editor  = pref.edit();
 

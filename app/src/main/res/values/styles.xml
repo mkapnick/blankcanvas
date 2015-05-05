@@ -3,13 +3,19 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
+
         <item name="android:textSize">14sp</item>
-        <!--<item name="android:fontFamily"></item> THIS WAS MAKING APP CRASH ON LONG PRESS ON EDIT TEXT!-->
         <item name="android:actionBarStyle">@style/MyActionBar</item>
-        <!-- colorPrimaryDark is used for the status bar -->
         <item name="colorPrimaryDark">@color/black</item>
         <item name="android:textAppearanceButton">@style/CustomTheme.ButtonTextAppearance</item>
+        <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
+        <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+        <item name="android:editTextStyle">@style/RobotoEditTextStyle</item>
+        <item name="android:alertDialogStyle">@style/RobotoAlertDialogStyle</item>
+        <item name="android:progressBarStyle">@style/RobotoAlertDialogStyle</item>
+
     </style>
+
 
     <style name="CustomTheme.ButtonTextAppearance" parent="@style/Base.TextAppearance.AppCompat.Button">
         <item name="textAllCaps">false</item>
@@ -20,6 +26,25 @@
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/action_bar_background</item>
     </style>
+
+    <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="RobotoEditTextStyle" parent="android:Widget.EditText">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="RobotoButtonStyle" parent="android:Widget.Holo.Button">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="RobotoAlertDialogStyle" parent="Theme.AppCompat.Dialog">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+
+
 
     <!-- Define standard dimensions to comply with Holo-style grids and rhythm. -->
 
