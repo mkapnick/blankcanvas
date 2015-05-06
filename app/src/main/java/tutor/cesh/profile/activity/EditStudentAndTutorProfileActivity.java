@@ -1,6 +1,7 @@
 package tutor.cesh.profile.activity;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -78,6 +79,8 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         tutorStatusCircle   = (TextView) findViewById(R.id.tutorStatusCircle);
         logoutButton        = (Button)   findViewById(R.id.logoutButton);
         tutorSwitch         = (Switch)   findViewById(R.id.tutorSwitch);
+        tutorSwitch.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
+
 
         studentAbout    = (EditText) findViewById(R.id.student_about);
         tutorAbout      = (EditText) findViewById(R.id.tutor_about);

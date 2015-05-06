@@ -14,7 +14,9 @@
         <activity
             android:name=".arrival.SessionStartActivity"
             android:label="@string/title_activity_beginning"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,40 +25,59 @@
         </activity>
         <activity
             android:name=".arrival.LoginActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            >
         </activity>
         <activity
             android:name=".arrival.NewAccountActivity"
-            android:label="@string/title_activity_new_account" >
+            android:label="@string/title_activity_new_account"
+            android:screenOrientation="portrait"
+            >
         </activity>
         <activity
             android:name=".list.TutorListActivity"
-            android:label="@string/title_activity_tutor_list" >
+            android:label="@string/title_activity_tutor_list"
+            android:screenOrientation="portrait"
+            >
         </activity>
         <activity
             android:name=".profile.activity.ReadOnlyTutorProfileActivity"
-            android:label="@string/title_activity_read_only_tutor_profile" >
+            android:label="@string/title_activity_read_only_tutor_profile"
+            android:screenOrientation="portrait"
+            >
         </activity>
         <activity
             android:name=".arrival.BeginningActivity"
-            android:label="@string/title_activity_student_tutor_profile_container" >
+            android:label="@string/title_activity_student_tutor_profile_container"
+            android:screenOrientation="portrait"
+            >
         </activity>
         <activity
             android:name=".profile.activity.EditStudentAndTutorProfileActivity"
-            android:label="" >
+            android:label=""
+            android:screenOrientation="portrait"
+            >
         </activity>
         <activity
             android:name=".profile.activity.StudentTutorProfileContainerActivity"
-            android:label="" >
+            android:label=""
+            android:screenOrientation="portrait"
+            >
         </activity>
         <activity
             android:name=".filter.TutorFilterActivity"
             android:label=""
-            android:theme="@android:style/Theme.Material.Light.Dialog" >
+            android:theme="@android:style/Theme.Material.Light.Dialog"
+            android:screenOrientation="portrait"
+
+            >
         </activity>
         <activity
             android:name=".administrative.SettingsActivity"
-            android:label="" >
+            android:label=""
+            android:screenOrientation="portrait"
+            >
         </activity>
     </application>
 

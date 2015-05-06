@@ -44,6 +44,7 @@
             android:layout_alignTop="@+id/arrow_back_image"
             android:layout_alignParentEnd="true"
             android:layout_marginRight="15dp"
+            android:textColor="@color/black"
 
             />
 

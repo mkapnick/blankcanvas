@@ -9,7 +9,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/actionBarModal">
+        android:id="@+id/actionBarModal"
+        >
 
         <TextView
             android:layout_width="22dp"
@@ -17,6 +18,7 @@
             android:background="@drawable/ic_action_back"
             android:id="@+id/arrow_back_image"
             android:textSize="14dp"
+            android:layout_centerVertical="true"
             />
 
         <TextView
@@ -25,22 +27,22 @@
             android:layout_alignParentEnd="true"
             android:text="Reset"
             android:layout_marginRight="10dp"
-            android:textColor="#2C3E57"
+            android:textColor="@color/black"
             android:id="@+id/resetTextViewFilter"
             android:textSize="14dp"
-            android:layout_alignTop="@+id/arrow_back_image"/>
+            android:layout_centerVertical="true"
+            />
     </RelativeLayout>
 
-    <TextView
+    <tutor.cesh.widget.textview.TextViewWithFont
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Filter by major"
         android:id="@+id/majorFilterTextView"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="70dp"
-        android:background="@drawable/oval_gray_skinny"
-        android:textColor="#fff"
+        android:layout_marginTop="60dp"
+        android:textColor="#A4A4A4"
         android:textSize="12dp"
         android:layout_below="@+id/actionBarModal"
         />
@@ -49,14 +51,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editTextFilterMajor"
-        android:hint="Filter..."
+        android:hint="Filter by major..."
         android:gravity="right"
         android:layout_below="@+id/majorFilterTextView"
         android:editable="false"
         android:focusableInTouchMode="false"
-        android:textColor="#717171"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
         android:textSize="14dp"
-        android:paddingTop="10dp"
+        android:layout_marginTop="10dp"
         />
 
     <TextView
@@ -64,11 +67,10 @@
         android:layout_height="wrap_content"
         android:text="Filter by rate"
         android:id="@+id/rateFilterTextView"
-        android:layout_below="@+id/majorFilterTextView"
+        android:layout_below="@+id/editTextFilterMajor"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="120dp"
-        android:background="@drawable/oval_gray_skinny"
-        android:textColor="#fff"
+        android:layout_marginTop="60dp"
+        android:textColor="#A4A4A4"
         android:textSize="12dp"
         />
 
@@ -77,15 +79,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editTextFilterRate"
-        android:hint="Filter..."
+        android:hint="Filter by rate..."
         android:gravity="right"
         android:layout_below="@+id/rateFilterTextView"
         android:editable="false"
         android:focusableInTouchMode="false"
         android:layout_alignStart="@+id/editTextFilterMajor"
-        android:textColor="#717171"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
         android:textSize="14dp"
-        android:paddingTop="10dp"
+        android:layout_marginTop="10dp"
 
         />
 
@@ -94,11 +97,10 @@
         android:layout_height="wrap_content"
         android:text="Filter by year"
         android:id="@+id/yearFilterTextView"
-        android:layout_below="@+id/rateFilterTextView"
+        android:layout_below="@+id/editTextFilterRate"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="120dp"
-        android:background="@drawable/oval_gray_skinny"
-        android:textColor="#fff"
+        android:layout_marginTop="60dp"
+        android:textColor="#A4A4A4"
         android:textSize="12dp"
 
         />
@@ -107,15 +109,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editTextFilterYear"
-        android:hint="Filter..."
+        android:hint="Filter by year..."
         android:gravity="right"
         android:layout_below="@+id/yearFilterTextView"
         android:editable="false"
         android:focusableInTouchMode="false"
         android:layout_alignStart="@+id/editTextFilterRate"
-        android:textColor="#717171"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
         android:textSize="14dp"
-        android:paddingTop="10dp"
+        android:layout_marginTop="10dp"
 
 
         />

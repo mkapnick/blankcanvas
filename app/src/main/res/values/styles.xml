@@ -13,6 +13,8 @@
         <item name="android:editTextStyle">@style/RobotoEditTextStyle</item>
         <item name="android:alertDialogStyle">@style/RobotoAlertDialogStyle</item>
         <item name="android:progressBarStyle">@style/RobotoAlertDialogStyle</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+x
 
     </style>
 
@@ -39,7 +41,7 @@
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
-    <style name="RobotoAlertDialogStyle" parent="Theme.AppCompat.Dialog">
+    <style name="RobotoAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 

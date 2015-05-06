@@ -3,9 +3,11 @@ package tutor.cesh.dialog.factory;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Created by michaelkapnick on 3/21/15.

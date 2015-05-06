@@ -38,11 +38,10 @@
                 android:layout_height="wrap_content"
                 android:text="GENERAL INFO"
                 android:textSize="10sp"
-                android:textColor="#fff"
+                android:textColor="@color/black"
                 android:id="@+id/general_label"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/oval_gray_skinny"
                 />
 
                 <RelativeLayout
@@ -184,8 +183,7 @@
                         android:layout_below="@id/general_info"
                         android:layout_marginLeft="12dp"
                         android:layout_marginTop="30dp"
-                        android:background="@drawable/oval_gray_skinny"
-                        android:textColor="#fff"
+                        android:textColor="@color/black"
                         />
 
                     <RelativeLayout
@@ -269,8 +267,7 @@
                         android:layout_below="@+id/student_section"
                         android:layout_marginLeft="12dp"
                         android:layout_marginTop="30dp"
-                        android:background="@drawable/oval_gray_skinny"
-                        android:textColor="#fff"
+                        android:textColor="@color/black"
                         />
 
                     <RelativeLayout
@@ -412,8 +409,8 @@
                         android:layout_below="@+id/tutor_section"
                         android:id="@+id/logoutButton"
                         android:text="Log Out"
-                        android:textColor="#6A6A6A"
-                        android:background="@drawable/oval_blue_outline"
+                        android:textColor="@color/black"
+                        android:background="@drawable/oval_black_outline"
                         android:layout_marginTop="20dp"
                         android:layout_marginLeft="12dp"
                         android:layout_marginRight="12dp"

@@ -1,13 +1,20 @@
 package tutor.cesh.filter;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import tutor.cesh.R;
 import tutor.cesh.dialog.DialogSetterAndPopulator;
@@ -20,7 +27,9 @@ import tutor.cesh.metadata.Year;
 
 public class TutorFilterActivity extends Activity implements View.OnClickListener {
 
-    private TextView                            arrowBackTextView, resetTextView;
+    private TextView                            arrowBackTextView, resetTextView,
+                                                majorFilterTextView, rateFilterTextView,
+                                                yearFilterTextView;
     private EditText                            majorEditText, rateEditText, yearEditText;
     private Button                              applyFilterButton;
 
@@ -54,6 +63,8 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
         setContentView(R.layout.activity_tutor_filter);
 
         initializeUI();
+        setUpTypeFaces();
+        //setUpActionBar();
         setData();
     }
 
@@ -67,8 +78,14 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
         this.yearEditText       = (EditText) findViewById(R.id.editTextFilterYear);
         this.arrowBackTextView  = (TextView) findViewById(R.id.arrow_back_image);
         this.resetTextView      = (TextView) findViewById(R.id.resetTextViewFilter);
+        this.majorFilterTextView= (TextView) findViewById(R.id.majorFilterTextView);
+        this.rateFilterTextView = (TextView) findViewById(R.id.rateFilterTextView);
+        this.yearFilterTextView = (TextView) findViewById(R.id.yearFilterTextView);
+
+
         this.applyFilterButton  = (Button) findViewById(R.id.applyFilterButton);
         this.applyFilterButton.setAllCaps(false);
+        this.applyFilterButton.setTypeface(((Typeface.create("sans-serif-light", Typeface.NORMAL))));
 
         this.majorEditText.setOnClickListener(this);
         this.rateEditText.setOnClickListener(this);
@@ -217,4 +234,39 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
             this.yearEditText.setText(result);
         }
     }
+
+    private void setUpTypeFaces()
+    {
+        this.majorEditText.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
+        this.rateEditText.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
+        this.yearEditText.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
+        this.resetTextView.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
+
+        this.majorFilterTextView.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
+        this.rateFilterTextView.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
+        this.yearFilterTextView.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
+    }
+
+    /**
+     *
+     */
+    /*private void setUpActionBar()
+    {
+        LayoutInflater inflator;
+        View           v;
+        this.actionBar = getSupportActionBar();
+        this.actionBar.setDisplayShowCustomEnabled(true);
+        this.actionBar.setDisplayShowHomeEnabled(false);
+        this.actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_background));
+
+
+        inflator    = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        v           = inflator.inflate(R.layout.action_bar_tutor_filter, null);
+
+
+
+
+        this.actionBar.setCustomView(v);
+    }*/
+
 }
