@@ -17,7 +17,7 @@ import tutor.cesh.profile.Student;
 import tutor.cesh.profile.Tutor;
 import tutor.cesh.profile.User;
 import tutor.cesh.list.TutorListActivity;
-import tutor.cesh.rest.apisecurity.APIEndpoints;
+import tutor.cesh.apisecurity.APIEndpoints;
 import tutor.cesh.rest.asynchronous.AsyncGet;
 
 /**

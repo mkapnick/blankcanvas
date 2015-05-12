@@ -9,14 +9,13 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.http.client.methods.HttpPost;
 
 import tutor.cesh.R;
 import tutor.cesh.profile.Student;
 import tutor.cesh.profile.User;
-import tutor.cesh.rest.apisecurity.APIEndpoints;
+import tutor.cesh.apisecurity.APIEndpoints;
 import tutor.cesh.rest.asynchronous.AsyncPost;
 import tutor.cesh.rest.delegate.TaskDelegate;
 

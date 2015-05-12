@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import java.net.URI;
 import java.util.List;
 
+import tutor.cesh.apisecurity.APIAuthorization;
 import tutor.cesh.profile.Student;
 import tutor.cesh.profile.User;
 import tutor.cesh.profile.util.classes.ClassesUtility;
@@ -34,20 +35,26 @@ public abstract class CourseHttpObject implements HttpObject
         JSONObject      params;
         StringEntity    entity;
         Student         student;
-        String          jsonArray;
+        String          jsonArray, path, method, jwt;
 
         httpPost    = new HttpPost(getEndPoint());
         params      = new JSONObject();
         student     = user.getStudent();
         jsonArray   = ClassesUtility.formatClassesBackend(this.courses.iterator());
 
+        path    = getEndPoint();
+        method  = "POST";
+
         params.put("courses", jsonArray);
         params.put("schoolId", student.getSchoolId());
 
         entity      = new StringEntity(params.toString());
 
+        jwt         = APIAuthorization.getAuthorizationHeader(params, path, method);
+
         httpPost.setHeader("Accept", "application/json");
         httpPost.setHeader("Content-Type", "application/json");
+        httpPost.setHeader("Authorization", jwt);
         httpPost.setEntity(entity);
 
         return httpPost;
@@ -60,20 +67,26 @@ public abstract class CourseHttpObject implements HttpObject
         JSONObject      params;
         StringEntity    entity;
         Student         student;
-        String          jsonArray;
+        String          jsonArray, path, method, jwt;
 
         httpPut     = new HttpPut(getEndPoint());
         params      = new JSONObject();
         student     = user.getStudent();
         jsonArray   = ClassesUtility.formatClassesBackend(this.courses.iterator());
 
+        path        = getEndPoint();
+        method      = "PUT";
+
         params.put("courses", jsonArray);
         params.put("schoolId", student.getSchoolId());
 
         entity      = new StringEntity(params.toString());
 
+        jwt         = APIAuthorization.getAuthorizationHeader(params, path, method);
+
         httpPut.setHeader("Accept", "application/json");
         httpPut.setHeader("Content-Type", "application/json");
+        httpPut.setHeader("Authorization", jwt);
         httpPut.setEntity(entity);
 
         return httpPut;
@@ -83,10 +96,16 @@ public abstract class CourseHttpObject implements HttpObject
     public HttpGet get() throws Exception
     {
         HttpGet httpGet;
+        String  path, method, jwt;
 
-        httpGet = new HttpGet(new URI(getEndPoint()));
+        path    = getEndPoint();
+        method  = "GET";
+        jwt     = APIAuthorization.getAuthorizationHeader(null, path, method);
+
+        httpGet = new HttpGet(new URI(path));
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-Type", "application/json");
+        httpGet.setHeader("Authorization", jwt);
 
         return httpGet;
     }

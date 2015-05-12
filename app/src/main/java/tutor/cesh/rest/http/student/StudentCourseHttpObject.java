@@ -3,7 +3,7 @@ package tutor.cesh.rest.http.student;
 import java.util.List;
 
 import tutor.cesh.profile.User;
-import tutor.cesh.rest.apisecurity.APIEndpoints;
+import tutor.cesh.apisecurity.APIEndpoints;
 import tutor.cesh.rest.http.CourseHttpObject;
 
 /**

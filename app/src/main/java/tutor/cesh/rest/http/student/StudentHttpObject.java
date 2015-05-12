@@ -15,9 +15,10 @@ import org.json.JSONObject;
 import java.io.File;
 import java.net.URI;
 
+import tutor.cesh.apisecurity.APIAuthorization;
 import tutor.cesh.profile.Student;
 import tutor.cesh.profile.User;
-import tutor.cesh.rest.apisecurity.APIEndpoints;
+import tutor.cesh.apisecurity.APIEndpoints;
 import tutor.cesh.rest.http.HttpObject;
 
 /**
@@ -46,18 +47,24 @@ public class StudentHttpObject implements HttpObject {
         Student         student;
         JSONObject      params;
         StringEntity    stringEntity;
+        String          path, method, jwt;
 
         student = user.getStudent();
         params  = new JSONObject();
-        put     = new HttpPut(APIEndpoints.getSTUDENTS_ENDPOINT() + "/" + student.getId());
+        path    = APIEndpoints.getSTUDENTS_ENDPOINT() + "/" + student.getId();
+        method  = "PUT";
+        put     = new HttpPut(path);
 
         params.put("firstName", student.getName());
         params.put("studentAbout", student.getAbout());
 
         stringEntity = new StringEntity(params.toString());
 
+        jwt          = APIAuthorization.getAuthorizationHeader(params, path, method);
+
         put.setHeader("Accept", "application/json");
         put.setHeader("Content-Type", "application/json");
+        put.setHeader("Authorization", jwt);
         put.setEntity(stringEntity);
 
         return put;
@@ -74,11 +81,14 @@ public class StudentHttpObject implements HttpObject {
         File            coverImageFile;
         FileBody        cBody;
         Student         student;
+        String          path, method, jwt;
 
         student = user.getStudent();
+        path    = APIEndpoints.getSTUDENTS_IMAGE_ENDPOINT() + "/" + student.getId() + "/" + "cover";
+        method  = "POST";
 
-        Log.d("TEST", APIEndpoints.getSTUDENTS_IMAGE_ENDPOINT() + "/" + student.getId() + "/" + "cover");
-        post    = new HttpPost(APIEndpoints.getSTUDENTS_IMAGE_ENDPOINT() + "/" + student.getId() + "/" + "cover");
+        Log.d("TEST", path);
+        post    = new HttpPost(path);
         entity  = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
         if(coverImagePath != null)
@@ -90,6 +100,9 @@ public class StudentHttpObject implements HttpObject {
             student.setCoverImage(BitmapFactory.decodeFile(coverImagePath));
         }
 
+        jwt     = APIAuthorization.getAuthorizationHeader(null, path, method);
+
+        post.setHeader("Authorization", jwt);
         post.setEntity(entity);
 
         return post;
@@ -132,12 +145,17 @@ public class StudentHttpObject implements HttpObject {
 
         HttpGet httpGet;
         Student student;
+        String  path, method, jwt;
 
         student = user.getStudent();
+        path    = APIEndpoints.getSTUDENTS_ENDPOINT() + "/" + student.getId();
+        method  = "GET";
+        jwt     = APIAuthorization.getAuthorizationHeader(null, path, method);
 
-        httpGet = new HttpGet(new URI(APIEndpoints.getSTUDENTS_ENDPOINT() + "/" + student.getId()));
+        httpGet = new HttpGet(new URI(path));
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-Type", "application/json");
+        httpGet.setHeader("Authorization", jwt);
 
         return httpGet;
     }

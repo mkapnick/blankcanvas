@@ -8,9 +8,10 @@ import org.json.JSONObject;
 
 import java.net.URI;
 
+import tutor.cesh.apisecurity.APIAuthorization;
 import tutor.cesh.profile.Student;
 import tutor.cesh.profile.User;
-import tutor.cesh.rest.apisecurity.APIEndpoints;
+import tutor.cesh.apisecurity.APIEndpoints;
 
 /**
  * Created by michaelk18 on 7/7/14.
@@ -34,10 +35,13 @@ public class EnrollHttpObject implements HttpObject
         HttpPut         put;
         JSONObject      params;
         Student         student;
+        String          path, method, jwt;
 
         student = user.getStudent();
 
-        put             = new HttpPut(APIEndpoints.getENROLLS_ENDPOINT() + "/" + student.getEnrollId());
+        path            = APIEndpoints.getENROLLS_ENDPOINT() + "/" + student.getEnrollId();
+        method          = "PUT";
+        put             = new HttpPut(path);
         params          = new JSONObject();
 
         params.put("major", student.getMajor());
@@ -45,8 +49,12 @@ public class EnrollHttpObject implements HttpObject
         params.put("minor", "MINOR -- STATIC FOR NOW -- OK");
 
         put.setEntity(new StringEntity(params.toString()));
+
+        jwt             = APIAuthorization.getAuthorizationHeader(params, path, method);
+
         put.setHeader("Accept", "application/json");
         put.setHeader("Content-Type", "application/json");
+        put.setHeader("Authorization", jwt);
 
         return put;
     }
@@ -56,13 +64,20 @@ public class EnrollHttpObject implements HttpObject
     {
         HttpGet httpGet;
         Student student;
+        String  path, method, jwt;
 
         student = user.getStudent();
+        path    = APIEndpoints.getENROLLS_ENDPOINT() + "/" + student.getEnrollId();
+        method  = "GET";
+
+        jwt     = APIAuthorization.getAuthorizationHeader(null, path, method);
 
         //get student enroll data
         httpGet = new HttpGet(new URI(APIEndpoints.getENROLLS_ENDPOINT() + "/" + student.getEnrollId()));
+
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-Type", "application/json");
+        httpGet.setHeader("Authorization", jwt);
 
         return httpGet;
     }

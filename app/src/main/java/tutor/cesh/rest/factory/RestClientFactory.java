@@ -1,9 +1,5 @@
 package tutor.cesh.rest.factory;
 
-import android.util.Base64;
-import android.util.Log;
-
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
@@ -12,11 +8,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 
+import tutor.cesh.apisecurity.APIAuthorization;
+import tutor.cesh.apisecurity.JWTFactory;
 import tutor.cesh.auth.User;
-import tutor.cesh.rest.apisecurity.APIEndpoints;
+import tutor.cesh.apisecurity.APIEndpoints;
 
 
 /**
@@ -42,19 +39,26 @@ public class RestClientFactory
         HttpPost                httpPost;
         StringEntity            entity;
         String                  encryptedEmailString, encryptedPasswordString;
+        String                  path, method, jwt;
 
         httpPost                = new HttpPost(APIEndpoints.getUSER_NEW_POST_ENDPOINT());
         params                  = new JSONObject();
         encryptedEmailString    = User.encrypt(email);
         encryptedPasswordString = User.encrypt(password);
+        path                    = APIEndpoints.getUSER_NEW_POST_ENDPOINT();
+        method                  = "POST";
 
-        params.put("email", encryptedEmailString);//Base64.encode(encryptedEmail, 0));
+        params.put("email", encryptedEmailString);
         params.put("password", encryptedPasswordString);
 
-        entity          = new StringEntity(params.toString());
+        entity                  = new StringEntity(params.toString());
+
+        jwt                     = APIAuthorization.getAuthorizationHeader(params, path, method);
 
         httpPost.setHeader("Accept", "application/json");
         httpPost.setHeader("Content-Type", "application/json");
+        httpPost.setHeader("Authorization", jwt);
+
         httpPost.setEntity(entity);
 
         return httpPost;
@@ -77,9 +81,13 @@ public class RestClientFactory
         JSONObject              params;
         HttpPost                httpPost;
         StringEntity            entity;
+        String                  path, method, jwt;
 
         encryptedEmailString    = null;
         encryptedPasswordString = null;
+
+        path                    = APIEndpoints.getAUTH_POST_ENDPOINT();
+        method                  = "POST";
 
         try
         {
@@ -94,15 +102,16 @@ public class RestClientFactory
         httpPost    = new HttpPost(APIEndpoints.getAUTH_POST_ENDPOINT());
         params      = new JSONObject();
 
-        //System.out.println(encryptedEmailString);
-
         params.put("email", encryptedEmailString);
         params.put("password", encryptedPasswordString);
 
         entity      = new StringEntity(params.toString());
 
+        jwt         = APIAuthorization.getAuthorizationHeader(params, path, method);
+
         httpPost.setHeader("Accept", "application/json");
         httpPost.setHeader("Content-Type", "application/json");
+        httpPost.setHeader("Authorization", jwt);
         httpPost.setEntity(entity);
 
         return httpPost;

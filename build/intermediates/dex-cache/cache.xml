@@ -2,6 +2,20 @@
 <items version="2" >
 
     <item
+        jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk15on/1.52/88a941faf9819d371e3174b5ed56a3f3f7d73269/bcprov-jdk15on-1.52.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="88a941faf9819d371e3174b5ed56a3f3f7d73269">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/bcprov-jdk15on-1.52-a37c81bff7a6389969bd96eaecc2435b8b65ff1e.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/net.minidev/json-smart/1.3.1/69b3835e96d282ec85fc2e1517b8164c45ed639e/json-smart-1.3.1.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="69b3835e96d282ec85fc2e1517b8164c45ed639e">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/json-smart-1.3.1-9e9677221bd78ccff9908b969d1c1700de5d93c9.jar" />
+    </item>
+    <item
         jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.6/562424e36df3d2327e8e9301a76027fca17d54ea/slf4j-api-1.7.6.jar"
         jumboMode="false"
         revision="21.0.0"
@@ -14,6 +28,13 @@
         revision="21.0.0"
         sha1="1a578b9607b36266c63d43a4fa0ab5664dbe911e">
         <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.0-a40ccb0d15cafaf3c925869b50d5afb4394b188e.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/net.jcip/jcip-annotations/1.0/afba4942caaeaf46aab0b976afd57cc7c181467e/jcip-annotations-1.0.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="afba4942caaeaf46aab0b976afd57cc7c181467e">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/jcip-annotations-1.0-8794b5d98cc677529de493dcf28a108477f11c22.jar" />
     </item>
     <item
         jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
@@ -44,6 +65,13 @@
         <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/httpmime-4.1.2-d4ea571b71888849467b120897ffbfaa84dd76d9.jar" />
     </item>
     <item
+        jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.4/b1b6ea3b7e4aa4f492509a4952029cd8e48019ad/commons-io-2.4.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="b1b6ea3b7e4aa4f492509a4952029cd8e48019ad">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/commons-io-2.4-585df989e4e8c2da387b6c39b6afe51609585f9c.jar" />
+    </item>
+    <item
         jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.4.0/d6a66c7a5f01cf500377bd669507a08cfeba882a/jackson-annotations-2.4.0.jar"
         jumboMode="false"
         revision="21.0.0"
@@ -56,6 +84,13 @@
         revision="21.0.0"
         sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0">
         <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-1a81b56ac79507d1bb4829d4f89c3d242c9549bc.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/com.nimbusds/nimbus-jose-jwt/3.9.2/be2e2f2562d74435c3b08d28354280c729ea3238/nimbus-jose-jwt-3.9.2.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="be2e2f2562d74435c3b08d28354280c729ea3238">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/nimbus-jose-jwt-3.9.2-2c4050843915480ecdc6252d3f76e546b60313a6.jar" />
     </item>
     <item
         jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/io.jsonwebtoken/jjwt/0.4/61ce246d937a0fd3acf06d3bef5fc9e3933ae812/jjwt-0.4.jar"
