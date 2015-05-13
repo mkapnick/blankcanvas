@@ -30,6 +30,7 @@ import java.util.HashMap;
 
 import tutor.cesh.R;
 import tutor.cesh.administrative.SettingsActivity;
+import tutor.cesh.apisecurity.APIAuthorization;
 import tutor.cesh.dialog.ProfileInfoBehavior;
 import tutor.cesh.filter.TutorFilterActivity;
 import tutor.cesh.format.TextFormatter;
@@ -290,17 +291,21 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
     public void populateDataFromServer(boolean showProgressDialog)
     {
-        AsyncGet        asyncGet;
         HttpGet         httpGet;
         ProgressDialog  pd;
         User            user;
         Student         student;
         String          mySchoolId;
+        String          path, method, jwt;
 
         pd          = null;
         user        = User.getInstance(this);
         student     = user.getStudent();
         mySchoolId  = student.getSchoolId();
+
+        path        = APIEndpoints.getTUTORS_SCHOOL_ENDPOINT() + "/" + mySchoolId + "/tutors";
+        method      = "GET";
+        jwt         = APIAuthorization.getAuthorizationHeader(null, path, method);
 
         if(showProgressDialog)
         {
@@ -312,10 +317,10 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
             pd.show();
         }
 
-        asyncGet    = new AsyncGet(this, this, pd);
-        httpGet     = new HttpGet(APIEndpoints.getTUTORS_SCHOOL_ENDPOINT() + "/" + mySchoolId + "/tutors");
+        httpGet     = new HttpGet(path);
+        httpGet.setHeader("Authorization", jwt);
 
-        asyncGet.execute(httpGet);
+        new AsyncGet(this, this, pd).execute(httpGet);
     }
 
     private void setUpListViewItems()
