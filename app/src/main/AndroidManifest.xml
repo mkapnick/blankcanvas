@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme"
         android:icon="@drawable/ic_launcher">
         <activity
-            android:name=".arrival.SessionStartActivity"
+            android:name=".arrival.BeginningActivity"
             android:label="@string/title_activity_beginning"
             android:noHistory="true"
             android:screenOrientation="portrait"
@@ -50,7 +50,7 @@
             >
         </activity>
         <activity
-            android:name=".arrival.BeginningActivity"
+            android:name=".arrival.SessionStartActivity"
             android:label="@string/title_activity_student_tutor_profile_container"
             android:screenOrientation="portrait"
             >

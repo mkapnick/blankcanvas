@@ -13,6 +13,7 @@ import android.widget.TextView;
 import org.apache.http.client.methods.HttpPost;
 
 import tutor.cesh.R;
+import tutor.cesh.apisecurity.APIAuthorization;
 import tutor.cesh.profile.Student;
 import tutor.cesh.profile.User;
 import tutor.cesh.apisecurity.APIEndpoints;
@@ -69,11 +70,13 @@ public class SettingsActivity extends ActionBarActivity implements View.OnClickL
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
     {
         HttpPost    post;
-        String      endPoint, studentId;
+        String      path, studentId;
         User        user;
         Student     student;
+        String      method, jwt;
 
-        endPoint    = APIEndpoints.getEMAIL_SUBSCRIBERS_ENDPOINT();
+        path        = APIEndpoints.getEMAIL_SUBSCRIBERS_ENDPOINT();
+        method      = "POST";
         user        = User.getInstance(this);
         student     = user.getStudent();
         studentId   = student.getId();
@@ -82,16 +85,22 @@ public class SettingsActivity extends ActionBarActivity implements View.OnClickL
         {
 
             student.setSubscribed(true);
-            endPoint    += "/" + studentId + "/subscribe";
-            post        = new HttpPost(endPoint);
+            path        += "/" + studentId + "/subscribe";
+            post        = new HttpPost(path);
+
+            jwt         = APIAuthorization.getAuthorizationHeader(null, path, method);
+            post.setHeader("Authorization", jwt);
 
             new AsyncPost(this, this, null).execute(post);
         }
         else
         {
             student.setSubscribed(false);
-            endPoint    += "/" + studentId + "/unsubscribe";
-            post        = new HttpPost(endPoint);
+            path        += "/" + studentId + "/unsubscribe";
+            post        = new HttpPost(path);
+
+            jwt         = APIAuthorization.getAuthorizationHeader(null, path, method);
+            post.setHeader("Authorization", jwt);
 
             new AsyncPost(this, this, null).execute(post);
         }

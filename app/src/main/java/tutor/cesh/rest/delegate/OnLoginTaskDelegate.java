@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import tutor.cesh.apisecurity.APIAuthorization;
 import tutor.cesh.profile.Student;
 import tutor.cesh.profile.Tutor;
 import tutor.cesh.profile.User;
@@ -47,8 +48,15 @@ public class OnLoginTaskDelegate implements TaskDelegate
     {
         HttpGet                 httpGet;
         MetaDataTaskDelegate    metaDataTaskDelegate;
+        String                  path, method, jwt;
 
-        httpGet                 = new HttpGet(APIEndpoints.getMETADATA_GET_ENDPOINT());
+        path                    = APIEndpoints.getMETADATA_GET_ENDPOINT();
+        method                  = "GET";
+        jwt                     = APIAuthorization.getAuthorizationHeader(null, path, method);
+
+        httpGet                 = new HttpGet(path);
+        httpGet.setHeader("Authorization", jwt);
+
         metaDataTaskDelegate    = new MetaDataTaskDelegate(this.context);
 
         new AsyncGet(this.context, metaDataTaskDelegate, null).execute(httpGet);
