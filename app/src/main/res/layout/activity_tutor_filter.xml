@@ -95,7 +95,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Filter by year"
+        android:text="Filter by graduation year"
         android:id="@+id/yearFilterTextView"
         android:layout_below="@+id/editTextFilterRate"
         android:layout_alignParentStart="true"
@@ -109,7 +109,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editTextFilterYear"
-        android:hint="Filter by year..."
+        android:hint="Filter by graduation year..."
         android:gravity="right"
         android:layout_below="@+id/yearFilterTextView"
         android:editable="false"

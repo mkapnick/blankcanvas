@@ -67,14 +67,14 @@ public class JWTFactory
         }
         catch(JOSEException jose)
         {
-            System.out.println("COULDN'T SIGN JWT");
+            //System.out.println("COULDN'T SIGN JWT");
         }
 
         // Serialize to compact form, produces something like
         // eyJhbGciOiJIUzI1NiJ9.SGVsbG8sIHdvcmxkIQ.onO9Ihudz3WkiauDO2Uhyuz0Y18UASXlSc1eS0NkWyA
         compactForm     = signedJWT.serialize();
 
-        System.out.println("OK!!! set compact form. Compact form is: " + compactForm);
+        //System.out.println("OK!!! set compact form. Compact form is: " + compactForm);
 
         return compactForm;
     }

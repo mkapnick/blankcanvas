@@ -10,6 +10,7 @@
     <color name="transparent">#00000000</color>
     <color name="bootstrap_primary">#0088cc</color>
     <color name="app_blue">#2C3E57</color>
+    <color name="app_orange">#FF6517</color>
     <color name="app_dark_grey">#4A4A4A</color>
     <color name="app_light_grey">#6A6A6A</color>
     <color name="app_light_light_grey">#CACACA</color>

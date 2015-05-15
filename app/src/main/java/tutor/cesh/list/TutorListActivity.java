@@ -142,10 +142,10 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         this.filterButton.setOnClickListener(this);
         this.swipeRefreshLayout         = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         this.swipeRefreshLayout.setOnRefreshListener(this);
-        this.swipeRefreshLayout.setColorScheme(R.color.app_light_light_grey,
-                R.color.app_light_light_grey,
-                R.color.app_light_light_grey,
-                R.color.app_light_light_grey);
+        this.swipeRefreshLayout.setColorScheme(R.color.app_orange,
+                R.color.app_orange,
+                R.color.app_orange,
+                R.color.app_orange);
         this.searchView                 = (SearchView) findViewById(R.id.action_search_icon);
         this.searchView.setOnQueryTextListener(this);
         this.searchView.setQueryHint("Search by keywords...");
@@ -507,7 +507,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
 
         emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"blankcanvasteam@gmail.com"});
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"team@blankcanvas.pw"});
         emailIntent.putExtra(Intent.EXTRA_TEXT, "");
         emailIntent.setType("message/rfc822");
 
