@@ -9,6 +9,8 @@ import tutor.cesh.dialog.factory.DialogSingleChoiceFactory;
 import tutor.cesh.dialog.listener.CheckBoxDialogPositiveButtonListener;
 import tutor.cesh.dialog.listener.DialogNegativeButtonListener;
 import tutor.cesh.dialog.listener.DialogPositiveButtonListener;
+import tutor.cesh.profile.ProfileInfo;
+import tutor.cesh.profile.ProfileInfoBehavior;
 
 /**
  * Created by michaelkapnick on 3/25/15.

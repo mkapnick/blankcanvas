@@ -14,7 +14,7 @@ import tutor.cesh.database.LocalDatabaseHelper;
  */
 public class Student implements Profile
 {
-    private String              name, major, year, about, profileImageUrl,
+    private String              name, major, minor, year, about, profileImageUrl,
                                 coverImageUrl, id, enrollId, schoolId, email;
     private String []           classes;
     private ArrayList<String>   currentClasses, pastClasses;
@@ -157,6 +157,14 @@ public class Student implements Profile
     public Bitmap getCoverImage() {
 
         return coverImage;
+    }
+
+    public String getMinor() {
+        return minor;
+    }
+
+    public void setMinor(String minor) {
+        this.minor = minor;
     }
 
     public void setCoverImageView(ImageView coverImageView){

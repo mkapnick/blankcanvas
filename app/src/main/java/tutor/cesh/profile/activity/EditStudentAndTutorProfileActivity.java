@@ -22,12 +22,9 @@ import org.apache.http.client.methods.HttpPut;
 import java.util.ArrayList;
 
 import tutor.cesh.R;
-import tutor.cesh.dialog.ProfileInfo;
-import tutor.cesh.dialog.ProfileInfoBehavior;
-import tutor.cesh.metadata.Major;
+import tutor.cesh.profile.ProfileInfo;
+import tutor.cesh.profile.ProfileInfoBehavior;
 import tutor.cesh.metadata.MetaDataBank;
-import tutor.cesh.metadata.Rate;
-import tutor.cesh.metadata.Year;
 import tutor.cesh.profile.Student;
 import tutor.cesh.profile.Tutor;
 import tutor.cesh.profile.User;
@@ -72,6 +69,8 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         year.setOnClickListener(this);
         year.setKeyListener(null);
         minor               = (EditText) findViewById(R.id.minor);
+        minor.setOnClickListener(this);
+        minor.setKeyListener(null);
         rate                = (EditText) findViewById(R.id.rate);
         rate.setOnClickListener(this);
         rate.setKeyListener(null);
@@ -138,22 +137,19 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
     @Override
     public void onClick(View v)
     {
-        String              majorTitle, rateTitle, yearTitle;
-        MetaDataBank        metaDataBank;
-        ArrayList<String>   allData;
-        ArrayList<Major>    allMajors;
-        ArrayList<Rate>     allRates;
-        ArrayList<Year>     allYears;
+        String              majorTitle, rateTitle, yearTitle, minorTitle;
+        ArrayList<String>   allData, allMajors, allRates, allYears, allMinors;
         String              thisData;
 
-        majorTitle  = "Please select your major(s)";
-        rateTitle   = "Please select your rate";
-        yearTitle   = "Please select your graduation year";
+        majorTitle  = "Filter by major(s)";
+        rateTitle   = "Filter by rate(s)";
+        yearTitle   = "Filter by year(s)";
+        minorTitle  = "Filter by minor(s)";
 
-        metaDataBank= MetaDataBank.getInstance(this, null, null, null);
-        allMajors   = metaDataBank.getMajors();
-        allRates    = metaDataBank.getRates();
-        allYears    = metaDataBank.getYears();
+        allMajors   = MetaDataBank.getMajors();
+        allRates    = MetaDataBank.getRates();
+        allYears    = MetaDataBank.getYears();
+        allMinors   = MetaDataBank.getMinors();
 
         allData     = new ArrayList<String>();
         thisData    = "";
@@ -174,8 +170,7 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
                 break;
             case R.id.major:
 
-                for(int i =0; i < allMajors.size(); i++)
-                    allData.add(allMajors.get(i).getMajorName());
+                shallowCopy(allMajors, allData);
 
                 thisData = ProfileInfoBehavior.getEditableMajor();
 
@@ -185,29 +180,57 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
                                                                      allData,
                                                                      thisData);
                 break;
+
+            case R.id.minor:
+
+                shallowCopy(allMinors, allData);
+
+                thisData = ProfileInfoBehavior.getEditableMinor();
+
+                DialogSetterAndPopulator.setMultiChoiceDialogAndShow(this, this.minor, minorTitle,
+                        ProfileInfo.MINOR,
+                        ProfileInfoBehavior.EDITABLE,
+                        allData,
+                        thisData);
+                break;
+
             case R.id.rate:
 
-                for(int i =0; i < allRates.size(); i++)
-                    allData.add(allRates.get(i).getRateName());
+                shallowCopy(allRates, allData);
 
                 thisData = ProfileInfoBehavior.getEditableRate();
                 DialogSetterAndPopulator.setSingleChoiceDialogAndShow(this, this.rate, rateTitle,
-                                                                     ProfileInfo.RATE,
-                                                                     ProfileInfoBehavior.EDITABLE,
-                                                                     allData,
-                                                                     thisData);
+                        ProfileInfo.RATE,
+                        ProfileInfoBehavior.EDITABLE,
+                        allData,
+                        thisData);
                 break;
             case R.id.year:
 
-                for(int i =0; i < allYears.size(); i++)
-                    allData.add(allYears.get(i).getYearName());
+                shallowCopy(allYears, allData);
 
                 thisData = ProfileInfoBehavior.getEditableYear();
                 DialogSetterAndPopulator.setSingleChoiceDialogAndShow(this, this.year, yearTitle,
-                                                                      ProfileInfo.YEAR,
-                                                                      ProfileInfoBehavior.EDITABLE,
-                                                                      allData,
-                                                                      thisData);
+                        ProfileInfo.YEAR,
+                        ProfileInfoBehavior.EDITABLE,
+                        allData,
+                        thisData);
+        }
+    }
+
+    /**
+     *
+     * @param originalData
+     * @param newData
+     */
+    private void shallowCopy(ArrayList<String> originalData, ArrayList<String> newData)
+    {
+        if(null != originalData && originalData.size() > 0)
+        {
+            for(int i =0; i < originalData.size(); i++)
+            {
+                newData.add(originalData.get(i));
+            }
         }
     }
 
@@ -261,9 +284,10 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
 
         //update student attributes
         student.setName(  this.name.getText().toString().trim());
-        student.setAbout( this.studentAbout.getText().toString().trim());
-        student.setYear(  this.year.getText().toString().trim());
-        student.setMajor( this.major.getText().toString().trim());
+        student.setAbout(this.studentAbout.getText().toString().trim());
+        student.setYear(this.year.getText().toString().trim());
+        student.setMajor(this.major.getText().toString().trim());
+        student.setMinor( this.minor.getText().toString().trim());
 
         //update tutor attributes
         tutor.setRate(  this.rate.getText().toString().trim());
@@ -368,6 +392,7 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         ProfileInfoBehavior.EDITABLE.setMajor(student.getMajor());
         ProfileInfoBehavior.EDITABLE.setRate(tutor.getRate());
         ProfileInfoBehavior.EDITABLE.setYear(student.getYear());
+        ProfileInfoBehavior.EDITABLE.setMinor(student.getMinor());
     }
     /**
      *
@@ -378,6 +403,7 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         this.bundle = getIntent().getExtras();
         name.setText(bundle.getString("name"));
         major.setText(bundle.getString("major"));
+        minor.setText(bundle.getString("minor"));
         year.setText(bundle.getString("year"));
 
         studentCurrentClasses.setText(bundle.getString("studentCurrentClasses"));
@@ -390,6 +416,4 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         /*** Tutor Switch **/
         setTutorSwitchAndVisibility(bundle.getBoolean("isPublic"));
     }
-
-
 }

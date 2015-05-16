@@ -31,7 +31,7 @@ import java.util.HashMap;
 import tutor.cesh.R;
 import tutor.cesh.administrative.SettingsActivity;
 import tutor.cesh.apisecurity.APIAuthorization;
-import tutor.cesh.dialog.ProfileInfoBehavior;
+import tutor.cesh.profile.ProfileInfoBehavior;
 import tutor.cesh.filter.TutorFilterActivity;
 import tutor.cesh.format.TextFormatter;
 import tutor.cesh.list.view.adapter.EmptyTextViewAdapter;
@@ -433,6 +433,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
             ProfileInfoBehavior.FILTERABLE.setMajor("");
             ProfileInfoBehavior.FILTERABLE.setRate("");
             ProfileInfoBehavior.FILTERABLE.setYear("");
+            ProfileInfoBehavior.FILTERABLE.setMinor("");
 
 
             this.listView.setAdapter(tutorListAdapter);

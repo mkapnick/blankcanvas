@@ -226,7 +226,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
             major                       = student.getMajor();
             rate                        = tutor.getRate();
             isPublic                    = tutor.isPublic();
-            //minor                     = this.studentProfileFragment.getMinor();
+            minor                       = student.getMinor();
             year                        = student.getYear();
             studentAbout                = student.getAbout();
             tutorAbout                  = tutor.getAbout();
@@ -247,6 +247,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
 
             bundle.putString("name", name);
             bundle.putString("major", major);
+            bundle.putString("minor", minor);
             bundle.putString("year", year);
             bundle.putString("studentAbout", studentAbout);
             bundle.putString("tutorAbout", tutorAbout);

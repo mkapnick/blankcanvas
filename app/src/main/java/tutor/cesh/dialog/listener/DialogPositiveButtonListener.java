@@ -4,8 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.EditText;
-import tutor.cesh.dialog.ProfileInfo;
-import tutor.cesh.dialog.ProfileInfoBehavior;
+import tutor.cesh.profile.ProfileInfo;
+import tutor.cesh.profile.ProfileInfoBehavior;
 
 /**
  * Created by michaelkapnick on 3/22/15.
@@ -70,6 +70,7 @@ public class DialogPositiveButtonListener implements DialogInterface.OnClickList
                 break;
             case MINOR:
                 ProfileInfo.MINOR.setResult(selectedItem, this.editText);
+                this.behavior.setMinor(selectedItem);
                 break;
             case YEAR:
                 ProfileInfo.YEAR.setResult(selectedItem, this.editText);

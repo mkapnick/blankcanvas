@@ -41,7 +41,7 @@
         android:id="@+id/majorFilterTextView"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="35dp"
         android:textColor="#A4A4A4"
         android:textSize="12dp"
         android:layout_below="@+id/actionBarModal"
@@ -65,14 +65,43 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Filter by rate"
-        android:id="@+id/rateFilterTextView"
+        android:text="Filter by minor"
+        android:id="@+id/minorFilterTextView"
         android:layout_below="@+id/editTextFilterMajor"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="35dp"
         android:textColor="#A4A4A4"
         android:textSize="12dp"
         />
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editTextFilterMinor"
+        android:hint="Filter by minor..."
+        android:gravity="right"
+        android:layout_below="@+id/minorFilterTextView"
+        android:editable="false"
+        android:focusableInTouchMode="false"
+        android:layout_alignStart="@+id/editTextFilterMajor"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
+        android:textSize="14dp"
+        android:layout_marginTop="10dp"
+
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filter by rate"
+        android:id="@+id/rateFilterTextView"
+        android:textColor="#A4A4A4"
+        android:textSize="12dp"
+        android:layout_below="@+id/editTextFilterMinor"
+        android:layout_marginTop="35dp"
+        android:layout_alignParentStart="true" />
 
 
     <EditText
@@ -84,7 +113,7 @@
         android:layout_below="@+id/rateFilterTextView"
         android:editable="false"
         android:focusableInTouchMode="false"
-        android:layout_alignStart="@+id/editTextFilterMajor"
+        android:layout_alignStart="@+id/editTextFilterMinor"
         android:textColor="@color/black"
         android:textColorHint="@color/black"
         android:textSize="14dp"
@@ -99,7 +128,7 @@
         android:id="@+id/yearFilterTextView"
         android:layout_below="@+id/editTextFilterRate"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="35dp"
         android:textColor="#A4A4A4"
         android:textSize="12dp"
 

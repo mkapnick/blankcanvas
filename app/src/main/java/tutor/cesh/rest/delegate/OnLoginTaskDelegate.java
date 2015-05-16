@@ -112,8 +112,8 @@ public class OnLoginTaskDelegate implements TaskDelegate
         student.setAbout(object.getString("studentAbout"));
         student.setSchoolId(object.getString("schoolId"));
         student.setCoverImageUrl(object.getString("studentCoverImageUrl"));
-        //System.out.println(object.getString("studentCoverImageUrl"));
         student.setMajor(object.getString("major"));
+        student.setMinor(object.getString("minor"));
         student.setYear(object.getString("graduationYear"));
         student.setSubscribed(object.getBoolean("subscribed"));
         student.setEmail(this.email);

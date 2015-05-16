@@ -46,7 +46,7 @@ public class EnrollHttpObject implements HttpObject
 
         params.put("major", student.getMajor());
         params.put("year", student.getYear());
-        params.put("minor", "MINOR -- STATIC FOR NOW -- OK");
+        params.put("minor", student.getMinor());
 
         put.setEntity(new StringEntity(params.toString()));
 

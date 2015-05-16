@@ -8,12 +8,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import tutor.cesh.metadata.Major;
 import tutor.cesh.metadata.MetaDataBank;
-import tutor.cesh.metadata.Minor;
-import tutor.cesh.metadata.Rate;
-import tutor.cesh.metadata.Year;
+
 
 /**
  * Created by michaelkapnick on 3/22/15.
@@ -34,11 +32,10 @@ public class MetaDataTaskDelegate implements TaskDelegate
         JSONObject          majorsObject, minorsObject, ratesObject, yearsObject;
         JSONArray           jsonArray, majorsArray, minorsArray, ratesArray, yearsArray;
 
-        ArrayList<Major>    majors;
-        ArrayList<Minor>    minors;
-        ArrayList<Rate>     rates;
-        ArrayList<Year>     years;
+        HashMap<String, ArrayList<String>> map;
+        ArrayList<String>   majors, rates, years, minors;
 
+        map = new HashMap<String, ArrayList<String>>();
         try
         {
             jsonArray       = (JSONArray) response;
@@ -52,11 +49,18 @@ public class MetaDataTaskDelegate implements TaskDelegate
             ratesArray      = ratesObject.getJSONArray("rates");
             yearsArray      = yearsObject.getJSONArray("years");
 
-            majors          = setMajors(majorsArray);
-            rates           = setRates(ratesArray);
-            years           = setYears(yearsArray);
+            majors          = getDataAsList(majorsArray, "major");
+            minors          = getDataAsList(minorsArray, "minor");
+            rates           = getDataAsList(ratesArray, "rate");
+            years           = getDataAsList(yearsArray, "year");
 
-            MetaDataBank.getInstance(this.context, majors, rates, years);
+            map.put("majors", majors);
+            map.put("minors", minors);
+            map.put("rates", rates);
+            map.put("years", years);
+
+            //initialize the MetaDataBank class
+            MetaDataBank.getInstance(this.context, map);
         }
         catch(JSONException jsone)
         {
@@ -69,78 +73,19 @@ public class MetaDataTaskDelegate implements TaskDelegate
 
     }
 
-    /**
-     *
-     * @param majorsArray
-     * @return
-     * @throws JSONException
-     */
-    private ArrayList<Major> setMajors(JSONArray majorsArray) throws JSONException
+    private ArrayList<String> getDataAsList(JSONArray jsonArray, String key) throws JSONException
     {
-        String              tmp;
-        Major               major;
-        ArrayList<Major>    majors;
+        String                  tmp;
+        ArrayList<String>       values;
 
-        majors  = new ArrayList<Major>();
+        values  = new ArrayList<String>();
 
-        for(int i =0; i < majorsArray.length(); i++)
+        for(int i =0; i < jsonArray.length(); i++)
         {
-            tmp     = majorsArray.getJSONObject(i).getString("major");
-            major   = new Major(tmp);
-
-            majors.add(major);
+            tmp     = jsonArray.getJSONObject(i).getString(key);
+            values.add(tmp);
         }
 
-        return majors;
-    }
-
-    /**
-     *
-     * @param ratesArray
-     * @return
-     * @throws JSONException
-     */
-    private ArrayList<Rate> setRates(JSONArray ratesArray) throws JSONException
-    {
-        String              tmp;
-        Rate                rate;
-        ArrayList<Rate>     rates;
-
-        rates   = new ArrayList<Rate>();
-
-        for(int i =0; i < ratesArray.length(); i++)
-        {
-            tmp     = ratesArray.getJSONObject(i).getString("rate");
-            rate    = new Rate(tmp);
-
-            rates.add(rate);
-        }
-
-        return rates;
-    }
-
-    /**
-     *
-     * @param yearsArray
-     * @return
-     * @throws JSONException
-     */
-    private ArrayList<Year> setYears(JSONArray yearsArray) throws JSONException
-    {
-        String              tmp;
-        Year                year;
-        ArrayList<Year>     years;
-
-        years   = new ArrayList<Year>();
-
-        for(int i =0; i < yearsArray.length(); i++)
-        {
-            tmp     = yearsArray.getJSONObject(i).getString("year");
-            year    = new Year(tmp);
-
-            years.add(year);
-        }
-
-        return years;
+        return values;
     }
 }
