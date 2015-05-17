@@ -24,7 +24,7 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
 {
 
     public  ImageView               profileImageView, coverImageView;
-    private EditText                name, major, year, about, classes;
+    private EditText                name, major, year, about, classes, minor;
     private TextView                rate;
     private ImageButton             cameraIcon;
     private TextView                switchText;
@@ -86,6 +86,7 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
     {
         name                = (EditText)    inflatedView.findViewById(R.id.name);
         major               = (EditText)    inflatedView.findViewById(R.id.major);
+        minor               = (EditText)    inflatedView.findViewById(R.id.minor);
         year                = (EditText)    inflatedView.findViewById(R.id.year);
         about               = (EditText)    inflatedView.findViewById(R.id.about);
         classes             = (EditText)    inflatedView.findViewById(R.id.classes);
@@ -138,6 +139,7 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
 
         name.setText(student.getName());
         major.setText(student.getMajor());
+        minor.setText(student.getMinor());
         year.setText(student.getYear());
         about.setText(tutor.getAbout());
         rate.setText(tutor.getRate());

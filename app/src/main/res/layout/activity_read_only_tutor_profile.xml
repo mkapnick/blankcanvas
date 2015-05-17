@@ -50,15 +50,15 @@ android:layout_height="match_parent">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="70dp"
                 android:layout_alignTop="@+id/dummyLayout"
                 android:id="@+id/nameFieldLayout">
 
-                <EditText
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/name"
-                    android:hint="N/A"
+                    android:hint="Name"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
                     android:gravity="left"
@@ -73,6 +73,38 @@ android:layout_height="match_parent">
 
                     />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/classOf"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="12sp"
+                    android:paddingLeft="10dp"
+                    android:clickable="false"
+                    android:editable="false"
+                    android:background="#00000000"
+                    android:layout_below="@+id/name"
+                    android:layout_marginTop="5dp"
+                    android:text="Class of "
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/year"
+                    android:text="dummy"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="12sp"
+                    android:clickable="false"
+                    android:editable="false"
+                    android:background="#00000000"
+                    android:layout_below="@+id/name"
+                    android:layout_marginTop="5dp"
+                    android:layout_toEndOf="@+id/classOf"
+                    />
+
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -80,6 +112,7 @@ android:layout_height="match_parent">
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="25dp"
+                    android:id="@+id/priceInfo"
                     >
 
                     <TextView
@@ -96,7 +129,7 @@ android:layout_height="match_parent">
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/rate"
-                        android:hint="N/A"
+                        android:hint="rate"
                         android:textColor="#fff"
                         android:textColorHint="#fff"
                         android:layout_toRightOf="@+id/dollarSign"
@@ -122,7 +155,7 @@ android:layout_height="match_parent">
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/dummyLayout"
-                android:layout_marginTop="345dp"
+                android:layout_marginTop="365dp"
                 >
             </RelativeLayout>
 
@@ -133,81 +166,102 @@ android:layout_height="match_parent">
                 android:layout_below="@+id/nameFieldLayout"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/line"
                 />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/userInfoSection"
-                android:paddingTop="10dp"
-                android:layout_below="@+id/dummyLayout"
-                android:layout_marginTop="70dp"
+                android:layout_below="@+id/line"
+                android:paddingBottom="10dp"
                 >
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/majorTitle"
-                    android:hint="Major"
-                    android:textColor="#6A6A6A"
-                    android:textColorHint="#6A6A6A"
-                    android:textSize="14dp"
-                    android:paddingLeft="10dp"
-                    android:clickable="false"
-                    android:editable="false"
-                    android:background="#00000000"
-                    />
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:id="@+id/majorMinorLayout">
 
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/major"
-                    android:hint="N/A"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/black"
-                    android:textSize="14dp"
-                    android:paddingLeft="10dp"
-                    android:clickable="false"
-                    android:editable="false"
-                    android:background="#00000000"
-                    android:layout_below="@+id/majorTitle"
-                    android:layout_marginTop="10dp"
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
 
-                    />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/majorTitle"
+                            android:hint="Major"
+                            android:textColor="#6A6A6A"
+                            android:textColorHint="#6A6A6A"
+                            android:textSize="14dp"
+                            android:paddingLeft="10dp"
+                            android:clickable="false"
+                            android:editable="false"
+                            android:background="#00000000"
+                            />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/yearTitle"
-                    android:textColor="#6A6A6A"
-                    android:textColorHint="#6A6A6A"
-                    android:textSize="14dp"
-                    android:text="Graduation Year"
-                    android:paddingLeft="10dp"
-                    android:clickable="false"
-                    android:editable="false"
-                    android:background="#00000000"
-                    android:layout_below="@+id/major"
-                    android:layout_marginTop="15dp"
-                    />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/major"
+                            android:hint="N/A"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="14dp"
+                            android:clickable="false"
+                            android:editable="false"
+                            android:background="#00000000"
+                            android:layout_below="@+id/majorTitle"
+                            android:paddingLeft="10dp"
+                            android:layout_marginTop="10dp"
 
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/year"
-                    android:hint="N/A"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/black"
-                    android:textSize="14dp"
-                    android:paddingLeft="10dp"
-                    android:clickable="false"
-                    android:editable="false"
-                    android:background="#00000000"
-                    android:layout_below="@+id/yearTitle"
-                    android:layout_marginTop="10dp"
+                            />
+                    </RelativeLayout>
 
-                    />
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/minorTitle"
+                            android:hint="Minor"
+                            android:textColor="#6A6A6A"
+                            android:textColorHint="#6A6A6A"
+                            android:textSize="14dp"
+                            android:paddingLeft="10dp"
+                            android:clickable="false"
+                            android:editable="false"
+                            android:background="#00000000"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/minor"
+                            android:hint="N/A"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="14dp"
+                            android:paddingLeft="10dp"
+                            android:clickable="false"
+                            android:editable="false"
+                            android:background="#00000000"
+                            android:layout_below="@+id/minorTitle"
+                            android:layout_marginTop="10dp"
+
+                            />
+                    </RelativeLayout>
+
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -217,11 +271,11 @@ android:layout_height="match_parent">
                     android:id="@+id/classesTitle"
                     android:textColor="#6A6A6A"
                     android:textColorHint="#6A6A6A"
-                    android:layout_below="@id/year"
+                    android:layout_below="@id/majorMinorLayout"
                     android:layout_marginTop="15dp"
                     />
 
-                <EditText
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/classes"
@@ -252,7 +306,7 @@ android:layout_height="match_parent">
                     android:paddingLeft="10dp"
                     />
 
-                <EditText
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/about"
@@ -264,7 +318,6 @@ android:layout_height="match_parent">
                     android:paddingLeft="10dp"
                     android:scrollbars="vertical"
                     android:hint="N/A"
-                    android:text="testing 123"
                     android:background="#00000000"
                     android:layout_below="@id/aboutTitle"
                     android:layout_marginTop="10dp"
@@ -282,6 +335,10 @@ android:layout_height="match_parent">
                     android:id="@+id/lastLine"
                     />
             </RelativeLayout>
+
+
+
         </RelativeLayout>
     </ScrollView>
+
 </RelativeLayout>

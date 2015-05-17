@@ -21,7 +21,7 @@ import tutor.cesh.profile.util.classes.ClassesUtility;
 public class StudentProfileFragment extends FragmentTabController implements TabObserver
 {
     public ImageView                profileImageView, coverImageView;
-    public EditText                 name, major, year, about, classes;
+    public EditText                 name, major, year, about, classes, minor;
     private ImageButton             cameraIcon;
 
 
@@ -84,6 +84,7 @@ public class StudentProfileFragment extends FragmentTabController implements Tab
 
         name                = (EditText) inflatedView.findViewById(R.id.name);
         major               = (EditText) inflatedView.findViewById(R.id.major);
+        minor               = (EditText) inflatedView.findViewById(R.id.minor);
         year                = (EditText) inflatedView.findViewById(R.id.year);
         about               = (EditText) inflatedView.findViewById(R.id.about);
         classes             = (EditText)inflatedView.findViewById(R.id.classes);
@@ -112,6 +113,7 @@ public class StudentProfileFragment extends FragmentTabController implements Tab
         //set fields based on data from the updated bundle
         name.setText(student.getName(), TextView.BufferType.EDITABLE);
         major.setText(student.getMajor(), TextView.BufferType.EDITABLE);
+        minor.setText(student.getMinor(), TextView.BufferType.EDITABLE);
         year.setText(student.getYear(), TextView.BufferType.EDITABLE);
         about.setText(student.getAbout(), TextView.BufferType.EDITABLE);
         coverImageView.setBackground(new BitmapDrawable(super.getGeneralResources(),

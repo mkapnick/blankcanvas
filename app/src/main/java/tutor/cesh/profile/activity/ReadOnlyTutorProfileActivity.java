@@ -30,7 +30,7 @@ public class ReadOnlyTutorProfileActivity extends ActionBarActivity implements V
 
     private String      rate, rating, firstName, major,minor,year, about;
     private Bitmap      coverImageBitmap;
-    private TextView    nameTextView, majorTextView,
+    private TextView    nameTextView, majorTextView, minorTextView,
                         yearTextView, aboutTextView,
                         classesTextView, rateTextView, actionBarProfileName, arrowBackImage;
     private Button      getInTouchButton;
@@ -61,6 +61,7 @@ public class ReadOnlyTutorProfileActivity extends ActionBarActivity implements V
 
         nameTextView                = (TextView)    this.findViewById(R.id.name);
         majorTextView               = (TextView)    this.findViewById(R.id.major);
+        minorTextView               = (TextView)    this.findViewById(R.id.minor);
         yearTextView                = (TextView)    this.findViewById(R.id.year);
         aboutTextView               = (TextView)    this.findViewById(R.id.about);
         classesTextView             = (TextView)    this.findViewById(R.id.classes);
@@ -157,6 +158,7 @@ public class ReadOnlyTutorProfileActivity extends ActionBarActivity implements V
 
         nameTextView.setText(this.firstName);
         majorTextView.setText(this.major);
+        minorTextView.setText(this.minor);
         yearTextView.setText(this.year);
         aboutTextView.setText(this.about);
         rateTextView.setText(this.rate);
