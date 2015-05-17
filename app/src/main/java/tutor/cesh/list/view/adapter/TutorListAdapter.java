@@ -22,6 +22,7 @@ import java.util.Map;
 
 import tutor.cesh.R;
 import tutor.cesh.list.TutorListActivity;
+import tutor.cesh.profile.ProfileInfoBehavior;
 
 /**
  * Created by michaelk18 on 8/10/14.
@@ -55,21 +56,23 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
 
     /**
      *
-     * @param majors
-     * @param rates
-     * @param years
+     *
      */
-    public void applyAdvancedFilters(String majors, String rates, String years)
+    public void applyAdvancedFilters()
     {
         ArrayList<HashMap<String, String>>  filteredData;
-        String                              currentMajor, currentPrice,
-                                            currentYear;
-        String []                           majorsArray, ratesArray, yearsArray;
+        String                              currentMajor, currentPrice, currentMinor, majors, rates,
+                                            minors;
+        String []                           majorsArray, ratesArray, minorsArray;
+
+        majors  = ProfileInfoBehavior.getFilterableMajor();
+        rates   = ProfileInfoBehavior.getFilterableRate();
+        minors  = ProfileInfoBehavior.getFilterableMinor();
 
         filteredData = new ArrayList<HashMap<String, String>>();
         majorsArray  = null;
         ratesArray   = null;
-        yearsArray   = null;
+        minorsArray  = null;
 
         if(null != majors)
             majorsArray  = majors.split(",");
@@ -77,14 +80,14 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
         if(null != rates)
             ratesArray   = rates.split(",");
 
-        if(null != years)
-            yearsArray   = years.split(",");
+        if(null != minors)
+            minorsArray  = minors.split(",");
 
         for(int i = 0; i < originalDataReference.size(); i++)
         {
             currentMajor        = originalDataReference.get(i).get("major");
             currentPrice        = originalDataReference.get(i).get("rate");
-            currentYear         = originalDataReference.get(i).get("year");
+            currentMinor        = originalDataReference.get(i).get("minor");
 
             if(null != majorsArray)
             {
@@ -104,11 +107,11 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
                 }
             }
 
-            if(null != yearsArray)
+            if(null != minorsArray)
             {
-                for(String y: yearsArray)
+                for(String mi: minorsArray)
                 {
-                    if(currentYear.trim().equalsIgnoreCase(y))
+                    if(!currentMinor.trim().equalsIgnoreCase("") && currentMinor.trim().equalsIgnoreCase(mi))
                         filteredData.add(originalDataReference.get(i));
                 }
             }
@@ -124,7 +127,7 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
         }
         else
         {
-            resetFilters();
+            resetFilters(); //otherwise, we have applied reset filters!
         }
     }
 

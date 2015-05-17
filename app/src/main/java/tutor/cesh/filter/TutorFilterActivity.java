@@ -69,14 +69,14 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
     {
         this.majorEditText      = (EditText) findViewById(R.id.editTextFilterMajor);
         this.rateEditText       = (EditText) findViewById(R.id.editTextFilterRate);
-        this.yearEditText       = (EditText) findViewById(R.id.editTextFilterYear);
+        //this.yearEditText       = (EditText) findViewById(R.id.editTextFilterYear);
         this.minorEditText      = (EditText) findViewById(R.id.editTextFilterMinor);
 
         this.arrowBackTextView  = (TextView) findViewById(R.id.arrow_back_image);
         this.resetTextView      = (TextView) findViewById(R.id.resetTextViewFilter);
         this.majorFilterTextView= (TextView) findViewById(R.id.majorFilterTextView);
         this.rateFilterTextView = (TextView) findViewById(R.id.rateFilterTextView);
-        this.yearFilterTextView = (TextView) findViewById(R.id.yearFilterTextView);
+        //this.yearFilterTextView = (TextView) findViewById(R.id.yearFilterTextView);
         this.minorFilterTextView= (TextView) findViewById(R.id.minorFilterTextView);
 
 
@@ -86,7 +86,7 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
 
         this.majorEditText.setOnClickListener(this);
         this.rateEditText.setOnClickListener(this);
-        this.yearEditText.setOnClickListener(this);
+        //this.yearEditText.setOnClickListener(this);
         this.applyFilterButton.setOnClickListener(this);
         this.arrowBackTextView.setOnClickListener(this);
         this.resetTextView.setOnClickListener(this);
@@ -123,7 +123,7 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
                 setResult(RESULT_OK);
                 ProfileInfoBehavior.FILTERABLE.setMajor(this.majorEditText.getText().toString());
                 ProfileInfoBehavior.FILTERABLE.setRate(this.rateEditText.getText().toString());
-                ProfileInfoBehavior.FILTERABLE.setYear(this.yearEditText.getText().toString());
+                //ProfileInfoBehavior.FILTERABLE.setYear(this.yearEditText.getText().toString());
                 ProfileInfoBehavior.FILTERABLE.setMinor(this.minorEditText.getText().toString());
                 finish();
                 break;
@@ -154,19 +154,6 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
                 DialogSetterAndPopulator.setMultiChoiceDialogAndShow(this, this.rateEditText,
                                                                      rateTitle,
                                                                      ProfileInfo.RATE,
-                                                                     ProfileInfoBehavior.FILTERABLE,
-                                                                     allData,
-                                                                     thisData);
-                break;
-
-            case R.id.editTextFilterYear:
-
-                shallowCopy(allYears, allData);
-
-                thisData = ProfileInfoBehavior.getFilterableYear();
-                DialogSetterAndPopulator.setMultiChoiceDialogAndShow(this, this.yearEditText,
-                                                                     yearTitle,
-                                                                     ProfileInfo.YEAR,
                                                                      ProfileInfoBehavior.FILTERABLE,
                                                                      allData,
                                                                      thisData);
@@ -217,7 +204,7 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
 
         this.majorEditText.setText("");
         this.rateEditText.setText("");
-        this.yearEditText.setText("");
+        //this.yearEditText.setText("");
         this.minorEditText.setText("");
     }
 
@@ -250,13 +237,13 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
             this.rateEditText.setText(result);
         }
 
-        if(null != years && years.length() > 0)
+        /*if(null != years && years.length() > 0)
         {
             yearsArray = years.split(",");
             result      = formatData(yearsArray);
 
             this.yearEditText.setText(result);
-        }
+        }*/
 
         if(null != minors && minors.length() > 0)
         {
@@ -271,13 +258,13 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
     {
         this.majorEditText.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
         this.rateEditText.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
-        this.yearEditText.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
+        //this.yearEditText.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
         this.minorEditText.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
         this.resetTextView.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
 
         this.majorFilterTextView.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
         this.rateFilterTextView.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
-        this.yearFilterTextView.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
+        //this.yearFilterTextView.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
         this.minorFilterTextView.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
 
     }

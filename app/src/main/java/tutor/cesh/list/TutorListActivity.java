@@ -197,9 +197,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
         {
             if(this.data.size() > 0)
             {
-                this.tutorListAdapter.applyAdvancedFilters(ProfileInfoBehavior.getFilterableMajor(),
-                                                           ProfileInfoBehavior.getFilterableRate(),
-                                                           ProfileInfoBehavior.getFilterableYear());
+                this.tutorListAdapter.applyAdvancedFilters();
             }
 
         }
