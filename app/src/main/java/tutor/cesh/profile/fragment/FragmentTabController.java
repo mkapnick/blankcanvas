@@ -158,6 +158,7 @@ public class FragmentTabController extends Fragment implements View.OnClickListe
         v = inflater.inflate(R.layout.fragment_tab_controller, container, false);
 
         //set up the image buttons found in the action bar
+
         this.editButton             = (TextView)v.findViewById(R.id.edit_action_bar_icon);
         this.arrowBackTextView      = (TextView)v.findViewById(R.id.arrow_back_image);
         this.tutorStatusCircle      = (TextView)v.findViewById(R.id.tutorStatusCircle);

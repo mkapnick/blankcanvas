@@ -2,13 +2,6 @@
 <items version="2" >
 
     <item
-        jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk15on/1.52/88a941faf9819d371e3174b5ed56a3f3f7d73269/bcprov-jdk15on-1.52.jar"
-        jumboMode="false"
-        revision="21.0.0"
-        sha1="88a941faf9819d371e3174b5ed56a3f3f7d73269">
-        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/bcprov-jdk15on-1.52-a37c81bff7a6389969bd96eaecc2435b8b65ff1e.jar" />
-    </item>
-    <item
         jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/net.minidev/json-smart/1.3.1/69b3835e96d282ec85fc2e1517b8164c45ed639e/json-smart-1.3.1.jar"
         jumboMode="false"
         revision="21.0.0"
@@ -23,25 +16,11 @@
         <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/slf4j-api-1.7.6-91805324f31a57ffd6f0ed0b7e6d268df4dcddb5.jar" />
     </item>
     <item
-        jar="/Users/michaelkapnick/android-sdk-macosx/extras/android/m2repository/com/android/support/support-annotations/21.0.0/support-annotations-21.0.0.jar"
-        jumboMode="false"
-        revision="21.0.0"
-        sha1="1a578b9607b36266c63d43a4fa0ab5664dbe911e">
-        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.0-a40ccb0d15cafaf3c925869b50d5afb4394b188e.jar" />
-    </item>
-    <item
         jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/net.jcip/jcip-annotations/1.0/afba4942caaeaf46aab0b976afd57cc7c181467e/jcip-annotations-1.0.jar"
         jumboMode="false"
         revision="21.0.0"
         sha1="afba4942caaeaf46aab0b976afd57cc7c181467e">
         <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/jcip-annotations-1.0-8794b5d98cc677529de493dcf28a108477f11c22.jar" />
-    </item>
-    <item
-        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.0.0"
-        sha1="686344a780033e4ba22b926cd225f8d4941247e6">
-        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/classes-d679192406fdf0b8e1ad732a76ade81099e5fbb1.jar" />
     </item>
     <item
         jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.0/classes.jar"
@@ -58,32 +37,11 @@
         <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/jackson-core-2.4.2-21492c08ef7f4ff2aec000a57f3d51875aa3a7cb.jar" />
     </item>
     <item
-        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/libs/httpmime-4.1.2.jar"
-        jumboMode="false"
-        revision="21.0.0"
-        sha1="ed8b5ee0167cb27dea55851259eb34b609f31df0">
-        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/httpmime-4.1.2-d4ea571b71888849467b120897ffbfaa84dd76d9.jar" />
-    </item>
-    <item
-        jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.4/b1b6ea3b7e4aa4f492509a4952029cd8e48019ad/commons-io-2.4.jar"
-        jumboMode="false"
-        revision="21.0.0"
-        sha1="b1b6ea3b7e4aa4f492509a4952029cd8e48019ad">
-        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/commons-io-2.4-585df989e4e8c2da387b6c39b6afe51609585f9c.jar" />
-    </item>
-    <item
         jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.4.0/d6a66c7a5f01cf500377bd669507a08cfeba882a/jackson-annotations-2.4.0.jar"
         jumboMode="false"
         revision="21.0.0"
         sha1="d6a66c7a5f01cf500377bd669507a08cfeba882a">
         <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/jackson-annotations-2.4.0-42dce6a96bf96ebc3e92df1d918461900811cbbf.jar" />
-    </item>
-    <item
-        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar"
-        jumboMode="false"
-        revision="21.0.0"
-        sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0">
-        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-1a81b56ac79507d1bb4829d4f89c3d242c9549bc.jar" />
     </item>
     <item
         jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/com.nimbusds/nimbus-jose-jwt/3.9.2/be2e2f2562d74435c3b08d28354280c729ea3238/nimbus-jose-jwt-3.9.2.jar"
@@ -105,6 +63,48 @@
         revision="21.0.0"
         sha1="8e31266a272ad25ac4c089734d93e8d811652c1f">
         <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/jackson-databind-2.4.2-377b0ad2b1c2e7cb986389e24f31e492edfe241a.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk15on/1.52/88a941faf9819d371e3174b5ed56a3f3f7d73269/bcprov-jdk15on-1.52.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="88a941faf9819d371e3174b5ed56a3f3f7d73269">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/bcprov-jdk15on-1.52-a37c81bff7a6389969bd96eaecc2435b8b65ff1e.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/android-sdk-macosx/extras/android/m2repository/com/android/support/support-annotations/21.0.0/support-annotations-21.0.0.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="1a578b9607b36266c63d43a4fa0ab5664dbe911e">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.0-a40ccb0d15cafaf3c925869b50d5afb4394b188e.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="686344a780033e4ba22b926cd225f8d4941247e6">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/classes-d679192406fdf0b8e1ad732a76ade81099e5fbb1.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.4/b1b6ea3b7e4aa4f492509a4952029cd8e48019ad/commons-io-2.4.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="b1b6ea3b7e4aa4f492509a4952029cd8e48019ad">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/commons-io-2.4-585df989e4e8c2da387b6c39b6afe51609585f9c.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/libs/httpmime-4.1.2.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="ed8b5ee0167cb27dea55851259eb34b609f31df0">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/httpmime-4.1.2-d4ea571b71888849467b120897ffbfaa84dd76d9.jar" />
+    </item>
+    <item
+        jar="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0">
+        <dex dex="/Users/michaelkapnick/Android_Dev/blankcanvas/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-1a81b56ac79507d1bb4829d4f89c3d242c9549bc.jar" />
     </item>
 
 </items>

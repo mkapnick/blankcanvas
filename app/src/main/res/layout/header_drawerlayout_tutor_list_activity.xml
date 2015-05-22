@@ -4,14 +4,14 @@
     android:layout_height="wrap_content"
     android:id="@+id/tutor_list_activity_relative_layout"
     android:paddingBottom="15dp"
-    android:background="#e1e1e1"
+    android:background="@color/app_icon_blue"
     >
 
     <TextView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:id="@+id/user_profile_icon"
-        android:background="@drawable/user_profile_circled_gray"
+        android:background="@drawable/user_profile_circled_light"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="70dp"
         />
@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="#717171"
+        android:textColor="#fff"
         android:text="View Profile"
         android:layout_below="@+id/user_profile_icon"
         android:layout_marginTop="5dp"

@@ -3,12 +3,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/main_layout">
+    android:id="@+id/main_layout"
+    android:background="@color/app_icon_blue">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/black" />
+         />
 
     <FrameLayout
         android:id="@+id/sample_content_fragment"

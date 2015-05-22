@@ -2,13 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F1F1F1"
+    android:background="@color/app_icon_blue"
     >
 
     <TextView
         android:layout_width="22dp"
         android:layout_height="20dp"
-        android:background="@drawable/ic_action_back"
+        android:background="@drawable/ic_action_back_light"
         android:layout_centerVertical="true"
         android:id="@+id/arrow_back_image"/>
 
@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Michael's Profile"
-        android:textColor="@color/black"
+        android:textColor="#fff"
         android:layout_marginStart="20dp"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/arrow_back_image"

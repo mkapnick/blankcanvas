@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
@@ -136,19 +138,27 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
      */
     private void initializeUI()
     {
+        int         id;
+        TextView    searchTextView;
+
         this.listView                   = (ListView) findViewById(R.id.tutor_list_activity_main_list_view);
         //this.emptyTextView              = (TextView) findViewById(R.id.emptyTextView);
         this.filterButton               = (TextView)   findViewById(R.id.filterButton);
         this.filterButton.setOnClickListener(this);
         this.swipeRefreshLayout         = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         this.swipeRefreshLayout.setOnRefreshListener(this);
-        this.swipeRefreshLayout.setColorScheme(R.color.app_orange,
-                R.color.app_orange,
-                R.color.app_orange,
-                R.color.app_orange);
-        this.searchView                 = (SearchView) findViewById(R.id.action_search_icon);
+        this.swipeRefreshLayout.setColorScheme(R.color.app_icon_blue,
+                R.color.app_icon_blue,
+                R.color.app_icon_blue,
+                R.color.app_icon_blue);
+        this.searchView = (SearchView) findViewById(R.id.action_search_icon_light);
         this.searchView.setOnQueryTextListener(this);
         this.searchView.setQueryHint("Search by keywords...");
+
+        //set text color of searchview to white
+       // id              = this.searchView.getContext().getResources().getIdentifier("android:id/action_search_icon", null, null);
+        //searchTextView  = (TextView) searchView.findViewById(id);
+        //searchTextView.setTextColor(Color.WHITE);
 
         this.actionBarProfileButton     = (TextView) findViewById(R.id.action_bar_profile_button);
         this.actionBarProfileButton.setOnClickListener(this);
@@ -198,8 +208,8 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
             if(this.data.size() > 0)
             {
                 this.tutorListAdapter.applyAdvancedFilters();
+                Toast.makeText(this, "Applied", Toast.LENGTH_SHORT).show();
             }
-
         }
     }
 

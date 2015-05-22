@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.ListView;
 
+import tutor.cesh.R;
+
 /**
  * Created by michaelkapnick on 3/21/15.
  */
@@ -21,7 +23,7 @@ public class DialogSingleChoiceFactory
         AlertDialog.Builder builder;
         ListView            listView;
 
-        builder = new AlertDialog.Builder(context);
+        builder = new AlertDialog.Builder(context, R.style.MyDialogStyle);
         builder.setTitle(title);
 
         builder.setPositiveButton(positiveButton, positiveButtonListener);

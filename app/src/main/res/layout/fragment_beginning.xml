@@ -4,17 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/nyc_blur_man"
     tools:context="tutor.cesh.arrival.LoginActivity"
-    tools:ignore="MergeRootFrame" >
+    tools:ignore="MergeRootFrame"
+    android:background="#fff">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/relativeLayout"
-        android:layout_marginTop="40dp"
-        android:alpha=".7"
-        android:paddingTop="15dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/blankcanvas_logo_full"
+
         >
 
     </RelativeLayout>
@@ -27,14 +27,14 @@
         android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
         android:onClick="validateArrival"
-        android:background="@drawable/oval_orange"
+        android:background="@drawable/oval_app_icon_blue"
         android:padding="12dp"
         android:layout_above="@+id/loginButton"
         android:layout_alignParentStart="true"
         android:gravity="center"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="7dp"
         />
 
     <Button
@@ -45,7 +45,7 @@
         android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
         android:onClick="validateArrival"
-        android:background="@drawable/oval_blue"
+        android:background="@drawable/oval_app_icon_dark_blue"
         android:padding="12dp"
         android:gravity="center"
         android:layout_marginLeft="20dp"

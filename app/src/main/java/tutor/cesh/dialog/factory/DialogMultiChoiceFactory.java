@@ -9,6 +9,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import tutor.cesh.R;
+
 /**
  * Created by michaelkapnick on 3/21/15.
  */
@@ -24,7 +26,7 @@ public class DialogMultiChoiceFactory
         AlertDialog         dialog;
         AlertDialog.Builder builder;
 
-        builder = new AlertDialog.Builder(context);
+        builder = new AlertDialog.Builder(context, R.style.MyDialogStyle);
 
         builder.setTitle(title);
         builder.setCancelable(isCancelable);
@@ -55,7 +57,7 @@ public class DialogMultiChoiceFactory
         AlertDialog         dialog;
         AlertDialog.Builder builder;
 
-        builder = new AlertDialog.Builder(context);
+        builder = new AlertDialog.Builder(context, R.style.MyDialogStyle);
         builder.setTitle(title);
 
         builder.setPositiveButton(positiveButton, positiveButtonListener);

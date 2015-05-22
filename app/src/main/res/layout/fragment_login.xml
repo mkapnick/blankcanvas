@@ -4,7 +4,7 @@ android:id="@+id/container"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical"
-android:background="@drawable/nyc_blurry_left_right"
+android:background="#fff"
 tools:context="tutor.cesh.arrival.LoginActivity"
 tools:ignore="MergeRootFrame" >
 
@@ -65,7 +65,7 @@ tools:ignore="MergeRootFrame" >
         android:id="@+id/loginButton"
         android:textColor="@color/white"
         android:onClick="validateArrival"
-        android:background="@drawable/oval_blue"
+        android:background="@drawable/oval_app_icon_dark_blue"
         android:gravity="center"
         android:layout_below="@+id/info"
         android:layout_marginLeft="12dp"

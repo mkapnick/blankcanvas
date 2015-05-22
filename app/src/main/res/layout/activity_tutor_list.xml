@@ -18,6 +18,7 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="?android:attr/actionBarSize"
+                android:background="@color/app_icon_blue"
                 android:id="@+id/actionBarTutorList"
 
                 >
@@ -26,7 +27,7 @@
                     android:layout_height="30dp"
                     android:id="@+id/action_bar_profile_button"
                     android:layout_alignParentRight="true"
-                    android:background="@drawable/user_profile_circled_gray"
+                    android:background="@drawable/user_profile_circled_light"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     />
@@ -34,20 +35,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxWidth="280dp"
-                    android:searchIcon="@drawable/ic_search_custom"
                     android:layout_centerVertical="true"
-                    android:iconifiedByDefault="false"
                     android:queryHint="Search by keywords..."
-                    android:id="@+id/action_search_icon"/>
+                    android:id="@+id/action_search_icon_light"
+
+                    />
 
                 <TextView
                     android:layout_width="23dp"
                     android:layout_height="23dp"
                     android:id="@+id/filterButton"
-                    android:background="@drawable/ic_action_filter_2"
+                    android:background="@drawable/ic_action_filter_light"
                     android:alpha=".9"
                     android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/action_search_icon"
+                    android:layout_toEndOf="@+id/action_search_icon_light"
                     android:layout_marginLeft="5dp"
                     />
 
