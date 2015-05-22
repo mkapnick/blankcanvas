@@ -108,20 +108,20 @@ android:layout_height="match_parent">
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/oval_gray_skinny"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="25dp"
+                    android:background="@drawable/oval_black_outline_skinny"
+                    android:layout_marginRight="20dp"
                     android:id="@+id/priceInfo"
-                    >
+                    android:layout_marginEnd="20dp"
+                    android:layout_above="@+id/year"
+                    android:layout_alignParentEnd="true">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/dollarSign"
                         android:text="$"
-                        android:textColor="#fff"
-                        android:textColorHint="#fff"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
                         android:textSize="10sp"
                         />
 
@@ -130,8 +130,8 @@ android:layout_height="match_parent">
                         android:layout_height="wrap_content"
                         android:id="@+id/rate"
                         android:hint="rate"
-                        android:textColor="#fff"
-                        android:textColorHint="#fff"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
                         android:layout_toRightOf="@+id/dollarSign"
                         android:textSize="10sp"
                         />
@@ -141,8 +141,8 @@ android:layout_height="match_parent">
                         android:layout_height="wrap_content"
                         android:id="@+id/perHour"
                         android:text="/hour"
-                        android:textColor="#fff"
-                        android:textColorHint="#fff"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
                         android:layout_toRightOf="@+id/rate"
                         android:textSize="10sp"
 

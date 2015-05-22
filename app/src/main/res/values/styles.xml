@@ -30,7 +30,7 @@
 
         <item name="colorAccent">@color/app_icon_blue</item>
         <item name="android:colorAccent">@color/app_icon_blue</item>
-        <item name="android:colorPrimaryDark">@color/app_icon_blue</item>
+        <item name="android:colorPrimaryDark">@color/app_icon_dark_blue</item>
         <item name="android:colorPrimary">@color/app_icon_blue</item>
 
     </style>
