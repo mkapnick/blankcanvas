@@ -47,7 +47,7 @@
     </style>
 
     <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
-        <item name="searchIcon">@drawable/ic_action_search_light_custom</item>
+        <item name="searchIcon">@drawable/ic_action_search_light</item>
         <item name="closeIcon">@drawable/ic_action_cancel_light_2</item>
     </style>
 

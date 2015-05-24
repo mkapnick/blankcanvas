@@ -38,7 +38,6 @@
                     android:layout_centerVertical="true"
                     android:queryHint="Search by keywords..."
                     android:id="@+id/action_search_icon_light"
-
                     />
 
                 <TextView

@@ -11,7 +11,7 @@ public class APIEndpoints
     private static final String AUTH_POST_ENDPOINT                  = DOMAIN + "/api/v1/bc/auth";
     private static final String USER_NEW_POST_ENDPOINT              = DOMAIN + "/api/v1/bc/users/new";
     private static final String ENROLLS_ENDPOINT                    = DOMAIN + "/api/v1/bc/enrolls";
-    private static final String TUTORS_SCHOOL_ENDPOINT              = DOMAIN + "/api/v1/bc/schools"; //TODO
+    private static final String TUTORS_SCHOOL_ENDPOINT              = DOMAIN + "/api/v1/bc/schools";
 
     /* STUDENTS */
     private static final String STUDENTS_ENDPOINT                   = DOMAIN + "/api/v1/bc/students";
