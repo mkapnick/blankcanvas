@@ -70,7 +70,7 @@
         <activity
             android:name=".filter.TutorFilterActivity"
             android:label=""
-            android:theme="@android:style/Theme.Material.Light.Dialog"
+            android:theme="@style/MyDialogStyle"
             android:screenOrientation="portrait"
 
             >
