@@ -18,6 +18,7 @@
         <item name="android:fontFamily">sans-serif-light</item>
 
 
+
         <!-- Primary colors !-->
         <!--<item name="colorControlNormal">@color/app_icon_blue</item>
         <item name="colorControlActivated">@color/app_icon_blue</item>
@@ -35,6 +36,8 @@
 
     </style>
 
+    <style name="cursorColor" parent="Widget.AppCompat.AutoCompleteTextView">
+    </style>
 
     <style name="CustomTheme.ButtonTextAppearance" parent="@style/Base.TextAppearance.AppCompat.Button">
         <item name="textAllCaps">false</item>
@@ -54,7 +57,7 @@
     <style name="AutoCompleteTextView" parent="Widget.AppCompat.Light.AutoCompleteTextView">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textColorHint">@android:color/white</item>
-        <item name="android:textCursorDrawable">@android:color/white</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_custom</item>
         <item name="android:textColorHighlight">@color/black</item>
     </style>
 

@@ -153,7 +153,7 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
                 R.color.app_icon_blue);
         this.searchView = (SearchView) findViewById(R.id.action_search_icon_light);
         this.searchView.setOnQueryTextListener(this);
-        this.searchView.setQueryHint("Search by keywords...");
+        this.searchView.setQueryHint("Search tutors by keywords...");
 
         //set text color of searchview to white
        // id              = this.searchView.getContext().getResources().getIdentifier("android:id/action_search_icon", null, null);
@@ -203,12 +203,14 @@ public class TutorListActivity extends Activity implements  TaskDelegate,
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        String toastText;
+
         if (requestCode == REQUEST_CODE_FILTER && resultCode == RESULT_OK)
         {
             if(this.data.size() > 0)
             {
-                this.tutorListAdapter.applyAdvancedFilters();
-                Toast.makeText(this, "Applied", Toast.LENGTH_SHORT).show();
+                toastText = this.tutorListAdapter.applyAdvancedFiltersAndGetToastText();
+                Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
             }
         }
     }

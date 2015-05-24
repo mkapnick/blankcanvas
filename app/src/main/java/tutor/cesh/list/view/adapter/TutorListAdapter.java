@@ -58,77 +58,89 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
      *
      *
      */
-    public void applyAdvancedFilters()
+    public String applyAdvancedFiltersAndGetToastText()
     {
-        ArrayList<HashMap<String, String>>  filteredData;
-        String                              currentMajor, currentPrice, currentMinor, majors, rates,
-                                            minors;
-        String []                           majorsArray, ratesArray, minorsArray;
+        String      currentMajor, currentPrice, currentMinor, majors, rates,
+                    minors, toastText;
+        String []   majorsArray, ratesArray, minorsArray;
 
         majors  = ProfileInfoBehavior.getFilterableMajor();
         rates   = ProfileInfoBehavior.getFilterableRate();
         minors  = ProfileInfoBehavior.getFilterableMinor();
 
-        filteredData = new ArrayList<HashMap<String, String>>();
-        majorsArray  = null;
-        ratesArray   = null;
-        minorsArray  = null;
-
-        if(null != majors)
-            majorsArray  = majors.split(",");
-
-        if(null != rates)
-            ratesArray   = rates.split(",");
-
-        if(null != minors)
-            minorsArray  = minors.split(",");
-
-        for(int i = 0; i < originalDataReference.size(); i++)
+        //if all filters = 0, then we know we're resetting the filters
+        if(majors.length() == 0 && minors.length()== 0 && rates.length() == 0)
         {
-            currentMajor        = originalDataReference.get(i).get("major");
-            currentPrice        = originalDataReference.get(i).get("rate");
-            currentMinor        = originalDataReference.get(i).get("minor");
-
-            if(null != majorsArray)
-            {
-                for(String m: majorsArray)
-                {
-                    if(currentMajor.trim().equalsIgnoreCase(m))
-                        filteredData.add(originalDataReference.get(i));
-                }
-            }
-
-            if(null != ratesArray)
-            {
-                for(String r: ratesArray)
-                {
-                    if(currentPrice.trim().equalsIgnoreCase(r))
-                        filteredData.add(originalDataReference.get(i));
-                }
-            }
-
-            if(null != minorsArray)
-            {
-                for(String mi: minorsArray)
-                {
-                    if(!currentMinor.trim().equalsIgnoreCase("") && currentMinor.trim().equalsIgnoreCase(mi))
-                        filteredData.add(originalDataReference.get(i));
-                }
-            }
-        }
-
-        if(filteredData.size() > 0)
-        {
-            this.data = new ArrayList<HashMap<String, String>>(); //update the data!
-            for (int i = 0; i < filteredData.size(); i++)
-                data.add(filteredData.get(i));
-
-            notifyDataSetChanged();
+            resetFilters();
+            toastText = "Reset";
         }
         else
         {
-            resetFilters(); //otherwise, we have applied reset filters!
+            this.data    = new ArrayList<HashMap<String, String>>(); //update the data!
+
+            majorsArray  = null;
+            ratesArray   = null;
+            minorsArray  = null;
+
+            if(null != majors)
+                majorsArray  = majors.split(",");
+
+            if(null != rates)
+                ratesArray   = rates.split(",");
+
+            if(null != minors)
+                minorsArray  = minors.split(",");
+
+            for(int i = 0; i < originalDataReference.size(); i++)
+            {
+                currentMajor    = originalDataReference.get(i).get("major");
+                currentPrice    = originalDataReference.get(i).get("rate");
+                currentMinor    = originalDataReference.get(i).get("minor");
+
+                if(null != majorsArray)
+                {
+                    for(String m: majorsArray)
+                    {
+                        if(currentMajor.trim().equalsIgnoreCase(m))
+                            this.data.add(originalDataReference.get(i));
+                    }
+                }
+
+                if(null != ratesArray)
+                {
+                    for(String r: ratesArray)
+                    {
+                        if(currentPrice.trim().equalsIgnoreCase(r))
+                        {
+                            if(!this.data.contains(originalDataReference.get(i)))
+                            {
+                                this.data.add(originalDataReference.get(i));
+                            }
+                        }
+                    }
+                }
+
+                if(null != minorsArray)
+                {
+                    for(String mi: minorsArray)
+                    {
+                        if(!currentMinor.trim().equalsIgnoreCase("") && currentMinor.trim().equalsIgnoreCase(mi))
+                        {
+                            if(!this.data.contains(originalDataReference.get(i)))
+                            {
+                                this.data.add(originalDataReference.get(i));
+                            }
+                        }
+                    }
+                }
+            }
+
+            toastText = "Applied";
         }
+
+        notifyDataSetChanged();
+
+        return toastText;
     }
 
     @Override
@@ -273,9 +285,9 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
     {
         this.data = new ArrayList<HashMap<String, String>>(); //update the data!
         for(int i =0; i < this.originalDataReference.size(); i++)
+        {
             data.add(originalDataReference.get(i));
-
-        notifyDataSetChanged();
+        }
     }
     /**
      *

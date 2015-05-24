@@ -3,11 +3,20 @@ package tutor.cesh.filter;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.nimbusds.jose.util.StringUtils;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import tutor.cesh.R;
@@ -17,37 +26,12 @@ import tutor.cesh.profile.ProfileInfoBehavior;
 import tutor.cesh.metadata.MetaDataBank;
 
 
-public class TutorFilterActivity extends Activity implements View.OnClickListener {
+public class TutorFilterActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
-    private TextView                            arrowBackTextView, resetTextView,
-                                                majorFilterTextView, rateFilterTextView,
-                                                yearFilterTextView, minorFilterTextView;
-
-    private EditText                            majorEditText, rateEditText, yearEditText,
-                                                minorEditText;
-    private Button                              applyFilterButton;
-
-    /**
-     *
-     * @param data
-     * @return
-     */
-    private String formatData(String [] data)
-    {
-        String result, tmp;
-
-        result = "";
-
-        for (int i =0; i < data.length; i++)
-        {
-            tmp = data[i];
-            result += tmp + ", ";
-        }
-
-        result = result.substring(0, result.lastIndexOf(","));
-
-        return result;
-    }
+    private TextView            arrowBackTextView, majorMinorTextView, rateTextView;
+    private Button              applyFilterButton;
+    private LinearLayout        majorMinorLayout, rateLayout;
+    private ArrayList<String>   filteredMajors, filteredRates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -56,10 +40,14 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_tutor_filter);
 
+        //initialize these
+        this.filteredMajors  = new ArrayList<String>();
+        this.filteredRates   = new ArrayList<String>();
+
         initializeUI();
+        initializeMajorAndRateData();
+        setUpMajorAndRateCheckBoxes();
         setUpTypeFaces();
-        //setUpActionBar();
-        setData();
     }
 
     /**
@@ -67,50 +55,27 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
      */
     private void initializeUI()
     {
-        this.majorEditText      = (EditText) findViewById(R.id.editTextFilterMajor);
-        this.rateEditText       = (EditText) findViewById(R.id.editTextFilterRate);
-        //this.yearEditText       = (EditText) findViewById(R.id.editTextFilterYear);
-        this.minorEditText      = (EditText) findViewById(R.id.editTextFilterMinor);
-
-        this.arrowBackTextView  = (TextView) findViewById(R.id.arrow_back_image);
-        this.resetTextView      = (TextView) findViewById(R.id.resetTextViewFilter);
-        this.majorFilterTextView= (TextView) findViewById(R.id.majorFilterTextView);
-        this.rateFilterTextView = (TextView) findViewById(R.id.rateFilterTextView);
-        //this.yearFilterTextView = (TextView) findViewById(R.id.yearFilterTextView);
-        this.minorFilterTextView= (TextView) findViewById(R.id.minorFilterTextView);
-
-
-        this.applyFilterButton  = (Button) findViewById(R.id.applyFilterButton);
+        this.arrowBackTextView  = (TextView)findViewById(R.id.arrow_back_image);
+        this.majorMinorTextView = (TextView)findViewById(R.id.majorMinorTextView);
+        this.rateTextView       = (TextView)findViewById(R.id.rateTextView);
+        this.applyFilterButton  = (Button)  findViewById(R.id.applyFilterButton);
         this.applyFilterButton.setAllCaps(false);
         this.applyFilterButton.setTypeface(((Typeface.create("sans-serif-light", Typeface.NORMAL))));
 
-        this.majorEditText.setOnClickListener(this);
-        this.rateEditText.setOnClickListener(this);
-        //this.yearEditText.setOnClickListener(this);
+        this.majorMinorLayout    = (LinearLayout) findViewById(R.id.majorMinorLayout);
+        this.rateLayout          = (LinearLayout) findViewById(R.id.rateLayout);
+
         this.applyFilterButton.setOnClickListener(this);
         this.arrowBackTextView.setOnClickListener(this);
-        this.resetTextView.setOnClickListener(this);
-        this.minorEditText.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v)
     {
-        String              majorTitle, rateTitle, yearTitle, minorTitle;
-        ArrayList<String>   allData, allMajors, allRates, allYears, allMinors;
-        String              thisData;
+        String filteredMajors, filteredRates;
 
-        majorTitle  = "Filter by major(s)";
-        rateTitle   = "Filter by rate(s)";
-        yearTitle   = "Filter by year(s)";
-        minorTitle  = "Filter by minor(s)";
-
-        allMajors   = MetaDataBank.getMajors();
-        allRates    = MetaDataBank.getRates();
-        allYears    = MetaDataBank.getYears();
-        allMinors   = MetaDataBank.getMinors();
-
-        allData     = new ArrayList<String>();
+        filteredMajors  = "";
+        filteredRates   = "";
 
         switch(v.getId())
         {
@@ -121,77 +86,109 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
 
             case R.id.applyFilterButton:
                 setResult(RESULT_OK);
-                ProfileInfoBehavior.FILTERABLE.setMajor(this.majorEditText.getText().toString());
-                ProfileInfoBehavior.FILTERABLE.setRate(this.rateEditText.getText().toString());
-                //ProfileInfoBehavior.FILTERABLE.setYear(this.yearEditText.getText().toString());
-                ProfileInfoBehavior.FILTERABLE.setMinor(this.minorEditText.getText().toString());
+
+                /******************* Format for enum ******************/
+                if(this.filteredMajors.size() > 0)
+                {
+                    for(String s: this.filteredMajors)
+                    {
+                        s = s.trim();
+                        filteredMajors += s + ", ";
+                    }
+                    filteredMajors = filteredMajors.substring(0, filteredMajors.lastIndexOf(","));
+                }
+
+                /******************* Format for enum *******************/
+                if(this.filteredRates.size() > 0)
+                {
+                    for(String s: this.filteredRates)
+                    {
+                        s = s.trim();
+                        filteredRates += s + ", ";
+                    }
+                    filteredRates = filteredRates.substring(0, filteredRates.lastIndexOf(","));
+                }
+
+                /******************** Set Enums ***********************/
+                ProfileInfoBehavior.FILTERABLE.setMajor(filteredMajors);
+                ProfileInfoBehavior.FILTERABLE.setRate(filteredRates);
+                ProfileInfoBehavior.FILTERABLE.setMinor(filteredMajors);
                 finish();
                 break;
-
-            case R.id.resetTextViewFilter:
-                resetFilters();
-                //Toast.makeText(this, "Filters reset", Toast.LENGTH_SHORT).show();
-                break;
-
-            case R.id.editTextFilterMajor:
-
-                shallowCopy(allMajors, allData);
-
-                thisData = ProfileInfoBehavior.getFilterableMajor();
-                DialogSetterAndPopulator.setMultiChoiceDialogAndShow(this, this.majorEditText,
-                                                                     majorTitle,
-                                                                     ProfileInfo.MAJOR,
-                                                                     ProfileInfoBehavior.FILTERABLE,
-                                                                     allData,
-                                                                     thisData);
-                break;
-
-            case R.id.editTextFilterRate:
-
-                shallowCopy(allRates, allData);
-
-                thisData = ProfileInfoBehavior.getFilterableRate();
-                DialogSetterAndPopulator.setMultiChoiceDialogAndShow(this, this.rateEditText,
-                                                                     rateTitle,
-                                                                     ProfileInfo.RATE,
-                                                                     ProfileInfoBehavior.FILTERABLE,
-                                                                     allData,
-                                                                     thisData);
-                break;
-
-            case R.id.editTextFilterMinor:
-
-                shallowCopy(allMinors, allData);
-
-                thisData = ProfileInfoBehavior.getFilterableMinor();
-                DialogSetterAndPopulator.setMultiChoiceDialogAndShow(this, this.minorEditText,
-                                                                     minorTitle,
-                                                                     ProfileInfo.MINOR,
-                                                                     ProfileInfoBehavior.FILTERABLE,
-                                                                     allData,
-                                                                     thisData);
-                break;
         }
-
     }
 
     /**
      *
-     * @param originalData
-     * @param newData
+     *
+     *
      */
-    private void shallowCopy(ArrayList<String> originalData, ArrayList<String> newData)
+    private void setUpMajorAndRateCheckBoxes()
     {
-        if(null != originalData && originalData.size() > 0)
+        ArrayList<String>           majors, rates;
+        CheckBox                    checkBox;
+        LinearLayout.LayoutParams   layoutParams;
+
+        majors  = MetaDataBank.getMajors();
+        rates   = MetaDataBank.getRates();
+
+        /*************************** MAJOR CHECK BOXES ****************************/
+        for(String s: majors)
         {
-            for(int i =0; i < originalData.size(); i++)
+            s           = s.trim();
+            checkBox    = new CheckBox(this);
+            checkBox.setText(s);
+            checkBox.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
+
+            if(this.filteredMajors.size() > 0)
             {
-                newData.add(originalData.get(i));
+                for(int i =0; i < this.filteredMajors.size(); i++)
+                {
+                    if(this.filteredMajors.get(i).trim().equalsIgnoreCase(s))
+                    {
+                        checkBox.setChecked(true);
+                        break;
+                    }
+                }
             }
+
+            layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                         LinearLayout.LayoutParams.WRAP_CONTENT);
+            checkBox.setLayoutParams(layoutParams);
+            checkBox.setOnCheckedChangeListener(this);
+
+            this.majorMinorLayout.addView(checkBox);
+        }
+
+        /************************** RATE CHECK BOXES ********************************/
+        for(String s: rates)
+        {
+            s           = s.trim();
+            checkBox    = new CheckBox(this);
+            checkBox.setText(s);
+            checkBox.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
+
+            if(this.filteredRates.size() > 0)
+            {
+                for(String  str: this.filteredRates)
+                {
+                    str = str.trim();
+                    if(str.equalsIgnoreCase(s))
+                    {
+                        checkBox.setChecked(true);
+                        break;
+                    }
+                }
+            }
+
+            layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                         LinearLayout.LayoutParams.WRAP_CONTENT);
+            checkBox.setLayoutParams(layoutParams);
+            checkBox.setOnCheckedChangeListener(this);
+
+            this.rateLayout.addView(checkBox);
         }
     }
-
-
     /**
      *
      */
@@ -199,93 +196,89 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
     {
         ProfileInfoBehavior.FILTERABLE.setMajor("");
         ProfileInfoBehavior.FILTERABLE.setRate("");
-        ProfileInfoBehavior.FILTERABLE.setYear("");
         ProfileInfoBehavior.FILTERABLE.setMinor("");
-
-        this.majorEditText.setText("");
-        this.rateEditText.setText("");
-        //this.yearEditText.setText("");
-        this.minorEditText.setText("");
     }
 
     /**
      *
      */
-    private void setData()
+    private void initializeMajorAndRateData()
     {
-        String majors, rates, years, result, minors;
-        String [] majorsArray, ratesArray, yearsArray, minorsArray;
+        String majors, rates;
+        String [] majorsArray, ratesArray;
 
         majors  = ProfileInfoBehavior.getFilterableMajor();
         rates   = ProfileInfoBehavior.getFilterableRate();
-        years   = ProfileInfoBehavior.getFilterableYear();
-        minors  = ProfileInfoBehavior.getFilterableMinor();
 
+        /*********************** MAJORS *********************/
         if(null != majors && majors.length() > 0)
         {
             majorsArray = majors.split(",");
-            result      = formatData(majorsArray);
 
-            this.majorEditText.setText(result);
+            for(String s: majorsArray)
+            {
+                s = s.trim();
+                this.filteredMajors.add(s);
+            }
         }
 
+        /*********************** RATES *********************/
         if(null != rates && rates.length() > 0)
         {
             ratesArray  = rates.split(",");
-            result      = formatData(ratesArray);
 
-            this.rateEditText.setText(result);
-        }
-
-        /*if(null != years && years.length() > 0)
-        {
-            yearsArray = years.split(",");
-            result      = formatData(yearsArray);
-
-            this.yearEditText.setText(result);
-        }*/
-
-        if(null != minors && minors.length() > 0)
-        {
-            minorsArray = minors.split(",");
-            result      = formatData(minorsArray);
-
-            this.minorEditText.setText(result);
+            for(String s: ratesArray)
+            {
+                s = s.trim();
+                this.filteredRates.add(s);
+            }
         }
     }
 
     private void setUpTypeFaces()
     {
-        this.majorEditText.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
-        this.rateEditText.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
-        //this.yearEditText.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
-        this.minorEditText.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
-        this.resetTextView.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
+        this.majorMinorTextView.setTypeface(((Typeface.create("sans-serif-light", Typeface.NORMAL))));
+        this.rateTextView.setTypeface(((Typeface.create("sans-serif-light", Typeface.NORMAL))));
+    }
 
-        this.majorFilterTextView.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
-        this.rateFilterTextView.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
-        //this.yearFilterTextView.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
-        this.minorFilterTextView.setTypeface((Typeface.create("sans-serif-light", Typeface.NORMAL)));
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+    {
+        String s;
 
+        s = buttonView.getText().toString().trim();
+
+        //determine if we checked a rate or a major/minor
+        if(isInteger(s))
+        {
+            if(isChecked)
+            {
+                this.filteredRates.add(s);
+            }
+            else
+            {
+                this.filteredRates.remove(s);
+            }
+        }
+        else
+        {
+            if(isChecked)
+            {
+                this.filteredMajors.add(s);
+            }
+            else
+            {
+                this.filteredMajors.remove(s);
+            }
+        }
     }
 
     /**
      *
+     * @param s
+     * @return
      */
-    /*private void setUpActionBar()
-    {
-        LayoutInflater inflator;
-        View           v;
-        this.actionBar = getSupportActionBar();
-        this.actionBar.setDisplayShowCustomEnabled(true);
-        this.actionBar.setDisplayShowHomeEnabled(false);
-        this.actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_background));
-
-
-        inflator    = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        v           = inflator.inflate(R.layout.action_bar_tutor_filter, null);
-
-        this.actionBar.setCustomView(v);
-    }*/
-
+    private boolean isInteger(String s) {
+        return s.matches("\\d+\\.\\d+") || s.matches("\\d+\\.\\d+\\+");
+    }
 }
