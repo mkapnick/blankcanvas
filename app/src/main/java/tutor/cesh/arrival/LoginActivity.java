@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
 import android.view.Menu;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import org.apache.http.client.methods.HttpPost;
 import org.json.JSONException;
@@ -26,18 +24,26 @@ import tutor.cesh.rest.factory.RestClientFactory;
 import tutor.cesh.rest.delegate.TaskDelegate;
 import tutor.cesh.session.SessionManager;
 
+/**
+ * The activity for a user to log in to the app
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
+ */
 public class LoginActivity extends Activity implements Arrival
 {
 
-    private String              email;
-    private String              password;
-    private EditText           passwordTextView;
+    private String      email;
+    private String      password;
+    private EditText    passwordTextView;
 
+    /**
+     *
+     */
     private void initializeUI()
     {
         this.passwordTextView = (EditText) findViewById(R.id.passwordTextView);
         this.passwordTextView.setHint("Password");
-
     }
 
     /**
@@ -90,11 +96,11 @@ public class LoginActivity extends Activity implements Arrival
         Intent intent;
         intent = new Intent(this, NewAccountActivity.class);
         startActivity(intent);
-
     }
 
     /**
-     * Validate the email and password of user
+     * Validate the email and password of the user
+     *
      * @param view The view from the UI
      */
     @Override
@@ -110,21 +116,22 @@ public class LoginActivity extends Activity implements Arrival
         {
             if(this.password.length() > 0)
             {
-                if(extension.equals("com"))
+                if(extension.equals("edu"))
                     validate();
                 else
-                    Toast.makeText(this, "Email must be a .com address", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Email must be a .edu address", Toast.LENGTH_LONG).show();
             }
             else
                 Toast.makeText(this, "Enter your password", Toast.LENGTH_LONG).show();
         }
         else
-            Toast.makeText(this, "Enter your .com email", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Enter your .edu email", Toast.LENGTH_LONG).show();
     }
 
     /**
-     * Validates the user email and password
-     * by querying the tutor.app.database as necessary
+     * Validates the user email and password enetered by making the appropriate
+     * API call
+     *
      */
     private void validate()
     {

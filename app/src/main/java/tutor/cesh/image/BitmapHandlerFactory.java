@@ -6,14 +6,16 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-
 import java.io.ByteArrayOutputStream;
 
 /**
- * Created by michaelk18 on 11/19/14.
+ * Class for handling bitmaps
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
-public class BitmapHandlerFactory {
-
+public class BitmapHandlerFactory
+{
     /**
      *
      * @param inContext
@@ -27,7 +29,6 @@ public class BitmapHandlerFactory {
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
-
 
     /**
      *
@@ -46,7 +47,12 @@ public class BitmapHandlerFactory {
         return cursor.getInt(0);
     }
 
-
+    /**
+     *
+     * @param uri
+     * @param activity
+     * @return
+     */
     public static String getRealPathFromURI(Uri uri, Activity activity)
     {
         Cursor cursor = activity.getContentResolver().query(uri, null, null, null, null);
@@ -54,5 +60,4 @@ public class BitmapHandlerFactory {
         int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
         return cursor.getString(idx);
     }
-
 }

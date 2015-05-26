@@ -8,11 +8,25 @@ import android.widget.ListView;
 import tutor.cesh.R;
 
 /**
- * Created by michaelkapnick on 3/21/15.
+ * A factory class that builds, creates, and shows dialogs to the user. This class
+ * builds radiobuttons (not checkboxes) dialogs
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
 public class DialogSingleChoiceFactory
 {
-
+    /**
+     *
+     * @param context
+     * @param title
+     * @param positiveButton
+     * @param negativeButton
+     * @param items
+     * @param positiveButtonListener
+     * @param negativeButtonListener
+     * @param positionSetChecked
+     */
     public static void createAndShowDialog(Context context, String title, String positiveButton,
                                            String negativeButton, CharSequence [] items,
                                            DialogInterface.OnClickListener positiveButtonListener,

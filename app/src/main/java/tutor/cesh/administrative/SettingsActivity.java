@@ -9,9 +9,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
-
 import org.apache.http.client.methods.HttpPost;
-
 import tutor.cesh.R;
 import tutor.cesh.apisecurity.APIAuthorization;
 import tutor.cesh.profile.Student;
@@ -20,6 +18,12 @@ import tutor.cesh.apisecurity.APIEndpoints;
 import tutor.cesh.rest.asynchronous.AsyncPost;
 import tutor.cesh.rest.delegate.TaskDelegate;
 
+/**
+ * Responsible for handling the settings within the app
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
+ */
 public class SettingsActivity extends ActionBarActivity implements View.OnClickListener,
                                                                    CompoundButton.OnCheckedChangeListener,
                                                                    TaskDelegate
@@ -30,6 +34,7 @@ public class SettingsActivity extends ActionBarActivity implements View.OnClickL
 
 
     /**
+     * Initializes the UI for this activity (gets references to the widgets that are drawn on the screen
      *
      */
     private void initializeUI()
@@ -107,7 +112,7 @@ public class SettingsActivity extends ActionBarActivity implements View.OnClickL
     }
 
     /**
-     *
+     * Sets up the action bar for this activity
      */
     private void setUpActionBar()
     {

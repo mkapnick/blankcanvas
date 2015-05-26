@@ -100,16 +100,16 @@ public class NewAccountActivity extends Activity implements Arrival
         {
            if(this.password.length() > 0)
            {
-               if(extension.equals("com"))
+               if(extension.equals("edu"))
                    validate();
                else
-                   Toast.makeText(this, "Email must be a .com address", Toast.LENGTH_LONG).show();
+                   Toast.makeText(this, "Email must be a .edu address", Toast.LENGTH_LONG).show();
            }
            else
                Toast.makeText(this, "Enter a password!", Toast.LENGTH_LONG).show();
         }
         else
-            Toast.makeText(this, "Enter your .com email", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Enter your .edu email", Toast.LENGTH_LONG).show();
 
     }
 

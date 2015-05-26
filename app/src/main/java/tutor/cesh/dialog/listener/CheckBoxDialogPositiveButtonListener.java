@@ -8,7 +8,10 @@ import tutor.cesh.profile.ProfileInfo;
 import tutor.cesh.profile.ProfileInfoBehavior;
 
 /**
- * Created by michaelkapnick on 3/26/15.
+ * Positive button listener for checkboxes in alert dialogs
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
 public class CheckBoxDialogPositiveButtonListener implements DialogInterface.OnMultiChoiceClickListener,
                                                              DialogInterface.OnClickListener
@@ -21,6 +24,15 @@ public class CheckBoxDialogPositiveButtonListener implements DialogInterface.OnM
     private ProfileInfoBehavior behavior;
 
 
+    /**
+     *
+     * @param context
+     * @param data
+     * @param editText
+     * @param checkedItems
+     * @param profileInfo
+     * @param behavior
+     */
     public CheckBoxDialogPositiveButtonListener(Context context, CharSequence [] data, EditText editText,
                                                 boolean [] checkedItems, ProfileInfo profileInfo,
                                                 ProfileInfoBehavior behavior)

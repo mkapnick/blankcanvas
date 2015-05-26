@@ -1,11 +1,12 @@
 package tutor.cesh.list.view.adapter;
 
 import android.graphics.drawable.Drawable;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 /**
- * Created by michaelkapnick on 3/20/15.
+ * A row in the tutor list
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
 public class TutorListViewItem
 {

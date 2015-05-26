@@ -7,14 +7,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
-
 import tutor.cesh.R;
 import tutor.cesh.list.view.adapter.TutorListViewItem;
 
 /**
- * Created by michaelkapnick on 3/14/15.
+ * Adapter for the drawer layout found in the tutor list activity
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
 public class TutorListDrawerLayoutAdapter extends BaseAdapter
 {

@@ -3,30 +3,28 @@ package tutor.cesh.filter;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.nimbusds.jose.util.StringUtils;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import tutor.cesh.R;
-import tutor.cesh.dialog.DialogSetterAndPopulator;
-import tutor.cesh.profile.ProfileInfo;
 import tutor.cesh.profile.ProfileInfoBehavior;
-import tutor.cesh.metadata.MetaDataBank;
+import tutor.cesh.metadata.ServerDataBank;
 
-
-public class TutorFilterActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+/**
+ * Responsible for filtering results on the original list of tutors
+ * (which we get back from the server)
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
+ */
+public class TutorFilterActivity extends Activity implements View.OnClickListener,
+                                                             CompoundButton.OnCheckedChangeListener
+{
 
     private TextView            arrowBackTextView, majorMinorTextView, rateTextView;
     private Button              applyFilterButton;
@@ -51,6 +49,7 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
     }
 
     /**
+     * Initializes the UI, gets references to all the widgets that android populates
      *
      */
     private void initializeUI()
@@ -87,7 +86,7 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
             case R.id.applyFilterButton:
                 setResult(RESULT_OK);
 
-                /******************* Format for enum ******************/
+                /******************* Format majors for enum ******************/
                 if(this.filteredMajors.size() > 0)
                 {
                     for(String s: this.filteredMajors)
@@ -98,7 +97,7 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
                     filteredMajors = filteredMajors.substring(0, filteredMajors.lastIndexOf(","));
                 }
 
-                /******************* Format for enum *******************/
+                /******************* Format rates for enum *******************/
                 if(this.filteredRates.size() > 0)
                 {
                     for(String s: this.filteredRates)
@@ -119,8 +118,8 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
     }
 
     /**
-     *
-     *
+     * Dynamically creates checkboxes in this activity based on the majors and rates
+     * we get from the server. Will also set the checkboxes checked or not
      *
      */
     private void setUpMajorAndRateCheckBoxes()
@@ -129,8 +128,8 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
         CheckBox                    checkBox;
         LinearLayout.LayoutParams   layoutParams;
 
-        majors  = MetaDataBank.getMajors();
-        rates   = MetaDataBank.getRates();
+        majors  = ServerDataBank.getMajors();
+        rates   = ServerDataBank.getRates();
 
         /*************************** MAJOR CHECK BOXES ****************************/
         for(String s: majors)
@@ -189,17 +188,9 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
             this.rateLayout.addView(checkBox);
         }
     }
-    /**
-     *
-     */
-    private void resetFilters()
-    {
-        ProfileInfoBehavior.FILTERABLE.setMajor("");
-        ProfileInfoBehavior.FILTERABLE.setRate("");
-        ProfileInfoBehavior.FILTERABLE.setMinor("");
-    }
 
     /**
+     * Set filtered majors and filtered rates data structures
      *
      */
     private void initializeMajorAndRateData()
@@ -235,6 +226,9 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
         }
     }
 
+    /**
+     * Sets the typefaces for the text views to be sans serif
+     */
     private void setUpTypeFaces()
     {
         this.majorMinorTextView.setTypeface(((Typeface.create("sans-serif-light", Typeface.NORMAL))));
@@ -274,9 +268,11 @@ public class TutorFilterActivity extends Activity implements View.OnClickListene
     }
 
     /**
+     * Determines if the text is in the format: (5.00, 10.00, 15.00)
      *
-     * @param s
-     * @return
+     * @param s The string to determine if it's an integer or not
+     *
+     * @return  True if an integer and in the format we want
      */
     private boolean isInteger(String s) {
         return s.matches("\\d+\\.\\d+") || s.matches("\\d+\\.\\d+\\+");

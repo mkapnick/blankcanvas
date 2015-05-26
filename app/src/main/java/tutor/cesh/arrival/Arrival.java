@@ -3,7 +3,10 @@ package tutor.cesh.arrival;
 import android.view.View;
 
 /**
- * Created by michaelk18 on 1/24/14.
+ * Defines behavior for an arrival activity
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
 public interface Arrival {
 

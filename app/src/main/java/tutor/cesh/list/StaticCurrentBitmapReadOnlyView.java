@@ -3,7 +3,10 @@ package tutor.cesh.list;
 import android.graphics.Bitmap;
 
 /**
- * Created by michaelkapnick on 1/8/15.
+ * Holds one static bitmap image
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
 public class StaticCurrentBitmapReadOnlyView
 {

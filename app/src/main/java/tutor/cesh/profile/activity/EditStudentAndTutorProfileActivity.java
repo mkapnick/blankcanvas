@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import tutor.cesh.R;
 import tutor.cesh.profile.ProfileInfo;
 import tutor.cesh.profile.ProfileInfoBehavior;
-import tutor.cesh.metadata.MetaDataBank;
+import tutor.cesh.metadata.ServerDataBank;
 import tutor.cesh.profile.Student;
 import tutor.cesh.profile.Tutor;
 import tutor.cesh.profile.User;
@@ -146,10 +146,10 @@ public class EditStudentAndTutorProfileActivity extends ActionBarActivity implem
         yearTitle   = "Filter by year(s)";
         minorTitle  = "Filter by minor(s)";
 
-        allMajors   = MetaDataBank.getMajors();
-        allRates    = MetaDataBank.getRates();
-        allYears    = MetaDataBank.getYears();
-        allMinors   = MetaDataBank.getMinors();
+        allMajors   = ServerDataBank.getMajors();
+        allRates    = ServerDataBank.getRates();
+        allYears    = ServerDataBank.getYears();
+        allMinors   = ServerDataBank.getMinors();
 
         allData     = new ArrayList<String>();
         thisData    = "";

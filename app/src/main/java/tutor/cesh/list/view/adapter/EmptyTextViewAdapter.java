@@ -12,7 +12,10 @@ import android.widget.TextView;
 import tutor.cesh.R;
 
 /**
- * Created by michaelkapnick on 5/3/15.
+ * Adapter for empty views
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
 public class EmptyTextViewAdapter extends BaseAdapter
 {

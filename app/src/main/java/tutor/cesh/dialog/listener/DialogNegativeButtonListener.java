@@ -3,7 +3,10 @@ package tutor.cesh.dialog.listener;
 import android.content.DialogInterface;
 
 /**
- * Created by michaelkapnick on 3/27/15.
+ * Negative button listener for alert dialogs
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
 public class DialogNegativeButtonListener implements DialogInterface.OnClickListener
 {

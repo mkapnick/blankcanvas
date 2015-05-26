@@ -5,11 +5,17 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
-
 import java.io.ByteArrayOutputStream;
 
-public class LocalDatabaseHelper extends SQLiteOpenHelper {
-
+/***
+ * Builds/updates/maintains a local sqlite database for our app
+ * This class is used but is not maintained
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
+ */
+public class LocalDatabaseHelper extends SQLiteOpenHelper
+{
     // All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 1;
@@ -198,7 +204,6 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * //TODO implement profile image in next version
      * @param tutorProfileImage
      * @param id
      */
@@ -208,7 +213,6 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * //TODO implement profile image in next version
      * @param studentProfileImage
      * @param id
      */

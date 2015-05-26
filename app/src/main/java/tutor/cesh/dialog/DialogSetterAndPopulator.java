@@ -13,7 +13,10 @@ import tutor.cesh.profile.ProfileInfo;
 import tutor.cesh.profile.ProfileInfoBehavior;
 
 /**
- * Created by michaelkapnick on 3/25/15.
+ * Sets alert dialogs with data and then shows them on the screen
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
 public class DialogSetterAndPopulator
 {

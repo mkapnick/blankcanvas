@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import tutor.cesh.metadata.MetaDataBank;
+import tutor.cesh.metadata.ServerDataBank;
 
 
 /**
@@ -60,7 +60,7 @@ public class MetaDataTaskDelegate implements TaskDelegate
             map.put("years", years);
 
             //initialize the MetaDataBank class
-            MetaDataBank.getInstance(this.context, map);
+            ServerDataBank.getInstance(this.context, map);
         }
         catch(JSONException jsone)
         {

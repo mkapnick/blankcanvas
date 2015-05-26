@@ -13,7 +13,7 @@ import tutor.cesh.R;
 import tutor.cesh.profile.Student;
 import tutor.cesh.profile.Tutor;
 import tutor.cesh.profile.User;
-import tutor.cesh.database.GlobalDatabaseHelper;
+import tutor.cesh.database.DownloadImageHelper;
 import tutor.cesh.profile.fragment.observer.TabObserver;
 import tutor.cesh.profile.fragment.subject.TabSubject;
 import tutor.cesh.profile.util.classes.ClassesUtility;
@@ -34,7 +34,7 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
     @Override
     public void downloadCoverImageFromServer()
     {
-        GlobalDatabaseHelper    globalDatabaseHelper;
+        DownloadImageHelper downloadImageHelper;
         User                    user;
         Tutor                   tutor;
 
@@ -43,8 +43,8 @@ public class TutorProfileFragment extends FragmentTabController implements TabOb
 
         if(null == tutor.getCoverImage())
         {
-            globalDatabaseHelper= new GlobalDatabaseHelper(super.activity);
-            globalDatabaseHelper.downloadTutorCoverImageFromServer(super.getGeneralResources(),
+            downloadImageHelper = new DownloadImageHelper(super.activity);
+            downloadImageHelper.downloadTutorCoverImageFromServer(super.getGeneralResources(),
                     this.coverImageView);
         }
     }

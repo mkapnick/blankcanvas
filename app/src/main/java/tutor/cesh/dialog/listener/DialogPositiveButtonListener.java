@@ -8,7 +8,9 @@ import tutor.cesh.profile.ProfileInfo;
 import tutor.cesh.profile.ProfileInfoBehavior;
 
 /**
- * Created by michaelkapnick on 3/22/15.
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
 public class DialogPositiveButtonListener implements DialogInterface.OnClickListener {
 

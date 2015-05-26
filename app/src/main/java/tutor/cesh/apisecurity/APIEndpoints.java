@@ -1,30 +1,33 @@
 package tutor.cesh.apisecurity;
 
 /**
- * Created by michaelkapnick on 4/18/15.
+ * Encapsulates the endpoints that are needed when hitting the Blankcanvas API
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
 public class APIEndpoints
 {
-    private static final String DOMAIN                              = "http://blankcanvas-testing.pw";
+    private static final String DOMAIN                      = "http://blankcanvas-testing.pw";
 
-    private static final String METADATA_GET_ENDPOINT               = DOMAIN + "/api/v1/bc/metadata/profile";
-    private static final String AUTH_POST_ENDPOINT                  = DOMAIN + "/api/v1/bc/auth";
-    private static final String USER_NEW_POST_ENDPOINT              = DOMAIN + "/api/v1/bc/users/new";
-    private static final String ENROLLS_ENDPOINT                    = DOMAIN + "/api/v1/bc/enrolls";
-    private static final String TUTORS_SCHOOL_ENDPOINT              = DOMAIN + "/api/v1/bc/schools";
+    private static final String METADATA_GET_ENDPOINT       = DOMAIN + "/api/v1/bc/metadata/profile";
+    private static final String AUTH_POST_ENDPOINT          = DOMAIN + "/api/v1/bc/auth";
+    private static final String USER_NEW_POST_ENDPOINT      = DOMAIN + "/api/v1/bc/users/new";
+    private static final String ENROLLS_ENDPOINT            = DOMAIN + "/api/v1/bc/enrolls";
+    private static final String TUTORS_SCHOOL_ENDPOINT      = DOMAIN + "/api/v1/bc/schools";
 
     /* STUDENTS */
-    private static final String STUDENTS_ENDPOINT                   = DOMAIN + "/api/v1/bc/students";
-    private static final String STUDENTS_COURSES_ENDPOINT           = DOMAIN + "/api/v1/bc/courses/students";
-    private static final String STUDENTS_IMAGE_ENDPOINT             = DOMAIN + "/api/v1/bc/images/students";
+    private static final String STUDENTS_ENDPOINT           = DOMAIN + "/api/v1/bc/students";
+    private static final String STUDENTS_COURSES_ENDPOINT   = DOMAIN + "/api/v1/bc/courses/students";
+    private static final String STUDENTS_IMAGE_ENDPOINT     = DOMAIN + "/api/v1/bc/images/students";
 
     /* TUTORS */
-    private static final String TUTORS_ENDPOINT                     = DOMAIN + "/api/v1/bc/tutors";
-    private static final String TUTORS_COURSES_ENDPOINT             = DOMAIN + "/api/v1/bc/courses/tutors";
-    private static final String TUTORS_IMAGE_ENDPOINT               = DOMAIN + "/api/v1/bc/images/tutors";
+    private static final String TUTORS_ENDPOINT             = DOMAIN + "/api/v1/bc/tutors";
+    private static final String TUTORS_COURSES_ENDPOINT     = DOMAIN + "/api/v1/bc/courses/tutors";
+    private static final String TUTORS_IMAGE_ENDPOINT       = DOMAIN + "/api/v1/bc/images/tutors";
 
     /*EMAIL SUBSCRIBERS */
-    private static final String EMAIL_SUBSCRIBERS_ENDPOINT          = DOMAIN + "/api/v1/bc/notifications";
+    private static final String EMAIL_SUBSCRIBERS_ENDPOINT  = DOMAIN + "/api/v1/bc/notifications";
 
 
     public static String getAUTH_POST_ENDPOINT() {

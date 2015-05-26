@@ -8,9 +8,15 @@ import android.view.MenuItem;
 import android.view.View;
 import tutor.cesh.R;
 
+/**
+ * The first activity that a user sees when opening up the app
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
+ *
+ */
 public class BeginningActivity extends Activity implements Arrival
 {
-
     @Override
     public void onBackPressed() {
         //do nothing

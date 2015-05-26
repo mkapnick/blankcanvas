@@ -13,11 +13,19 @@ import tutor.cesh.rest.delegate.TaskDelegate;
 import tutor.cesh.rest.factory.RestClientFactory;
 import tutor.cesh.session.SessionManager;
 
+/**
+ * Maintains a user session with our app (auto logs in the user if necessary)
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
+ *
+ */
 public class SessionStartActivity extends Activity
 {
     private SessionManager sessionManager;
 
     /**
+     * Branches to the appropriate activity
      *
      */
     private void branchToFirstActivity()

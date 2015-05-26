@@ -1,10 +1,12 @@
 package tutor.cesh.apisecurity;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by michaelkapnick on 5/11/15.
+ *  Responsible for adding authorization to every HTTP API call
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
 public class APIAuthorization
 {
@@ -14,6 +16,16 @@ public class APIAuthorization
     private static final String issuer       = "2015 Blankcanvas. All Rights Reserved";
 
 
+    /**
+     * Responsbile for creating a valid JWT that will be used as the Authorization header in the
+     * API call
+     *
+     * @param params    The body of the API call
+     * @param path      The path of the API call
+     * @param method    The method of the API call
+     *
+     * @return          A valid JWT
+     */
     public static String getAuthorizationHeader(JSONObject params, String path, String method)
     {
         JWTPayload  payload;

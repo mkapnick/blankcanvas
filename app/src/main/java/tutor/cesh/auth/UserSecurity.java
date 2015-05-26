@@ -6,23 +6,23 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * Handles AES/CBC/NoPadding encryption/decryption
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
+ */
 public class UserSecurity
 {
     private static final String IV              = "3272b77db250a6df";
     private static final String encryptionKey   = "45c6b0753e83b48f";
 
     /**
+     * Encrypts a string using AES encryption with no padding
      *
-     */
-    public UserSecurity()
-    {
-        //do nothing
-    }
-
-    /**
+     * @param plainText The text to be encrypted with AES encryption
+     * @return          The encrypted text
      *
-     * @param plainText
-     * @return
      * @throws Exception
      */
     public String encrypt(String plainText) throws Exception
@@ -31,9 +31,10 @@ public class UserSecurity
         SecretKeySpec   key;
         byte []         encryptedText;
 
-        plainText = formatPlainText(plainText);
-        cipher  = Cipher.getInstance("AES/CBC/NoPadding");
-        key     = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");
+        plainText   = formatPlainText(plainText);
+        cipher      = Cipher.getInstance("AES/CBC/NoPadding");
+        key         = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");
+
         cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
 
         encryptedText = cipher.doFinal(plainText.getBytes("UTF-8"));
@@ -41,6 +42,14 @@ public class UserSecurity
         return Base64.encodeToString(encryptedText, 0);
     }
 
+    /**
+     * Decrypts a string
+     *
+     * @param cipherText    The text to be deecrypted
+     * @return              The decrypted text
+     *
+     * @throws Exception
+     */
     public String decrypt(String cipherText) throws Exception
     {
         Cipher          cipher;
@@ -57,13 +66,14 @@ public class UserSecurity
         return decryptedText;
     }
     /**
+     * Pads a plain text, the text must be a multiple of 16 for the encryption to work
      *
-     * @param plainText
-     * @return
+     * @param plainText The text to be padded
+     * @return          The appropriately padded text
      */
     private String formatPlainText(String plainText)
     {
-        int             length, maxNum;
+        int length, maxNum;
 
         length = plainText.length();
 

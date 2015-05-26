@@ -3,7 +3,10 @@ package tutor.cesh.list;
 import android.graphics.Bitmap;
 
 /**
- * Created by michaelkapnick on 1/7/15.
+ * Sets behavior for caching bitmaps
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
 public interface BitmapCacheBehavior
 {

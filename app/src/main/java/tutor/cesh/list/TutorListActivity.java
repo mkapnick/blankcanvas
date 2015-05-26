@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,15 +20,12 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import tutor.cesh.R;
 import tutor.cesh.administrative.SettingsActivity;
 import tutor.cesh.apisecurity.APIAuthorization;
@@ -48,6 +44,12 @@ import tutor.cesh.rest.asynchronous.AsyncDownloader;
 import tutor.cesh.rest.asynchronous.AsyncGet;
 import tutor.cesh.rest.delegate.TaskDelegate;
 
+/**
+ * Tutor list activity
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
+ */
 public class TutorListActivity extends Activity implements  TaskDelegate,
                                                             SearchView.OnQueryTextListener,
                                                             BitmapCacheBehavior,

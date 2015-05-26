@@ -4,13 +4,28 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by michaelkapnick on 5/11/15.
+ * Encapsulates data that's used a payload when creating JWT's
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
 public class JWTPayload  extends JSONObject
 {
     private String key, path, method, body, secret, subject, issuer;
-    private String [] keys = {"key", "path", "method", "expiration", "body", "secret", "subject", "issuer", "type", "alg"};
+    private String [] keys = {"key", "path", "method", "expiration", "body", "secret",
+                              "subject", "issuer", "type", "alg"};
 
+    /**
+     * Explicit value constructor
+     *
+     * @param key       The key
+     * @param path      The path of the endpoint
+     * @param method    The http method of the endpoint
+     * @param body      The http body
+     * @param secret    The shared secret between client and server
+     * @param subject   The shared subject between client and server
+     * @param issuer    The shared issuer between client and server
+     */
     public JWTPayload(String key, String path, String method, String body,
                       String secret, String subject, String issuer)
     {
@@ -26,7 +41,7 @@ public class JWTPayload  extends JSONObject
     }
 
     /**
-     *
+     * Initialize this payload object
      */
     private void init()
     {
@@ -44,7 +59,7 @@ public class JWTPayload  extends JSONObject
         }
         catch(JSONException json)
         {
-
+            //do nothing
         }
     }
 

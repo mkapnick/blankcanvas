@@ -15,17 +15,18 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import tutor.cesh.R;
 import tutor.cesh.list.TutorListActivity;
 import tutor.cesh.profile.ProfileInfoBehavior;
 
 /**
- * Created by michaelk18 on 8/10/14.
+ * A custom adapter for the TutorListActivity
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
 public class TutorListAdapter extends BaseAdapter implements Filterable
 {
@@ -42,6 +43,13 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
     private HashMap<String, Bitmap>             cachedBitmaps;
 
 
+    /**
+     *
+     * @param context
+     * @param resources
+     * @param data
+     * @param listView
+     */
     public TutorListAdapter(Context context, Resources resources, ArrayList<HashMap<String, String>> data,
                             ListView listView)
     {
@@ -101,7 +109,7 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
                 {
                     for(String m: majorsArray)
                     {
-                        if(currentMajor.trim().equalsIgnoreCase(m))
+                        if(currentMajor.trim().equalsIgnoreCase(m.trim()))
                             this.data.add(originalDataReference.get(i));
                     }
                 }
@@ -110,7 +118,7 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
                 {
                     for(String r: ratesArray)
                     {
-                        if(currentPrice.trim().equalsIgnoreCase(r))
+                        if(currentPrice.trim().equalsIgnoreCase(r.trim()))
                         {
                             if(!this.data.contains(originalDataReference.get(i)))
                             {
@@ -237,14 +245,13 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
                                                     currentTutorCourses, currentMajor, currentPrice,
                                                     currentYear;
 
-                results             = new FilterResults();
+                results = new FilterResults();
 
                 // if constraint is empty return the original names
                 if(constraint.length() == 0 || null == constraint ){
                     results.values  = originalDataReference;
                     results.count   = originalDataReference.size();
                 }
-
                 else
                 {
                     filteredData = new ArrayList<HashMap<String, String>>();
@@ -273,6 +280,7 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
                     results.values =    filteredData;
                     results.count =     filteredData.size();
                 }
+
                 return results;
             }
         };

@@ -1,13 +1,17 @@
 package tutor.cesh.format;
 
 /**
- * Created by michaelkapnick on 3/18/15.
+ * Formats text
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
  */
 public class TextFormatter
 {
     /**
+     * Capitalizes all first letters in a string
      *
-     * @param s
+     * @param s The string to capitalize all first letters in each word
      * @return
      */
     public static String capitalizeAllFirstLetters(String s)

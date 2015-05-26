@@ -7,6 +7,11 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import tutor.cesh.R;
 
+/**
+ *
+ * @version v1.0
+ * @author  Michael Kapnick
+ */
 public class OnCreateAccountDialog extends DialogFragment
 {
     @Override
