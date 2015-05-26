@@ -8,7 +8,7 @@ package tutor.cesh.apisecurity;
  */
 public class APIEndpoints
 {
-    private static final String DOMAIN                      = "http://blankcanvas-testing.pw";
+    private static final String DOMAIN                      = "http://blankcanvas.pw";
 
     private static final String METADATA_GET_ENDPOINT       = DOMAIN + "/api/v1/bc/metadata/profile";
     private static final String AUTH_POST_ENDPOINT          = DOMAIN + "/api/v1/bc/auth";

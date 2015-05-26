@@ -1,9 +1,13 @@
 package tutor.cesh.arrival;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+
 import org.apache.http.client.methods.HttpPost;
 import java.util.HashMap;
 import tutor.cesh.R;
@@ -22,7 +26,7 @@ import tutor.cesh.session.SessionManager;
  */
 public class SessionStartActivity extends Activity
 {
-    private SessionManager sessionManager;
+    private SessionManager  sessionManager;
 
     /**
      * Branches to the appropriate activity
@@ -44,11 +48,11 @@ public class SessionStartActivity extends Activity
             email       = userInfo.get("email");
             password    = userInfo.get("password");
 
-            delegate    = new OnLoginTaskDelegate(this, email, password);
+            delegate    = new OnLoginTaskDelegate(this, email, password, true);
 
             try
             {
-                post        = RestClientFactory.authenticateViaPost(email, password);
+                post    = RestClientFactory.authenticateViaPost(email, password);
                 new AsyncPost(this, delegate, null).execute(post);
             }
             catch (Exception e)
@@ -65,10 +69,10 @@ public class SessionStartActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        branchToFirstActivity();
-
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_start);
+        super.onCreate(savedInstanceState);
+
+        branchToFirstActivity();
     }
 
 

@@ -14,30 +14,32 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import tutor.cesh.apisecurity.APIAuthorization;
+import tutor.cesh.arrival.LoginActivity;
 import tutor.cesh.profile.Student;
 import tutor.cesh.profile.Tutor;
 import tutor.cesh.profile.User;
 import tutor.cesh.list.TutorListActivity;
 import tutor.cesh.apisecurity.APIEndpoints;
 import tutor.cesh.rest.asynchronous.AsyncGet;
+import tutor.cesh.session.SessionManager;
 
 /**
  * Created by michaelk18 on 4/7/14.
  */
 public class OnLoginTaskDelegate implements TaskDelegate
 {
-    private Context context;
-    private String  email, password;
+    private Context         context;
+    private String          email, password;
+    private boolean         branch;
+    private SessionManager  sessionManager;
 
-    public OnLoginTaskDelegate(Context context, String email, String password)
+    public OnLoginTaskDelegate(Context context, String email, String password, boolean branch)
     {
         this.context    = context;
         this.email      = email;
         this.password   = password;
-    }
-
-    private void populateCoverImages()
-    {
+        this.branch     = branch;
+        this.sessionManager = new SessionManager(context);
 
     }
 
@@ -103,7 +105,6 @@ public class OnLoginTaskDelegate implements TaskDelegate
         JSONArray           studentCoursesArray, pastStudentCoursesArray;
         ArrayList<String>   studentCoursesArrayList;
 
-        //System.out.println(object);
         studentCoursesArrayList = new ArrayList<String>();
 
         student.setId(object.getString("id"));
@@ -171,10 +172,6 @@ public class OnLoginTaskDelegate implements TaskDelegate
             tutor.setCurrentClasses(new ArrayList<String>());
     }
 
-
-
-
-
     @Override
     public void taskCompletionResult(Object response)
     {
@@ -184,10 +181,12 @@ public class OnLoginTaskDelegate implements TaskDelegate
         Tutor           tutor;
         JSONObject      object;
         JSONArray       jsonArray;
+        boolean         isAuthenticated;
 
-        user    = User.getInstance(this.context);
-        student = user.getStudent();
-        tutor   = user.getTutor();
+        user            = User.getInstance(this.context);
+        student         = user.getStudent();
+        tutor           = user.getTutor();
+        isAuthenticated = false;
 
         try
         {
@@ -198,6 +197,8 @@ public class OnLoginTaskDelegate implements TaskDelegate
             {
                 if (object.getString("confirmed").equalsIgnoreCase("true"))
                 {
+                    isAuthenticated = true;
+
                     //intent
                     intent = setIntent(object);
 
@@ -210,8 +211,7 @@ public class OnLoginTaskDelegate implements TaskDelegate
                     //get metadata from server
                     populateMetaData();
 
-                    //get cover images from server
-
+                    //start activity
                     context.startActivity(intent);
                 }
                 else
@@ -227,6 +227,15 @@ public class OnLoginTaskDelegate implements TaskDelegate
         catch (JSONException e)
         {
             Toast.makeText(context, "Email or password incorrect", Toast.LENGTH_SHORT).show();
+        }
+
+        if(!isAuthenticated)
+        {
+            if(this.branch)
+            {
+                this.sessionManager.logOut();
+                this.sessionManager.startLoginActivity();
+            }
         }
     }
 }

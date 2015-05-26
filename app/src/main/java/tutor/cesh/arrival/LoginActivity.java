@@ -155,7 +155,7 @@ public class LoginActivity extends Activity implements Arrival
         {
             hideKeyboard();
             sessionManager.createLoginSession(this.email, this.password);
-            delegate    = new OnLoginTaskDelegate(this, this.email, this.password);
+            delegate    = new OnLoginTaskDelegate(this, this.email, this.password, false);
             post        = RestClientFactory.authenticateViaPost(email, password);
             new AsyncPost(this, delegate, pd).execute(post);
         }

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import java.util.HashMap;
 
 import tutor.cesh.arrival.BeginningActivity;
+import tutor.cesh.arrival.LoginActivity;
 import tutor.cesh.profile.Student;
 import tutor.cesh.profile.Tutor;
 import tutor.cesh.profile.User;
@@ -105,6 +106,23 @@ public class SessionManager
         this.context.startActivity(intent);
     }
 
+    public void startLoginActivity()
+    {
+        Intent intent;
+
+        // user is not logged in redirect him to Login Activity
+        intent = new Intent(this.context, LoginActivity.class);
+
+        // Closing all the Activities
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        // Add new Flag to start new Activity
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        // Staring Login Activity
+        this.context.startActivity(intent);
+    }
+
     public HashMap<String, String> getSessionDetails()
     {
         HashMap<String, String> map;
@@ -116,5 +134,4 @@ public class SessionManager
 
         return map;
     }
-
 }
