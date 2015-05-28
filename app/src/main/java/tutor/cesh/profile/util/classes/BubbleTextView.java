@@ -3,7 +3,6 @@ package tutor.cesh.profile.util.classes;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;

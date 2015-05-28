@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#fff"
+    android:background="@color/app_icon_blue"
     tools:context="tutor.cesh.arrival.LoginActivity"
     tools:ignore="MergeRootFrame" >
 
@@ -36,16 +36,6 @@
                 android:textCursorDrawable="@null"
                 android:layout_marginTop="10dp"
                 android:background="#00000000"
-                />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border_top_white"
-                android:layout_below="@+id/emailTextView"
-                android:id="@+id/line"
-                android:layout_marginTop="-7dp"
-
                 />
 
             <EditText

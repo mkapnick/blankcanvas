@@ -32,7 +32,7 @@ public class TutorListAdapter extends BaseAdapter implements Filterable
 {
     private Activity                            activity;
     private ArrayList                           list;
-    private HashMap                             map;
+    private HashMap<String, String> map;
     private Context                             context;
     private ArrayList<HashMap<String, String>>  data;
     private ArrayList<HashMap<String, String>>  originalDataReference;

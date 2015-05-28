@@ -6,14 +6,14 @@
     android:orientation="vertical"
     tools:context="tutor.cesh.arrival.LoginActivity"
     tools:ignore="MergeRootFrame"
-    android:background="#fff">
+    android:background="@color/app_icon_blue">
 
     <RelativeLayout
-        android:layout_width="300dp"
-        android:layout_height="250dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/blankcanvas_logo_full"
+        android:layout_marginTop="75dp"
+        android:background="@drawable/feature_graphic_plain"
         >
 
     </RelativeLayout>
@@ -44,7 +44,7 @@
         android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
         android:onClick="validateArrival"
-        android:background="@drawable/oval_app_icon_dark_blue"
+        android:background="@drawable/oval_app_icon_blue"
         android:padding="12dp"
         android:gravity="center"
         android:layout_marginLeft="20dp"

@@ -1,8 +1,5 @@
 package tutor.cesh.profile.fragment.observer;
 
-import android.view.View;
-import android.widget.ImageView;
-
 import tutor.cesh.profile.fragment.FragmentTabBehavior;
 import tutor.cesh.profile.fragment.subject.TabSubject;
 

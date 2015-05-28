@@ -4,7 +4,7 @@ android:id="@+id/container"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical"
-android:background="#fff"
+android:background="@color/app_icon_blue"
 tools:context="tutor.cesh.arrival.LoginActivity"
 tools:ignore="MergeRootFrame" >
 
@@ -38,17 +38,6 @@ tools:ignore="MergeRootFrame" >
             android:background="#00000000"
             />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/border_top_white"
-            android:layout_below="@+id/emailTextView"
-            android:id="@+id/line"
-            android:layout_alignStart="@+id/emailTextView"
-            android:layout_marginTop="-7dp"
-            android:layout_alignEnd="@+id/emailTextView"
-            />
-
         <EditText
             android:layout_width="match_parent"
             android:layout_height="35dp"
@@ -74,7 +63,7 @@ tools:ignore="MergeRootFrame" >
         android:id="@+id/loginButton"
         android:textColor="@color/white"
         android:onClick="validateArrival"
-        android:background="@drawable/oval_app_icon_dark_blue"
+        android:background="@drawable/oval_app_icon_blue"
         android:gravity="center"
         android:layout_below="@+id/info"
         android:layout_marginTop="10dp"

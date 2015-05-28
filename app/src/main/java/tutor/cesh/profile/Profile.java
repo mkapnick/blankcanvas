@@ -2,8 +2,6 @@ package tutor.cesh.profile;
 
 import android.graphics.Bitmap;
 
-import java.util.HashMap;
-
 /**
  * Created by michaelk18 on 7/12/14.
  */
